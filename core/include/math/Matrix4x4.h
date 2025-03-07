@@ -94,6 +94,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		Matrix4x4& To_Inverse(void);
 
 		const float Minor(size_t Out_Row, size_t Out_Column)const;
+
+		const bool Is_Singular(void)const;
 	
 	public:
 		static const Matrix4x4 Generate_Column_Order(const Vector4& Column_0, const Vector4& Column_1, const Vector4& Column_2, const Vector4& Column_3);
@@ -122,6 +124,3 @@ namespace NameSpace_Core::NameSpace_Math {
 	};
 
 }// namespace NameSpace_Core::NameSpace_Math
-
-
-

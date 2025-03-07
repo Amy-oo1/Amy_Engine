@@ -1,5 +1,7 @@
 #include "math/Matrix4x4.h"
 
+#include<cassert>
+
 #include "math/Constant.h"
 #include  "math/Utilities.h"
 
@@ -207,15 +209,22 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	void Matrix4x4::Set_Column(size_t Column_Index, float Scale) {
-		this->m_Mat[Column_Index] = Vector4{ Scale };
+		for (size_t Row_Index = 0; Row_Index < 4; ++Row_Index)
+			this->m_Mat[Row_Index][Column_Index] = Scale;
 	}
 
 	void Matrix4x4::Set_Column(size_t Column_Index, float X, float Y, float Z, float W) {
-		this->m_Mat[Column_Index] = Vector4{ X,Y,Z,W };
+		this->m_Mat[0][Column_Index] = X;
+		this->m_Mat[1][Column_Index] = Y;
+		this->m_Mat[2][Column_Index] = Z;
+		this->m_Mat[3][Column_Index] = W;
 	}
 
 	void Matrix4x4::Set_Column(size_t Column_Index, const Vector3& Temp_Vector3, float W) {
-		this->m_Mat[Column_Index] = Vector4{ Temp_Vector3,W };
+		this->m_Mat[0][Column_Index] = Temp_Vector3.Get_X();
+		this->m_Mat[1][Column_Index] = Temp_Vector3.Get_Y();
+		this->m_Mat[2][Column_Index] = Temp_Vector3.Get_Z();
+		this->m_Mat[3][Column_Index] = W;
 	}
 
 	const float Matrix4x4::Trace(void) const {
@@ -250,6 +259,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Matrix4x4 Matrix4x4::Inverse(void) const {
+		assert(!this->Is_Singular());
+
 		return this->Adjoint() * (1.f / this->Determinant());
 	}
 
@@ -273,6 +284,10 @@ namespace NameSpace_Core::NameSpace_Math {
 		}
 
 		return Temp.Determinant();
+	}
+
+	const bool Matrix4x4::Is_Singular(void) const{
+		return NameSpace_Utilities::Real_Equal(this->Determinant(), 0.f);
 	}
 
 	const Matrix4x4 Matrix4x4::Generate_Column_Order(const Vector4& Column_0, const Vector4& Column_1, const Vector4& Column_2, const Vector4& Column_3) {
