@@ -122,6 +122,10 @@ namespace NameSpace_Core::NameSpace_Math {
 		return R_HS.Transpose() * L_HS;
 	}
 
+
+
+
+
 	const Matrix3x3 Matrix3x3::operator*(const Matrix3x3& R_HS) const {
 		Matrix3x3 Prod_Matrix3x3{};
 
@@ -130,6 +134,12 @@ namespace NameSpace_Core::NameSpace_Math {
 				Prod_Matrix3x3[Row_Index][Column_Index] = m_Mat[Row_Index].Dot_Product(R_HS.Get_Column(Column_Index));
 
 		return Prod_Matrix3x3;
+	}
+
+	const Matrix3x3 Matrix3x3::operator/(float R_HS) const{
+		assert(R_HS != 0.f);
+
+		return *this * (1.0f / R_HS);
 	}
 
 	Matrix3x3& Matrix3x3::operator+=(const Matrix3x3& R_HS) {
@@ -148,6 +158,10 @@ namespace NameSpace_Core::NameSpace_Math {
 		return (*this) = *this * R_HS;
 	}
 
+	Matrix3x3& Matrix3x3::operator/=(float R_HS){
+		return (*this) = *this / R_HS;
+	}
+
 	Vector3& Matrix3x3::operator[](size_t Index) {
 		return this->m_Mat[Index];
 	}
@@ -158,8 +172,8 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	const float Matrix3x3::Trace(void) const {
 		return
-			this->m_Mat[0][0] *
-			this->m_Mat[1][1] *
+			this->m_Mat[0][0] +
+			this->m_Mat[1][1] +
 			this->m_Mat[2][2];
 	}
 
@@ -227,8 +241,9 @@ namespace NameSpace_Core::NameSpace_Math {
 		}
 
 		return
-			Temp_Matirx2x2[0][0] * Temp_Matirx2x2[1][1] -
-			Temp_Matirx2x2[0][1] * Temp_Matirx2x2[1][0];
+			(Temp_Matirx2x2[0][0] * Temp_Matirx2x2[1][1] -
+				Temp_Matirx2x2[0][1] * Temp_Matirx2x2[1][0])
+			* (((Out_Row + Out_Column) % 2 == 0) ? 1.f : -1.f);
 	}
 
 	tuple<Matrix3x3, Matrix3x3, Matrix3x3> Matrix3x3::Calculate_QDU_Decomposition(void) const {
@@ -245,7 +260,6 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		return { Q,D,U };
 	}
-
 
 	const Vector3 Matrix3x3::Get_Row(size_t Row_Index) const {
 		return this->m_Mat[Row_Index];

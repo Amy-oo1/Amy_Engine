@@ -54,11 +54,15 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		const Matrix3x3 operator*(const Matrix3x3& R_HS)const;
 
+		const Matrix3x3 operator/(float R_HS)const;
+
 		Matrix3x3& operator+=(const Matrix3x3& R_HS);
 		Matrix3x3& operator-=(const Matrix3x3& R_HS);
 
 		Matrix3x3& operator*=(float R_HS);
 		Matrix3x3& operator*=(const Matrix3x3& R_HS);
+
+		Matrix3x3& operator/=(float R_HS);
 
 		Vector3& operator[](size_t Row_Index);
 		const Vector3& operator[](size_t Row_Index)const;
