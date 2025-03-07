@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\logger\System_Logger.h" />
     <ClInclude Include="include\math\Constant.h" />
     <ClInclude Include="include\math\Degree.h" />
     <ClInclude Include="include\math\Head_Math.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="include\math\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\logger\System_Logger.cpp" />
     <ClCompile Include="src\math\Degree.cpp" />
     <ClCompile Include="src\math\matrix3x3.cpp" />
     <ClCompile Include="src\math\Matrix4x4.cpp" />

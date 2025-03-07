@@ -13,6 +13,12 @@
     <Filter Include="src\math">
       <UniqueIdentifier>{bd4c88cb-1076-4296-899b-c819340f18b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\logger">
+      <UniqueIdentifier>{ce73e74e-89f3-466f-a2f6-e22917ff8646}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\logger">
+      <UniqueIdentifier>{36c85d8d-6452-44c1-a98d-b97a8031aa08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\math\Constant.h">
@@ -54,6 +60,9 @@
     <ClInclude Include="include\math\Vector4.h">
       <Filter>include\math</Filter>
     </ClInclude>
+    <ClInclude Include="include\logger\System_Logger.h">
+      <Filter>include\logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">
@@ -83,5 +92,11 @@
     <ClCompile Include="src\math\Vector4.cpp">
       <Filter>src\math</Filter>
     </ClCompile>
+    <ClCompile Include="src\logger\System_Logger.cpp">
+      <Filter>src\logger</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
