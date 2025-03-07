@@ -106,6 +106,7 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Vector2 Vector2::operator/(const Vector2& R_HS) const {
+		assert(!NameSpace_Utilities::Real_Equal(R_HS.m_X, 0.f) && "Vector2 Division By Zero");
 		return Vector2{
 			this->m_X / R_HS.m_X,
 			this->m_Y / R_HS.m_Y

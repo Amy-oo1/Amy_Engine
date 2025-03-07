@@ -30,9 +30,13 @@ namespace NameSpace_Core::NameSpace_Math {
 		const bool operator==(const Vector2& R_HS)const;
 		const bool operator!=(const Vector2& R_HS)const;
 
+		//Total order relation
 		const bool operator<(const Vector2& R_HS)const;
+		//Total order relation
 		const bool operator>(const Vector2& R_HS)const;
+		//Total order relation
 		const bool operator<=(const Vector2& R_HS)const;
+		//Total order relation
 		const bool operator>=(const Vector2& R_HS)const;
 
 
