@@ -21,8 +21,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		Vector4{ XYZ.Get_X(),XYZ.Get_Y(),XYZ.Get_Z(),W } {
 	}
 
-	Vector4& Vector4::operator=(float R_Temp_Scalar) {
-		return *this = Vector4{ R_Temp_Scalar };
+	Vector4& Vector4::operator=(float R_HS) {
+		return *this = Vector4{ R_HS };
 	}
 
 	const Vector4 Vector4::operator+(void) const {
@@ -38,117 +38,119 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
-	const bool Vector4::operator==(const Vector4& R_Temp_Vector4) const {
+	const bool Vector4::operator==(const Vector4& R_HS) const {
 		return
-			NameSpace_Utilities::Real_Equal(this->m_X, R_Temp_Vector4.m_X) &&
-			NameSpace_Utilities::Real_Equal(this->m_Y, R_Temp_Vector4.m_Y) &&
-			NameSpace_Utilities::Real_Equal(this->m_Z, R_Temp_Vector4.m_Z) &&
-			NameSpace_Utilities::Real_Equal(this->m_W, R_Temp_Vector4.m_W);
+			NameSpace_Utilities::Real_Equal(this->m_X, R_HS.m_X) &&
+			NameSpace_Utilities::Real_Equal(this->m_Y, R_HS.m_Y) &&
+			NameSpace_Utilities::Real_Equal(this->m_Z, R_HS.m_Z) &&
+			NameSpace_Utilities::Real_Equal(this->m_W, R_HS.m_W);
 	}
 
-	const bool Vector4::operator!=(const Vector4& R_Temp_Vector4) const {
-		return !(*this == R_Temp_Vector4);
+	const bool Vector4::operator!=(const Vector4& R_HS) const {
+		return !(*this == R_HS);
 	}
 
-	const Vector4 Vector4::operator+(const Vector4& R_Temp_Vector4) const {
+	const Vector4 Vector4::operator+(const Vector4& R_HS) const {
 		return Vector4{
-			this->m_X + R_Temp_Vector4.m_X,
-			this->m_Y + R_Temp_Vector4.m_Y,
-			this->m_Z + R_Temp_Vector4.m_Z,
-			this->m_W + R_Temp_Vector4.m_W
+			this->m_X + R_HS.m_X,
+			this->m_Y + R_HS.m_Y,
+			this->m_Z + R_HS.m_Z,
+			this->m_W + R_HS.m_W
 		};
 	}
 
-	const Vector4 Vector4::operator+(float R_Temp_Scalar) const {
-		return *this + Vector4{ R_Temp_Scalar };
+	const Vector4 Vector4::operator+(float R_HS) const {
+		return *this + Vector4{ R_HS };
 	}
 
-	const Vector4 operator+(float L_Temp_Scalar, const Vector4& R_Temp_Vector4) {
-		return R_Temp_Vector4 + L_Temp_Scalar;
+	const Vector4 operator+(float L_SH, const Vector4& R_HS) {
+		return R_HS + L_SH;
 	}
 
-	const Vector4 Vector4::operator-(const Vector4& R_Temp_Vector4) const {
+	const Vector4 Vector4::operator-(const Vector4& R_HS) const {
 		return Vector4{
-			this->m_X - R_Temp_Vector4.m_X,
-			this->m_Y - R_Temp_Vector4.m_Y,
-			this->m_Z - R_Temp_Vector4.m_Z,
-			this->m_W - R_Temp_Vector4.m_W
+			this->m_X - R_HS.m_X,
+			this->m_Y - R_HS.m_Y,
+			this->m_Z - R_HS.m_Z,
+			this->m_W - R_HS.m_W
 		};
 
 	}
 
-	const Vector4 Vector4::operator-(float R_Temp_Scalar) const {
-		return *this - Vector4{ R_Temp_Scalar };
+	const Vector4 Vector4::operator-(float R_HS) const {
+		return *this - Vector4{ R_HS };
 	}
 
-	const Vector4 operator-(float L_Temp_Scalar, const Vector4& R_Temp_Vector4) {
-		return Vector4{ L_Temp_Scalar } - R_Temp_Vector4;
+	const Vector4 operator-(float L_SH, const Vector4& R_HS) {
+		return Vector4{ L_SH } - R_HS;
 	}
 
-	const Vector4 Vector4::operator*(const Vector4& R_Temp_Vector4) const {
+	const Vector4 Vector4::operator*(const Vector4& R_HS) const {
 		return Vector4{
-			this->m_X * R_Temp_Vector4.m_X,
-			this->m_Y * R_Temp_Vector4.m_Y,
-			this->m_Z * R_Temp_Vector4.m_Z,
-			this->m_W * R_Temp_Vector4.m_W
+			this->m_X * R_HS.m_X,
+			this->m_Y * R_HS.m_Y,
+			this->m_Z * R_HS.m_Z,
+			this->m_W * R_HS.m_W
 		};
 	}
 
-	const Vector4 Vector4::operator*(float R_Temp_Scalar) const {
-		return *this * Vector4{ R_Temp_Scalar };
+	const Vector4 Vector4::operator*(float R_HS) const {
+		return *this * Vector4{ R_HS };
 	}
 
-	const Vector4 operator*(float L_Temp_Scalar, const Vector4& R_Temp_Vector4) {
-		return R_Temp_Vector4 * L_Temp_Scalar;
+	const Vector4 operator*(float L_SH, const Vector4& R_HS) {
+		return R_HS * L_SH;
 	}
 
-	const Vector4 Vector4::operator/(const Vector4& R_Temp_Vector4) const {
+	const Vector4 Vector4::operator/(const Vector4& R_HS) const {
 		return Vector4{
-			this->m_X / R_Temp_Vector4.m_X,
-			this->m_Y / R_Temp_Vector4.m_Y,
-			this->m_Z / R_Temp_Vector4.m_Z,
-			this->m_W / R_Temp_Vector4.m_W
+			this->m_X / R_HS.m_X,
+			this->m_Y / R_HS.m_Y,
+			this->m_Z / R_HS.m_Z,
+			this->m_W / R_HS.m_W
 		};
 	}
 
-	const Vector4 Vector4::operator/(float R_Temp_Scalar) const {
-		return *this / Vector4{ R_Temp_Scalar };
+	const Vector4 Vector4::operator/(float R_HS) const {
+		return *this / Vector4{ R_HS };
 	}
 
-	const Vector4 operator/(float L_Temp_Scalar, const Vector4& R_Temp_Vector4) {
-		return Vector4{ L_Temp_Scalar } / R_Temp_Vector4;
+	const Vector4 operator/(float L_SH, const Vector4& R_HS) {
+		assert(R_HS.Get_X() != 0.f && R_HS.Get_Y() != 0.f && R_HS.Get_Z() != 0.f && R_HS.Get_W() != 0.f);
+
+		return Vector4{ L_SH } / R_HS;
 	}
 
-	Vector4& Vector4::operator+=(const Vector4& R_Temp_Vector4) {
-		return *this = *this + R_Temp_Vector4;
+	Vector4& Vector4::operator+=(const Vector4& R_HS) {
+		return *this = *this + R_HS;
 	}
 
-	Vector4& Vector4::operator+=(float R_Temp_Scalar) {
-		return *this = *this + R_Temp_Scalar;
+	Vector4& Vector4::operator+=(float R_HS) {
+		return *this = *this + R_HS;
 	}
 
-	Vector4& Vector4::operator-=(const Vector4& R_Temp_Vector4) {
-		return *this = *this - R_Temp_Vector4;
+	Vector4& Vector4::operator-=(const Vector4& R_HS) {
+		return *this = *this - R_HS;
 	}
 
-	Vector4& Vector4::operator-=(float R_Temp_Scalar) {
-		return *this = *this - R_Temp_Scalar;
+	Vector4& Vector4::operator-=(float R_HS) {
+		return *this = *this - R_HS;
 	}
 
-	Vector4& Vector4::operator*=(const Vector4& R_Temp_Vector4) {
-		return *this = *this * R_Temp_Vector4;
+	Vector4& Vector4::operator*=(const Vector4& R_HS) {
+		return *this = *this * R_HS;
 	}
 
-	Vector4& Vector4::operator*=(float R_Temp_Scalar) {
-		return *this = *this * R_Temp_Scalar;
+	Vector4& Vector4::operator*=(float R_HS) {
+		return *this = *this * R_HS;
 	}
 
-	Vector4& Vector4::operator/=(const Vector4& R_Temp_Vector4) {
-		return *this = *this / R_Temp_Vector4;
+	Vector4& Vector4::operator/=(const Vector4& R_HS) {
+		return *this = *this / R_HS;
 	}
 
-	Vector4& Vector4::operator/=(float R_Temp_Scalar) {
-		return *this = *this / R_Temp_Scalar;
+	Vector4& Vector4::operator/=(float R_HS) {
+		return *this = *this / R_HS;
 	}
 
 	const float& Vector4::operator[](size_t Index) const {
@@ -213,12 +215,12 @@ namespace NameSpace_Core::NameSpace_Math {
 			NameSpace_Utilities::Is_NaN(this->m_W);
 	}
 
-	const float Vector4::Dot_Product(const Vector4& R_Temp_Vector4) const {
+	const float Vector4::Dot_Product(const Vector4& R_HS) const {
 		return
-			this->m_X * R_Temp_Vector4.m_X +
-			this->m_Y * R_Temp_Vector4.m_Y +
-			this->m_Z * R_Temp_Vector4.m_Z +
-			this->m_W * R_Temp_Vector4.m_W;
+			this->m_X * R_HS.m_X +
+			this->m_Y * R_HS.m_Y +
+			this->m_Z * R_HS.m_Z +
+			this->m_W * R_HS.m_W;
 	}
 
 	const Vector3 Vector4::Homogeneous(void) const {

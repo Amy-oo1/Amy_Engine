@@ -1,12 +1,11 @@
 #pragma once
 
 #include<cstddef>
-
 #include "math/Vector3.h"
 
 namespace NameSpace_Core::NameSpace_Math {
 
-	class Vector4 final{
+	class Vector4 final {
 	public:
 		Vector4(void) = default;
 
@@ -23,47 +22,47 @@ namespace NameSpace_Core::NameSpace_Math {
 		~Vector4(void) = default;
 
 	public:
-		Vector4& operator=(float R_Temp_Scalar);
+		Vector4& operator=(float R_HS);
 
 		const Vector4 operator+(void)const;
 		const Vector4 operator-(void)const;
 
-		const bool operator==(const Vector4& R_Temp_Vector4)const;
-		const bool operator!=(const Vector4& R_Temp_Vector4)const;
+		const bool operator==(const Vector4& R_HS)const;
+		const bool operator!=(const Vector4& R_HS)const;
 
-		const Vector4 operator+(const Vector4& R_Temp_Vector4)const;
-		const Vector4 operator+(float R_Temp_Scalar)const;
-		friend const Vector4 operator+(float L_Temp_Scalar, const Vector4& R_Temp_Vector4);
+		const Vector4 operator+(const Vector4& R_HS)const;
+		const Vector4 operator+(float R_HS)const;
+		friend const Vector4 operator+(float L_SH, const Vector4& R_HS);
 
-		const Vector4 operator-(const Vector4& R_Temp_Vector4)const;
-		const Vector4 operator-(float R_Temp_Scalar)const;
-		friend const Vector4 operator-(float L_Temp_Scalar, const Vector4& R_Temp_Vector4);
+		const Vector4 operator-(const Vector4& R_HS)const;
+		const Vector4 operator-(float R_HS)const;
+		friend const Vector4 operator-(float L_SH, const Vector4& R_HS);
 
-		const Vector4 operator*(const Vector4& R_Temp_Vector4)const;
-		const Vector4 operator*(float R_Temp_Scalar)const;
-		friend const Vector4 operator*(float L_Temp_Scalar, const Vector4& R_Temp_Vector4);
+		const Vector4 operator*(const Vector4& R_HS)const;
+		const Vector4 operator*(float R_HS)const;
+		friend const Vector4 operator*(float L_SH, const Vector4& R_HS);
 
-		const Vector4 operator/(const Vector4& R_Temp_Vector4)const;
-		const Vector4 operator/(float R_Temp_Scalar)const;
-		friend const Vector4 operator/(float L_Temp_Scalar, const Vector4& R_Temp_Vector4);
+		const Vector4 operator/(const Vector4& R_HS)const;
+		const Vector4 operator/(float R_HS)const;
+		friend const Vector4 operator/(float L_SH, const Vector4& R_HS);
 
-		Vector4& operator+=(const Vector4& R_Temp_Vector4);
-		Vector4& operator+=(float R_Temp_Scalar);
+		Vector4& operator+=(const Vector4& R_HS);
+		Vector4& operator+=(float R_HS);
 
-		Vector4& operator-=(const Vector4& R_Temp_Vector4);
-		Vector4& operator-=(float R_Temp_Scalar);
+		Vector4& operator-=(const Vector4& R_HS);
+		Vector4& operator-=(float R_HS);
 
-		Vector4& operator*=(const Vector4& R_Temp_Vector4);
-		Vector4& operator*=(float R_Temp_Scalar);
+		Vector4& operator*=(const Vector4& R_HS);
+		Vector4& operator*=(float R_HS);
 
-		Vector4& operator/=(const Vector4& R_Temp_Vector4);
-		Vector4& operator/=(float R_Temp_Scalar);
+		Vector4& operator/=(const Vector4& R_HS);
+		Vector4& operator/=(float R_HS);
 
 		const float& operator[](size_t Index)const;
 		float& operator[](size_t Index);
 
 	public:
-		const float Dot_Product(const Vector4& R_Temp_Vector4)const;
+		const float Dot_Product(const Vector4& R_HS)const;
 
 		const Vector3 Homogeneous(void)const;
 
@@ -81,7 +80,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		void Set_XYZ(const Vector3& XYZ);
 
 		const bool Is_NaN(void)const;
-		
+
 	public:
 		static const Vector4 ZERO;
 		static const Vector4 ONE;
