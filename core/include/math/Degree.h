@@ -21,7 +21,7 @@ namespace NameSpace_Core::NameSpace_Math {
 	public:
 		Degree& operator=(float Value);
 
-		operator Radian(void) const;
+		explicit operator Radian(void) const;
 
 		const Degree operator+(void) const;
 		const Degree operator-(void) const;
@@ -51,8 +51,15 @@ namespace NameSpace_Core::NameSpace_Math {
 		friend const Degree operator/(float L_HS, const Degree& R_HS);
 
 		Degree& operator+=(const Degree& R_HS);
+		Degree& operator+=(float R_HS);
+
 		Degree& operator-=(const Degree& R_HS);
+		Degree& operator-=(float R_HS);
+
+		Degree& operator*= (const Degree& R_HS);
 		Degree& operator*=(float R_HS);
+		
+		Degree& operator/=(const Degree& R_HS);
 		Degree& operator/=(float R_HS);
 
 	public:

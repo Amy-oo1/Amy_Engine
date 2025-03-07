@@ -3,10 +3,11 @@
 
 #include<iostream>
 
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/async.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
-namespace NameSpace_Core::NameSpace_System_Logger {
+namespace NameSpace_Core::NameSpace_Logger {
+
 	System_Logger::System_Logger(void) {
 		//Consoule Sink
 		auto ConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -30,4 +31,4 @@ namespace NameSpace_Core::NameSpace_System_Logger {
 		return Get_Instance;
 	}
 
-}// namespace NameSpace_Core::NameSpace_System_Logger
+}// namespace NameSpace_Core::NameSpace_Logger

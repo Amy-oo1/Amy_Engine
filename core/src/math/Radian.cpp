@@ -1,5 +1,7 @@
 #include "math/Radian.h"
 
+#include<cassert>
+
 #include "math/Degree.h"
 #include "math/Constant.h"
 #include "math/Utilities.h"
@@ -11,8 +13,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	Radian& Radian::operator=(float Value) {
-		this->m_Radian = Value;
-		return *this;
+		return *this = Radian{ Value };
+
 	}
 
 	Radian::operator Degree(void) const {
@@ -56,7 +58,7 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Radian Radian::operator+(const Radian& R_HS) const {
-		return (*this) + R_HS.m_Radian;
+		return  (*this) + R_HS.m_Radian;
 	}
 
 	const Radian operator+(float L_HS, const Radian& R_HS) {
@@ -88,14 +90,17 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Radian Radian::operator/(float R_HS) const {
+		assert(!NameSpace_Utilities::Real_Equal(R_HS, 0.f));
 		return Radian{ this->m_Radian / R_HS };
 	}
 
 	const Radian Radian::operator/(const Radian& R_HS) const {
+		assert(R_HS != Radian{ 0.f });
 		return (*this) / R_HS.m_Radian;
 	}
 
 	const Radian operator/(float L_HS, const Radian& R_HS) {
+		assert(R_HS != Radian{ 0.f });
 		return Radian{ L_HS / R_HS.m_Radian };
 	}
 
@@ -103,12 +108,28 @@ namespace NameSpace_Core::NameSpace_Math {
 		return *this = *this + R_HS;
 	}
 
+	Radian& Radian::operator+=(float R_HS){
+		return *this = *this + R_HS;
+	}
+
 	Radian& Radian::operator-=(const Radian& R_HS) {
 		return *this = *this - R_HS;
 	}
 
+	Radian& Radian::operator-=(float R_HS) {
+		return *this = *this - R_HS;
+	}
+	
+	Radian& Radian::operator*=(const Radian& R_HS) {
+		return *this = (*this) * R_HS;
+	}
+
 	Radian& Radian::operator*=(float R_HS) {
 		return *this = (*this) * R_HS;
+	}
+
+	Radian& Radian::operator/=(const Radian& R_HS) {
+		return *this = (*this) / R_HS;
 	}
 
 	Radian& Radian::operator/=(float R_HS) {

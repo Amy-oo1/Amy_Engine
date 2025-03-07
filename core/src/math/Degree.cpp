@@ -1,5 +1,7 @@
 #include "math/Degree.h"
 
+#include<cassert>
+
 #include "math/Radian.h"
 #include "math/Constant.h"
 #include "math/Utilities.h"
@@ -88,14 +90,17 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Degree Degree::operator/(float R_HS) const {
+		assert(!NameSpace_Utilities::Real_Equal(R_HS, 0.f));
 		return Degree{ this->m_Degree / R_HS };
 	}
 
 	const Degree Degree::operator/(const Degree& R_HS) const {
+		assert(R_HS != Degree{ 0.f });
 		return (*this) / R_HS.m_Degree;
 	}
 
 	const Degree operator/(float L_HS, const Degree& R_HS) {
+		assert(R_HS != Degree{ 0.f });
 		return Degree{ L_HS / R_HS.m_Degree };
 	}
 
@@ -103,12 +108,28 @@ namespace NameSpace_Core::NameSpace_Math {
 		return *this = *this + R_HS;
 	}
 
+	Degree& Degree::operator+=(float R_HS){
+		return *this = *this + R_HS;
+	}
+
 	Degree& Degree::operator-=(const Degree& R_HS) {
 		return *this = *this - R_HS;
 	}
 
+	Degree& Degree::operator-=(float R_HS) {
+		return *this = *this - R_HS;
+	}
+
+	Degree& Degree::operator*=(const Degree& R_HS) {
+		return *this = (*this) * R_HS;
+	}
+
 	Degree& Degree::operator*=(float R_HS) {
 		return *this = (*this) * R_HS;
+	}
+
+	Degree& Degree::operator/=(const Degree& R_HS) {
+		return *this = (*this) / R_HS;
 	}
 
 	Degree& Degree::operator/=(float R_HS) {

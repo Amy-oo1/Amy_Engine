@@ -51,8 +51,15 @@ namespace NameSpace_Core::NameSpace_Math {
 		friend const Radian operator/(float L_HS, const Radian& R_HS);
 
 		Radian& operator+=(const Radian& R_HS);
+		Radian& operator+=(float R_HS);
+
 		Radian& operator-=(const Radian& R_HS);
+		Radian& operator-=(float R_HS);
+
+		Radian& operator*=(const Radian& R_HS);
 		Radian& operator*=(float R_HS);
+
+		Radian& operator/=(const Radian& R_HS);
 		Radian& operator/=(float R_HS);
 
 	public:

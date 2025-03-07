@@ -7,7 +7,7 @@
 
 #include "spdlog/spdlog.h"
 
-namespace NameSpace_Core::NameSpace_System_Logger {
+namespace NameSpace_Core::NameSpace_Logger {
 
 	using std::shared_ptr;
 
@@ -71,4 +71,4 @@ namespace NameSpace_Core::NameSpace_System_Logger {
 		shared_ptr<spdlog::logger> m_Logger = nullptr;
 	};
 
-}// namespace NameSpace_Core::NameSpace_System_Logger
+}// namespace NameSpace_Core::NameSpace_Logger
