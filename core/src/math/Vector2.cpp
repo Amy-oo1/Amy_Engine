@@ -210,6 +210,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Radian Vector2::Angle_Between(const Vector2& R_HS) const {
+		assert(*this != Vector2::ZERO && R_HS != Vector2::ZERO);
+
 		return Radian{ NameSpace_Utilities::Acos(this->Dot_Product(R_HS) / (this->Length() * R_HS.Length())) };
 	}
 

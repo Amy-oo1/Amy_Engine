@@ -115,7 +115,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Vector_Text.cpp" />
+    <ClCompile Include="Vector3_Test.cpp" />
+    <ClCompile Include="Vector2_Text.cpp" />
+    <ClCompile Include="Vector4_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

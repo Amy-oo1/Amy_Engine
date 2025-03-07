@@ -22,7 +22,7 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 		return  std::sqrtf(Value);
 	}
 
-	const float NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Pow(float Value, float Index) {
+	const float Pow(float Value, float Index) {
 		return std::powf(Value, Index);
 	}
 
@@ -63,23 +63,11 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 	}
 
 	const float Hypot(float X, float Y){
-		float Max_Component = Max(Abs(X), Abs(Y));
-
-		float Scaled_X = X / Max_Component,
-			Scaled_Y = Y / Max_Component;
-
-		return Max_Component * std::hypot(Scaled_X, Scaled_Y);
+		return std::hypot(X, Y);
 	}
 
 	const float Hypot(float X, float Y, float Z){
-		float Max_Component = Max({ Abs(X),Abs(Y), Abs(Z) });
-
-		float 
-			Scaled_X = X / Max_Component,
-			Scaled_Y = Y / Max_Component,
-			Scaled_Z = Z / Max_Component;
-
-		return Max_Component * std::hypot(Scaled_X, Scaled_Y, Scaled_Z);
+		return std::hypot(X, Y, Z);
 	}
 
 	const bool Is_NaN(float Value){

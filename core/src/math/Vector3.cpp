@@ -214,6 +214,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Vector3 Vector3::Project_Over(const Vector3& Not_Zeor_Other) const {
+		assert(!NameSpace_Utilities::Real_Equal(Not_Zeor_Other.Length(), 0.f));
+
 		return Not_Zeor_Other * (this->Dot_Product(Not_Zeor_Other) / Not_Zeor_Other.Length_Square());
 	}
 
@@ -238,7 +240,9 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Radian Vector3::Angle_Between(const Vector3& R_HS) const {
-		return NameSpace_Utilities::Acos(this->Dot_Product(R_HS) / this->Length() * R_HS.Length());
+		assert(*this != Vector3::ZERO && R_HS != Vector3::ZERO);
+
+		return NameSpace_Utilities::Acos(this->Dot_Product(R_HS) / (this->Length() * R_HS.Length()));
 	}
 
 	const Vector3 Vector3::Middle_Point(const Vector3& R_HS) {
