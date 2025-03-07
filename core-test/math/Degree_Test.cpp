@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "gtest/gtest.h"
 
 #include "math/Degree.h"
 #include "math/Radian.h"
