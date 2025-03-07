@@ -122,10 +122,6 @@ namespace NameSpace_Core::NameSpace_Math {
 		return R_HS.Transpose() * L_HS;
 	}
 
-
-
-
-
 	const Matrix3x3 Matrix3x3::operator*(const Matrix3x3& R_HS) const {
 		Matrix3x3 Prod_Matrix3x3{};
 
