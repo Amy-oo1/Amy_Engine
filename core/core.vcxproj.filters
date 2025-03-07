@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{ec5cfdfd-8931-40d0-86de-a5e5792903ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{3ec11750-3399-4f4c-8f64-440d6caa4be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\math">
+      <UniqueIdentifier>{c4485cf6-dc34-4808-a111-5d1404c5920b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\math">
+      <UniqueIdentifier>{bd4c88cb-1076-4296-899b-c819340f18b5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\math\Constant.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Degree.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Head_Math.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Matrix3x3.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Matrix4x4.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Quaternion.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Radian.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Random.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Third_Party.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Utilities.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Vector2.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Vector3.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Vector4.h">
+      <Filter>include\math</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\math\Degree.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\matrix3x3.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Matrix4x4.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Quaternion.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Radian.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Utilities.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Vector2.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Vector3.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Vector4.cpp">
+      <Filter>src\math</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
