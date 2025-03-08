@@ -90,6 +90,24 @@
     <ClInclude Include="include\transform\Uniform_Transform.h">
       <Filter>include\transform</Filter>
     </ClInclude>
+    <ClInclude Include="include\bounding\Bounding_Box_AxisAligned.h">
+      <Filter>include\bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bounding\Bounding_Box_Oriented.h">
+      <Filter>include\bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bounding\Bounding_Plane.h">
+      <Filter>include\bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bounding\Bounding_Sphere.h">
+      <Filter>include\bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bounding\Head_Bounding.h">
+      <Filter>include\bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bounding\Third_Party.h">
+      <Filter>include\bounding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">
@@ -133,6 +151,18 @@
     </ClCompile>
     <ClCompile Include="src\transform\Uniform_Transform.cpp">
       <Filter>src\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bounding\Bounding_Box_AxisAligned.cpp">
+      <Filter>src\bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bounding\Bounding_Box_Oriented.cpp">
+      <Filter>src\bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bounding\Bounding_Plane.cpp">
+      <Filter>src\bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bounding\Bounding_Sphere.cpp">
+      <Filter>src\bounding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -119,7 +119,16 @@
     <ClCompile Include="math\Vector2_Test.cpp" />
     <ClCompile Include="math\Vector3_Test.cpp" />
     <ClCompile Include="math\Vector4_Test.cpp" />
-    <ClCompile Include="transform\Orthogonal_Transform_Test.cpp" />
+    <ClCompile Include="transform\Affine_Tranform_Test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="transform\Orthogonal_Transform_Test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="transform\ScaleTranslation_Transform_Test.cpp" />
+    <ClCompile Include="transform\Uniform_Transform_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

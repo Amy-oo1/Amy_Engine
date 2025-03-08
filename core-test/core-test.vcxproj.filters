@@ -31,6 +31,15 @@
     <ClCompile Include="transform\Orthogonal_Transform_Test.cpp">
       <Filter>transform</Filter>
     </ClCompile>
+    <ClCompile Include="transform\ScaleTranslation_Transform_Test.cpp">
+      <Filter>transform</Filter>
+    </ClCompile>
+    <ClCompile Include="transform\Uniform_Transform_Test.cpp">
+      <Filter>transform</Filter>
+    </ClCompile>
+    <ClCompile Include="transform\Affine_Tranform_Test.cpp">
+      <Filter>transform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -32,8 +32,8 @@ namespace NameSpace_Core::NameSpace_Transform {
 		Uniform_Transform& operator=(const Quaternion& Rotate);
 		Uniform_Transform& operator=(const ScaleTranslation_Transform& ScaleTranslation);
 
-		const bool operator==(const Uniform_Transform& R_HS)const;
-		const bool operator!=(const Uniform_Transform& R_HS)const;
+		bool operator==(const Uniform_Transform& R_HS)const;
+		bool operator!=(const Uniform_Transform& R_HS)const;
 
 		const Vector3 operator*(const Vector3& Vec3)const;
 
@@ -50,10 +50,10 @@ namespace NameSpace_Core::NameSpace_Transform {
 		void Set_Translation(const Vector3& Translate);
 		void Set_Scale_Translation(const ScaleTranslation_Transform& Scale_Translation);
 
-		const bool Has_Rotation(void)const;
-		const bool Has_Scale(void)const;
-		const bool Has_Negative_Scale(void)const;
-		const bool Has_Tranlation(void)const;
+		bool Has_Rotation(void)const;
+		bool Has_Scale(void)const;
+		bool Has_Negative_Scale(void)const;
+		bool Has_Tranlation(void)const;
 
 	public:
 		static const Uniform_Transform Generate_Rotation_X(const Radian& Angle);

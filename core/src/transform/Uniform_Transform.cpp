@@ -24,12 +24,12 @@ namespace NameSpace_Core::NameSpace_Transform {
 		return *this = Uniform_Transform{ ScaleTranslation };
 	}
 
-	const bool Uniform_Transform::operator==(const Uniform_Transform& R_HS) const {
+	bool Uniform_Transform::operator==(const Uniform_Transform& R_HS) const {
 		return this->m_Rotation.Is_Equivalence_Rotate(R_HS.m_Rotation) &&
 			this->m_Sacle_Transform == R_HS.m_Sacle_Transform;
 	}
 
-	const bool Uniform_Transform::operator!=(const Uniform_Transform& R_HS) const {
+	bool Uniform_Transform::operator!=(const Uniform_Transform& R_HS) const {
 		return !(*this == R_HS);
 	}
 
@@ -54,7 +54,7 @@ namespace NameSpace_Core::NameSpace_Transform {
 		return this->m_Sacle_Transform;
 	}
 
-	const Matrix4x4 Uniform_Transform::Get_Matrix4x4(void) const{
+	const Matrix4x4 Uniform_Transform::Get_Matrix4x4(void) const {
 		return this->m_Sacle_Transform.Get_Matrix4x4() * this->m_Rotation.Get_Rotation_Matrix4x4();
 	}
 
@@ -74,19 +74,19 @@ namespace NameSpace_Core::NameSpace_Transform {
 		this->m_Sacle_Transform = Scale_Translation;
 	}
 
-	const bool Uniform_Transform::Has_Rotation(void) const {
+	bool Uniform_Transform::Has_Rotation(void) const {
 		return this->m_Rotation != Quaternion::IDENTITY;
 	}
 
-	const bool Uniform_Transform::Has_Scale(void) const {
+	bool Uniform_Transform::Has_Scale(void) const {
 		return this->m_Sacle_Transform.Has_Scale();
 	}
 
-	const bool Uniform_Transform::Has_Negative_Scale(void) const {
+	bool Uniform_Transform::Has_Negative_Scale(void) const {
 		return this->m_Sacle_Transform.Has_Negative_Scale();
 	}
 
-	const bool Uniform_Transform::Has_Tranlation(void) const {
+	bool Uniform_Transform::Has_Tranlation(void) const {
 		return this->m_Sacle_Transform.Has_Tranlation();
 	}
 
