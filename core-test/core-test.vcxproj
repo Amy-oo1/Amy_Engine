@@ -59,6 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -91,6 +92,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -101,9 +103,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="logger\System_Logger_Test.cpp" />
-    <ClCompile Include="math\Degree_Test.cpp" />
-    <ClCompile Include="math\Matrix3x3_Test.cpp" />
-    <ClCompile Include="math\Matrix4x4_Test.cpp" />
+    <ClCompile Include="math\Degree_Test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="math\Matrix3x3_Test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="math\Matrix4x4_Test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="math\Radian_Test.cpp" />
     <ClCompile Include="math\Vector2_Test.cpp" />
     <ClCompile Include="math\Vector3_Test.cpp" />

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include <limits>
+#include<limits>
 
 #include "math/Vector3.h"
 #include "math/Vector4.h"
@@ -11,10 +11,10 @@
 namespace Core::Math::Matrix4x4 {
 
     using NameSpace_Core::NameSpace_Math::Vector3;
-	using NameSpace_Core::NameSpace_Math::Vector4;
+    using NameSpace_Core::NameSpace_Math::Vector4;
     using NameSpace_Core::NameSpace_Math::Matrix3x3;
-	using NameSpace_Core::NameSpace_Math::Matrix4x4;
-
+    using NameSpace_Core::NameSpace_Math::Matrix4x4;
+    using NameSpace_Core::NameSpace_Math::Matrix4x4;
     TEST(Matrix4x4_Test, Constructors) {
         Matrix4x4 m1{};
         EXPECT_EQ(m1[0], Vector4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -91,7 +91,7 @@ namespace Core::Math::Matrix4x4 {
             1.0f, 2.0f, 3.0f, 4.0f,
             5.0f, 6.0f, 7.0f, 8.0f,
             9.0f, 10.0f, 11.0f, 12.0f,
-            13.0f, 14.0f, 15.0f, 16.0f
+            13.0f,14.0f, 15.0f, 16.0f
         };
         Matrix4x4 m2 = m1 * 2.0f;
         EXPECT_EQ(m2[0], Vector4(2.0f, 4.0f, 6.0f, 8.0f));
@@ -152,7 +152,6 @@ namespace Core::Math::Matrix4x4 {
         };
         EXPECT_FLOAT_EQ(diag.Determinant(), 2.0f * 3.0f * 4.0f * 5.0f);
 
-        // ∆Ê“Ïæÿ’Û
         Matrix4x4 singular{
             1.0f, 2.0f, 3.0f, 4.0f,
             5.0f, 6.0f, 7.0f, 8.0f,
