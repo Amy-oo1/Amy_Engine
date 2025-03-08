@@ -31,6 +31,33 @@
     <Filter Include="src\transform">
       <UniqueIdentifier>{85e3f075-a089-46fe-8218-620bb5aa026f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\meta">
+      <UniqueIdentifier>{5820b5e9-5fc0-4321-b718-72239cbca61b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\meta">
+      <UniqueIdentifier>{4a569149-99d7-417a-b2bd-cd7f4fa56f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\reflection">
+      <UniqueIdentifier>{98dae6e6-5037-414c-8b13-b469184617f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\serializer">
+      <UniqueIdentifier>{7b1826ef-f956-4393-9e31-ac1b83377449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\generated">
+      <UniqueIdentifier>{176a2ee8-2f43-4960-954b-d8e6a1fca5c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\meta\reflection">
+      <UniqueIdentifier>{60942fed-8869-4afc-9e17-82dda1e242dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\meta\serializer">
+      <UniqueIdentifier>{d45ddba1-64e6-49bb-b3f9-c5fb7e3b7ca2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\generated\reflection">
+      <UniqueIdentifier>{152a9395-7d4d-4f41-a5e6-c1b9c042fa96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\generated\serializer">
+      <UniqueIdentifier>{805e6217-d07b-4e49-88b3-4776dcc3c6fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\math\Constant.h">
@@ -108,6 +135,30 @@
     <ClInclude Include="include\bounding\Third_Party.h">
       <Filter>include\bounding</Filter>
     </ClInclude>
+    <ClInclude Include="include\meta\serializer\Serializer.h">
+      <Filter>include\meta\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\reflection\Reflection_Instance.h">
+      <Filter>include\meta\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\reflection\Reflection_Macro.h">
+      <Filter>include\meta\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\reflection\Reflection_Register.h">
+      <Filter>include\meta\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\reflection\Type_Meta.h">
+      <Filter>include\meta\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\Parser_Header.h">
+      <Filter>include\meta\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Reflection_Header.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">
@@ -163,6 +214,15 @@
     </ClCompile>
     <ClCompile Include="src\bounding\Bounding_Sphere.cpp">
       <Filter>src\bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meta\reflection\Reflection_Instance.cpp">
+      <Filter>src\meta\reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meta\reflection\Reflection_Register.cpp">
+      <Filter>src\meta\reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meta\reflection\Type_Meta.cpp">
+      <Filter>src\meta\reflection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

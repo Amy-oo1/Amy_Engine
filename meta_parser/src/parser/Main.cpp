@@ -15,12 +15,13 @@ int main(int argc, char* argv[]) {
 	using namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config;
 
 	//----------------------------Header_File----------------------------------------------------------------
-	std::filesystem::path Project_Inputs_File_Paths{ "C:/Amy_Engine/meta_parser/bin/project_input.txt",std::filesystem::path::generic_format };
+	std::filesystem::path Project_Inputs_File_Paths{ "D:/Amy_Engine/meta_parser/bin/project_input.txt",std::filesystem::path::generic_format };
 
-	std::filesystem::path Parser_Header_File_Path{ "C:/Amy_Engine/core/include/meta/generated/Parser_Header.h",std::filesystem::path::generic_format };
+	std::filesystem::path Parser_Header_File_Path{ "D:/Amy_Engine/core/include/meta/generated/Parser_Header.h",std::filesystem::path::generic_format };
 
 	//-----------------------------Work Path------------------------------------------------------------------
 	const std::filesystem::path Work_Directory{ Parser_Header_File_Path.parent_path()};
+	std::filesystem::create_directories(Parser_Header_File_Path.parent_path());
 
 #ifdef _DEBUG
 	std::cout << "Project Need Headers All In File (In Line)    " << Project_Inputs_File_Paths.generic_string() << std::endl;
@@ -78,8 +79,9 @@ int main(int argc, char* argv[]) {
 	////---------------------------Meta_parser_Finish_Generator---------------------------------------------------------------
 	
 	Parser.Finish_Generator(
-		std::filesystem::path{ "D:/Amy_Engine/core/include/meta/generated/reflection/Reflection_Header.h",std::filesystem::path::generic_format },
-		std::filesystem::path{ "D:/Amy_Engine/core/include/meta/generated/serializer/Serializer_Header.h",std::filesystem::path::generic_format });
+		Work_Directory / "Reflection_Header.h",
+		Work_Directory / "Serializer_Header.h"
+	);
 
 
 }

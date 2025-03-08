@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{a6df2c15-eabc-47e9-bddc-fd7f2ed3a40a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{50f59c61-b9ac-4b0c-bac0-bb73d817d8ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\config">
+      <UniqueIdentifier>{5797895e-98c5-487d-9c6a-7b88ad2733a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\config">
+      <UniqueIdentifier>{ffa020c0-48a7-4f04-8cf9-260ed4e7e948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\manage">
+      <UniqueIdentifier>{d5a59679-de5b-489d-9eda-c56772d0f362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\manage">
+      <UniqueIdentifier>{b6f1d8f1-2e04-4ae9-a094-ff3f41ae6e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\components">
+      <UniqueIdentifier>{70cd04be-49ad-4ed2-8f3f-78d7e64eac8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components">
+      <UniqueIdentifier>{295a8fa9-b5eb-495e-af71-c1ce6a00301a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\config\Resource_Configer.h">
+      <Filter>include\config</Filter>
+    </ClInclude>
+    <ClInclude Include="include\manage\Resource_Manager.h">
+      <Filter>include\manage</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\Camera.h">
+      <Filter>include\components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\config\Resource_Configer.cpp">
+      <Filter>src\config</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manager\Resource_Manager.cpp">
+      <Filter>src\manage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\Camera.cpp">
+      <Filter>src\components</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
