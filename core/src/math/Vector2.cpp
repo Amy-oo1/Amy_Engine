@@ -107,6 +107,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	const Vector2 Vector2::operator/(const Vector2& R_HS) const {
 		assert(!NameSpace_Utilities::Real_Equal(R_HS.m_X, 0.f) && "Vector2 Division By Zero");
+
 		return Vector2{
 			this->m_X / R_HS.m_X,
 			this->m_Y / R_HS.m_Y
@@ -154,10 +155,14 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	float& Vector2::operator[](size_t Index) {
+		assert(Index < 2 && "Vector2 Index Out Of Range");
+
 		return *(&this->m_X + Index);
 	}
 
 	const float& Vector2::operator[](size_t Index) const {
+		assert(Index < 2 && "Vector2 Index Out Of Range");
+
 		return *(&this->m_X + Index);
 	}
 

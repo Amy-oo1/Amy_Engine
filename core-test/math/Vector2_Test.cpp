@@ -192,4 +192,20 @@ namespace Core::Math::Vector2 {
 		EXPECT_EQ(Vector2::UNIT_Y, Vector2(0.0f, 1.0f));
 	}
 
+	TEST(Vector2_Test, Edge_Case) {
+		Vector2 Zero{ 0.f };
+		const Vector2 Const_Zero{ 0.f };
+
+		EXPECT_DEATH(Zero / Const_Zero, ".*");
+
+		EXPECT_DEATH(Zero[3], ".*");
+		EXPECT_DEATH(Const_Zero[3], ".*");
+
+		EXPECT_DEATH(Zero.Normalize(), ".*");
+		EXPECT_DEATH(Const_Zero.Project_Over(Vector2::ZERO), ".*");
+		EXPECT_DEATH(Zero.Reflect(Vector2::ZERO), ".*");
+		EXPECT_DEATH(Zero.Angle_Between(Vector2::ZERO), ".*");
+
+	}
+
 }// namespace Core::Math::Vector2

@@ -114,6 +114,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Vector3 Vector3::operator/(const Vector3& R_HS) const {
+		assert(R_HS != Vector3::ZERO && "Vector3 Division By Zero");
+
 		return Vector3{
 			this->m_X / R_HS.m_X,
 			this->m_Y / R_HS.m_Y,
@@ -162,10 +164,14 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const float& Vector3::operator[](size_t Index) const {
+		assert(Index < 3 && "Vector3 Index Out Of Range");
+
 		return *(&this->m_X + Index);
 	}
 
 	float& Vector3::operator[](size_t Index) {
+		assert(Index < 3 && "Vector3 Index Out Of Range");
+
 		return *(&this->m_X + Index);
 	}
 

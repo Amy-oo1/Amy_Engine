@@ -103,6 +103,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Vector4 Vector4::operator/(const Vector4& R_HS) const {
+		assert(R_HS != Vector4::ZERO);
+
 		return Vector4{
 			this->m_X / R_HS.m_X,
 			this->m_Y / R_HS.m_Y,
@@ -116,8 +118,6 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Vector4 operator/(float L_SH, const Vector4& R_HS) {
-		assert(R_HS.Get_X() != 0.f && R_HS.Get_Y() != 0.f && R_HS.Get_Z() != 0.f && R_HS.Get_W() != 0.f);
-
 		return Vector4{ L_SH } / R_HS;
 	}
 

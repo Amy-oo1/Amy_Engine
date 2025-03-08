@@ -203,4 +203,10 @@ namespace Core::Math::Degree {
 		EXPECT_TRUE((-degree).Is_Infinity());
 	}
 
+	TEST(Degree_Test, Edge_Case) {
+		Degree zeroRad{1.f};
+
+		EXPECT_DEATH(zeroRad / 0.f, ".*");
+	}
+
 }// namespace Core::Math::Degre

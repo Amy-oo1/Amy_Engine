@@ -100,14 +100,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="logger\System_Logger_Test.cpp" />
     <ClCompile Include="math\Degree_Test.cpp" />
     <ClCompile Include="math\Matrix3x3_Test.cpp" />
+    <ClCompile Include="math\Matrix4x4_Test.cpp" />
     <ClCompile Include="math\Radian_Test.cpp" />
-    <ClCompile Include="math\System_Logger_Test.cpp" />
     <ClCompile Include="math\Vector2_Test.cpp" />
     <ClCompile Include="math\Vector3_Test.cpp" />
     <ClCompile Include="math\Vector4_Test.cpp" />
-    <ClCompile Include="Matrix4x4_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -422,4 +422,17 @@ namespace Core::Math::Matrix3x3 {
 		EXPECT_EQ(Matrix3x3::IDENTITY[2], Vector3(0.0f, 0.0f, 1.0f));
 	}
 
+	TEST(Matirx3x3_Test, Rdge_Case) {
+		Matrix3x3 Zero{ 0.f };
+		Matrix3x3 Const_Zero{ 0.f };
+
+		EXPECT_DEATH(Zero / 0.f, ".*");
+
+		EXPECT_DEATH(Zero[4], "0.f");
+		EXPECT_DEATH(Const_Zero[4], ".*");
+
+		EXPECT_DEATH(Zero.Inverse(), ".*");
+		
+	}
+
 }//namespace Core::Math::Matrix3x3

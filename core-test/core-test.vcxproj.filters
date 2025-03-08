@@ -10,9 +10,6 @@
     <ClCompile Include="math\Radian_Test.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="math\System_Logger_Test.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
     <ClCompile Include="math\Vector2_Test.cpp">
       <Filter>math</Filter>
     </ClCompile>
@@ -22,8 +19,11 @@
     <ClCompile Include="math\Vector4_Test.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix4x4_Test.cpp">
+    <ClCompile Include="math\Matrix4x4_Test.cpp">
       <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="logger\System_Logger_Test.cpp">
+      <Filter>logger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +32,9 @@
   <ItemGroup>
     <Filter Include="math">
       <UniqueIdentifier>{e7c3590e-0dd5-4d8f-9ee7-dbbe93b59aa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="logger">
+      <UniqueIdentifier>{a595a4d5-bfd1-4e9a-8e50-1dcbb5bec1f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

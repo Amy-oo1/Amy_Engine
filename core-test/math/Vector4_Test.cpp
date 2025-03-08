@@ -139,4 +139,16 @@ namespace Core::Math::Vector4 {
 		EXPECT_EQ(Vector4::UNIT_W, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 
+	TEST(Vector4_Test, Edge_Case) {
+		Vector4 Zero{ 0.f };
+		const Vector4 Const_Zero{ 0.f };
+
+		EXPECT_DEATH((Zero / Const_Zero), ".*");
+
+		EXPECT_DEATH(Zero[4], ".*");
+		EXPECT_DEATH(Const_Zero[4], ".*");
+
+		EXPECT_DEATH(Zero.Homogeneous(), ".*");
+	}
+
 }// namespace Core::Math::Vector4

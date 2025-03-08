@@ -91,6 +91,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	const Radian Radian::operator/(float R_HS) const {
 		assert(!NameSpace_Utilities::Real_Equal(R_HS, 0.f));
+
 		return Radian{ this->m_Radian / R_HS };
 	}
 

@@ -213,4 +213,10 @@ namespace Core::Math::Radian {
 		EXPECT_FLOAT_EQ(Radian::PI.Get_Radian(), Math_PI);
 	}
 
+	TEST(Radian_Test, Edge_Case) {
+		Radian zeroRad{ 1.f };
+		
+		EXPECT_DEATH(zeroRad / 0.f, ".*");
+	}
+
 }// namespace Test::Math::Radian
