@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{1070c340-6f50-41ed-a49c-55693d6b7858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{da9e8ad6-545c-495a-87dd-308eb8e55469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\file">
+      <UniqueIdentifier>{0a24e4ee-a581-4ed6-9b5b-ee89e55e6618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\file">
+      <UniqueIdentifier>{cb70077c-97d1-4292-846d-027966d996cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\file\File_System.h">
+      <Filter>include\file</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\file\File_System.cpp">
+      <Filter>src\file</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
