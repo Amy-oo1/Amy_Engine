@@ -6,7 +6,7 @@
 
 namespace NameSpace_Core::NameSpace_Math {
 
-	class Vector2 {
+	class Vector2 final {
 	public:
 		Vector2(void) = default;
 
@@ -27,17 +27,17 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Vector2 operator+(void)const;
 		const Vector2 operator-(void)const;
 
-		const bool operator==(const Vector2& R_HS)const;
-		const bool operator!=(const Vector2& R_HS)const;
+		bool operator==(const Vector2& R_HS)const;
+		bool operator!=(const Vector2& R_HS)const;
 
 		//Total order relation
-		const bool operator<(const Vector2& R_HS)const;
+		bool operator<(const Vector2& R_HS)const;
 		//Total order relation
-		const bool operator>(const Vector2& R_HS)const;
+		bool operator>(const Vector2& R_HS)const;
 		//Total order relation
-		const bool operator<=(const Vector2& R_HS)const;
+		bool operator<=(const Vector2& R_HS)const;
 		//Total order relation
-		const bool operator>=(const Vector2& R_HS)const;
+		bool operator>=(const Vector2& R_HS)const;
 
 
 		const Vector2 operator+(const Vector2& R_HS)const;
@@ -72,19 +72,19 @@ namespace NameSpace_Core::NameSpace_Math {
 		const float& operator[](size_t Index)const;
 
 	public:
-		const float Length(void)const;
-		const float Length_Square(void)const;
+		float Length(void)const;
+		float Length_Square(void)const;
 
-		const float Distance(const Vector2& R_HS)const;
-		const float Distance_Square(const Vector2& R_HS)const;
+		float Distance(const Vector2& R_HS)const;
+		float Distance_Square(const Vector2& R_HS)const;
 
-		const float Dot_Product(const Vector2& R_HS)const;
-		const float Cross_Product(const Vector2& R_HS)const;
+		float Dot_Product(const Vector2& R_HS)const;
+		float Cross_Product(const Vector2& R_HS)const;
 
 		const Vector2 Normalize(void)const;
 		Vector2& To_Normalized(void);
 
-		const Vector2 Project_Over(const Vector2& Not_Zero_Other)const;		
+		const Vector2 Project_Over(const Vector2& Not_Zero_Other)const;
 
 		const Vector2 Reflect(const Vector2& Normal)const;
 
@@ -98,14 +98,14 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Vector2 Middle_Point(const Vector2& R_HS)const;
 
 	public:
-		const float Get_X(void) const;
-		const float Get_Y(void) const;
+		float Get_X(void) const;
+		float Get_Y(void) const;
 
 		void Set_X(float X);
 		void Set_Y(float Y);
 
-		const bool Is_NaN(void) const;
-		const bool Is_Unit(void) const;
+		bool Is_NaN(void) const;
+		bool Is_Unit(void) const;
 
 	public:
 		static const Vector2 ZERO;

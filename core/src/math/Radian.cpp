@@ -14,7 +14,6 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	Radian& Radian::operator=(float Value) {
 		return *this = Radian{ Value };
-
 	}
 
 	Radian::operator Degree(void) const {
@@ -29,27 +28,27 @@ namespace NameSpace_Core::NameSpace_Math {
 		return Radian{ -this->m_Radian };
 	}
 
-	const bool Radian::operator==(const Radian& R_HS) const {
+	bool Radian::operator==(const Radian& R_HS) const {
 		return NameSpace_Utilities::Real_Equal(this->m_Radian, R_HS.m_Radian);
 	}
 
-	const bool Radian::operator!=(const Radian& R_HS) const {
+	bool Radian::operator!=(const Radian& R_HS) const {
 		return  !(*this == R_HS);
 	}
 
-	const bool Radian::operator<(const Radian& R_HS) const {
+	bool Radian::operator<(const Radian& R_HS) const {
 		return this->m_Radian < R_HS.m_Radian;
 	}
 
-	const bool Radian::operator>(const Radian& R_HS) const {
+	bool Radian::operator>(const Radian& R_HS) const {
 		return this->m_Radian > R_HS.m_Radian;
 	}
 
-	const bool Radian::operator<=(const Radian& R_HS) const {
+	bool Radian::operator<=(const Radian& R_HS) const {
 		return !(*this > R_HS);
 	}
 
-	const bool Radian::operator>=(const Radian& R_HS) const {
+	bool Radian::operator>=(const Radian& R_HS) const {
 		return !(*this < R_HS);
 	}
 
@@ -102,6 +101,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	const Radian operator/(float L_HS, const Radian& R_HS) {
 		assert(R_HS != Radian{ 0.f });
+
 		return Radian{ L_HS / R_HS.m_Radian };
 	}
 
@@ -109,7 +109,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		return *this = *this + R_HS;
 	}
 
-	Radian& Radian::operator+=(float R_HS){
+	Radian& Radian::operator+=(float R_HS) {
 		return *this = *this + R_HS;
 	}
 
@@ -120,7 +120,7 @@ namespace NameSpace_Core::NameSpace_Math {
 	Radian& Radian::operator-=(float R_HS) {
 		return *this = *this - R_HS;
 	}
-	
+
 	Radian& Radian::operator*=(const Radian& R_HS) {
 		return *this = (*this) * R_HS;
 	}
@@ -134,18 +134,18 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	Radian& Radian::operator/=(float R_HS) {
-		return	*this = (*this) / R_HS;
+		return *this = (*this) / R_HS;
 	}
 
-	const bool Radian::Is_NaN(void) const {
+	bool Radian::Is_NaN(void) const {
 		return NameSpace_Utilities::Is_NaN(this->m_Radian);
 	}
 
-	const bool Radian::Is_Infinity(void) const {
+	bool Radian::Is_Infinity(void) const {
 		return NameSpace_Utilities::Is_Infinity(this->m_Radian);
 	}
 
-	const float Radian::Get_Radian(void) const {
+	float Radian::Get_Radian(void) const {
 		return this->m_Radian;
 	}
 

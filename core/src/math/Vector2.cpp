@@ -30,33 +30,33 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
-	const bool Vector2::operator==(const Vector2& R_HS) const {
+	bool Vector2::operator==(const Vector2& R_HS) const {
 		return
 			NameSpace_Utilities::Real_Equal(this->m_X, R_HS.m_X) &&
 			NameSpace_Utilities::Real_Equal(this->m_Y, R_HS.m_Y);
 	}
 
-	const bool Vector2::operator!=(const Vector2& R_HS) const {
+	bool Vector2::operator!=(const Vector2& R_HS) const {
 		return !(*this == R_HS);
 	}
 
-	const bool Vector2::operator<(const Vector2& R_HS) const {
+	bool Vector2::operator<(const Vector2& R_HS) const {
 		return
 			this->m_X < R_HS.m_X &&
 			this->m_Y < R_HS.m_Y;
 	}
 
-	const bool Vector2::operator>(const Vector2& R_HS) const {
+	bool Vector2::operator>(const Vector2& R_HS) const {
 		return
 			this->m_X > R_HS.m_X &&
 			this->m_Y > R_HS.m_Y;
 	}
 
-	const bool Vector2::operator<=(const Vector2& R_HS) const {
+	bool Vector2::operator<=(const Vector2& R_HS) const {
 		return !((*this) > R_HS);
 	}
 
-	const bool Vector2::operator>=(const Vector2& R_HS) const {
+	bool Vector2::operator>=(const Vector2& R_HS) const {
 		return !((*this) < R_HS);
 	}
 
@@ -166,27 +166,27 @@ namespace NameSpace_Core::NameSpace_Math {
 		return *(&this->m_X + Index);
 	}
 
-	const float Vector2::Length(void) const {
+	float Vector2::Length(void) const {
 		return NameSpace_Utilities::Hypot(this->m_X, this->m_Y);
 	}
 
-	const float Vector2::Length_Square(void) const {
+	float Vector2::Length_Square(void) const {
 		return this->m_X * this->m_X + this->m_Y * this->m_Y;
 	}
 
-	const float Vector2::Distance(const Vector2& R_HS) const {
+	float Vector2::Distance(const Vector2& R_HS) const {
 		return (*this - R_HS).Length();
 	}
 
-	const float Vector2::Distance_Square(const Vector2& R_HS) const {
+	float Vector2::Distance_Square(const Vector2& R_HS) const {
 		return (*this - R_HS).Length_Square();
 	}
 
-	const float Vector2::Dot_Product(const Vector2& R_HS) const {
+	float Vector2::Dot_Product(const Vector2& R_HS) const {
 		return this->m_X * R_HS.m_X + this->m_Y * R_HS.m_Y;
 	}
 
-	const float Vector2::Cross_Product(const Vector2& R_HS) const {
+	float Vector2::Cross_Product(const Vector2& R_HS) const {
 		return
 			this->m_X * R_HS.m_Y -
 			this->m_Y * R_HS.m_X;
@@ -249,11 +249,11 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
-	const float Vector2::Get_X(void) const {
+	float Vector2::Get_X(void) const {
 		return this->m_X;
 	}
 
-	const float Vector2::Get_Y(void) const {
+	float Vector2::Get_Y(void) const {
 		return this->m_Y;
 	}
 
@@ -265,12 +265,12 @@ namespace NameSpace_Core::NameSpace_Math {
 		this->m_Y = Y;
 	}
 
-	const bool Vector2::Is_NaN(void) const {
+	bool Vector2::Is_NaN(void) const {
 		return NameSpace_Utilities::Is_NaN(this->m_X) ||
 			NameSpace_Utilities::Is_NaN(this->m_Y);
 	}
 
-	const bool Vector2::Is_Unit(void) const {
+	bool Vector2::Is_Unit(void) const {
 		return NameSpace_Utilities::Real_Equal(this->Length(), 1.f);
 	}
 

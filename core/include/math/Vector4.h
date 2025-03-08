@@ -27,8 +27,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Vector4 operator+(void)const;
 		const Vector4 operator-(void)const;
 
-		const bool operator==(const Vector4& R_HS)const;
-		const bool operator!=(const Vector4& R_HS)const;
+		bool operator==(const Vector4& R_HS)const;
+		bool operator!=(const Vector4& R_HS)const;
 
 		const Vector4 operator+(const Vector4& R_HS)const;
 		const Vector4 operator+(float R_HS)const;
@@ -62,15 +62,15 @@ namespace NameSpace_Core::NameSpace_Math {
 		float& operator[](size_t Index);
 
 	public:
-		const float Dot_Product(const Vector4& R_HS)const;
+		float Dot_Product(const Vector4& R_HS)const;
 
 		const Vector3 Homogeneous(void)const;
 
 	public:
-		const float Get_X(void)const;
-		const float Get_Y(void)const;
-		const float Get_Z(void)const;
-		const float Get_W(void)const;
+		float Get_X(void)const;
+		float Get_Y(void)const;
+		float Get_Z(void)const;
+		float Get_W(void)const;
 		const Vector3 Get_XYZ(void)const;
 
 		void Set_X(float X);
@@ -79,7 +79,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		void Set_W(float W);
 		void Set_XYZ(const Vector3& XYZ);
 
-		const bool Is_NaN(void)const;
+		bool Is_NaN(void)const;
 
 	public:
 		static const Vector4 ZERO;

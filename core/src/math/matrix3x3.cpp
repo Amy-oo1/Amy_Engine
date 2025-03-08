@@ -70,14 +70,14 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
-	const bool Matrix3x3::operator==(const Matrix3x3& R_HS) const {
+	bool Matrix3x3::operator==(const Matrix3x3& R_HS) const {
 		for (size_t Row_Index = 0; Row_Index < 3; ++Row_Index)
 			if (m_Mat[Row_Index] != R_HS.m_Mat[Row_Index])
 				return false;
 		return true;
 	}
 
-	const bool Matrix3x3::operator!=(const Matrix3x3& R_HS) const {
+	bool Matrix3x3::operator!=(const Matrix3x3& R_HS) const {
 		return !(*this == R_HS);
 	}
 
@@ -132,7 +132,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		return Prod_Matrix3x3;
 	}
 
-	const Matrix3x3 Matrix3x3::operator/(float R_HS) const{
+	const Matrix3x3 Matrix3x3::operator/(float R_HS) const {
 		assert(R_HS != 0.f);
 
 		return *this * (1.0f / R_HS);
@@ -154,12 +154,12 @@ namespace NameSpace_Core::NameSpace_Math {
 		return (*this) = *this * R_HS;
 	}
 
-	Matrix3x3& Matrix3x3::operator/=(float R_HS){
+	Matrix3x3& Matrix3x3::operator/=(float R_HS) {
 		return (*this) = *this / R_HS;
 	}
 
 	Vector3& Matrix3x3::operator[](size_t Index) {
-		assert(Index < 3&&"Index Out Of Range");
+		assert(Index < 3 && "Index Out Of Range");
 
 		return this->m_Mat[Index];
 	}
@@ -170,7 +170,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		return this->m_Mat[Row_Index];
 	}
 
-	const float Matrix3x3::Trace(void) const {
+	float Matrix3x3::Trace(void) const {
 		return
 			this->m_Mat[0][0] +
 			this->m_Mat[1][1] +

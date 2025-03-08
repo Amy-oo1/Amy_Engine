@@ -75,14 +75,14 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
-	const bool Matrix4x4::operator==(const Matrix4x4& R_HS) const {
+	bool Matrix4x4::operator==(const Matrix4x4& R_HS) const {
 		for (size_t Row_Index = 0; Row_Index < 4; ++Row_Index)
 			if (m_Mat[Row_Index] != R_HS.m_Mat[Row_Index])
 				return false;
 		return true;
 	}
 
-	const bool Matrix4x4::operator!=(const Matrix4x4& R_HS) const {
+	bool Matrix4x4::operator!=(const Matrix4x4& R_HS) const {
 		return !(*this == R_HS);
 	}
 
@@ -249,7 +249,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		return (*this) = this->Transpose();
 	}
 
-	const float Matrix4x4::Determinant(void) const {
+	float Matrix4x4::Determinant(void) const {
 		return m_Mat[0][0] * this->Minor(0, 0) - m_Mat[0][1] * this->Minor(0, 1) + m_Mat[0][2] * this->Minor(0, 2) - m_Mat[0][3] * this->Minor(0, 3);
 	}
 
@@ -272,7 +272,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		return (*this) = this->Inverse();
 	}
 
-	const float Matrix4x4::Minor(size_t Out_Row, size_t Out_Column) const {
+	float Matrix4x4::Minor(size_t Out_Row, size_t Out_Column) const {
 		Matrix3x3 Temp{};
 
 		for (int Row_Index = 0, Temp_Row = 0; Row_Index < 4; ++Row_Index) {
@@ -290,7 +290,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		return Temp.Determinant();
 	}
 
-	const bool Matrix4x4::Is_Singular(void) const{
+	bool Matrix4x4::Is_Singular(void) const {
 		return NameSpace_Utilities::Real_Equal(this->Determinant(), 0.f);
 	}
 

@@ -27,13 +27,13 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Vector3 operator+(void)const;
 		const Vector3 operator-(void)const;
 
-		const bool operator==(const Vector3& R_HS)const;
-		const bool operator!=(const Vector3& R_HS)const;
+		bool operator==(const Vector3& R_HS)const;
+		bool operator!=(const Vector3& R_HS)const;
 
-		const bool operator<(const Vector3& R_HS)const;
-		const bool operator>(const Vector3& R_HS)const;
-		const bool operator<=(const Vector3& R_HS)const;
-		const bool operator>=(const Vector3& R_HS)const;
+		bool operator<(const Vector3& R_HS)const;
+		bool operator>(const Vector3& R_HS)const;
+		bool operator<=(const Vector3& R_HS)const;
+		bool operator>=(const Vector3& R_HS)const;
 
 		const Vector3 operator+(const Vector3& R_HS)const;
 		const Vector3 operator+(float R_HS)const;
@@ -68,13 +68,13 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	public:
 
-		const float Length(void)const;
-		const float Length_Square(void) const;
+		float Length(void)const;
+		float Length_Square(void) const;
 
-		const float Distance(const Vector3& R_HS)const;
-		const float Distance_Square(const Vector3& R_HS)const;
+		float Distance(const Vector3& R_HS)const;
+		float Distance_Square(const Vector3& R_HS)const;
 
-		const float Dot_Product(const Vector3& R_HS)const;
+		float Dot_Product(const Vector3& R_HS)const;
 		const Vector3 Cross_Product(const Vector3& R_HS)const;
 
 		const Vector3 Normalize(void)const;
@@ -92,16 +92,16 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Vector3 Middle_Point(const Vector3& R_HS);
 
 	public:
-		const float Get_X(void)const;
-		const float Get_Y(void)const;
-		const float Get_Z(void)const;
+		float Get_X(void)const;
+		float Get_Y(void)const;
+		float Get_Z(void)const;
 
 		void Set_X(float X);
 		void Set_Y(float Y);
 		void Set_Z(float Z);
 
-		const bool Is_NaN(void)const;
-		const bool Is_Unit(void)const;
+		bool Is_NaN(void)const;
+		bool Is_Unit(void)const;
 
 	public:
 		static const Vector3 ZERO;

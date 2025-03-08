@@ -21,18 +21,17 @@ namespace NameSpace_Core::NameSpace_Math {
 	public:
 		Degree& operator=(float Value);
 
-		explicit operator Radian(void) const;
+		operator Radian(void) const;
 
 		const Degree operator+(void) const;
 		const Degree operator-(void) const;
 
-		const bool operator==(const Degree& R_HS) const;
-		const bool operator!=(const Degree& R_HS) const;
-
-		const bool operator<(const Degree& R_HS) const;
-		const bool operator>(const Degree& R_HS) const;
-		const bool operator<=(const Degree& R_HS) const;
-		const bool operator>=(const Degree& R_HS) const;
+		bool operator==(const Degree& R_HS) const;
+		bool operator!=(const Degree& R_HS) const;
+		bool operator<(const Degree& R_HS) const;
+		bool operator>(const Degree& R_HS) const;
+		bool operator<=(const Degree& R_HS) const;
+		bool operator>=(const Degree& R_HS) const;
 
 		const Degree operator+(float R_HS)const;
 		const Degree operator+(const Degree& R_HS) const;
@@ -58,18 +57,18 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		Degree& operator*= (const Degree& R_HS);
 		Degree& operator*=(float R_HS);
-		
+
 		Degree& operator/=(const Degree& R_HS);
 		Degree& operator/=(float R_HS);
 
 	public:
-		const bool Is_NaN(void)const;
-		const bool Is_Infinity(void)const;
+		bool Is_NaN(void)const;
+		bool Is_Infinity(void)const;
 
 	public:
-		const float Get_Degree(void) const;
+		float Get_Degree(void) const;
 
 	private:
 		float m_Degree{ 0.f };
 	};
-} // namespace NameSpace_Core::NameSpace_Math
+}// namespace NameSpace_Core::NameSpace_Math

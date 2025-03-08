@@ -40,8 +40,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Matrix3x3 operator+(void)const;
 		const Matrix3x3 operator-(void)const;
 
-		const bool operator==(const Matrix3x3& R_HS)const;
-		const bool operator!=(const Matrix3x3& R_HS)const;
+		bool operator==(const Matrix3x3& R_HS)const;
+		bool operator!=(const Matrix3x3& R_HS)const;
 
 		const Matrix3x3 operator+(const Matrix3x3& R_HS)const;
 		const Matrix3x3 operator-(const Matrix3x3& R_HS)const;
@@ -68,7 +68,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Vector3& operator[](size_t Row_Index)const;
 
 	public:
-		const float Trace(void)const;
+		float Trace(void)const;
 
 		const Matrix3x3 Transpose(void)const;
 		Matrix3x3& To_Transpose(void);

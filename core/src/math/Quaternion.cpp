@@ -54,12 +54,12 @@ namespace NameSpace_Core::NameSpace_Math {
 		return this->Conjugation();
 	}
 
-	const bool Quaternion::operator==(const Quaternion& Temp_Quaternion) const {
+	bool Quaternion::operator==(const Quaternion& Temp_Quaternion) const {
 		return NameSpace_Utilities::Real_Equal(this->m_Quat.first, Temp_Quaternion.m_Quat.first) &&
 			this->m_Quat.second == Temp_Quaternion.m_Quat.second;
 	}
 
-	const bool Quaternion::operator!=(const Quaternion& Temp_Quaternion) const {
+	bool Quaternion::operator!=(const Quaternion& Temp_Quaternion) const {
 		return !(*this == Temp_Quaternion);
 	}
 
@@ -143,15 +143,15 @@ namespace NameSpace_Core::NameSpace_Math {
 			this->m_Quat.second[static_cast<size_t>(Index) - 1];
 	}
 
-	const float Quaternion::Length(void) const {
+	float Quaternion::Length(void) const {
 		return NameSpace_Utilities::Sqrt(this->Dot_Product(*this));
 	}
 
-	const float Quaternion::Length_Square(void) const {
+	float Quaternion::Length_Square(void) const {
 		return this->Dot_Product(*this);
 	}
 
-	const bool Quaternion::Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance) const {
+	bool Quaternion::Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance) const {
 		return NameSpace_Utilities::Real_Equal(this->Dot_Product(Temp_Quaternion), 1.f, Tolerance);
 	}
 
@@ -185,16 +185,16 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Matrix3x3 Quaternion::Get_Rotation_Matrix3x3(void) const {
-		float 
-			s = this->Get_S(), 
-			x = this->Get_X(), 
-			y = this->Get_Y(), 
+		float
+			s = this->Get_S(),
+			x = this->Get_X(),
+			y = this->Get_Y(),
 			z = this->Get_Z();
 
 		return Matrix3x3{
 			1 - 2 * y * y - 2 * z * z,		2 * x * y - 2 * s * z,			2 * x * z + 2 * s * y,
 			2 * x * y + 2 * s * z,			1 - 2 * x * x - 2 * z * z,		2 * y * z - 2 * s * x,
-			2 * x * z - 2 * s * y,			2 * y * z + 2 * s * x,			1 - 2 * x * x - 2 * y * y 
+			2 * x * z - 2 * s * y,			2 * y * z + 2 * s * x,			1 - 2 * x * x - 2 * y * y
 		};
 	}
 
@@ -256,23 +256,23 @@ namespace NameSpace_Core::NameSpace_Math {
 		return Radian{ NameSpace_Utilities::Atan2(2 * (X * Z + S * Y),1.f - 2 * (X * X + Y * Y)) };
 	}
 
-	const float Quaternion::Get_S(void) const {
+	float Quaternion::Get_S(void) const {
 		return this->m_Quat.first;
 	}
 
-	const float Quaternion::Get_X(void) const {
+	float Quaternion::Get_X(void) const {
 		return this->m_Quat.second.Get_X();
 	}
 
-	const float Quaternion::Get_Y(void) const {
+	float Quaternion::Get_Y(void) const {
 		return this->m_Quat.second.Get_Y();
 	}
 
-	const float Quaternion::Get_Z(void) const {
+	float Quaternion::Get_Z(void) const {
 		return this->m_Quat.second.Get_Z();
 	}
 
-	const float Quaternion::Get_Real_Part(void) const {
+	float Quaternion::Get_Real_Part(void) const {
 		return this->m_Quat.first;
 	}
 

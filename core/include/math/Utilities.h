@@ -13,37 +13,37 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 
 	using std::initializer_list;
 
-	const float Abs(float Value);
-	const float Ceil(float Value);
-	const float Floor(float Value);
+	float Abs(float Value);
+	float Ceil(float Value);
+	float Floor(float Value);
 
-	const float Sqrt(float Value);
+	float Sqrt(float Value);
 
-	const float Pow(float Value, float Index);
+	float Pow(float Value, float Index);
 
-	const float Cos(float Value);
-	const float Cos(const Radian& Value);
-	const float Sin(float Value);
-	const float Sin(const Radian& Value);
+	float Cos(float Value);
+	float Cos(const Radian& Value);
+	float Sin(float Value);
+	float Sin(const Radian& Value);
 
 	const Radian Acos(float Value);
 	const Radian Asin(float Value);
 	const Radian Atan(float Value);
 	const Radian Atan2(float Y, float X);
 
-	const bool Real_Equal(float LHS, float RHS, float Tolerance = std::numeric_limits<float>::epsilon());
+	bool Real_Equal(float LHS, float RHS, float Tolerance = std::numeric_limits<float>::epsilon());
 
-	const float Hypot(float X, float Y);
-	const float Hypot(float X, float Y, float Z);
+	float Hypot(float X, float Y);
+	float Hypot(float X, float Y, float Z);
 
 	template<typename T>
 	const T Get_NaN(void) {
 		return std::numeric_limits<T>::quiet_NaN();
 	}
 
-	const bool Is_NaN(float Value);
+	bool Is_NaN(float Value);
 
-	const bool Is_Infinity(float Value);
+	bool Is_Infinity(float Value);
 
 	template<class T>
 	inline const T Min(const T& LHS, const T& RHS) {

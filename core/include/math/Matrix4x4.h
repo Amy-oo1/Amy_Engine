@@ -41,8 +41,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Matrix4x4 operator+(void) const;
 		const Matrix4x4 operator-(void) const;
 
-		const bool operator==(const Matrix4x4& R_HS) const;
-		const bool operator!=(const Matrix4x4& R_HS) const;
+		bool operator==(const Matrix4x4& R_HS) const;
+		bool operator!=(const Matrix4x4& R_HS) const;
 
 		const Matrix4x4 operator+(const Matrix4x4& R_HS) const;
 		const Matrix4x4 operator-(const Matrix4x4& R_HS) const;
@@ -77,7 +77,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		void Set_Column(size_t Column_Index, const Vector4& Temp_Vector4);
 		void Set_Column(size_t Column_Index, float Scale);
-		void Set_Column(size_t Column_Index, float X, float Y, float Z,float W);
+		void Set_Column(size_t Column_Index, float X, float Y, float Z, float W);
 		void Set_Column(size_t Column_Index, const Vector3& Temp_Vector3, float W);
 
 	public:
@@ -86,17 +86,17 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Matrix4x4 Transpose(void)const;
 		Matrix4x4& To_Transpose(void);
 
-		const float Determinant(void)const;
+		float Determinant(void)const;
 
 		const Matrix4x4 Adjoint(void)const;
 
 		const Matrix4x4 Inverse(void)const;
 		Matrix4x4& To_Inverse(void);
 
-		const float Minor(size_t Out_Row, size_t Out_Column)const;
+		float Minor(size_t Out_Row, size_t Out_Column)const;
 
-		const bool Is_Singular(void)const;
-	
+		bool Is_Singular(void)const;
+
 	public:
 		static const Matrix4x4 Generate_Column_Order(const Vector4& Column_0, const Vector4& Column_1, const Vector4& Column_2, const Vector4& Column_3);
 		static const Matrix4x4 Generate_Column_Order(const initializer_list<float>& List);

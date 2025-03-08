@@ -45,8 +45,8 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		const Quaternion operator~(void)const;
 
-		const bool operator==(const Quaternion& R_HS) const;
-		const bool operator!=(const Quaternion& R_HS) const;
+		bool operator==(const Quaternion& R_HS) const;
+		bool operator!=(const Quaternion& R_HS) const;
 
 		const Quaternion operator+(const Quaternion& R_HS)const;
 		const Quaternion operator-(const Quaternion& R_HS)const;
@@ -69,10 +69,10 @@ namespace NameSpace_Core::NameSpace_Math {
 		float& operator[](Quaternion::Index Index);
 
 	public:
-		const float Length(void)const;
-		const float Length_Square(void)const;
+		float Length(void)const;
+		float Length_Square(void)const;
 
-		const bool Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance = Math_FLOAT_EPSILON)const;
+		bool Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance = Math_FLOAT_EPSILON)const;
 
 		const Quaternion Normalize(void)const;
 		Quaternion& To_Normalize(void);
@@ -93,12 +93,12 @@ namespace NameSpace_Core::NameSpace_Math {
 		const Radian Get_Roll(void)const;
 
 	public:
-		const float Get_S(void) const;
-		const float Get_X(void) const;
-		const float Get_Y(void) const;
-		const float Get_Z(void) const;
+		float Get_S(void) const;
+		float Get_X(void) const;
+		float Get_Y(void) const;
+		float Get_Z(void) const;
 
-		const float Get_Real_Part(void)const;
+		float Get_Real_Part(void)const;
 		const Vector3 Get_Imaginary_Part(void)const;
 
 		const bool Is_NaN(void)const;

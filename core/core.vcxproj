@@ -149,7 +149,7 @@
   <ItemGroup>
     <ClCompile Include="src\logger\System_Logger.cpp" />
     <ClCompile Include="src\math\Degree.cpp" />
-    <ClCompile Include="src\math\matrix3x3.cpp" />
+    <ClCompile Include="src\math\Matrix3x3.cpp" />
     <ClCompile Include="src\math\Matrix4x4.cpp" />
     <ClCompile Include="src\math\Quaternion.cpp" />
     <ClCompile Include="src\math\Radian.cpp" />

@@ -38,7 +38,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
-	const bool Vector4::operator==(const Vector4& R_HS) const {
+	bool Vector4::operator==(const Vector4& R_HS) const {
 		return
 			NameSpace_Utilities::Real_Equal(this->m_X, R_HS.m_X) &&
 			NameSpace_Utilities::Real_Equal(this->m_Y, R_HS.m_Y) &&
@@ -46,7 +46,7 @@ namespace NameSpace_Core::NameSpace_Math {
 			NameSpace_Utilities::Real_Equal(this->m_W, R_HS.m_W);
 	}
 
-	const bool Vector4::operator!=(const Vector4& R_HS) const {
+	bool Vector4::operator!=(const Vector4& R_HS) const {
 		return !(*this == R_HS);
 	}
 
@@ -165,19 +165,19 @@ namespace NameSpace_Core::NameSpace_Math {
 		return *(&this->m_X + Index);
 	}
 
-	const float Vector4::Get_X(void) const {
+	float Vector4::Get_X(void) const {
 		return this->m_X;
 	}
 
-	const float Vector4::Get_Y(void) const {
+	float Vector4::Get_Y(void) const {
 		return this->m_Y;
 	}
 
-	const float Vector4::Get_Z(void) const {
+	float Vector4::Get_Z(void) const {
 		return this->m_Z;
 	}
 
-	const float Vector4::Get_W(void) const {
+	float Vector4::Get_W(void) const {
 		return this->m_W;
 	}
 
@@ -211,7 +211,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		this->m_Z = XYZ.Get_Z();
 	}
 
-	const bool Vector4::Is_NaN(void) const {
+	bool Vector4::Is_NaN(void) const {
 		return
 			NameSpace_Utilities::Is_NaN(this->m_X) ||
 			NameSpace_Utilities::Is_NaN(this->m_Y) ||
@@ -219,7 +219,7 @@ namespace NameSpace_Core::NameSpace_Math {
 			NameSpace_Utilities::Is_NaN(this->m_W);
 	}
 
-	const float Vector4::Dot_Product(const Vector4& R_HS) const {
+	float Vector4::Dot_Product(const Vector4& R_HS) const {
 		return
 			this->m_X * R_HS.m_X +
 			this->m_Y * R_HS.m_Y +
