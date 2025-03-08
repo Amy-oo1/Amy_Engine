@@ -5,7 +5,7 @@
 #include "math/Vector3.h"
 #include "math/Vector4.h"
 
-namespace Core::Math::Vector4 {
+namespace Core::Math::Vector4_Test {
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Math::Vector4;
@@ -151,4 +151,4 @@ namespace Core::Math::Vector4 {
 		EXPECT_DEATH(Zero.Homogeneous(), ".*");
 	}
 
-}// namespace Core::Math::Vector4
+}// namespace Core::Math::Vector4_Test

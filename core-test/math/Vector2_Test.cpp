@@ -6,7 +6,7 @@
 #include "math/Radian.h"
 #include "math/Vector2.h"
 
-namespace Core::Math::Vector2 {
+namespace Core::Math::Vector2_Test {
 
 	using NameSpace_Core::NameSpace_Math::Radian;
 	using NameSpace_Core::NameSpace_Math::Vector2;
@@ -208,4 +208,4 @@ namespace Core::Math::Vector2 {
 
 	}
 
-}// namespace Core::Math::Vector2
+}// namespace Core::Math::Vector2_Test

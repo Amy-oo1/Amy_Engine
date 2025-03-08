@@ -7,7 +7,7 @@
 #include "math/Radian.h"
 #include "math/Vector3.h"
 
-namespace Core::Math::Vector3 {
+namespace Core::Math::Vector3_Test {
 
 	using NameSpace_Core::NameSpace_Math::Math_PI;
 	using NameSpace_Core::NameSpace_Math::Radian;
@@ -192,4 +192,4 @@ namespace Core::Math::Vector3 {
 
 	}
 
-}// namespace Core::Math::Vector3
+}// namespace Core::Math::Vector3_Test

@@ -8,7 +8,7 @@
 #include "math/Matrix4x4.h"
 
 
-namespace Core::Math::Matrix4x4 {
+namespace Core::Math::Matrix4x4_Test {
 
     using NameSpace_Core::NameSpace_Math::Vector3;
     using NameSpace_Core::NameSpace_Math::Vector4;
@@ -256,4 +256,4 @@ namespace Core::Math::Matrix4x4 {
         EXPECT_DEATH(zero.Inverse(), ".*");
     }
 
-}// namespace Core::Math::Matrix4x4
+}// namespace Core::Math::Matrix4x4_Test

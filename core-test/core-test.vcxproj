@@ -119,6 +119,7 @@
     <ClCompile Include="math\Vector2_Test.cpp" />
     <ClCompile Include="math\Vector3_Test.cpp" />
     <ClCompile Include="math\Vector4_Test.cpp" />
+    <ClCompile Include="transform\Orthogonal_Transform_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

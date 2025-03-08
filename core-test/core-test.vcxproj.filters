@@ -28,6 +28,9 @@
     <ClCompile Include="math\Quaternion_Test.cpp">
       <Filter>math</Filter>
     </ClCompile>
+    <ClCompile Include="transform\Orthogonal_Transform_Test.cpp">
+      <Filter>transform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -38,6 +41,12 @@
     </Filter>
     <Filter Include="logger">
       <UniqueIdentifier>{a595a4d5-bfd1-4e9a-8e50-1dcbb5bec1f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="transform">
+      <UniqueIdentifier>{6b66351e-dc6b-4d6e-a360-778e28e923ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bounding">
+      <UniqueIdentifier>{7f657dd5-ffba-47c7-9825-de1c35f0ce08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

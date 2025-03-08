@@ -3,7 +3,7 @@
 #include "math/Matrix3x3.h"
 #include "math/Vector3.h"
 
-namespace Core::Math::Matrix3x3 {
+namespace Core::Math::Matrix3x3_Test {
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Math::Matrix3x3;
@@ -435,4 +435,4 @@ namespace Core::Math::Matrix3x3 {
 		
 	}
 
-}//namespace Core::Math::Matrix3x3
+}//namespace Core::Math::Matrix3x3_Test

@@ -2,7 +2,7 @@
 
 #include "logger/System_Logger.h"
 
-namespace Core::Logger::System_logger {
+namespace Core::Logger::System_logger_Test {
 
 	using  NameSpace_Core::NameSpace_Logger::System_Logger;
 
@@ -35,4 +35,4 @@ namespace Core::Logger::System_logger {
 		system_logger.Log(System_Logger::Level::trace, "Log_Err");
 	}
 
-}// namespace Core::Logger::System_logger
+}// namespace Core::Logger::System_logger_Test

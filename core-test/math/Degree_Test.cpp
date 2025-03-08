@@ -3,7 +3,7 @@
 #include "math/Degree.h"
 #include "math/Radian.h"
 
-namespace Core::Math::Degree {
+namespace Core::Math::Degree_Test {
 
 	using NameSpace_Core::NameSpace_Math::Radian;
 	using  NameSpace_Core::NameSpace_Math::Degree;
@@ -209,4 +209,4 @@ namespace Core::Math::Degree {
 		EXPECT_DEATH(zeroRad / 0.f, ".*");
 	}
 
-}// namespace Core::Math::Degre
+}// namespace Core::Math::Degree_Test

@@ -7,7 +7,7 @@
 #include "math/Degree.h"
 #include "math/Radian.h"
 
-namespace Core::Math::Radian {
+namespace Core::Math::Radian_Test {
 
 	using NameSpace_Core::NameSpace_Math::Math_PI;
 	using NameSpace_Core::NameSpace_Math::Radian;
@@ -219,4 +219,4 @@ namespace Core::Math::Radian {
 		EXPECT_DEATH(zeroRad / 0.f, ".*");
 	}
 
-}// namespace Test::Math::Radian
+}// namespace Test::Math::Radian_Test

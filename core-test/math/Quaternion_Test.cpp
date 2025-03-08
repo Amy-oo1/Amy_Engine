@@ -11,7 +11,7 @@
 #include "math/Quaternion.h"
 
 
-namespace Core::Math::Quaternion {
+namespace Core::Math::Quaternion_Test {
 
 	using NameSpace_Core::NameSpace_Math::Math_PI;
 	using NameSpace_Core::NameSpace_Math::Math_PI_DIV_2;
@@ -185,4 +185,4 @@ namespace Core::Math::Quaternion {
 		EXPECT_DEATH(Quaternion::Spherical_Lerp(valid, zero, 0.5f, true), ".*");
 	}
 
-}// namespace Core::Math::Quaternion
+}// namespace Core::Math::Quaternion_Test
