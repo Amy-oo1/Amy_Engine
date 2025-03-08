@@ -19,6 +19,18 @@
     <Filter Include="src\logger">
       <UniqueIdentifier>{36c85d8d-6452-44c1-a98d-b97a8031aa08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\bounding">
+      <UniqueIdentifier>{e48f5346-6db6-4b15-931d-a3934a4fae9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\transform">
+      <UniqueIdentifier>{c0b780e1-8596-4d2d-990e-7190a12108c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bounding">
+      <UniqueIdentifier>{65f8a3ea-792f-4cb2-9d18-28971778a6ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\transform">
+      <UniqueIdentifier>{85e3f075-a089-46fe-8218-620bb5aa026f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\math\Constant.h">
@@ -63,6 +75,21 @@
     <ClInclude Include="include\logger\System_Logger.h">
       <Filter>include\logger</Filter>
     </ClInclude>
+    <ClInclude Include="include\transform\Affine_Transform.h">
+      <Filter>include\transform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\transform\Head_Thansform.h">
+      <Filter>include\transform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\transform\Orthogonal_Transform.h">
+      <Filter>include\transform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\transform\ScaleTranslation_Transform.h">
+      <Filter>include\transform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\transform\Uniform_Transform.h">
+      <Filter>include\transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">
@@ -94,6 +121,18 @@
     </ClCompile>
     <ClCompile Include="src\logger\System_Logger.cpp">
       <Filter>src\logger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transform\Affine_Transform.cpp">
+      <Filter>src\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transform\Orthogonal_Transform.cpp">
+      <Filter>src\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transform\ScaleTranslation_Transform.cpp">
+      <Filter>src\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\transform\Uniform_Transform.cpp">
+      <Filter>src\transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

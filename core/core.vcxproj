@@ -147,6 +147,11 @@
     <ClInclude Include="include\math\Vector2.h" />
     <ClInclude Include="include\math\Vector3.h" />
     <ClInclude Include="include\math\Vector4.h" />
+    <ClInclude Include="include\transform\Affine_Transform.h" />
+    <ClInclude Include="include\transform\Head_Thansform.h" />
+    <ClInclude Include="include\transform\Orthogonal_Transform.h" />
+    <ClInclude Include="include\transform\ScaleTranslation_Transform.h" />
+    <ClInclude Include="include\transform\Uniform_Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\logger\System_Logger.cpp" />
@@ -159,6 +164,10 @@
     <ClCompile Include="src\math\Vector2.cpp" />
     <ClCompile Include="src\math\Vector3.cpp" />
     <ClCompile Include="src\math\Vector4.cpp" />
+    <ClCompile Include="src\transform\Affine_Transform.cpp" />
+    <ClCompile Include="src\transform\Orthogonal_Transform.cpp" />
+    <ClCompile Include="src\transform\ScaleTranslation_Transform.cpp" />
+    <ClCompile Include="src\transform\Uniform_Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -113,10 +113,10 @@ namespace Core::Math::Matrix4x4_Test {
 
     TEST(Matrix4x4_Test, MatrixMatrix_Multiplication) {
         Matrix4x4 m1{
-            1.0f, 2.0f, 3.0f, 4.0f,
-            5.0f, 6.0f, 7.0f, 8.0f,
-            9.0f, 10.0f, 11.0f, 12.0f,
-            13.0f, 14.0f, 15.0f, 16.0f
+            1.f,0.f,0.f,0.f,
+			0.f,1.f,0.f,0.f,
+			0.f,0.f,1.f,0.f,
+			0.f,0.f,0.f,1.f
         };
         Matrix4x4 m2{ m1 * Matrix4x4::IDENTITY };
         EXPECT_EQ(m2, m1);
