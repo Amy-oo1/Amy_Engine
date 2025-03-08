@@ -156,6 +156,7 @@
     <ClInclude Include="include\meta\generated\Parser_Header.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Reflection_Header.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />

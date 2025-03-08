@@ -31,6 +31,12 @@
     <Filter Include="src\components\camera">
       <UniqueIdentifier>{4db48510-6c33-465c-900e-9164f0d6781c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components\mesh">
+      <UniqueIdentifier>{dc2794d6-57d9-4033-8f05-706b03a10dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\components\mesh">
+      <UniqueIdentifier>{f43119df-750d-47f8-bd0d-16bd65072e52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config\Resource_Configer.h">
@@ -45,6 +51,9 @@
     <ClInclude Include="include\components\camera\Camera_Controller.h">
       <Filter>include\components\camera</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\mesh\Mesh.h">
+      <Filter>include\components\mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -56,8 +65,11 @@
     <ClCompile Include="src\components\camera\Camera.cpp">
       <Filter>src\components\camera</Filter>
     </ClCompile>
-    <ClCompile Include="include\components\camera\Camera_Controller.cpp">
+    <ClCompile Include="src\components\camera\Camera_Controller.cpp">
       <Filter>src\components\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\mesh\Mesh.cpp">
+      <Filter>src\components\mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

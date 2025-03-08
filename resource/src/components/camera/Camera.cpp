@@ -1,2 +1,2 @@
-#include "components/Camera.h"
+#include "components/camera/Camera.h"
 
