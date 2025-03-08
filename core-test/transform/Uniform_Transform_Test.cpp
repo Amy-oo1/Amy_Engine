@@ -63,7 +63,7 @@ namespace Core::Transform::Uniform_Transform_Test {
 		t = st;
 		EXPECT_FLOAT_EQ(t.Get_Scale(), 3.0f);
 		EXPECT_EQ(t.Get_Translation(), Vector3(4.0f, 5.0f, 6.0f));
-		EXPECT_TRUE(t.Get_Rotation().Is_Equivalence_Rotate(Quaternion::IDENTITY)); // ÖØÖÃÐý×ª£¿
+		EXPECT_TRUE(t.Get_Rotation().Is_Equivalence_Rotate(Quaternion::IDENTITY));
 	}
 
 	TEST(Uniform_Transform_Test, Equality_Operator) {

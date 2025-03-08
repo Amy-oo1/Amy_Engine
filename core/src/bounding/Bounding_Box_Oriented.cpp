@@ -2,18 +2,18 @@
 
 namespace NameSpace_Core::NameSpace_Bounding {
 
-	Oriented_Bounding_Box::Oriented_Bounding_Box(const Affine_Tranform& Transform)
+	Oriented_Bounding_Box::Oriented_Bounding_Box(const Affine_Transform& Transform)
 		:m_Transform{ Transform } {
 	}
 
 	Oriented_Bounding_Box::Oriented_Bounding_Box(const AxisAligned_Bounding_Box& Box)
 		:m_Transform{
-			Affine_Tranform::Generate_Scale(Box.Get_Dimensions()).Get_Basis(),
+			Affine_Transform::Generate_Scale(Box.Get_Dimensions()).Get_Basis(),
 			Box.Get_Min()
 		} {
 	}
 
-	Oriented_Bounding_Box& Oriented_Bounding_Box::operator=(const Affine_Tranform& Transform) {
+	Oriented_Bounding_Box& Oriented_Bounding_Box::operator=(const Affine_Transform& Transform) {
 		return (*this) = Oriented_Bounding_Box{ Transform };
 	}
 
@@ -21,7 +21,7 @@ namespace NameSpace_Core::NameSpace_Bounding {
 		return (*this) = Oriented_Bounding_Box{ Box };
 	}
 
-	const Affine_Tranform& Oriented_Bounding_Box::Get_Transform(void) const {
+	const Affine_Transform& Oriented_Bounding_Box::Get_Transform(void) const {
 		return this->m_Transform;
 	}
 
@@ -38,16 +38,16 @@ namespace NameSpace_Core::NameSpace_Bounding {
 
 	const Oriented_Bounding_Box Oriented_Bounding_Box::EMPTY{};
 
-	const Oriented_Bounding_Box operator*(const Affine_Tranform& Transform, const Oriented_Bounding_Box& Box) {
+	const Oriented_Bounding_Box operator*(const Affine_Transform& Transform, const Oriented_Bounding_Box& Box) {
 		return Oriented_Bounding_Box{ Transform * Box.Get_Transform() };
 	}
 
 	const Oriented_Bounding_Box operator*(const Uniform_Transform& Transform, const Oriented_Bounding_Box& Box) {
-		return Oriented_Bounding_Box{ Affine_Tranform{Transform} *Box.Get_Transform() };
+		return Oriented_Bounding_Box{ Affine_Transform{Transform} *Box.Get_Transform() };
 	}
 
 	const Oriented_Bounding_Box operator*(const Uniform_Transform& Transform, const AxisAligned_Bounding_Box& Box) {
-		return Oriented_Bounding_Box{ Affine_Tranform{Transform} *Oriented_Bounding_Box{Box} };
+		return Oriented_Bounding_Box{ Affine_Transform{Transform} *Oriented_Bounding_Box{Box} };
 	}
 
 }// namespace NameSpace_Core::NameSpace_Bounding
