@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{cec2fa08-1783-40ec-9e12-be1716cd4b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{debea38a-0112-49c5-a386-5ade14909661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bin">
+      <UniqueIdentifier>{2cc078a7-cfce-4506-b233-0af031c49236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\cursor">
+      <UniqueIdentifier>{56abf068-e55e-4244-8d44-b276d9d07e94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\cursor">
+      <UniqueIdentifier>{5e0b95aa-343c-46a2-b56c-ecd36585196b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta">
+      <UniqueIdentifier>{15ffda6a-b25f-40b4-a2f0-89080af81837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\meta">
+      <UniqueIdentifier>{eefa0a99-c8e4-43a7-b16e-b30de62bd242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\language_type">
+      <UniqueIdentifier>{f15007f2-0d5d-4f92-ba14-464dd13b2274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\language_type">
+      <UniqueIdentifier>{94369514-3a8e-4bff-80e8-f183dfb8d9a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\generator">
+      <UniqueIdentifier>{b778d234-4138-4961-b857-a781fb1878d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\generator">
+      <UniqueIdentifier>{6f1b9749-3733-4491-8e2b-56bd398c51d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\parser">
+      <UniqueIdentifier>{49b69c52-a0fc-480c-ad59-8ef14df5b5fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\parser">
+      <UniqueIdentifier>{e6e4702e-79fe-4f68-a1ec-25ad1e920d3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="template">
+      <UniqueIdentifier>{6ad91fe0-a6a9-442e-b7b6-6c63bde1ded6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="template\reflection">
+      <UniqueIdentifier>{b5e4288f-a329-41ac-bdc2-9e756d850777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="template\serializer">
+      <UniqueIdentifier>{8977a844-fab7-4ea0-8f40-160be0543ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\template_mangaer">
+      <UniqueIdentifier>{d2623346-502e-47a4-af90-d2847862567f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\template_mangaer">
+      <UniqueIdentifier>{252d896b-af66-43a8-b778-4b9950f6578d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="bin\project_input.txt">
+      <Filter>bin</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\cursor\Cursor.h">
+      <Filter>include\cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cursor\Cursor_Type.h">
+      <Filter>include\cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cursor\Cursor_Utils.h">
+      <Filter>include\cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cursor\TranslationUnit_Cursor.h">
+      <Filter>include\cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\Meta_Info.h">
+      <Filter>include\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\Meta_Utils.h">
+      <Filter>include\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="include\language_type\Class.h">
+      <Filter>include\language_type</Filter>
+    </ClInclude>
+    <ClInclude Include="include\language_type\Field.h">
+      <Filter>include\language_type</Filter>
+    </ClInclude>
+    <ClInclude Include="include\language_type\Language_Type_Config.h">
+      <Filter>include\language_type</Filter>
+    </ClInclude>
+    <ClInclude Include="include\language_type\Language_Utils.h">
+      <Filter>include\language_type</Filter>
+    </ClInclude>
+    <ClInclude Include="include\language_type\Method.h">
+      <Filter>include\language_type</Filter>
+    </ClInclude>
+    <ClInclude Include="include\language_type\Type_Info.h">
+      <Filter>include\language_type</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generator\Generator_Config.h">
+      <Filter>include\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generator\Generator_Interface.h">
+      <Filter>include\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generator\Generator_Reflection.h">
+      <Filter>include\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generator\Generator_Serializer.h">
+      <Filter>include\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="include\generator\Generator_Utils.h">
+      <Filter>include\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="include\parser\Command_Config.h">
+      <Filter>include\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\parser\Meta_Parser.h">
+      <Filter>include\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\template_manager\Template_Manager.h">
+      <Filter>include\template_mangaer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\template_manager\Template_Manager_Utils.h">
+      <Filter>include\template_mangaer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cursor\Cursor.cpp">
+      <Filter>src\cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cursor\Cursor_Type.cpp">
+      <Filter>src\cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cursor\Cursor_Utils.cpp">
+      <Filter>src\cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cursor\TranslationUnit_Cursor.cpp">
+      <Filter>src\cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meta\Meta_Info.cpp">
+      <Filter>src\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="src\meta\Meta_Utils.cpp">
+      <Filter>src\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="src\language_type\Class.cpp">
+      <Filter>src\language_type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\language_type\Field.cpp">
+      <Filter>src\language_type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\language_type\Language_Utils.cpp">
+      <Filter>src\language_type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\language_type\Method.cpp">
+      <Filter>src\language_type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\language_type\Type_Info.cpp">
+      <Filter>src\language_type</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator\Generator_Interface.cpp">
+      <Filter>src\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator\Generator_Reflection.cpp">
+      <Filter>src\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator\Generator_Serializer.cpp">
+      <Filter>src\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator\Generator_Utils.cpp">
+      <Filter>src\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\Main.cpp">
+      <Filter>src\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\Meta_Parser.cpp">
+      <Filter>src\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\template_manager\Template_Manager.cpp">
+      <Filter>src\template_mangaer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\template_manager\Template_Manager_Utils.cpp">
+      <Filter>src\template_mangaer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="template\reflection\Common_Class_Reflection.mustache">
+      <Filter>template\reflection</Filter>
+    </None>
+  </ItemGroup>
+</Project>
