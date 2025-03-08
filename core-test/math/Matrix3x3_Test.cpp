@@ -428,7 +428,7 @@ namespace Core::Math::Matrix3x3 {
 
 		EXPECT_DEATH(Zero / 0.f, ".*");
 
-		EXPECT_DEATH(Zero[4], "0.f");
+		EXPECT_DEATH(Zero[4], ".*");
 		EXPECT_DEATH(Const_Zero[4], ".*");
 
 		EXPECT_DEATH(Zero.Inverse(), ".*");

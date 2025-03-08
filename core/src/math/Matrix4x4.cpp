@@ -157,10 +157,14 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	Vector4& Matrix4x4::operator[](size_t Row_Index) {
+		assert(Row_Index < 4 && "Index Out Of Range");
+
 		return this->m_Mat[Row_Index];
 	}
 
 	const Vector4& Matrix4x4::operator[](size_t Row_Index) const {
+		assert(Row_Index < 4 && "Index Out Of Range");
+
 		return this->m_Mat[Row_Index];
 	}
 

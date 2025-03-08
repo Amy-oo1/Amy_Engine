@@ -154,10 +154,14 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const float& Vector4::operator[](size_t Index) const {
+		assert(Index < 4 && "Index Out Of Range");
+
 		return *(&this->m_X + Index);
 	}
 
 	float& Vector4::operator[](size_t Index) {
+		assert(Index < 4 && "Index Out Of Range");
+
 		return *(&this->m_X + Index);
 	}
 

@@ -159,11 +159,15 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	Vector3& Matrix3x3::operator[](size_t Index) {
+		assert(Index < 3&&"Index Out Of Range");
+
 		return this->m_Mat[Index];
 	}
 
-	const Vector3& Matrix3x3::operator[](size_t Index) const {
-		return this->m_Mat[Index];
+	const Vector3& Matrix3x3::operator[](size_t Row_Index) const {
+		assert(Row_Index < 3 && "Index Out Of Range");
+
+		return this->m_Mat[Row_Index];
 	}
 
 	const float Matrix3x3::Trace(void) const {
