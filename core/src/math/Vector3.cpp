@@ -226,6 +226,8 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Vector3 Vector3::Reflect(const Vector3& Normal) const {
+		assert(Normal.Is_Unit() && "Normal Is Not Is_Unit");
+
 		return *this - Normal * (2.0f * this->Dot_Product(Normal));
 	}
 

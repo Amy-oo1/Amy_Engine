@@ -20,8 +20,8 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	Quaternion::Quaternion(const Radian& Pitch, const Radian& Yaw, const Radian& Roll)
 		:Quaternion{
-			Quaternion{Vector3::UNIT_X,Pitch}*
 			Quaternion{Vector3::UNIT_Y,Yaw} *
+			Quaternion{Vector3::UNIT_X,Pitch}*
 			Quaternion{Vector3::UNIT_Z,Roll}
 		} {
 	}
@@ -47,11 +47,11 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Quaternion Quaternion::operator-(void) const {
-		return Quaternion{ -this->m_Quat.first,this->m_Quat.second };
+		return Quaternion{ -this->m_Quat.first,-this->m_Quat.second };
 	}
 
 	const Quaternion Quaternion::operator~(void) const {
-		return this->Normalize().Conjugation();
+		return this->Conjugation();
 	}
 
 	const bool Quaternion::operator==(const Quaternion& Temp_Quaternion) const {
@@ -64,14 +64,14 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Quaternion Quaternion::operator+(const Quaternion& R_HS) const {
-		return Quaternion{ 
+		return Quaternion{
 			this->m_Quat.first + R_HS.m_Quat.first,
 			this->m_Quat.second + R_HS.m_Quat.second
 		};
 	}
 
 	const Quaternion Quaternion::operator-(const Quaternion& R_HS) const {
-		return Quaternion{ 
+		return Quaternion{
 			this->m_Quat.first - R_HS.m_Quat.first,
 			this->m_Quat.second - R_HS.m_Quat.second
 		};
@@ -79,7 +79,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	const Quaternion Quaternion::operator*(const Quaternion& R_HS) const {
 		float Sa = this->m_Quat.first, Xa = this->m_Quat.second[0], Ya = this->m_Quat.second[1], Za = this->m_Quat.second[2];
-		float Sb = R_HS.m_Quat.first, Xb = this->m_Quat.second[0], Yb = R_HS.m_Quat.second[1], Zb = R_HS.m_Quat.second[2];
+		float Sb = R_HS.m_Quat.first, Xb = R_HS.m_Quat.second[0], Yb = R_HS.m_Quat.second[1], Zb = R_HS.m_Quat.second[2];
 
 		return Quaternion{
 			Sa * Sb - Xa * Xb - Ya * Yb - Za * Zb,
@@ -90,9 +90,9 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Quaternion Quaternion::operator*(float R_HS) const {
-		return Quaternion{ 
+		return Quaternion{
 			this->m_Quat.first * R_HS,
-			this->m_Quat.second * R_HS 
+			this->m_Quat.second * R_HS
 		};
 	}
 
@@ -128,12 +128,16 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const float& Quaternion::operator[](Quaternion::Index Index) const {
-		return static_cast<size_t>(Index) == 0 ? 
-			this->m_Quat.first : 
+		assert(static_cast<size_t>(Index) < 4 && "Index Out Range");
+
+		return static_cast<size_t>(Index) == 0 ?
+			this->m_Quat.first :
 			this->m_Quat.second[static_cast<size_t>(Index) - 1];
 	}
 
 	float& Quaternion::operator[](Quaternion::Index Index) {
+		assert(static_cast<size_t>(Index) < 4 && "Index Out Range");
+
 		return static_cast<size_t>(Index) == 0 ?
 			this->m_Quat.first :
 			this->m_Quat.second[static_cast<size_t>(Index) - 1];
@@ -147,12 +151,12 @@ namespace NameSpace_Core::NameSpace_Math {
 		return this->Dot_Product(*this);
 	}
 
-	const bool Quaternion::Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance) const{
+	const bool Quaternion::Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance) const {
 		return NameSpace_Utilities::Real_Equal(this->Dot_Product(Temp_Quaternion), 1.f, Tolerance);
 	}
 
 	const Quaternion Quaternion::Normalize(void) const {
-		assert(NameSpace_Utilities::Real_Equal(this->Length(), 0.f));
+		assert(!NameSpace_Utilities::Real_Equal(this->Length(), 0.f));
 
 		return Quaternion{ (*this) * (1.f / this->Length()) };
 	}
@@ -169,24 +173,29 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Quaternion Quaternion::Inverse(void) const {
-		assert(NameSpace_Utilities::Real_Equal(this->Length(), 0.f));
+		assert(!NameSpace_Utilities::Real_Equal(this->Length(), 0.f));
 
 		return this->Conjugation() * (1.f / this->Dot_Product(*this));
 	}
 
 	const float Quaternion::Dot_Product(const Quaternion& Temp_Quaternion) const {
-		return 
+		return
 			this->m_Quat.first * Temp_Quaternion.m_Quat.first +
 			this->m_Quat.second.Dot_Product(Temp_Quaternion.m_Quat.second);
 	}
 
 	const Matrix3x3 Quaternion::Get_Rotation_Matrix3x3(void) const {
-		float s = this->Get_S(), x = this->Get_X(), y = this->Get_Y(), z = this->Get_Z();
+		float 
+			s = this->Get_S(), 
+			x = this->Get_X(), 
+			y = this->Get_Y(), 
+			z = this->Get_Z();
 
 		return Matrix3x3{
 			1 - 2 * y * y - 2 * z * z,		2 * x * y - 2 * s * z,			2 * x * z + 2 * s * y,
 			2 * x * y + 2 * s * z,			1 - 2 * x * x - 2 * z * z,		2 * y * z - 2 * s * x,
-			2 * x * z - 2 * s * y,			2 * y * z + 2 * s * x,			1 - 2 * x * x - 2 * y * y };
+			2 * x * z - 2 * s * y,			2 * y * z + 2 * s * x,			1 - 2 * x * x - 2 * y * y 
+		};
 	}
 
 	const Matrix4x4 Quaternion::Get_Rotation_Matrix4x4(void) const {
@@ -201,55 +210,50 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const pair<Vector3, Radian> Quaternion::Get_AxisAngle(void) const {
-		// 计算四元数的虚部（x, y, z）的平方和
-		float Squared_Length = NameSpace_Utilities::Pow(this->Get_X(), 2) +
-			NameSpace_Utilities::Pow(this->Get_Y(), 2) +
-			NameSpace_Utilities::Pow(this->Get_Z(), 2);
+		assert(this->Get_Imaginary_Part().Length_Square() > 0 && "Quaternion Is Not A Rotate Quaternion");
 
-		// 如果虚部的长度大于 0，说明旋转轴有效
-		if (Squared_Length > 0.f) {
-			// 计算虚部的长度的倒数
-			float Inverse_Length = 1.f / NameSpace_Utilities::Sqrt(Squared_Length);
+		float Squared_Length = this->Get_Imaginary_Part().Length_Square();
+		float Inverse_Length = 1.f / this->Get_Imaginary_Part().Length();
 
-			// 计算旋转轴（单位向量）
-			Vector3 Axis = Vector3{
-				this->Get_X() * Inverse_Length,
-				this->Get_Y() * Inverse_Length,
-				this->Get_Z() * Inverse_Length
-			};
+		Vector3 Axis = Vector3{
+			this->Get_X() * Inverse_Length,
+			this->Get_Y() * Inverse_Length,
+			this->Get_Z() * Inverse_Length
+		};
 
-			// 计算旋转角度（弧度）
-			Radian Angle = 2.f * NameSpace_Utilities::Acos(this->Get_S());
+		Radian Angle = 2.f * NameSpace_Utilities::Acos(this->Get_S());
 
-			// 返回轴角表示
-			return std::make_pair(Axis, Angle);
-		}
-		else {
-			// 如果虚部长度为 0，说明旋转轴无效，返回默认值
-			// 默认轴为 (1, 0, 0)，角度为 0
-			return std::make_pair(Vector3{ 1.f, 0.f, 0.f }, Radian{ 0.f });
-		}
+		return std::make_pair(Axis, Angle);
 	}
 
 	const Radian Quaternion::Get_Yaw(void) const {
-		float S = this->m_Quat.first,
-			X = this->m_Quat.second[0], Y = this->m_Quat.second[1], Z = this->m_Quat.second[2];
+		float
+			S = this->m_Quat.first,
+			X = this->m_Quat.second[0],
+			Y = this->m_Quat.second[1],
+			Z = this->m_Quat.second[2];
 
 		return Radian{ NameSpace_Utilities::Atan2(2 * (X * Y + S * Z),1.f - 2 * (Y * Y - Z * Z)) };
 	}
 
 	const Radian Quaternion::Get_Pitch(void) const {
-		float S = this->m_Quat.first,
-			X = this->m_Quat.second[0], Y = this->m_Quat.second[1], Z = this->m_Quat.second[2];
+		float
+			S = this->m_Quat.first,
+			X = this->m_Quat.second[0],
+			Y = this->m_Quat.second[1],
+			Z = this->m_Quat.second[2];
 
 		return Radian{ NameSpace_Utilities::Atan2(2 * (Y * Z + S * X),1.f - 2 * (X * X - Z * Z)) };
 	}
 
 	const Radian Quaternion::Get_Roll(void) const {
-		float S = this->m_Quat.first,
-			X = this->m_Quat.second[0], Y = this->m_Quat.second[1], Z = this->m_Quat.second[2];
+		float
+			S = this->m_Quat.first,
+			X = this->m_Quat.second[0],
+			Y = this->m_Quat.second[1],
+			Z = this->m_Quat.second[2];
 
-		return Radian{ NameSpace_Utilities::Atan2(2 * (X * Z,S * Y),1.f - 2 * (X * X + Y * Y)) };
+		return Radian{ NameSpace_Utilities::Atan2(2 * (X * Z + S * Y),1.f - 2 * (X * X + Y * Y)) };
 	}
 
 	const float Quaternion::Get_S(void) const {
@@ -277,16 +281,18 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const bool Quaternion::Is_NaN(void) const {
-		return 
+		return
 			NameSpace_Utilities::Is_NaN(this->Get_S()) ||
 			this->m_Quat.second.Is_NaN();
 	}
 
 	const Quaternion Quaternion::Generate_By_AxisAngle(const Vector3& Axis, const Radian& Angle) {
+		assert(Axis.Is_Unit() && "Axis Is Not A Unit Vector");
+
 		Radian Half_Angle = 0.5f * Angle;
-		return Quaternion{ 
+		return Quaternion{
 			NameSpace_Utilities::Cos(Half_Angle),
-			Axis * NameSpace_Utilities::Sin(Half_Angle) 
+			Axis * NameSpace_Utilities::Sin(Half_Angle)
 		};
 	}
 
@@ -325,38 +331,6 @@ namespace NameSpace_Core::NameSpace_Math {
 		return Quaternion::Generate_By_RotationMatrix(Rotation_Matrix4x4.Get_LeftTop_Matrix3x3());
 	}
 
-	pair<Vector3, Radian> Quaternion::To_AxisAngle_Representation(void) const {
-
-		Matrix3x3 Temp_Matrix3x3 = this->Get_Rotation_Matrix3x3();
-
-		float 
-			Trace = Temp_Matrix3x3.Trace(),
-			Cosine{ (Trace - 1.0f) * 0.5f }, 
-			Sine{ NameSpace_Utilities::Sqrt(1.0f - Cosine * Cosine) };
-
-		if (Sine == 0.0f) {
-			if (Cosine > 0.0f)
-				return { Vector3{1,0,0},Radian::ZERO };
-
-			else {
-				float Max_Value = NameSpace_Utilities::Max({ Temp_Matrix3x3[0][0],Temp_Matrix3x3[1][1],Temp_Matrix3x3[2][2] });
-				Vector3 Generate_Column_Order{};
-				if (Max_Value == Temp_Matrix3x3[0][0])
-					Generate_Column_Order = Temp_Matrix3x3.Get_Column(0);
-				else if (Max_Value == Temp_Matrix3x3[1][1])
-					Generate_Column_Order = Temp_Matrix3x3.Get_Column(1);
-				else
-					Generate_Column_Order = Temp_Matrix3x3.Get_Column(2);
-				return { Generate_Column_Order.Normalize(),Radian{Math_PI} };
-			}
-		}
-		else {
-			Radian Angle = NameSpace_Utilities::Acos(Cosine);
-			float Inverse = 1.0f / (2.0f * Sine);
-			return { Vector3{Temp_Matrix3x3[2][1] - Temp_Matrix3x3[1][2],Temp_Matrix3x3[0][2] - Temp_Matrix3x3[2][0],Temp_Matrix3x3[1][0] - Temp_Matrix3x3[0][1]} *Inverse,Angle };
-		}
-	}
-
 	const Quaternion Quaternion::Normalized_Lerp(const Quaternion& P, const Quaternion& Q, float T, bool Use_Shortest_Path) {
 		if (P.Dot_Product(Q) < 0.f && Use_Shortest_Path)
 			return (P + T * ((-Q) - P)).Normalize();
@@ -365,6 +339,9 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const Quaternion Quaternion::Spherical_Lerp(const Quaternion& P, const Quaternion& Q, float T, bool Use_Shortest_Path) {
+		assert(!NameSpace_Utilities::Real_Equal(P.Length(), 0.f) && "zero begin");
+		assert(!NameSpace_Utilities::Real_Equal(Q.Length(), 0.f) && "zero end");
+
 		float Cos_V = P.Dot_Product(Q);
 		Quaternion TQ = Q;
 		if (Cos_V < 0.f && Use_Shortest_Path) {

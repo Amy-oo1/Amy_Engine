@@ -25,6 +25,9 @@
     <ClCompile Include="logger\System_Logger_Test.cpp">
       <Filter>logger</Filter>
     </ClCompile>
+    <ClCompile Include="math\Quaternion_Test.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

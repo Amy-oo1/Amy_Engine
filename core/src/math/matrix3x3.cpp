@@ -192,6 +192,12 @@ namespace NameSpace_Core::NameSpace_Math {
 	}
 
 	const float Matrix3x3::Determinant(void) const {
+		float cofactor00 = m_Mat[1][1] * m_Mat[2][2] - m_Mat[1][2] * m_Mat[2][1];
+		float cofactor10 = m_Mat[1][2] * m_Mat[2][0] - m_Mat[1][0] * m_Mat[2][2];
+		float cofactor20 = m_Mat[1][0] * m_Mat[2][1] - m_Mat[1][1] * m_Mat[2][0];
+
+		return  m_Mat[0][0] * cofactor00 + m_Mat[0][1] * cofactor10 + m_Mat[0][2] * cofactor20;
+
 		return m_Mat[0].Dot_Product(m_Mat[1].Cross_Product(m_Mat[2]));
 	}
 

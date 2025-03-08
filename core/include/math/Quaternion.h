@@ -3,10 +3,10 @@
 #include<utility>
 
 #include "math/Constant.h"
-#include "math/Radian.h"
-#include "math/Vector3.h"
 #include "math/Matrix3x3.h"
 #include "math/Matrix4x4.h"
+#include "math/Radian.h"
+#include "math/Vector3.h"
 
 namespace NameSpace_Core::NameSpace_Math {
 
@@ -28,7 +28,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		Quaternion(float S, float X, float Y, float Z);
 		Quaternion(float Real_Part, const Vector3& Imaginary_Part);
 
-		Quaternion(const Vector3&  Axis, const Radian& Angle);
+		Quaternion(const Vector3& Axis, const Radian& Angle);
 		Quaternion(const Radian& Pitch, const Radian& Yaw, const Radian& Roll);
 
 		explicit Quaternion(const Matrix3x3& Rotation_Matrix3x3);
@@ -72,7 +72,7 @@ namespace NameSpace_Core::NameSpace_Math {
 		const float Length(void)const;
 		const float Length_Square(void)const;
 
-		const bool Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance=Math_FLOAT_EPSILON)const;
+		const bool Is_Equivalence_Rotate(const Quaternion& Temp_Quaternion, float Tolerance = Math_FLOAT_EPSILON)const;
 
 		const Quaternion Normalize(void)const;
 		Quaternion& To_Normalize(void);
@@ -108,9 +108,6 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		static const Quaternion Generate_By_RotationMatrix(const Matrix3x3& Rotation_Matrix3x3);
 		static const Quaternion Generate_By_RotationMatrix(const Matrix4x4& Rotation_Matrix4x4);
-
-		pair<Vector3, Radian> To_AxisAngle_Representation(void)const;
-
 
 		static const Quaternion Normalized_Lerp(const Quaternion& P, const Quaternion& Q, float T, bool Use_Shortest_Path);
 		static const Quaternion Spherical_Lerp(const Quaternion& P, const Quaternion& Q, float T, bool Use_Shortest_Path);
