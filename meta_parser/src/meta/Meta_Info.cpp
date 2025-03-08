@@ -18,7 +18,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Meta {
 
 	}
 
-	const bool Meta_Info::Get_Flag(const string& Key) const {
+	bool Meta_Info::Get_Flag(const string& Key) const {
 		return this->m_Properties.find(Key) != this->m_Properties.end();
 	}
 

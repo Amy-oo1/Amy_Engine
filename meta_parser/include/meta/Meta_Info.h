@@ -33,7 +33,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Meta {
 	public:
 		const string Get_Property(const string& Key)const;
 
-		const bool Get_Flag(const string& Key)const;
+		 bool Get_Flag(const string& Key)const;
 
 	private:
 		static const vector<pair<string, string>> Extract_Properties(const Cursor& Temp_Cursor);
