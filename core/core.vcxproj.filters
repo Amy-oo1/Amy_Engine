@@ -159,6 +159,9 @@
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">

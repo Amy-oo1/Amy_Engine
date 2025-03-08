@@ -8,7 +8,7 @@
 #include "meta/Reflection/Reflection_Instance.h"
 #include "meta/Reflection/Reflection_Register.h"
 
-#include "D:/Amy_Engine/resource/include/components/Camera.h"
+#include "D:/Amy_Engine/resource/include/components/camera/Camera.h"
 
 namespace NameSpace_Resource::NameSpace_Components{
 

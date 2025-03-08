@@ -131,12 +131,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\components\Camera.h" />
+    <ClInclude Include="include\components\camera\Camera.h" />
+    <ClInclude Include="include\components\camera\Camera_Controller.h" />
+    <ClCompile Include="include\components\camera\Camera_Controller.cpp" />
     <ClInclude Include="include\config\Resource_Configer.h" />
     <ClInclude Include="include\manage\Resource_Manager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\components\Camera.cpp" />
+    <ClCompile Include="src\components\camera\Camera.cpp" />
     <ClCompile Include="src\config\Resource_Configer.cpp" />
     <ClCompile Include="src\manager\Resource_Manager.cpp" />
   </ItemGroup>
