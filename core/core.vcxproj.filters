@@ -58,6 +58,12 @@
     <Filter Include="include\meta\generated\serializer">
       <UniqueIdentifier>{805e6217-d07b-4e49-88b3-4776dcc3c6fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\color">
+      <UniqueIdentifier>{7f194d3f-c787-49b3-92e2-7f03372eab08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\color">
+      <UniqueIdentifier>{3ed81a37-a355-47e6-9cb5-88704a5719cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\math\Constant.h">
@@ -150,9 +156,6 @@
     <ClInclude Include="include\meta\reflection\Type_Meta.h">
       <Filter>include\meta\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\Parser_Header.h">
-      <Filter>include\meta\generated</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Reflection_Header.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
@@ -164,6 +167,21 @@
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Animation.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Animation_Clip.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Blend_State.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\color\Color.h">
+      <Filter>include\color</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="src\meta\reflection\Type_Meta.cpp">
       <Filter>src\meta\reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\color\Color.cpp">
+      <Filter>src\color</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

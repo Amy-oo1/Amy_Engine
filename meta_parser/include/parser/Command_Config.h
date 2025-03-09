@@ -40,7 +40,6 @@ namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config {
 	constexpr const char* Include_Third_Part_Json{ "-ID:/Amy_Engine/third_party/nlohmann-3.11.3/include" };
 
 	constexpr const char* Includes[]{
-		"-I*",
 		Include_Platform,
 		Include_Core,
 		Include_Resource,

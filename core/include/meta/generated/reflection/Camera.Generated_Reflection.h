@@ -152,28 +152,28 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
-            static const string Get_Field_vertical_offset_Type_Spelling(void){
+            static const string Get_Field_Vertical_Offset_Type_Spelling(void){
                 return string{"float"};
             }
 
-            static const string Get_Field_vertical_offset_Spelling(void){
-                return string{"m_vertical_offset"};
+            static const string Get_Field_Vertical_Offset_Spelling(void){
+                return string{"m_Vertical_Offset"};
             }
 
 
-            static const string Get_Field_vertical_offset_Display_Name(void){
-                return string{"vertical_offset"};
+            static const string Get_Field_Vertical_Offset_Display_Name(void){
+                return string{"Vertical_Offset"};
             }
 
-            static const void *const Get_Filed_vertical_offset_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Camera_First_Persion>(Instance)->m_vertical_offset);
+            static const void *const Get_Filed_Vertical_Offset_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Camera_First_Persion>(Instance)->m_Vertical_Offset);
             }
 
-            static void Set_Field_vertical_offset_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Camera_First_Persion>(Instance)->m_vertical_offset=*static_cast<const float*>(Value);
+            static void Set_Field_Vertical_Offset_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Camera_First_Persion>(Instance)->m_Vertical_Offset=*static_cast<const float*>(Value);
             }
 
-            static const bool Is_Filed_vertical_offset_CPPVector(void){
+            static const bool Is_Filed_Vertical_Offset_CPPVector(void){
                 return  false;
             }
 
@@ -196,14 +196,14 @@ namespace NameSpace_Resource::NameSpace_Components{
                 );
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_vertical_offset"},
+                    string{"m_Vertical_Offset"},
                     make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Camera_First_Persion_Operator::Get_Field_vertical_offset_Type_Spelling,
-                        Reflection_Camera_First_Persion_Operator::Get_Field_vertical_offset_Spelling,
-                        Reflection_Camera_First_Persion_Operator::Get_Field_vertical_offset_Display_Name,
-                        Reflection_Camera_First_Persion_Operator::Get_Filed_vertical_offset_Attribute,
-                        Reflection_Camera_First_Persion_Operator::Set_Field_vertical_offset_Attribute,
-                        Reflection_Camera_First_Persion_Operator::Is_Filed_vertical_offset_CPPVector
+                        Reflection_Camera_First_Persion_Operator::Get_Field_Vertical_Offset_Type_Spelling,
+                        Reflection_Camera_First_Persion_Operator::Get_Field_Vertical_Offset_Spelling,
+                        Reflection_Camera_First_Persion_Operator::Get_Field_Vertical_Offset_Display_Name,
+                        Reflection_Camera_First_Persion_Operator::Get_Filed_Vertical_Offset_Attribute,
+                        Reflection_Camera_First_Persion_Operator::Set_Field_Vertical_Offset_Attribute,
+                        Reflection_Camera_First_Persion_Operator::Is_Filed_Vertical_Offset_CPPVector
                     )
                 );
 
@@ -258,7 +258,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const string Get_Field_Cursor_Yaw_Type_Spelling(void){
-                return string{"NameSpace_Core::NameSpace_Math::Quaternion"};
+                return string{"Quaternion"};
             }
 
             static const string Get_Field_Cursor_Yaw_Spelling(void){
@@ -275,7 +275,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static void Set_Field_Cursor_Yaw_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Camera_Third_Persion>(Instance)->m_Cursor_Yaw=*static_cast<const NameSpace_Core::NameSpace_Math::Quaternion*>(Value);
+                static_pointer_cast<Camera_Third_Persion>(Instance)->m_Cursor_Yaw=*static_cast<const Quaternion*>(Value);
             }
 
             static const bool Is_Filed_Cursor_Yaw_CPPVector(void){
@@ -448,18 +448,18 @@ namespace NameSpace_Resource::NameSpace_Components{
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
 
 
-    class Reflection_Component_Camera_Resource_Operator {
+    class Reflection_Camera_Operator {
     public:
 
-        static const string Get_Class_Component_Camera_Resource_Spelling(void){
-            return string{"Component_Camera_Resource"};
+        static const string Get_Class_Camera_Spelling(void){
+            return string{"Camera"};
         }
 
         static const string Get_Class_Displaying_Name(void){
-            return string{"Component_Camera_Resource"};            
+            return string{"Camera"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Component_Camera_Resource_Reflection_Instance_List(shared_ptr<void> Instance){
+            static const vector<Reflection_Instance<void>> Get_Base_Class_Camera_Reflection_Instance_List(shared_ptr<void> Instance){
                 vector<Reflection_Instance<void>> Table;
 
                     
@@ -502,33 +502,33 @@ namespace NameSpace_Resource::NameSpace_Components{
                 shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
 
                 Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Component_Camera_Resource_Operator::Get_Class_Component_Camera_Resource_Spelling,
-                    Reflection_Component_Camera_Resource_Operator::Get_Class_Displaying_Name
+                    Reflection_Camera_Operator::Get_Class_Camera_Spelling,
+                    Reflection_Camera_Operator::Get_Class_Displaying_Name
                 );
 
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Component_Camera_Resource_Operator::Get_Base_Class_Component_Camera_Resource_Reflection_Instance_List
+                    Reflection_Camera_Operator::Get_Base_Class_Camera_Reflection_Instance_List
                 );
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Camera"},
                     make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Component_Camera_Resource_Operator::Get_Field_Camera_Type_Spelling,
-                        Reflection_Component_Camera_Resource_Operator::Get_Field_Camera_Spelling,
-                        Reflection_Component_Camera_Resource_Operator::Get_Field_Camera_Display_Name,
-                        Reflection_Component_Camera_Resource_Operator::Get_Filed_Camera_Attribute,
-                        Reflection_Component_Camera_Resource_Operator::Set_Field_Camera_Attribute,
-                        Reflection_Component_Camera_Resource_Operator::Is_Filed_Camera_CPPVector
+                        Reflection_Camera_Operator::Get_Field_Camera_Type_Spelling,
+                        Reflection_Camera_Operator::Get_Field_Camera_Spelling,
+                        Reflection_Camera_Operator::Get_Field_Camera_Display_Name,
+                        Reflection_Camera_Operator::Get_Filed_Camera_Attribute,
+                        Reflection_Camera_Operator::Set_Field_Camera_Attribute,
+                        Reflection_Camera_Operator::Is_Filed_Camera_CPPVector
                     )
                 );
 
                 
 
                 
-            Reflection_Register::Get_Instance().Register_Class(string{"Component_Camera_Resource"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Component_Camera_Resource"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Component_Camera_Resource"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Component_Camera_Resource"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
+            Reflection_Register::Get_Instance().Register_Class(string{"Camera"},Temp_Class_Func_Tuple);
+            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Camera"},Temp_Class_Base_Class_Tuple);
+            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Camera"},Temp_Class_Field_Func_Tuple_Map);
+            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Camera"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
         }
 
     };

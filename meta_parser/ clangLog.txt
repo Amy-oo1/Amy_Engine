@@ -116,7 +116,8 @@ Parser_Header.o: \
   D:\Amy_Engine\core\include\math\Vector4.h \
   D:\Amy_Engine\resource\include\components\camera\Camera_Controller.h \
   D:\Amy_Engine\core\include\math\Vector2.h \
-  D:\Amy_Engine\resource\include\components\mesh\mesh.h \
+  D:\Amy_Engine\resource\include\components\animation\Skeleton_Node.h \
+  D:\Amy_Engine\resource\include\components\animation\Blend_State.h \
   D:\Amy_Engine\platform\include\file\File_System.h \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\filesystem \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\algorithm \
@@ -158,6 +159,7 @@ Parser_Header.o: \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\locale \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xlocbuf \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xlocmes \
+  D:\Amy_Engine\resource\include\components\animation\Animation_Clip.h \
   D:\Amy_Engine\core\include\transform\Affine_Transform.h \
   D:\Amy_Engine\core\include\math\Head_Math.h \
   D:\Amy_Engine\core\include\math\Third_Party.h \
@@ -167,4 +169,6 @@ Parser_Header.o: \
   D:\Amy_Engine\core\include\math\Utilities.h \
   D:\Amy_Engine\core\include\transform\Orthogonal_Transform.h \
   D:\Amy_Engine\core\include\transform\Uniform_Transform.h \
-  D:\Amy_Engine\core\include\transform\ScaleTranslation_Transform.h
+  D:\Amy_Engine\core\include\transform\ScaleTranslation_Transform.h \
+  D:\Amy_Engine\resource\include\components\animation\Animation.h \
+  D:\Amy_Engine\resource\include\components\mesh\mesh.h

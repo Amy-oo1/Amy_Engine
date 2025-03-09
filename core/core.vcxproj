@@ -139,6 +139,7 @@
     <ClInclude Include="include\bounding\Bounding_Sphere.h" />
     <ClInclude Include="include\bounding\Head_Bounding.h" />
     <ClInclude Include="include\bounding\Third_Party.h" />
+    <ClInclude Include="include\color\Color.h" />
     <ClInclude Include="include\logger\System_Logger.h" />
     <ClInclude Include="include\math\Constant.h" />
     <ClInclude Include="include\math\Degree.h" />
@@ -153,11 +154,14 @@
     <ClInclude Include="include\math\Vector2.h" />
     <ClInclude Include="include\math\Vector3.h" />
     <ClInclude Include="include\math\Vector4.h" />
-    <ClInclude Include="include\meta\generated\Parser_Header.h" />
+    <ClInclude Include="include\meta\generated\reflection\Animation.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Animation_Clip.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Blend_State.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Reflection_Header.h" />
+    <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Register.h" />
@@ -174,6 +178,7 @@
     <ClCompile Include="src\bounding\Bounding_Box_Oriented.cpp" />
     <ClCompile Include="src\bounding\Bounding_Plane.cpp" />
     <ClCompile Include="src\bounding\Bounding_Sphere.cpp" />
+    <ClCompile Include="src\color\Color.cpp" />
     <ClCompile Include="src\logger\System_Logger.cpp" />
     <ClCompile Include="src\math\Degree.cpp" />
     <ClCompile Include="src\math\Matrix3x3.cpp" />
