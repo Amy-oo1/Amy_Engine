@@ -481,11 +481,11 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const void *const Get_Filed_Camera_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Component_Camera_Resource>(Instance)->m_Camera);
+                return static_cast<void*>(&static_pointer_cast<Camera>(Instance)->m_Camera);
             }
 
             static void Set_Field_Camera_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Component_Camera_Resource>(Instance)->m_Camera=*static_cast<const Reflection_Instance<Camera_Base>*>(Value);
+                static_pointer_cast<Camera>(Instance)->m_Camera=*static_cast<const Reflection_Instance<Camera_Base>*>(Value);
             }
 
             static const bool Is_Filed_Camera_CPPVector(void){

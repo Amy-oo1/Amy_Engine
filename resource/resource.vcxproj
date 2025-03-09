@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +123,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,16 +133,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\components\animation\Animation.h" />
+    <ClInclude Include="include\components\animation\Animation_Clip.h" />
+    <ClInclude Include="include\components\animation\Blend_State.h" />
+    <ClInclude Include="include\components\animation\Skeleton_Node.h" />
     <ClInclude Include="include\components\camera\Camera.h" />
     <ClInclude Include="include\components\camera\Camera_Controller.h" />
+    <ClInclude Include="include\components\material\Materia.h" />
     <ClInclude Include="include\components\mesh\Mesh.h" />
+    <ClInclude Include="include\components\mesh\Mesh_Data.h" />
     <ClInclude Include="include\config\Resource_Configer.h" />
     <ClInclude Include="include\manage\Resource_Manager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components\animation\Animation.cpp" />
+    <ClCompile Include="src\components\animation\Animation_Clip.cpp" />
+    <ClCompile Include="src\components\animation\Blend_State.cpp" />
+    <ClCompile Include="src\components\animation\Skeleton_Node.cpp" />
     <ClCompile Include="src\components\camera\Camera.cpp" />
     <ClCompile Include="src\components\camera\Camera_Controller.cpp" />
+    <ClCompile Include="src\components\material\Materia.cpp" />
     <ClCompile Include="src\components\mesh\Mesh.cpp" />
+    <ClCompile Include="src\components\mesh\Mesh_Data.cpp" />
     <ClCompile Include="src\config\Resource_Configer.cpp" />
     <ClCompile Include="src\manager\Resource_Manager.cpp" />
   </ItemGroup>

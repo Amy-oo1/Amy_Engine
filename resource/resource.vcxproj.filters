@@ -37,6 +37,18 @@
     <Filter Include="include\components\mesh">
       <UniqueIdentifier>{f43119df-750d-47f8-bd0d-16bd65072e52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components\animation">
+      <UniqueIdentifier>{2e58af63-5d5a-411c-9f38-a610d42de1eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\components\animation">
+      <UniqueIdentifier>{65a28138-d63b-4e4d-825f-cfda722aa0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\components\material">
+      <UniqueIdentifier>{d72d49b5-9328-4902-8705-3c727f6f0a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components\material">
+      <UniqueIdentifier>{be668113-7c0d-4807-a19d-d226764032fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config\Resource_Configer.h">
@@ -54,6 +66,24 @@
     <ClInclude Include="include\components\mesh\Mesh.h">
       <Filter>include\components\mesh</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\mesh\Mesh_Data.h">
+      <Filter>include\components\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\animation\Animation.h">
+      <Filter>include\components\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\material\Materia.h">
+      <Filter>include\components\material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\animation\Animation_Clip.h">
+      <Filter>include\components\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\animation\Blend_State.h">
+      <Filter>include\components\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\animation\Skeleton_Node.h">
+      <Filter>include\components\animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -70,6 +100,24 @@
     </ClCompile>
     <ClCompile Include="src\components\mesh\Mesh.cpp">
       <Filter>src\components\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\mesh\Mesh_Data.cpp">
+      <Filter>src\components\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\animation\Animation.cpp">
+      <Filter>src\components\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\material\Materia.cpp">
+      <Filter>src\components\material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\animation\Animation_Clip.cpp">
+      <Filter>src\components\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\animation\Blend_State.cpp">
+      <Filter>src\components\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\animation\Skeleton_Node.cpp">
+      <Filter>src\components\animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

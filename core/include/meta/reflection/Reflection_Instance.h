@@ -2,6 +2,7 @@
 
 #include<memory>
 #include<utility>
+#include<string>
 
 #include "meta/Reflection/Type_Meta.h"
 
@@ -11,6 +12,9 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 
 	template<typename Type>
 	class Reflection_Instance final {
+		template<typename U>
+		friend class Reflection_Instance;
+
 	public:
 		Reflection_Instance(void) = default;
 
@@ -32,6 +36,14 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		~Reflection_Instance(void) = default;
 
 	public:
+		template<typename U, typename = std::enable_if_t<std::is_base_of_v<U, Type>>>
+		operator Reflection_Instance<U>(void) const {
+			Reflection_Instance<U> Instance{};
+			Instance.Meta_Type = this->Meta_Type;
+			Instance.Meta_Instance = std::static_pointer_cast<U>(this->Meta_Instance);
+			return Instance;
+		}
+
 		bool operator==(const Reflection_Instance& Other) const {
 			return *this->m_Instance == *Other.m_Instance;
 		}
@@ -87,3 +99,17 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 	};
 
 }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+#define CONVERT_UP(NameSpace,Base,Sun)\
+namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {\
+	using NameSpace::Base;\
+	using NameSpace::Sun;\
+	template<>\
+	template<>\
+	Reflection_Instance<Sun>::operator Reflection_Instance<Base>() const {\
+		return Reflection_Instance<Base>{\
+			std::string{#Sun},\
+			std::static_pointer_cast<Base>(this->m_Instance)\
+		}; \
+	}\
+};
