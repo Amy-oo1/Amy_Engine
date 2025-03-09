@@ -96,7 +96,7 @@
     <ClInclude Include="include\components\animation\Skeleton_Node.h">
       <Filter>include\components\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\components\emitter\Particle​.h">
+    <ClInclude Include="include\components\emitter\particle​.h">
       <Filter>include\components\emitter</Filter>
     </ClInclude>
     <ClInclude Include="include\components\motor\Basic_Shape.h">
