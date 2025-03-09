@@ -143,6 +143,7 @@
     <ClInclude Include="include\components\material\Materia.h" />
     <ClInclude Include="include\components\mesh\Mesh.h" />
     <ClInclude Include="include\components\mesh\Mesh_Data.h" />
+    <ClInclude Include="include\components\motor\Motor.h" />
     <ClInclude Include="include\components\rigid_body\Basic_Shape.h" />
     <ClInclude Include="include\components\rigid_body\Rigid_Body.h" />
     <ClInclude Include="include\config\Resource_Configer.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="src\components\material\Particle​.cpp" />
     <ClCompile Include="src\components\mesh\Mesh.cpp" />
     <ClCompile Include="src\components\mesh\Mesh_Data.cpp" />
+    <ClCompile Include="src\components\motor\Motor.cpp" />
     <ClCompile Include="src\components\rigid_body\Basic_Shape.cpp" />
     <ClCompile Include="src\components\rigid_body\Rigid_Body.cpp" />
     <ClCompile Include="src\config\Resource_Configer.cpp" />

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "meta/reflection/Reflection_Macro.h"
-
+#include<cstdint>
 #include<vector>
+
+#include "meta/reflection/Reflection_Macro.h"
 
 #include "transform/Orthogonal_Transform.h"
 #include  "bounding/Bounding_Box_AxisAligned.h"
@@ -17,7 +18,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 	using NameSpace_Core::NameSpace_Bounding::AxisAligned_Bounding_Box;
 	using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-	enum class Rigid_Body_Type {
+	enum class Rigid_Body_Type :uint8_t {
 		BOX,
 		SPHERE,
 		CAPSULE,

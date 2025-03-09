@@ -1,4 +1,5 @@
 #pragma once
+#include "D:/Amy_Engine/core/include/meta/generated/erializer/Motor.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Animation.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Skeleton_Node.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/mesh.Generated_Serializer.h"

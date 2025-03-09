@@ -111,6 +111,9 @@
     <ClInclude Include="include\components\rigid_body\Basic_Shape.h">
       <Filter>include\components\rigid_body</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\motor\Motor.h">
+      <Filter>include\components\motor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="src\components\rigid_body\Basic_Shape.cpp">
       <Filter>src\components\rigid_body</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\motor\Motor.cpp">
+      <Filter>src\components\motor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

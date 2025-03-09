@@ -163,6 +163,7 @@
     <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Reflection_Header.h" />
     <ClInclude Include="include\meta\generated\reflection\Rigid_Body.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h" />
