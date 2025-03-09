@@ -192,6 +192,9 @@
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Rigid_Body.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">

@@ -7,6 +7,7 @@
 #include "D:/Amy_Engine/resource/include/components/animation/Animation.h"
 #include "D:/Amy_Engine/resource/include/components/emitter/particle.h"
 #include "D:/Amy_Engine/resource/include/components/material/Materia.h"
-#include "D:/Amy_Engine/resource/include/components/motor/Basic_Shape.h"
+#include "D:/Amy_Engine/resource/include/components/rigid_body/Basic_Shape.h"
+#include "D:/Amy_Engine/resource/include/components/rigid_body/Rigid_Body.h"
 #include "D:/Amy_Engine/resource/include/components/mesh/mesh.h"
 #include "D:/Amy_Engine/resource/include/components/mesh/Mesh_Data.h"

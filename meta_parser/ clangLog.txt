@@ -173,6 +173,8 @@ Parser_Header.o: \
   D:\Amy_Engine\resource\include\components\animation\Animation.h \
   D:\Amy_Engine\resource\include\components\emitter\particle.h \
   D:\Amy_Engine\resource\include\components\material\Materia.h \
-  D:\Amy_Engine\resource\include\components\motor\Basic_Shape.h \
+  D:\Amy_Engine\resource\include\components\rigid_body\Basic_Shape.h \
+  D:\Amy_Engine\resource\include\components\rigid_body\Rigid_Body.h \
+  D:\Amy_Engine\core\include\bounding\Bounding_Box_AxisAligned.h \
   D:\Amy_Engine\resource\include\components\mesh\mesh.h \
   D:\Amy_Engine\resource\include\components\mesh\Mesh_Data.h

@@ -8,7 +8,7 @@
 #include "meta/Reflection/Reflection_Instance.h"
 #include "meta/Reflection/Reflection_Register.h"
 
-#include "D:/Amy_Engine/resource/include/components/motor/Basic_Shape.h"
+#include "D:/Amy_Engine/resource/include/components/rigid_body/Basic_Shape.h"
 
 namespace NameSpace_Resource::NameSpace_Components{
 

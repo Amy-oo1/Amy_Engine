@@ -61,6 +61,12 @@
     <Filter Include="src\components\motor">
       <UniqueIdentifier>{0f4d66ac-ba48-4f62-8567-7812710b13c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components\rigid_body">
+      <UniqueIdentifier>{24195fc5-0aea-4ac0-982d-ce2002513cfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\components\rigid_body">
+      <UniqueIdentifier>{aba06f12-db73-443c-9099-638306b4ac15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config\Resource_Configer.h">
@@ -99,8 +105,11 @@
     <ClInclude Include="include\components\emitter\particle​.h">
       <Filter>include\components\emitter</Filter>
     </ClInclude>
-    <ClInclude Include="include\components\motor\Basic_Shape.h">
-      <Filter>include\components\motor</Filter>
+    <ClInclude Include="include\components\rigid_body\Rigid_Body.h">
+      <Filter>include\components\rigid_body</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\rigid_body\Basic_Shape.h">
+      <Filter>include\components\rigid_body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,8 +149,11 @@
     <ClCompile Include="src\components\material\Particle​.cpp">
       <Filter>src\components\emitter</Filter>
     </ClCompile>
-    <ClCompile Include="src\components\motor\Basic_Shape.cpp">
-      <Filter>src\components\motor</Filter>
+    <ClCompile Include="src\components\rigid_body\Rigid_Body.cpp">
+      <Filter>src\components\rigid_body</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\rigid_body\Basic_Shape.cpp">
+      <Filter>src\components\rigid_body</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
