@@ -55,6 +55,12 @@
     <Filter Include="src\components\emitter">
       <UniqueIdentifier>{598e98cd-0850-4e62-9c3c-e862fca3efd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\components\motor">
+      <UniqueIdentifier>{685fc8e7-a6a0-44d4-8f40-903dbdc41642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components\motor">
+      <UniqueIdentifier>{0f4d66ac-ba48-4f62-8567-7812710b13c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config\Resource_Configer.h">
@@ -93,6 +99,9 @@
     <ClInclude Include="include\components\emitter\Particle​.h">
       <Filter>include\components\emitter</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\motor\Basic_Shape.h">
+      <Filter>include\components\motor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -130,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="src\components\material\Particle​.cpp">
       <Filter>src\components\emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\motor\Basic_Shape.cpp">
+      <Filter>src\components\motor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

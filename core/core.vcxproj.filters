@@ -183,6 +183,15 @@
     <ClInclude Include="include\color\Color.h">
       <Filter>include\color</Filter>
     </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Basic_Shape.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">
