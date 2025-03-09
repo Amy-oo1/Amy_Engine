@@ -139,6 +139,7 @@
     <ClInclude Include="include\components\animation\Skeleton_Node.h" />
     <ClInclude Include="include\components\camera\Camera.h" />
     <ClInclude Include="include\components\camera\Camera_Controller.h" />
+    <ClInclude Include="include\components\emitter\Particle​.h" />
     <ClInclude Include="include\components\material\Materia.h" />
     <ClInclude Include="include\components\mesh\Mesh.h" />
     <ClInclude Include="include\components\mesh\Mesh_Data.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\components\camera\Camera.cpp" />
     <ClCompile Include="src\components\camera\Camera_Controller.cpp" />
     <ClCompile Include="src\components\material\Materia.cpp" />
+    <ClCompile Include="src\components\material\Particle​.cpp" />
     <ClCompile Include="src\components\mesh\Mesh.cpp" />
     <ClCompile Include="src\components\mesh\Mesh_Data.cpp" />
     <ClCompile Include="src\config\Resource_Configer.cpp" />
