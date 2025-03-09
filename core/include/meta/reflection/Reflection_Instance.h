@@ -29,7 +29,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		}
 
 		Reflection_Instance(const string& Class_pelling, shared_ptr<Type> Temp_Stance) :
-			m_Type_Meta{ Class_pelling },
+			m_Type_Meta{ std::make_shared<Type_Meta>(Class_pelling) },
 			m_Instance{ std::move(Temp_Stance) } {
 		}
 
