@@ -10,4 +10,6 @@
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Basic_Shape.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Materia.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Rigid_Body.Generated_Serializer.h"
+#include "D:/Amy_Engine/core/include/meta/generated/erializer/Skeleton_Mask.Generated_Serializer.h"
+#include "D:/Amy_Engine/core/include/meta/generated/erializer/Skeleton_Data.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Mesh_Data.Generated_Serializer.h"

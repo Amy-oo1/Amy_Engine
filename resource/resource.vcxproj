@@ -146,6 +146,8 @@
     <ClInclude Include="include\components\motor\Motor.h" />
     <ClInclude Include="include\components\rigid_body\Basic_Shape.h" />
     <ClInclude Include="include\components\rigid_body\Rigid_Body.h" />
+    <ClInclude Include="include\components\skeleton\Skeleton_Data.h" />
+    <ClInclude Include="include\components\skeleton\Skeleton_Mask.h" />
     <ClInclude Include="include\config\Resource_Configer.h" />
     <ClInclude Include="include\manage\Resource_Manager.h" />
   </ItemGroup>
@@ -163,6 +165,8 @@
     <ClCompile Include="src\components\motor\Motor.cpp" />
     <ClCompile Include="src\components\rigid_body\Basic_Shape.cpp" />
     <ClCompile Include="src\components\rigid_body\Rigid_Body.cpp" />
+    <ClCompile Include="src\components\skeleton\Skeleton_Data.cpp" />
+    <ClCompile Include="src\components\skeleton\Skeleton_Mask.cpp" />
     <ClCompile Include="src\config\Resource_Configer.cpp" />
     <ClCompile Include="src\manager\Resource_Manager.cpp" />
   </ItemGroup>

@@ -10,5 +10,7 @@
 #include "D:/Amy_Engine/resource/include/components/rigid_body/Basic_Shape.h"
 #include "D:/Amy_Engine/resource/include/components/rigid_body/Rigid_Body.h"
 #include "D:/Amy_Engine/resource/include/components/motor/Motor.h"
+#include "D:/Amy_Engine/resource/include/components/skeleton/Skeleton_Mask.h"
+#include "D:/Amy_Engine/resource/include/components/skeleton/Skeleton_Data.h"
 #include "D:/Amy_Engine/resource/include/components/mesh/mesh.h"
 #include "D:/Amy_Engine/resource/include/components/mesh/Mesh_Data.h"

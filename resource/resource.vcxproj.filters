@@ -67,6 +67,12 @@
     <Filter Include="include\components\rigid_body">
       <UniqueIdentifier>{aba06f12-db73-443c-9099-638306b4ac15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\components\skeleton">
+      <UniqueIdentifier>{30c591fc-9632-438d-8829-911e20be5234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components\skeleton">
+      <UniqueIdentifier>{cdcac76f-c568-4d60-977f-61f2cac2df47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config\Resource_Configer.h">
@@ -114,6 +120,12 @@
     <ClInclude Include="include\components\motor\Motor.h">
       <Filter>include\components\motor</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\skeleton\Skeleton_Mask.h">
+      <Filter>include\components\skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\skeleton\Skeleton_Data.h">
+      <Filter>include\components\skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -160,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="src\components\motor\Motor.cpp">
       <Filter>src\components\motor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\skeleton\Skeleton_Mask.cpp">
+      <Filter>src\components\skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\skeleton\Skeleton_Data.cpp">
+      <Filter>src\components\skeleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
