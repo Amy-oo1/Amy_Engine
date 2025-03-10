@@ -162,6 +162,7 @@
     <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Particle.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Level.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h" />
@@ -208,6 +209,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\platform\platform.vcxproj">
+      <Project>{9466d5fb-0dc5-4c4a-b88a-7db410166c13}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

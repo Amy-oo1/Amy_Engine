@@ -184,4 +184,5 @@ Parser_Header.o: \
   D:\Amy_Engine\resource\include\global\Global_Particle.h \
   D:\Amy_Engine\resource\include\global\Global_Rendering.h \
   D:\Amy_Engine\core\include\color\Color.h \
-  D:\Amy_Engine\resource\include\common\Object.h
+  D:\Amy_Engine\resource\include\common\Object.h \
+  D:\Amy_Engine\resource\include\common\Level.h
