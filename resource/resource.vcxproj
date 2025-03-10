@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="include\common\Level.h" />
     <ClInclude Include="include\common\Object.h" />
+    <ClInclude Include="include\common\World.h" />
     <ClInclude Include="include\components\animation\Animation.h" />
     <ClInclude Include="include\components\animation\Animation_Clip.h" />
     <ClInclude Include="include\components\animation\Blend_State.h" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="src\common\Level.cpp" />
     <ClCompile Include="src\common\Object.cpp" />
+    <ClCompile Include="src\common\World.cpp" />
     <ClCompile Include="src\components\animation\Animation.cpp" />
     <ClCompile Include="src\components\animation\Animation_Clip.cpp" />
     <ClCompile Include="src\components\animation\Blend_State.cpp" />

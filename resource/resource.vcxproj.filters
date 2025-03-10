@@ -150,6 +150,9 @@
     <ClInclude Include="include\common\Level.h">
       <Filter>include\common</Filter>
     </ClInclude>
+    <ClInclude Include="include\common\World.h">
+      <Filter>include\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -213,6 +216,9 @@
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="src\common\Level.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\World.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,6 +12,7 @@
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Object.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Rigid_Body.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Skeleton_Mask.Generated_Reflection.h"
+#include "D:/Amy_Engine/core/include/meta/generated/reflection/World.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Skeleton_Data.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Mesh_Data.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Global_Particle.Generated_Reflection.h"

@@ -172,6 +172,7 @@
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Data.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Register.h" />

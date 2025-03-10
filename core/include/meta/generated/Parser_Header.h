@@ -18,3 +18,4 @@
 #include "D:/Amy_Engine/resource/include/global/Global_Rendering.h"
 #include "D:/Amy_Engine/resource/include/common/Object.h"
 #include "D:/Amy_Engine/resource/include/common/Level.h"
+#include "D:/Amy_Engine/resource/include/common/World.h"
