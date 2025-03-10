@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +123,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,10 +144,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\animation\Skeleton.h" />
+    <ClInclude Include="include\animation\Utilities.h" />
     <ClInclude Include="include\animation\Bone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp" />
+    <ClCompile Include="src\animation\Skeleton.cpp" />
+    <ClCompile Include="src\animation\Utilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

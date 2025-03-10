@@ -139,7 +139,6 @@
     <ClInclude Include="include\components\animation\Animation.h" />
     <ClInclude Include="include\components\animation\Animation_Clip.h" />
     <ClInclude Include="include\components\animation\Blend_State.h" />
-    <ClInclude Include="include\components\animation\Skeleton_Node.h" />
     <ClInclude Include="include\components\camera\Camera.h" />
     <ClInclude Include="include\components\camera\Camera_Controller.h" />
     <ClInclude Include="include\components\emitter\particle​.h" />
@@ -151,6 +150,7 @@
     <ClInclude Include="include\components\rigid_body\Rigid_Body.h" />
     <ClInclude Include="include\components\skeleton\Skeleton_Data.h" />
     <ClInclude Include="include\components\skeleton\Skeleton_Mask.h" />
+    <ClInclude Include="include\components\skeleton\Skeleton_Node.h" />
     <ClInclude Include="include\config\Resource_Configer.h" />
     <ClInclude Include="include\global\Global_Particle.h" />
     <ClInclude Include="include\global\Global_Rendering.h" />
@@ -163,7 +163,6 @@
     <ClCompile Include="src\components\animation\Animation.cpp" />
     <ClCompile Include="src\components\animation\Animation_Clip.cpp" />
     <ClCompile Include="src\components\animation\Blend_State.cpp" />
-    <ClCompile Include="src\components\animation\Skeleton_Node.cpp" />
     <ClCompile Include="src\components\camera\Camera.cpp" />
     <ClCompile Include="src\components\camera\Camera_Controller.cpp" />
     <ClCompile Include="src\components\material\Materia.cpp" />
@@ -175,6 +174,7 @@
     <ClCompile Include="src\components\rigid_body\Rigid_Body.cpp" />
     <ClCompile Include="src\components\skeleton\Skeleton_Data.cpp" />
     <ClCompile Include="src\components\skeleton\Skeleton_Mask.cpp" />
+    <ClCompile Include="src\components\skeleton\Skeleton_Node.cpp" />
     <ClCompile Include="src\config\Resource_Configer.cpp" />
     <ClCompile Include="src\global\Global_Particle.cpp" />
     <ClCompile Include="src\global\Global_Rendering.cpp" />

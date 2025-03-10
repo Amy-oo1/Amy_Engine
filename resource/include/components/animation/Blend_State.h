@@ -7,7 +7,7 @@
 #include "meta/reflection/Reflection_Macro.h"
 
 #include "file/File_System.h"
-#include "components/animation/Skeleton_Node.h"
+#include "components/skeleton/Skeleton_Node.h"
 #include "components/animation/Animation_Clip.h"
 
 namespace NameSpace_Resource::NameSpace_Components {

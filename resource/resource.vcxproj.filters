@@ -117,9 +117,6 @@
     <ClInclude Include="include\components\animation\Blend_State.h">
       <Filter>include\components\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\components\animation\Skeleton_Node.h">
-      <Filter>include\components\animation</Filter>
-    </ClInclude>
     <ClInclude Include="include\components\emitter\particle​.h">
       <Filter>include\components\emitter</Filter>
     </ClInclude>
@@ -153,6 +150,9 @@
     <ClInclude Include="include\common\World.h">
       <Filter>include\common</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\skeleton\Skeleton_Node.h">
+      <Filter>include\components\skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -183,9 +183,6 @@
       <Filter>src\components\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\components\animation\Blend_State.cpp">
-      <Filter>src\components\animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\animation\Skeleton_Node.cpp">
       <Filter>src\components\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\components\material\Particle​.cpp">
@@ -220,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="src\common\World.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\skeleton\Skeleton_Node.cpp">
+      <Filter>src\components\skeleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

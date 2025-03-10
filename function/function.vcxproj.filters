@@ -18,9 +18,21 @@
     <ClInclude Include="include\animation\Bone.h">
       <Filter>include\animation</Filter>
     </ClInclude>
+    <ClInclude Include="include\animation\Utilities.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\animation\Skeleton.h">
+      <Filter>include\animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\Utilities.cpp">
+      <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\Skeleton.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
   </ItemGroup>
