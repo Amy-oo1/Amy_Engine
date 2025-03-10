@@ -47,14 +47,14 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	};
 
-	REFLECTION_HEADER(Animation);
-	REFLECTION_CLASS(Animation, All) final
+	REFLECTION_HEADER(Animation_Component_Res);
+	REFLECTION_CLASS(Animation_Component_Res, All) final
 	{
-		REFLECTION_BODY(Animation);
+		REFLECTION_BODY(Animation_Component_Res);
 	public:
-		Animation(void) = default;
+		Animation_Component_Res(void) = default;
 
-		~Animation(void) = default;
+		~Animation_Component_Res(void) = default;
 
 	private:
 		path m_skeleton_File_Path{};
