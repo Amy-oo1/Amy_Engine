@@ -79,6 +79,12 @@
     <Filter Include="src\global">
       <UniqueIdentifier>{c3fd5755-0bc1-497a-98e6-58511ffe72ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\common">
+      <UniqueIdentifier>{e99228b1-f4c6-4fef-b751-825988e2e626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{e87ef065-f84e-4319-bed4-3e48412eed3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\config\Resource_Configer.h">
@@ -138,6 +144,9 @@
     <ClInclude Include="include\global\Global_Rendering.h">
       <Filter>include\global</Filter>
     </ClInclude>
+    <ClInclude Include="include\common\Object.h">
+      <Filter>include\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config\Resource_Configer.cpp">
@@ -196,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="src\global\Global_Rendering.cpp">
       <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Object.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
