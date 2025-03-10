@@ -156,9 +156,6 @@
     <ClInclude Include="include\meta\reflection\Type_Meta.h">
       <Filter>include\meta\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Reflection_Header.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
@@ -202,6 +199,12 @@
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Global_Particle.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
   </ItemGroup>
