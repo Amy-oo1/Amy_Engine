@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1e8c58f6-ebe8-44f5-aa04-2026784a70f2}</ProjectGuid>
-    <RootNamespace>resource</RootNamespace>
+    <ProjectGuid>{1b1acc18-9bf2-4fce-93f1-6509e51ce864}</ProjectGuid>
+    <RootNamespace>function</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -105,8 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,8 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,60 +131,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\common\Level.h" />
-    <ClInclude Include="include\common\Object.h" />
-    <ClInclude Include="include\common\World.h" />
-    <ClInclude Include="include\components\animation\Animation.h" />
-    <ClInclude Include="include\components\animation\Animation_Clip.h" />
-    <ClInclude Include="include\components\animation\Blend_State.h" />
-    <ClInclude Include="include\components\animation\Skeleton_Node.h" />
-    <ClInclude Include="include\components\camera\Camera.h" />
-    <ClInclude Include="include\components\camera\Camera_Controller.h" />
-    <ClInclude Include="include\components\emitter\particle​.h" />
-    <ClInclude Include="include\components\material\Materia.h" />
-    <ClInclude Include="include\components\mesh\Mesh.h" />
-    <ClInclude Include="include\components\mesh\Mesh_Data.h" />
-    <ClInclude Include="include\components\motor\Motor.h" />
-    <ClInclude Include="include\components\rigid_body\Basic_Shape.h" />
-    <ClInclude Include="include\components\rigid_body\Rigid_Body.h" />
-    <ClInclude Include="include\components\skeleton\Skeleton_Data.h" />
-    <ClInclude Include="include\components\skeleton\Skeleton_Mask.h" />
-    <ClInclude Include="include\config\Resource_Configer.h" />
-    <ClInclude Include="include\global\Global_Particle.h" />
-    <ClInclude Include="include\global\Global_Rendering.h" />
-    <ClInclude Include="include\manage\Resource_Manager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\common\Level.cpp" />
-    <ClCompile Include="src\common\Object.cpp" />
-    <ClCompile Include="src\common\World.cpp" />
-    <ClCompile Include="src\components\animation\Animation.cpp" />
-    <ClCompile Include="src\components\animation\Animation_Clip.cpp" />
-    <ClCompile Include="src\components\animation\Blend_State.cpp" />
-    <ClCompile Include="src\components\animation\Skeleton_Node.cpp" />
-    <ClCompile Include="src\components\camera\Camera.cpp" />
-    <ClCompile Include="src\components\camera\Camera_Controller.cpp" />
-    <ClCompile Include="src\components\material\Materia.cpp" />
-    <ClCompile Include="src\components\material\Particle​.cpp" />
-    <ClCompile Include="src\components\mesh\Mesh.cpp" />
-    <ClCompile Include="src\components\mesh\Mesh_Data.cpp" />
-    <ClCompile Include="src\components\motor\Motor.cpp" />
-    <ClCompile Include="src\components\rigid_body\Basic_Shape.cpp" />
-    <ClCompile Include="src\components\rigid_body\Rigid_Body.cpp" />
-    <ClCompile Include="src\components\skeleton\Skeleton_Data.cpp" />
-    <ClCompile Include="src\components\skeleton\Skeleton_Mask.cpp" />
-    <ClCompile Include="src\config\Resource_Configer.cpp" />
-    <ClCompile Include="src\global\Global_Particle.cpp" />
-    <ClCompile Include="src\global\Global_Rendering.cpp" />
-    <ClCompile Include="src\manager\Resource_Manager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\core\core.vcxproj">
       <Project>{be06579d-e236-4a4a-b072-2d2a8feaf0d2}</Project>
     </ProjectReference>
     <ProjectReference Include="..\platform\platform.vcxproj">
       <Project>{9466d5fb-0dc5-4c4a-b88a-7db410166c13}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\resource\resource.vcxproj">
+      <Project>{1e8c58f6-ebe8-44f5-aa04-2026784a70f2}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\animation\Bone.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\animation\Bone.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
