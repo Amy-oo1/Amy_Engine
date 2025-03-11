@@ -6,7 +6,6 @@
 #include<cstddef>
 
 #include "meta/Reflection/Reflection_Instance.h"
-#include "meta/Reflection/Reflection_Register.h"
 
 {{#Include_Define_List}}
 #include "{{& Src_File_Path}}"
@@ -23,28 +22,19 @@ namespace {{Class_NameSpace}}{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_{{& Class_Display_Name}}_Operator {
     public:
-
-        static const string Get_Class_{{& Class_Display_Name}}_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"{{& Class_Spelling}}"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"{{& Class_Display_Name}}"};            
         }
 
         {{#Class_Base_Class_Define_List}}
-            static const vector<Reflection_Instance<void>> Get_Base_Class_{{& Class_Display_Name}}_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<{{& Class_Spelling}}>> Get_Base_Class_Reflection_Instance_List(shared_ptr<{{Class_Spelling}}> Instance){
+                vector<Reflection_Instance<{{Class_Spelling}}>> Table;
 
                     {{#Class_Base_Spelling_List}}
                         Table.emplace_back(string{"{{& Class_Base_Class_Spelling}}"},static_pointer_cast<{{& Class_Base_Class_Spelling}}>(Instance));
@@ -55,25 +45,25 @@ namespace {{Class_NameSpace}}{
         {{/Class_Base_Class_Define_List}}
 
         {{#Field_Define_List}}
-            static const string Get_Field_{{& Field_Display_Name}}_Type_Spelling(void){
+            static const string Get_{{& Field_Display_Name}}_Type_Spelling(void){
                 return string{"{{& Field_Type_Spelling}}"};
             }
 
-            static const string Get_Field_{{& Field_Display_Name}}_Spelling(void){
+            static const string Get_{{& Field_Display_Name}}_Spelling(void){
                 return string{"{{& Field_Spelling}}"};
             }
 
 
-            static const string Get_Field_{{& Field_Display_Name}}_Display_Name(void){
+            static const string Get_{{& Field_Display_Name}}_Display_Name(void){
                 return string{"{{& Field_Display_Name}}"};
             }
 
-            static const void *const Get_Filed_{{& Field_Display_Name}}_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<{{& Class_Spelling}}>(Instance)->{{& Field_Spelling}});
+            static const {{& Field_Type_Spelling}} Get_{{& Field_Display_Name}}_Attribute(shared_ptr<{{& Class_Spelling}}> Instance){
+                return Instance->{{& Field_Spelling}};
             }
 
-            static void Set_Field_{{& Field_Display_Name}}_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<{{& Class_Spelling}}>(Instance)->{{& Field_Spelling}}=*static_cast<const {{& Field_Type_Spelling}}*>(Value);
+            static void Set_Field_{{& Field_Display_Name}}_Attribute(shared_ptr<{{& Class_Spelling}}> Instance, const {{& Field_Type_Spelling}}& Value){
+                Instance->{{& Field_Spelling}}=Value;
             }
 
             static const bool Is_Filed_{{& Field_Display_Name}}_CPPVector(void){
@@ -81,82 +71,30 @@ namespace {{Class_NameSpace}}{
             }
 
             {{#Filed_CPPVector_Define_List}}
-                static const string Get_Field_{{& Field_Display_Name}}_CPPVector_Element_Type_Spelling(void){
-                    return string {"{{& Field_Spelling}}"};
+                static const string Get_{{& Field_Display_Name}}_CPPVector_Element_Type_Spelling(void){
+                    return string {"{{& Filed_CPPVector_Element_Type_Spelling}}"};
                 }
 
-                static const size_t Get_Field_{{& Field_Display_Name}}_CPPVector_Capacity(shared_ptr<void> Instance){
-                    return static_pointer_cast<{{& Class_Spelling}}>(Instance)->{{& Field_Spelling}}.capacity();
+                static const size_t Get_{{& Field_Display_Name}}_CPPVector_Capacity(shared_ptr<{{& Class_Spelling}}> Instance){
+                    return Instance->{{& Field_Spelling}}.capacity();
                 }
 
-                static const size_t Get_Field_{{& Field_Display_Name}}_CPPVector_Size(shared_ptr<void> Instance){
-                    return static_pointer_cast<{{& Class_Spelling}}>(Instance)->{{& Field_Spelling}}.size();
+                static const size_t Get_{{& Field_Display_Name}}_CPPVector_Size(shared_ptr<{{& Class_Spelling}}> Instance){
+                    return Instance->{{& Field_Spelling}}.size();
                 }
 
-                static const void *Get_Field_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<void> Instance, size_t Index){
-                    return static_cast<const void*>(&static_pointer_cast<{{& Class_Spelling}}>(Instance)->{{& Field_Spelling}}[Index]);
+                static const {{& Filed_CPPVector_Element_Type_Spelling}} Get_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<{{& Class_Spelling}}> Instance, size_t Index){
+                    return Instance->{{& Field_Spelling}}[Index];
                 }
 
-                static void Set_Field_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<void> Instance, size_t Index,const void* Value){
-                    static_pointer_cast<{{& Class_Spelling}}>(Instance)->{{& Field_Spelling}}[Index]=*static_cast<const {{& Filed_CPPVector_Element_Type_Spelling}}*>(Value);
+                static void Set_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<{{& Class_Spelling}}> Instance, size_t Index, const {{& Filed_CPPVector_Element_Type_Spelling}}& Value){
+                    Instance->{{& Field_Spelling}}[Index]=Value;
                 }
             {{/Filed_CPPVector_Define_List}}
 
         {{/Field_Define_List}}
 
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_{{& Class_Display_Name}}_Operator::Get_Class_{{& Class_Display_Name}}_Spelling,
-                    Reflection_{{& Class_Display_Name}}_Operator::Get_Class_Displaying_Name
-                );
-
-            {{#Class_Base_Class_Define_List}}
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_{{& Class_Display_Name}}_Operator::Get_Base_Class_{{& Class_Display_Name}}_Reflection_Instance_List
-                );
-            {{/Class_Base_Class_Define_List}}
-
-            {{#Field_Define_List}}
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"{{& Field_Spelling}}"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_Type_Spelling,
-                        Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_Spelling,
-                        Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_Display_Name,
-                        Reflection_{{& Class_Display_Name}}_Operator::Get_Filed_{{& Field_Display_Name}}_Attribute,
-                        Reflection_{{& Class_Display_Name}}_Operator::Set_Field_{{& Field_Display_Name}}_Attribute,
-                        Reflection_{{& Class_Display_Name}}_Operator::Is_Filed_{{& Field_Display_Name}}_CPPVector
-                    )
-                );
-
-                {{#Filed_CPPVector_Define_List}}
-                    Temp_Class_Filed_CPPVector_Func_Tuple_Map->emplace(
-                    string{"{{& Field_Spelling}}"},
-                        make_shared<Class_Filed_CPPVector_Func_Tuple>( 
-                            Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_CPPVector_Element_Type_Spelling,
-                            Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_CPPVector_Capacity,
-                            Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_CPPVector_Size,
-                            Reflection_{{& Class_Display_Name}}_Operator::Get_Field_{{& Field_Display_Name}}_CPPVector_Element,
-                            Reflection_{{& Class_Display_Name}}_Operator::Set_Field_{{& Field_Display_Name}}_CPPVector_Element
-                        )
-                    );
-                {{/Filed_CPPVector_Define_List}}
-
-            {{/Field_Define_List}}
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"{{& Class_Spelling}}"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"{{& Class_Spelling}}"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"{{& Class_Spelling}}"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"{{& Class_Spelling}}"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
-
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
  {{/Class_Define_List}}

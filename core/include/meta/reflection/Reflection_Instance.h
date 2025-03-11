@@ -3,11 +3,11 @@
 #include<memory>
 #include<utility>
 #include<string>
-
-#include "meta/Reflection/Type_Meta.h"
+#include<cassert>
 
 namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 
+	using std::string;
 	using std::shared_ptr;
 
 	template<typename Type>
@@ -25,12 +25,12 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		Reflection_Instance& operator=(Reflection_Instance&&) = default;
 
 		Reflection_Instance(const string& Class_pelling) :
-			m_Type_Meta{ Class_pelling } {
+			m_Type_Spelling{ Class_pelling } {
 		}
 
 		Reflection_Instance(const string& Class_pelling, shared_ptr<Type> Temp_Stance) :
-			m_Type_Meta{ std::make_shared<Type_Meta>(Class_pelling) },
-			m_Instance{ std::move(Temp_Stance) } {
+			m_Type_Spelling{ Class_pelling },
+			m_Instance{ Temp_Stance } {
 		}
 
 		~Reflection_Instance(void) = default;
@@ -45,7 +45,9 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		}
 
 		bool operator==(const Reflection_Instance& Other) const {
-			return *this->m_Instance == *Other.m_Instance;
+			return
+				this->m_Type_Spelling == Other.m_Type_Spelling &&
+				*this->m_Instance == *Other.m_Instance;
 		}
 
 		bool operator!=(const Reflection_Instance& Other) const {
@@ -53,18 +55,26 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		}
 
 		bool operator<(const Reflection_Instance& Other) const {
+			assert(this->m_Type_Spelling == Other.m_Type_Spelling);
+
 			return *this->m_Instance < *Other.m_Instance;
 		}
 
 		bool operator>(const Reflection_Instance& Other) const {
+			assert(this->m_Type_Spelling == Other.m_Type_Spelling);
+
 			return  *this->m_Instance > *Other.m_Instance;
 		}
 
 		bool operator<=(const Reflection_Instance& Other) const {
+			assert(this->m_Type_Spelling == Other.m_Type_Spelling);
+
 			return *this->m_Instance <= *Other.m_Instance;
 		}
 
 		bool operator>=(const Reflection_Instance& Other) const {
+			assert(this->m_Type_Spelling == Other.m_Type_Spelling);
+
 			return *this->m_Instance >= *Other.m_Instance;
 		}
 
@@ -93,7 +103,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		}
 
 	private:
-		shared_ptr<Type_Meta> m_Type_Meta{};
+		string m_Type_Spelling{};
 		shared_ptr<Type> m_Instance{ nullptr };
 
 	};

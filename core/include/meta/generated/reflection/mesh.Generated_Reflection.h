@@ -6,7 +6,6 @@
 #include<cstddef>
 
 #include "meta/Reflection/Reflection_Instance.h"
-#include "meta/Reflection/Reflection_Register.h"
 
 #include "D:/Amy_Engine/resource/include/components/mesh/mesh.h"
 
@@ -20,52 +19,43 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Mesh_Sub_Operator {
     public:
-
-        static const string Get_Class_Mesh_Sub_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Mesh_Sub"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Mesh_Sub"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Mesh_Sub_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Mesh_Sub>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Mesh_Sub> Instance){
+                vector<Reflection_Instance<Mesh_Sub>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_Object_Path_Type_Spelling(void){
+            static const string Get_Object_Path_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Field_Object_Path_Spelling(void){
+            static const string Get_Object_Path_Spelling(void){
                 return string{"m_Object_Path"};
             }
 
 
-            static const string Get_Field_Object_Path_Display_Name(void){
+            static const string Get_Object_Path_Display_Name(void){
                 return string{"Object_Path"};
             }
 
-            static const void *const Get_Filed_Object_Path_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Mesh_Sub>(Instance)->m_Object_Path);
+            static const path Get_Object_Path_Attribute(shared_ptr<Mesh_Sub> Instance){
+                return Instance->m_Object_Path;
             }
 
-            static void Set_Field_Object_Path_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Mesh_Sub>(Instance)->m_Object_Path=*static_cast<const path*>(Value);
+            static void Set_Field_Object_Path_Attribute(shared_ptr<Mesh_Sub> Instance, const path& Value){
+                Instance->m_Object_Path=Value;
             }
 
             static const bool Is_Filed_Object_Path_CPPVector(void){
@@ -74,25 +64,25 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Field_Transform_Type_Spelling(void){
+            static const string Get_Transform_Type_Spelling(void){
                 return string{"Affine_Transform"};
             }
 
-            static const string Get_Field_Transform_Spelling(void){
+            static const string Get_Transform_Spelling(void){
                 return string{"m_Transform"};
             }
 
 
-            static const string Get_Field_Transform_Display_Name(void){
+            static const string Get_Transform_Display_Name(void){
                 return string{"Transform"};
             }
 
-            static const void *const Get_Filed_Transform_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Mesh_Sub>(Instance)->m_Transform);
+            static const Affine_Transform Get_Transform_Attribute(shared_ptr<Mesh_Sub> Instance){
+                return Instance->m_Transform;
             }
 
-            static void Set_Field_Transform_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Mesh_Sub>(Instance)->m_Transform=*static_cast<const Affine_Transform*>(Value);
+            static void Set_Field_Transform_Attribute(shared_ptr<Mesh_Sub> Instance, const Affine_Transform& Value){
+                Instance->m_Transform=Value;
             }
 
             static const bool Is_Filed_Transform_CPPVector(void){
@@ -101,25 +91,25 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Field_Material_Type_Spelling(void){
+            static const string Get_Material_Type_Spelling(void){
                 return string{"string"};
             }
 
-            static const string Get_Field_Material_Spelling(void){
+            static const string Get_Material_Spelling(void){
                 return string{"m_Material"};
             }
 
 
-            static const string Get_Field_Material_Display_Name(void){
+            static const string Get_Material_Display_Name(void){
                 return string{"Material"};
             }
 
-            static const void *const Get_Filed_Material_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Mesh_Sub>(Instance)->m_Material);
+            static const string Get_Material_Attribute(shared_ptr<Mesh_Sub> Instance){
+                return Instance->m_Material;
             }
 
-            static void Set_Field_Material_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Mesh_Sub>(Instance)->m_Material=*static_cast<const string*>(Value);
+            static void Set_Field_Material_Attribute(shared_ptr<Mesh_Sub> Instance, const string& Value){
+                Instance->m_Material=Value;
             }
 
             static const bool Is_Filed_Material_CPPVector(void){
@@ -129,74 +119,9 @@ namespace NameSpace_Resource::NameSpace_Components{
             
 
 
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Mesh_Sub_Operator::Get_Class_Mesh_Sub_Spelling,
-                    Reflection_Mesh_Sub_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Mesh_Sub_Operator::Get_Base_Class_Mesh_Sub_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Object_Path"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Mesh_Sub_Operator::Get_Field_Object_Path_Type_Spelling,
-                        Reflection_Mesh_Sub_Operator::Get_Field_Object_Path_Spelling,
-                        Reflection_Mesh_Sub_Operator::Get_Field_Object_Path_Display_Name,
-                        Reflection_Mesh_Sub_Operator::Get_Filed_Object_Path_Attribute,
-                        Reflection_Mesh_Sub_Operator::Set_Field_Object_Path_Attribute,
-                        Reflection_Mesh_Sub_Operator::Is_Filed_Object_Path_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Transform"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Mesh_Sub_Operator::Get_Field_Transform_Type_Spelling,
-                        Reflection_Mesh_Sub_Operator::Get_Field_Transform_Spelling,
-                        Reflection_Mesh_Sub_Operator::Get_Field_Transform_Display_Name,
-                        Reflection_Mesh_Sub_Operator::Get_Filed_Transform_Attribute,
-                        Reflection_Mesh_Sub_Operator::Set_Field_Transform_Attribute,
-                        Reflection_Mesh_Sub_Operator::Is_Filed_Transform_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Material"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Mesh_Sub_Operator::Get_Field_Material_Type_Spelling,
-                        Reflection_Mesh_Sub_Operator::Get_Field_Material_Spelling,
-                        Reflection_Mesh_Sub_Operator::Get_Field_Material_Display_Name,
-                        Reflection_Mesh_Sub_Operator::Get_Filed_Material_Attribute,
-                        Reflection_Mesh_Sub_Operator::Set_Field_Material_Attribute,
-                        Reflection_Mesh_Sub_Operator::Is_Filed_Material_CPPVector
-                    )
-                );
-
-                
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Mesh_Sub"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Mesh_Sub"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Mesh_Sub"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Mesh_Sub"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
-
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -207,126 +132,71 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Mesh_Operator {
     public:
-
-        static const string Get_Class_Mesh_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Mesh"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Mesh"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Mesh_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Mesh>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Mesh> Instance){
+                vector<Reflection_Instance<Mesh>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_Meshes_Type_Spelling(void){
+            static const string Get_Meshes_Type_Spelling(void){
                 return string{"vector<Mesh_Sub>"};
             }
 
-            static const string Get_Field_Meshes_Spelling(void){
+            static const string Get_Meshes_Spelling(void){
                 return string{"m_Meshes"};
             }
 
 
-            static const string Get_Field_Meshes_Display_Name(void){
+            static const string Get_Meshes_Display_Name(void){
                 return string{"Meshes"};
             }
 
-            static const void *const Get_Filed_Meshes_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Mesh>(Instance)->m_Meshes);
+            static const vector<Mesh_Sub> Get_Meshes_Attribute(shared_ptr<Mesh> Instance){
+                return Instance->m_Meshes;
             }
 
-            static void Set_Field_Meshes_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Mesh>(Instance)->m_Meshes=*static_cast<const vector<Mesh_Sub>*>(Value);
+            static void Set_Field_Meshes_Attribute(shared_ptr<Mesh> Instance, const vector<Mesh_Sub>& Value){
+                Instance->m_Meshes=Value;
             }
 
             static const bool Is_Filed_Meshes_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_Field_Meshes_CPPVector_Element_Type_Spelling(void){
-                    return string {"m_Meshes"};
+                static const string Get_Meshes_CPPVector_Element_Type_Spelling(void){
+                    return string {"Mesh_Sub"};
                 }
 
-                static const size_t Get_Field_Meshes_CPPVector_Capacity(shared_ptr<void> Instance){
-                    return static_pointer_cast<Mesh>(Instance)->m_Meshes.capacity();
+                static const size_t Get_Meshes_CPPVector_Capacity(shared_ptr<Mesh> Instance){
+                    return Instance->m_Meshes.capacity();
                 }
 
-                static const size_t Get_Field_Meshes_CPPVector_Size(shared_ptr<void> Instance){
-                    return static_pointer_cast<Mesh>(Instance)->m_Meshes.size();
+                static const size_t Get_Meshes_CPPVector_Size(shared_ptr<Mesh> Instance){
+                    return Instance->m_Meshes.size();
                 }
 
-                static const void *Get_Field_Meshes_CPPVector_Element(shared_ptr<void> Instance, size_t Index){
-                    return static_cast<const void*>(&static_pointer_cast<Mesh>(Instance)->m_Meshes[Index]);
+                static const Mesh_Sub Get_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index){
+                    return Instance->m_Meshes[Index];
                 }
 
-                static void Set_Field_Meshes_CPPVector_Element(shared_ptr<void> Instance, size_t Index,const void* Value){
-                    static_pointer_cast<Mesh>(Instance)->m_Meshes[Index]=*static_cast<const Mesh_Sub*>(Value);
+                static void Set_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index, const Mesh_Sub& Value){
+                    Instance->m_Meshes[Index]=Value;
                 }
 
-
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Mesh_Operator::Get_Class_Mesh_Spelling,
-                    Reflection_Mesh_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Mesh_Operator::Get_Base_Class_Mesh_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Meshes"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Mesh_Operator::Get_Field_Meshes_Type_Spelling,
-                        Reflection_Mesh_Operator::Get_Field_Meshes_Spelling,
-                        Reflection_Mesh_Operator::Get_Field_Meshes_Display_Name,
-                        Reflection_Mesh_Operator::Get_Filed_Meshes_Attribute,
-                        Reflection_Mesh_Operator::Set_Field_Meshes_Attribute,
-                        Reflection_Mesh_Operator::Is_Filed_Meshes_CPPVector
-                    )
-                );
-
-                    Temp_Class_Filed_CPPVector_Func_Tuple_Map->emplace(
-                    string{"m_Meshes"},
-                        make_shared<Class_Filed_CPPVector_Func_Tuple>( 
-                            Reflection_Mesh_Operator::Get_Field_Meshes_CPPVector_Element_Type_Spelling,
-                            Reflection_Mesh_Operator::Get_Field_Meshes_CPPVector_Capacity,
-                            Reflection_Mesh_Operator::Get_Field_Meshes_CPPVector_Size,
-                            Reflection_Mesh_Operator::Get_Field_Meshes_CPPVector_Element,
-                            Reflection_Mesh_Operator::Set_Field_Meshes_CPPVector_Element
-                        )
-                    );
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Mesh"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Mesh"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Mesh"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Mesh"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
 
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 

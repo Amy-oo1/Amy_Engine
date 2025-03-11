@@ -6,7 +6,6 @@
 #include<cstddef>
 
 #include "meta/Reflection/Reflection_Instance.h"
-#include "meta/Reflection/Reflection_Register.h"
 
 #include "D:/Amy_Engine/resource/include/components/animation/Animation_Clip.h"
 
@@ -20,128 +19,73 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Animation_Node_Map_Operator {
     public:
-
-        static const string Get_Class_Animation_Node_Map_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Animation_Node_Map"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Animation_Node_Map"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Animation_Node_Map_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Animation_Node_Map>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Node_Map> Instance){
+                vector<Reflection_Instance<Animation_Node_Map>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_onvert_Type_Spelling(void){
+            static const string Get_onvert_Type_Spelling(void){
                 return string{"vector<string>"};
             }
 
-            static const string Get_Field_onvert_Spelling(void){
+            static const string Get_onvert_Spelling(void){
                 return string{"m_onvert"};
             }
 
 
-            static const string Get_Field_onvert_Display_Name(void){
+            static const string Get_onvert_Display_Name(void){
                 return string{"onvert"};
             }
 
-            static const void *const Get_Filed_onvert_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Node_Map>(Instance)->m_onvert);
+            static const vector<string> Get_onvert_Attribute(shared_ptr<Animation_Node_Map> Instance){
+                return Instance->m_onvert;
             }
 
-            static void Set_Field_onvert_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Node_Map>(Instance)->m_onvert=*static_cast<const vector<string>*>(Value);
+            static void Set_Field_onvert_Attribute(shared_ptr<Animation_Node_Map> Instance, const vector<string>& Value){
+                Instance->m_onvert=Value;
             }
 
             static const bool Is_Filed_onvert_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_Field_onvert_CPPVector_Element_Type_Spelling(void){
-                    return string {"m_onvert"};
+                static const string Get_onvert_CPPVector_Element_Type_Spelling(void){
+                    return string {"string"};
                 }
 
-                static const size_t Get_Field_onvert_CPPVector_Capacity(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Node_Map>(Instance)->m_onvert.capacity();
+                static const size_t Get_onvert_CPPVector_Capacity(shared_ptr<Animation_Node_Map> Instance){
+                    return Instance->m_onvert.capacity();
                 }
 
-                static const size_t Get_Field_onvert_CPPVector_Size(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Node_Map>(Instance)->m_onvert.size();
+                static const size_t Get_onvert_CPPVector_Size(shared_ptr<Animation_Node_Map> Instance){
+                    return Instance->m_onvert.size();
                 }
 
-                static const void *Get_Field_onvert_CPPVector_Element(shared_ptr<void> Instance, size_t Index){
-                    return static_cast<const void*>(&static_pointer_cast<Animation_Node_Map>(Instance)->m_onvert[Index]);
+                static const string Get_onvert_CPPVector_Element(shared_ptr<Animation_Node_Map> Instance, size_t Index){
+                    return Instance->m_onvert[Index];
                 }
 
-                static void Set_Field_onvert_CPPVector_Element(shared_ptr<void> Instance, size_t Index,const void* Value){
-                    static_pointer_cast<Animation_Node_Map>(Instance)->m_onvert[Index]=*static_cast<const string*>(Value);
+                static void Set_onvert_CPPVector_Element(shared_ptr<Animation_Node_Map> Instance, size_t Index, const string& Value){
+                    Instance->m_onvert[Index]=Value;
                 }
 
-
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Animation_Node_Map_Operator::Get_Class_Animation_Node_Map_Spelling,
-                    Reflection_Animation_Node_Map_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Animation_Node_Map_Operator::Get_Base_Class_Animation_Node_Map_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_onvert"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Node_Map_Operator::Get_Field_onvert_Type_Spelling,
-                        Reflection_Animation_Node_Map_Operator::Get_Field_onvert_Spelling,
-                        Reflection_Animation_Node_Map_Operator::Get_Field_onvert_Display_Name,
-                        Reflection_Animation_Node_Map_Operator::Get_Filed_onvert_Attribute,
-                        Reflection_Animation_Node_Map_Operator::Set_Field_onvert_Attribute,
-                        Reflection_Animation_Node_Map_Operator::Is_Filed_onvert_CPPVector
-                    )
-                );
-
-                    Temp_Class_Filed_CPPVector_Func_Tuple_Map->emplace(
-                    string{"m_onvert"},
-                        make_shared<Class_Filed_CPPVector_Func_Tuple>( 
-                            Reflection_Animation_Node_Map_Operator::Get_Field_onvert_CPPVector_Element_Type_Spelling,
-                            Reflection_Animation_Node_Map_Operator::Get_Field_onvert_CPPVector_Capacity,
-                            Reflection_Animation_Node_Map_Operator::Get_Field_onvert_CPPVector_Size,
-                            Reflection_Animation_Node_Map_Operator::Get_Field_onvert_CPPVector_Element,
-                            Reflection_Animation_Node_Map_Operator::Set_Field_onvert_CPPVector_Element
-                        )
-                    );
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Animation_Node_Map"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Animation_Node_Map"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Animation_Node_Map"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Animation_Node_Map"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
 
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -152,52 +96,43 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Animation_Channel_Operator {
     public:
-
-        static const string Get_Class_Animation_Channel_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Animation_Channel"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Animation_Channel"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Animation_Channel_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Animation_Channel>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Channel> Instance){
+                vector<Reflection_Instance<Animation_Channel>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_Name_Type_Spelling(void){
+            static const string Get_Name_Type_Spelling(void){
                 return string{"string"};
             }
 
-            static const string Get_Field_Name_Spelling(void){
+            static const string Get_Name_Spelling(void){
                 return string{"m_Name"};
             }
 
 
-            static const string Get_Field_Name_Display_Name(void){
+            static const string Get_Name_Display_Name(void){
                 return string{"Name"};
             }
 
-            static const void *const Get_Filed_Name_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Channel>(Instance)->m_Name);
+            static const string Get_Name_Attribute(shared_ptr<Animation_Channel> Instance){
+                return Instance->m_Name;
             }
 
-            static void Set_Field_Name_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Channel>(Instance)->m_Name=*static_cast<const string*>(Value);
+            static void Set_Field_Name_Attribute(shared_ptr<Animation_Channel> Instance, const string& Value){
+                Instance->m_Name=Value;
             }
 
             static const bool Is_Filed_Name_CPPVector(void){
@@ -206,70 +141,70 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Field_Time_Type_Spelling(void){
+            static const string Get_Time_Type_Spelling(void){
                 return string{"vector<float>"};
             }
 
-            static const string Get_Field_Time_Spelling(void){
+            static const string Get_Time_Spelling(void){
                 return string{"m_Time"};
             }
 
 
-            static const string Get_Field_Time_Display_Name(void){
+            static const string Get_Time_Display_Name(void){
                 return string{"Time"};
             }
 
-            static const void *const Get_Filed_Time_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Channel>(Instance)->m_Time);
+            static const vector<float> Get_Time_Attribute(shared_ptr<Animation_Channel> Instance){
+                return Instance->m_Time;
             }
 
-            static void Set_Field_Time_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Channel>(Instance)->m_Time=*static_cast<const vector<float>*>(Value);
+            static void Set_Field_Time_Attribute(shared_ptr<Animation_Channel> Instance, const vector<float>& Value){
+                Instance->m_Time=Value;
             }
 
             static const bool Is_Filed_Time_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_Field_Time_CPPVector_Element_Type_Spelling(void){
-                    return string {"m_Time"};
+                static const string Get_Time_CPPVector_Element_Type_Spelling(void){
+                    return string {"float"};
                 }
 
-                static const size_t Get_Field_Time_CPPVector_Capacity(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Channel>(Instance)->m_Time.capacity();
+                static const size_t Get_Time_CPPVector_Capacity(shared_ptr<Animation_Channel> Instance){
+                    return Instance->m_Time.capacity();
                 }
 
-                static const size_t Get_Field_Time_CPPVector_Size(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Channel>(Instance)->m_Time.size();
+                static const size_t Get_Time_CPPVector_Size(shared_ptr<Animation_Channel> Instance){
+                    return Instance->m_Time.size();
                 }
 
-                static const void *Get_Field_Time_CPPVector_Element(shared_ptr<void> Instance, size_t Index){
-                    return static_cast<const void*>(&static_pointer_cast<Animation_Channel>(Instance)->m_Time[Index]);
+                static const float Get_Time_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
+                    return Instance->m_Time[Index];
                 }
 
-                static void Set_Field_Time_CPPVector_Element(shared_ptr<void> Instance, size_t Index,const void* Value){
-                    static_pointer_cast<Animation_Channel>(Instance)->m_Time[Index]=*static_cast<const float*>(Value);
+                static void Set_Time_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index, const float& Value){
+                    Instance->m_Time[Index]=Value;
                 }
 
-            static const string Get_Field_Transform_Type_Spelling(void){
+            static const string Get_Transform_Type_Spelling(void){
                 return string{"Affine_Transform"};
             }
 
-            static const string Get_Field_Transform_Spelling(void){
+            static const string Get_Transform_Spelling(void){
                 return string{"m_Transform"};
             }
 
 
-            static const string Get_Field_Transform_Display_Name(void){
+            static const string Get_Transform_Display_Name(void){
                 return string{"Transform"};
             }
 
-            static const void *const Get_Filed_Transform_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Channel>(Instance)->m_Transform);
+            static const Affine_Transform Get_Transform_Attribute(shared_ptr<Animation_Channel> Instance){
+                return Instance->m_Transform;
             }
 
-            static void Set_Field_Transform_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Channel>(Instance)->m_Transform=*static_cast<const Affine_Transform*>(Value);
+            static void Set_Field_Transform_Attribute(shared_ptr<Animation_Channel> Instance, const Affine_Transform& Value){
+                Instance->m_Transform=Value;
             }
 
             static const bool Is_Filed_Transform_CPPVector(void){
@@ -279,83 +214,9 @@ namespace NameSpace_Resource::NameSpace_Components{
             
 
 
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Animation_Channel_Operator::Get_Class_Animation_Channel_Spelling,
-                    Reflection_Animation_Channel_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Animation_Channel_Operator::Get_Base_Class_Animation_Channel_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Name"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Channel_Operator::Get_Field_Name_Type_Spelling,
-                        Reflection_Animation_Channel_Operator::Get_Field_Name_Spelling,
-                        Reflection_Animation_Channel_Operator::Get_Field_Name_Display_Name,
-                        Reflection_Animation_Channel_Operator::Get_Filed_Name_Attribute,
-                        Reflection_Animation_Channel_Operator::Set_Field_Name_Attribute,
-                        Reflection_Animation_Channel_Operator::Is_Filed_Name_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Time"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Channel_Operator::Get_Field_Time_Type_Spelling,
-                        Reflection_Animation_Channel_Operator::Get_Field_Time_Spelling,
-                        Reflection_Animation_Channel_Operator::Get_Field_Time_Display_Name,
-                        Reflection_Animation_Channel_Operator::Get_Filed_Time_Attribute,
-                        Reflection_Animation_Channel_Operator::Set_Field_Time_Attribute,
-                        Reflection_Animation_Channel_Operator::Is_Filed_Time_CPPVector
-                    )
-                );
-
-                    Temp_Class_Filed_CPPVector_Func_Tuple_Map->emplace(
-                    string{"m_Time"},
-                        make_shared<Class_Filed_CPPVector_Func_Tuple>( 
-                            Reflection_Animation_Channel_Operator::Get_Field_Time_CPPVector_Element_Type_Spelling,
-                            Reflection_Animation_Channel_Operator::Get_Field_Time_CPPVector_Capacity,
-                            Reflection_Animation_Channel_Operator::Get_Field_Time_CPPVector_Size,
-                            Reflection_Animation_Channel_Operator::Get_Field_Time_CPPVector_Element,
-                            Reflection_Animation_Channel_Operator::Set_Field_Time_CPPVector_Element
-                        )
-                    );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Transform"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Channel_Operator::Get_Field_Transform_Type_Spelling,
-                        Reflection_Animation_Channel_Operator::Get_Field_Transform_Spelling,
-                        Reflection_Animation_Channel_Operator::Get_Field_Transform_Display_Name,
-                        Reflection_Animation_Channel_Operator::Get_Filed_Transform_Attribute,
-                        Reflection_Animation_Channel_Operator::Set_Field_Transform_Attribute,
-                        Reflection_Animation_Channel_Operator::Is_Filed_Transform_CPPVector
-                    )
-                );
-
-                
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Animation_Channel"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Animation_Channel"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Animation_Channel"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Animation_Channel"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
-
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -366,52 +227,43 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Animation_Clip_Operator {
     public:
-
-        static const string Get_Class_Animation_Clip_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Animation_Clip"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Animation_Clip"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Animation_Clip_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Animation_Clip>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Clip> Instance){
+                vector<Reflection_Instance<Animation_Clip>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_Total_Frame_Type_Spelling(void){
+            static const string Get_Total_Frame_Type_Spelling(void){
                 return string{"size_t"};
             }
 
-            static const string Get_Field_Total_Frame_Spelling(void){
+            static const string Get_Total_Frame_Spelling(void){
                 return string{"Total_Frame"};
             }
 
 
-            static const string Get_Field_Total_Frame_Display_Name(void){
+            static const string Get_Total_Frame_Display_Name(void){
                 return string{"Total_Frame"};
             }
 
-            static const void *const Get_Filed_Total_Frame_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Clip>(Instance)->Total_Frame);
+            static const size_t Get_Total_Frame_Attribute(shared_ptr<Animation_Clip> Instance){
+                return Instance->Total_Frame;
             }
 
-            static void Set_Field_Total_Frame_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Clip>(Instance)->Total_Frame=*static_cast<const size_t*>(Value);
+            static void Set_Field_Total_Frame_Attribute(shared_ptr<Animation_Clip> Instance, const size_t& Value){
+                Instance->Total_Frame=Value;
             }
 
             static const bool Is_Filed_Total_Frame_CPPVector(void){
@@ -420,115 +272,55 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Field_Node_Channels_Type_Spelling(void){
+            static const string Get_Node_Channels_Type_Spelling(void){
                 return string{"vector<Animation_Channel>"};
             }
 
-            static const string Get_Field_Node_Channels_Spelling(void){
+            static const string Get_Node_Channels_Spelling(void){
                 return string{"m_Node_Channels"};
             }
 
 
-            static const string Get_Field_Node_Channels_Display_Name(void){
+            static const string Get_Node_Channels_Display_Name(void){
                 return string{"Node_Channels"};
             }
 
-            static const void *const Get_Filed_Node_Channels_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Clip>(Instance)->m_Node_Channels);
+            static const vector<Animation_Channel> Get_Node_Channels_Attribute(shared_ptr<Animation_Clip> Instance){
+                return Instance->m_Node_Channels;
             }
 
-            static void Set_Field_Node_Channels_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Clip>(Instance)->m_Node_Channels=*static_cast<const vector<Animation_Channel>*>(Value);
+            static void Set_Field_Node_Channels_Attribute(shared_ptr<Animation_Clip> Instance, const vector<Animation_Channel>& Value){
+                Instance->m_Node_Channels=Value;
             }
 
             static const bool Is_Filed_Node_Channels_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_Field_Node_Channels_CPPVector_Element_Type_Spelling(void){
-                    return string {"m_Node_Channels"};
+                static const string Get_Node_Channels_CPPVector_Element_Type_Spelling(void){
+                    return string {"Animation_Channel"};
                 }
 
-                static const size_t Get_Field_Node_Channels_CPPVector_Capacity(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Clip>(Instance)->m_Node_Channels.capacity();
+                static const size_t Get_Node_Channels_CPPVector_Capacity(shared_ptr<Animation_Clip> Instance){
+                    return Instance->m_Node_Channels.capacity();
                 }
 
-                static const size_t Get_Field_Node_Channels_CPPVector_Size(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Clip>(Instance)->m_Node_Channels.size();
+                static const size_t Get_Node_Channels_CPPVector_Size(shared_ptr<Animation_Clip> Instance){
+                    return Instance->m_Node_Channels.size();
                 }
 
-                static const void *Get_Field_Node_Channels_CPPVector_Element(shared_ptr<void> Instance, size_t Index){
-                    return static_cast<const void*>(&static_pointer_cast<Animation_Clip>(Instance)->m_Node_Channels[Index]);
+                static const Animation_Channel Get_Node_Channels_CPPVector_Element(shared_ptr<Animation_Clip> Instance, size_t Index){
+                    return Instance->m_Node_Channels[Index];
                 }
 
-                static void Set_Field_Node_Channels_CPPVector_Element(shared_ptr<void> Instance, size_t Index,const void* Value){
-                    static_pointer_cast<Animation_Clip>(Instance)->m_Node_Channels[Index]=*static_cast<const Animation_Channel*>(Value);
+                static void Set_Node_Channels_CPPVector_Element(shared_ptr<Animation_Clip> Instance, size_t Index, const Animation_Channel& Value){
+                    Instance->m_Node_Channels[Index]=Value;
                 }
 
-
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Animation_Clip_Operator::Get_Class_Animation_Clip_Spelling,
-                    Reflection_Animation_Clip_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Animation_Clip_Operator::Get_Base_Class_Animation_Clip_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"Total_Frame"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Clip_Operator::Get_Field_Total_Frame_Type_Spelling,
-                        Reflection_Animation_Clip_Operator::Get_Field_Total_Frame_Spelling,
-                        Reflection_Animation_Clip_Operator::Get_Field_Total_Frame_Display_Name,
-                        Reflection_Animation_Clip_Operator::Get_Filed_Total_Frame_Attribute,
-                        Reflection_Animation_Clip_Operator::Set_Field_Total_Frame_Attribute,
-                        Reflection_Animation_Clip_Operator::Is_Filed_Total_Frame_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Node_Channels"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_Type_Spelling,
-                        Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_Spelling,
-                        Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_Display_Name,
-                        Reflection_Animation_Clip_Operator::Get_Filed_Node_Channels_Attribute,
-                        Reflection_Animation_Clip_Operator::Set_Field_Node_Channels_Attribute,
-                        Reflection_Animation_Clip_Operator::Is_Filed_Node_Channels_CPPVector
-                    )
-                );
-
-                    Temp_Class_Filed_CPPVector_Func_Tuple_Map->emplace(
-                    string{"m_Node_Channels"},
-                        make_shared<Class_Filed_CPPVector_Func_Tuple>( 
-                            Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_CPPVector_Element_Type_Spelling,
-                            Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_CPPVector_Capacity,
-                            Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_CPPVector_Size,
-                            Reflection_Animation_Clip_Operator::Get_Field_Node_Channels_CPPVector_Element,
-                            Reflection_Animation_Clip_Operator::Set_Field_Node_Channels_CPPVector_Element
-                        )
-                    );
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Animation_Clip"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Animation_Clip"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Animation_Clip"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Animation_Clip"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
 
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -539,52 +331,43 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Animation_Data_Operator {
     public:
-
-        static const string Get_Class_Animation_Data_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Animation_Data"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Animation_Data"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Animation_Data_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Animation_Data>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Data> Instance){
+                vector<Reflection_Instance<Animation_Data>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_Skeleton_File_Path_Type_Spelling(void){
+            static const string Get_Skeleton_File_Path_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Field_Skeleton_File_Path_Spelling(void){
+            static const string Get_Skeleton_File_Path_Spelling(void){
                 return string{"m_Skeleton_File_Path"};
             }
 
 
-            static const string Get_Field_Skeleton_File_Path_Display_Name(void){
+            static const string Get_Skeleton_File_Path_Display_Name(void){
                 return string{"Skeleton_File_Path"};
             }
 
-            static const void *const Get_Filed_Skeleton_File_Path_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Data>(Instance)->m_Skeleton_File_Path);
+            static const path Get_Skeleton_File_Path_Attribute(shared_ptr<Animation_Data> Instance){
+                return Instance->m_Skeleton_File_Path;
             }
 
-            static void Set_Field_Skeleton_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Data>(Instance)->m_Skeleton_File_Path=*static_cast<const path*>(Value);
+            static void Set_Field_Skeleton_File_Path_Attribute(shared_ptr<Animation_Data> Instance, const path& Value){
+                Instance->m_Skeleton_File_Path=Value;
             }
 
             static const bool Is_Filed_Skeleton_File_Path_CPPVector(void){
@@ -593,25 +376,25 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Field_Node_Map_Type_Spelling(void){
+            static const string Get_Node_Map_Type_Spelling(void){
                 return string{"Animation_Node_Map"};
             }
 
-            static const string Get_Field_Node_Map_Spelling(void){
+            static const string Get_Node_Map_Spelling(void){
                 return string{"m_Node_Map"};
             }
 
 
-            static const string Get_Field_Node_Map_Display_Name(void){
+            static const string Get_Node_Map_Display_Name(void){
                 return string{"Node_Map"};
             }
 
-            static const void *const Get_Filed_Node_Map_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Data>(Instance)->m_Node_Map);
+            static const Animation_Node_Map Get_Node_Map_Attribute(shared_ptr<Animation_Data> Instance){
+                return Instance->m_Node_Map;
             }
 
-            static void Set_Field_Node_Map_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Data>(Instance)->m_Node_Map=*static_cast<const Animation_Node_Map*>(Value);
+            static void Set_Field_Node_Map_Attribute(shared_ptr<Animation_Data> Instance, const Animation_Node_Map& Value){
+                Instance->m_Node_Map=Value;
             }
 
             static const bool Is_Filed_Node_Map_CPPVector(void){
@@ -620,127 +403,53 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Field_Clips_Type_Spelling(void){
+            static const string Get_Clips_Type_Spelling(void){
                 return string{"vector<Animation_Clip>"};
             }
 
-            static const string Get_Field_Clips_Spelling(void){
+            static const string Get_Clips_Spelling(void){
                 return string{"m_Clips"};
             }
 
 
-            static const string Get_Field_Clips_Display_Name(void){
+            static const string Get_Clips_Display_Name(void){
                 return string{"Clips"};
             }
 
-            static const void *const Get_Filed_Clips_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation_Data>(Instance)->m_Clips);
+            static const vector<Animation_Clip> Get_Clips_Attribute(shared_ptr<Animation_Data> Instance){
+                return Instance->m_Clips;
             }
 
-            static void Set_Field_Clips_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation_Data>(Instance)->m_Clips=*static_cast<const vector<Animation_Clip>*>(Value);
+            static void Set_Field_Clips_Attribute(shared_ptr<Animation_Data> Instance, const vector<Animation_Clip>& Value){
+                Instance->m_Clips=Value;
             }
 
             static const bool Is_Filed_Clips_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_Field_Clips_CPPVector_Element_Type_Spelling(void){
-                    return string {"m_Clips"};
+                static const string Get_Clips_CPPVector_Element_Type_Spelling(void){
+                    return string {"Animation_Clip"};
                 }
 
-                static const size_t Get_Field_Clips_CPPVector_Capacity(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Data>(Instance)->m_Clips.capacity();
+                static const size_t Get_Clips_CPPVector_Capacity(shared_ptr<Animation_Data> Instance){
+                    return Instance->m_Clips.capacity();
                 }
 
-                static const size_t Get_Field_Clips_CPPVector_Size(shared_ptr<void> Instance){
-                    return static_pointer_cast<Animation_Data>(Instance)->m_Clips.size();
+                static const size_t Get_Clips_CPPVector_Size(shared_ptr<Animation_Data> Instance){
+                    return Instance->m_Clips.size();
                 }
 
-                static const void *Get_Field_Clips_CPPVector_Element(shared_ptr<void> Instance, size_t Index){
-                    return static_cast<const void*>(&static_pointer_cast<Animation_Data>(Instance)->m_Clips[Index]);
+                static const Animation_Clip Get_Clips_CPPVector_Element(shared_ptr<Animation_Data> Instance, size_t Index){
+                    return Instance->m_Clips[Index];
                 }
 
-                static void Set_Field_Clips_CPPVector_Element(shared_ptr<void> Instance, size_t Index,const void* Value){
-                    static_pointer_cast<Animation_Data>(Instance)->m_Clips[Index]=*static_cast<const Animation_Clip*>(Value);
+                static void Set_Clips_CPPVector_Element(shared_ptr<Animation_Data> Instance, size_t Index, const Animation_Clip& Value){
+                    Instance->m_Clips[Index]=Value;
                 }
 
-
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Animation_Data_Operator::Get_Class_Animation_Data_Spelling,
-                    Reflection_Animation_Data_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Animation_Data_Operator::Get_Base_Class_Animation_Data_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Skeleton_File_Path"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Data_Operator::Get_Field_Skeleton_File_Path_Type_Spelling,
-                        Reflection_Animation_Data_Operator::Get_Field_Skeleton_File_Path_Spelling,
-                        Reflection_Animation_Data_Operator::Get_Field_Skeleton_File_Path_Display_Name,
-                        Reflection_Animation_Data_Operator::Get_Filed_Skeleton_File_Path_Attribute,
-                        Reflection_Animation_Data_Operator::Set_Field_Skeleton_File_Path_Attribute,
-                        Reflection_Animation_Data_Operator::Is_Filed_Skeleton_File_Path_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Node_Map"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Data_Operator::Get_Field_Node_Map_Type_Spelling,
-                        Reflection_Animation_Data_Operator::Get_Field_Node_Map_Spelling,
-                        Reflection_Animation_Data_Operator::Get_Field_Node_Map_Display_Name,
-                        Reflection_Animation_Data_Operator::Get_Filed_Node_Map_Attribute,
-                        Reflection_Animation_Data_Operator::Set_Field_Node_Map_Attribute,
-                        Reflection_Animation_Data_Operator::Is_Filed_Node_Map_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Clips"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Data_Operator::Get_Field_Clips_Type_Spelling,
-                        Reflection_Animation_Data_Operator::Get_Field_Clips_Spelling,
-                        Reflection_Animation_Data_Operator::Get_Field_Clips_Display_Name,
-                        Reflection_Animation_Data_Operator::Get_Filed_Clips_Attribute,
-                        Reflection_Animation_Data_Operator::Set_Field_Clips_Attribute,
-                        Reflection_Animation_Data_Operator::Is_Filed_Clips_CPPVector
-                    )
-                );
-
-                    Temp_Class_Filed_CPPVector_Func_Tuple_Map->emplace(
-                    string{"m_Clips"},
-                        make_shared<Class_Filed_CPPVector_Func_Tuple>( 
-                            Reflection_Animation_Data_Operator::Get_Field_Clips_CPPVector_Element_Type_Spelling,
-                            Reflection_Animation_Data_Operator::Get_Field_Clips_CPPVector_Capacity,
-                            Reflection_Animation_Data_Operator::Get_Field_Clips_CPPVector_Size,
-                            Reflection_Animation_Data_Operator::Get_Field_Clips_CPPVector_Element,
-                            Reflection_Animation_Data_Operator::Set_Field_Clips_CPPVector_Element
-                        )
-                    );
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Animation_Data"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Animation_Data"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Animation_Data"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Animation_Data"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
 
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 

@@ -94,19 +94,8 @@ Parser_Header.o: \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\memory \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\typeinfo \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\vcruntime_typeinfo.h \
-  D:\Amy_Engine\core\include\meta\Reflection\Type_Meta.h \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\optional \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xsmf_control.h \
-  D:\Amy_Engine\core\include\meta\Reflection\Reflection_Register.h \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\functional \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\unordered_map \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xhash \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\cmath \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\list \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\vector \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\__msvc_bit_utils.hpp \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xbit_ops.h \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xnode_handle.h \
+  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\cassert \
+  C:\Program\ Files\ (x86)\Windows\ Kits\10\Include\10.0.22621.0\ucrt\assert.h \
   D:\Amy_Engine\core\include\math\Quaternion.h \
   D:\Amy_Engine\core\include\math\Constant.h \
   D:\Amy_Engine\core\include\math\Matrix3x3.h \
@@ -118,7 +107,11 @@ Parser_Header.o: \
   D:\Amy_Engine\core\include\math\Vector2.h \
   D:\Amy_Engine\resource\include\components\animation\Skeleton_Node.h \
   D:\Amy_Engine\resource\include\components\animation\Blend_State.h \
+  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\vector \
+  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\__msvc_bit_utils.hpp \
   D:\Amy_Engine\platform\include\file\File_System.h \
+  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\optional \
+  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xsmf_control.h \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\filesystem \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\algorithm \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\__msvc_heap_algorithms.hpp \
@@ -144,6 +137,7 @@ Parser_Header.o: \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\__msvc_ostream.hpp \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\ios \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xlocnum \
+  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\cmath \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\iterator \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\streambuf \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xiosbase \
@@ -164,8 +158,6 @@ Parser_Header.o: \
   D:\Amy_Engine\core\include\transform\Affine_Transform.h \
   D:\Amy_Engine\core\include\math\Head_Math.h \
   D:\Amy_Engine\core\include\math\Third_Party.h \
-  C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\cassert \
-  C:\Program\ Files\ (x86)\Windows\ Kits\10\Include\10.0.22621.0\ucrt\assert.h \
   D:\Amy_Engine\core\include\math\Degree.h \
   D:\Amy_Engine\core\include\math\Utilities.h \
   D:\Amy_Engine\core\include\transform\Orthogonal_Transform.h \

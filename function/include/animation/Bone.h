@@ -8,6 +8,8 @@
 #include "math/Quaternion.h"
 #include "transform/Affine_Transform.h"
 
+#include "components/skeleton/Skeleton_Data.h"
+
 
 namespace NameSpace_Function::NameSpace_Animation {
 
@@ -19,8 +21,9 @@ namespace NameSpace_Function::NameSpace_Animation {
 	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 	using NameSpace_Core::NameSpace_Math::Quaternion;
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
+	using NameSpace_Resource::NameSpace_Components::Bone_Raw;
 
-	class Bone final {
+	class Bone final : public std::enable_shared_from_this<Bone> {
 		enum class Transform_Space {
 			//NOTE : Transform is relative to the local space
 			LOCAL,
@@ -39,6 +42,8 @@ namespace NameSpace_Function::NameSpace_Animation {
 		Bone& operator=(const Bone&) = default;
 		Bone& operator=(Bone&&) = default;
 
+		Bone(shared_ptr<Bone_Raw> Definition, shared_ptr<Bone> Parent_Bone);
+
 		~Bone(void) = default;
 
 	public:
@@ -46,7 +51,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 		const string Get_Name(void) const;
 
-		weak_ptr<Bone> Get_Parent(void) const;
+		shared_ptr<Bone> Get_Parent(void) const;
 
 		const Affine_Transform Get_Relative_Transform(void) const;
 
@@ -57,7 +62,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 	private:
 		bool m_Is_Dirty{ true };
 
-		weak_ptr<Bone> m_Parent_Node;
+		weak_ptr<Bone> m_Parent_Bone;
 
 		string m_Name{};
 

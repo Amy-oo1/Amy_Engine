@@ -6,7 +6,6 @@
 #include<cstddef>
 
 #include "meta/Reflection/Reflection_Instance.h"
-#include "meta/Reflection/Reflection_Register.h"
 
 #include "D:/Amy_Engine/resource/include/global/Global_Particle.h"
 
@@ -20,52 +19,43 @@ namespace NameSpace_Resource::NameSpace_Global{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Base_Class_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Field_Func_Tuple;
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Class_Filed_CPPVector_Func_Tuple;
-
-    using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
-
-
     class Reflection_Global_Particle_Operator {
     public:
-
-        static const string Get_Class_Global_Particle_Spelling(void){
+        static const string Get_Spelling(void){
             return string{"Global_Particle"};
         }
 
-        static const string Get_Class_Displaying_Name(void){
+        static const string Get_Displaying_Name(void){
             return string{"Global_Particle"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Global_Particle_Reflection_Instance_List(shared_ptr<void> Instance){
-                vector<Reflection_Instance<void>> Table;
+            static const vector<Reflection_Instance<Global_Particle>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Global_Particle> Instance){
+                vector<Reflection_Instance<Global_Particle>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Field_Emit_Gap_Type_Spelling(void){
+            static const string Get_Emit_Gap_Type_Spelling(void){
                 return string{"int"};
             }
 
-            static const string Get_Field_Emit_Gap_Spelling(void){
+            static const string Get_Emit_Gap_Spelling(void){
                 return string{"m_Emit_Gap"};
             }
 
 
-            static const string Get_Field_Emit_Gap_Display_Name(void){
+            static const string Get_Emit_Gap_Display_Name(void){
                 return string{"Emit_Gap"};
             }
 
-            static const void *const Get_Filed_Emit_Gap_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Emit_Gap);
+            static const int Get_Emit_Gap_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Emit_Gap;
             }
 
-            static void Set_Field_Emit_Gap_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Emit_Gap=*static_cast<const int*>(Value);
+            static void Set_Field_Emit_Gap_Attribute(shared_ptr<Global_Particle> Instance, const int& Value){
+                Instance->m_Emit_Gap=Value;
             }
 
             static const bool Is_Filed_Emit_Gap_CPPVector(void){
@@ -74,25 +64,25 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Field_Emit_Count_Type_Spelling(void){
+            static const string Get_Emit_Count_Type_Spelling(void){
                 return string{"int"};
             }
 
-            static const string Get_Field_Emit_Count_Spelling(void){
+            static const string Get_Emit_Count_Spelling(void){
                 return string{"m_Emit_Count"};
             }
 
 
-            static const string Get_Field_Emit_Count_Display_Name(void){
+            static const string Get_Emit_Count_Display_Name(void){
                 return string{"Emit_Count"};
             }
 
-            static const void *const Get_Filed_Emit_Count_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Emit_Count);
+            static const int Get_Emit_Count_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Emit_Count;
             }
 
-            static void Set_Field_Emit_Count_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Emit_Count=*static_cast<const int*>(Value);
+            static void Set_Field_Emit_Count_Attribute(shared_ptr<Global_Particle> Instance, const int& Value){
+                Instance->m_Emit_Count=Value;
             }
 
             static const bool Is_Filed_Emit_Count_CPPVector(void){
@@ -101,25 +91,25 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Field_Time_Step_Type_Spelling(void){
+            static const string Get_Time_Step_Type_Spelling(void){
                 return string{"int"};
             }
 
-            static const string Get_Field_Time_Step_Spelling(void){
+            static const string Get_Time_Step_Spelling(void){
                 return string{"m_Time_Step"};
             }
 
 
-            static const string Get_Field_Time_Step_Display_Name(void){
+            static const string Get_Time_Step_Display_Name(void){
                 return string{"Time_Step"};
             }
 
-            static const void *const Get_Filed_Time_Step_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Time_Step);
+            static const int Get_Time_Step_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Time_Step;
             }
 
-            static void Set_Field_Time_Step_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Time_Step=*static_cast<const int*>(Value);
+            static void Set_Field_Time_Step_Attribute(shared_ptr<Global_Particle> Instance, const int& Value){
+                Instance->m_Time_Step=Value;
             }
 
             static const bool Is_Filed_Time_Step_CPPVector(void){
@@ -128,25 +118,25 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Field_Max_Life_Type_Spelling(void){
+            static const string Get_Max_Life_Type_Spelling(void){
                 return string{"float"};
             }
 
-            static const string Get_Field_Max_Life_Spelling(void){
+            static const string Get_Max_Life_Spelling(void){
                 return string{"m_Max_Life"};
             }
 
 
-            static const string Get_Field_Max_Life_Display_Name(void){
+            static const string Get_Max_Life_Display_Name(void){
                 return string{"Max_Life"};
             }
 
-            static const void *const Get_Filed_Max_Life_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Max_Life);
+            static const float Get_Max_Life_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Max_Life;
             }
 
-            static void Set_Field_Max_Life_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Max_Life=*static_cast<const float*>(Value);
+            static void Set_Field_Max_Life_Attribute(shared_ptr<Global_Particle> Instance, const float& Value){
+                Instance->m_Max_Life=Value;
             }
 
             static const bool Is_Filed_Max_Life_CPPVector(void){
@@ -155,25 +145,25 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Field_Gravity_Type_Spelling(void){
+            static const string Get_Gravity_Type_Spelling(void){
                 return string{"Vector3"};
             }
 
-            static const string Get_Field_Gravity_Spelling(void){
+            static const string Get_Gravity_Spelling(void){
                 return string{"m_Gravity"};
             }
 
 
-            static const string Get_Field_Gravity_Display_Name(void){
+            static const string Get_Gravity_Display_Name(void){
                 return string{"Gravity"};
             }
 
-            static const void *const Get_Filed_Gravity_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Gravity);
+            static const Vector3 Get_Gravity_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Gravity;
             }
 
-            static void Set_Field_Gravity_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Gravity=*static_cast<const Vector3*>(Value);
+            static void Set_Field_Gravity_Attribute(shared_ptr<Global_Particle> Instance, const Vector3& Value){
+                Instance->m_Gravity=Value;
             }
 
             static const bool Is_Filed_Gravity_CPPVector(void){
@@ -182,25 +172,25 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Field_Particle_Billboard_Texture_File_Path_Type_Spelling(void){
+            static const string Get_Particle_Billboard_Texture_File_Path_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Field_Particle_Billboard_Texture_File_Path_Spelling(void){
+            static const string Get_Particle_Billboard_Texture_File_Path_Spelling(void){
                 return string{"m_Particle_Billboard_Texture_File_Path"};
             }
 
 
-            static const string Get_Field_Particle_Billboard_Texture_File_Path_Display_Name(void){
+            static const string Get_Particle_Billboard_Texture_File_Path_Display_Name(void){
                 return string{"Particle_Billboard_Texture_File_Path"};
             }
 
-            static const void *const Get_Filed_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Particle_Billboard_Texture_File_Path);
+            static const path Get_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Particle_Billboard_Texture_File_Path;
             }
 
-            static void Set_Field_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Particle_Billboard_Texture_File_Path=*static_cast<const path*>(Value);
+            static void Set_Field_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance, const path& Value){
+                Instance->m_Particle_Billboard_Texture_File_Path=Value;
             }
 
             static const bool Is_Filed_Particle_Billboard_Texture_File_Path_CPPVector(void){
@@ -209,156 +199,35 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Field_Piccolo_Logo_Texture_File_Path_Type_Spelling(void){
+            static const string Get_Logo_Texture_File_Path_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Field_Piccolo_Logo_Texture_File_Path_Spelling(void){
-                return string{"m_Piccolo_Logo_Texture_File_Path"};
+            static const string Get_Logo_Texture_File_Path_Spelling(void){
+                return string{"m_Logo_Texture_File_Path"};
             }
 
 
-            static const string Get_Field_Piccolo_Logo_Texture_File_Path_Display_Name(void){
-                return string{"Piccolo_Logo_Texture_File_Path"};
+            static const string Get_Logo_Texture_File_Path_Display_Name(void){
+                return string{"Logo_Texture_File_Path"};
             }
 
-            static const void *const Get_Filed_Piccolo_Logo_Texture_File_Path_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Global_Particle>(Instance)->m_Piccolo_Logo_Texture_File_Path);
+            static const path Get_Logo_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Logo_Texture_File_Path;
             }
 
-            static void Set_Field_Piccolo_Logo_Texture_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Global_Particle>(Instance)->m_Piccolo_Logo_Texture_File_Path=*static_cast<const path*>(Value);
+            static void Set_Field_Logo_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance, const path& Value){
+                Instance->m_Logo_Texture_File_Path=Value;
             }
 
-            static const bool Is_Filed_Piccolo_Logo_Texture_File_Path_CPPVector(void){
+            static const bool Is_Filed_Logo_Texture_File_Path_CPPVector(void){
                 return  false;
             }
 
             
 
 
-            static void TypeWrapper_Rigster(void){
-                shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
-                shared_ptr<Class_Base_Class_Tuple> Temp_Class_Base_Class_Tuple{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Field_Func_Tuple>>> Temp_Class_Field_Func_Tuple_Map{nullptr};
-                shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
-
-                Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Global_Particle_Operator::Get_Class_Global_Particle_Spelling,
-                    Reflection_Global_Particle_Operator::Get_Class_Displaying_Name
-                );
-
-                Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Global_Particle_Operator::Get_Base_Class_Global_Particle_Reflection_Instance_List
-                );
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Emit_Gap"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Emit_Gap_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Emit_Gap_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Emit_Gap_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Emit_Gap_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Emit_Gap_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Emit_Gap_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Emit_Count"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Emit_Count_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Emit_Count_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Emit_Count_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Emit_Count_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Emit_Count_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Emit_Count_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Time_Step"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Time_Step_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Time_Step_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Time_Step_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Time_Step_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Time_Step_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Time_Step_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Max_Life"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Max_Life_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Max_Life_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Max_Life_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Max_Life_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Max_Life_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Max_Life_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Gravity"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Gravity_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Gravity_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Gravity_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Gravity_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Gravity_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Gravity_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Particle_Billboard_Texture_File_Path"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Particle_Billboard_Texture_File_Path_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Particle_Billboard_Texture_File_Path_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Particle_Billboard_Texture_File_Path_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Particle_Billboard_Texture_File_Path_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Particle_Billboard_Texture_File_Path_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Particle_Billboard_Texture_File_Path_CPPVector
-                    )
-                );
-
-                
-
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{"m_Piccolo_Logo_Texture_File_Path"},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Global_Particle_Operator::Get_Field_Piccolo_Logo_Texture_File_Path_Type_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Piccolo_Logo_Texture_File_Path_Spelling,
-                        Reflection_Global_Particle_Operator::Get_Field_Piccolo_Logo_Texture_File_Path_Display_Name,
-                        Reflection_Global_Particle_Operator::Get_Filed_Piccolo_Logo_Texture_File_Path_Attribute,
-                        Reflection_Global_Particle_Operator::Set_Field_Piccolo_Logo_Texture_File_Path_Attribute,
-                        Reflection_Global_Particle_Operator::Is_Filed_Piccolo_Logo_Texture_File_Path_CPPVector
-                    )
-                );
-
-                
-
-                
-            Reflection_Register::Get_Instance().Register_Class(string{"Global_Particle"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Global_Particle"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Global_Particle"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Global_Particle"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
-        }
-
     };
    
 }// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
-
 

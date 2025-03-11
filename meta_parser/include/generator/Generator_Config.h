@@ -38,7 +38,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Generator::NameSpace_Generator_Config
 
 	constexpr const char* Vector_Prefix{ "vector<" };
 
-	//Field_ Mothod
+	//NOTE : CPPVector_Field
 	constexpr const char* Parameter_Filed_CPPVector_Define_List{ "Filed_CPPVector_Define_List" };
 
 	constexpr const char* Parameter_Filed_CPPVector_Element_Type_Spelling{ "Filed_CPPVector_Element_Type_Spelling" };

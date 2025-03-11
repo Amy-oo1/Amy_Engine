@@ -175,8 +175,6 @@
     <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />
-    <ClInclude Include="include\meta\reflection\Reflection_Register.h" />
-    <ClInclude Include="include\meta\reflection\Type_Meta.h" />
     <ClInclude Include="include\meta\serializer\Serializer.h" />
     <ClInclude Include="include\transform\Affine_Transform.h" />
     <ClInclude Include="include\transform\Head_Thansform.h" />
@@ -201,8 +199,6 @@
     <ClCompile Include="src\math\Vector3.cpp" />
     <ClCompile Include="src\math\Vector4.cpp" />
     <ClCompile Include="src\meta\reflection\Reflection_Instance.cpp" />
-    <ClCompile Include="src\meta\reflection\Reflection_Register.cpp" />
-    <ClCompile Include="src\meta\reflection\Type_Meta.cpp" />
     <ClCompile Include="src\transform\Affine_Transform.cpp" />
     <ClCompile Include="src\transform\Orthogonal_Transform.cpp" />
     <ClCompile Include="src\transform\ScaleTranslation_Transform.cpp" />

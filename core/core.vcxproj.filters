@@ -150,12 +150,6 @@
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h">
       <Filter>include\meta\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\reflection\Reflection_Register.h">
-      <Filter>include\meta\reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\reflection\Type_Meta.h">
-      <Filter>include\meta\reflection</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
@@ -273,12 +267,6 @@
       <Filter>src\bounding</Filter>
     </ClCompile>
     <ClCompile Include="src\meta\reflection\Reflection_Instance.cpp">
-      <Filter>src\meta\reflection</Filter>
-    </ClCompile>
-    <ClCompile Include="src\meta\reflection\Reflection_Register.cpp">
-      <Filter>src\meta\reflection</Filter>
-    </ClCompile>
-    <ClCompile Include="src\meta\reflection\Type_Meta.cpp">
       <Filter>src\meta\reflection</Filter>
     </ClCompile>
     <ClCompile Include="src\color\Color.cpp">
