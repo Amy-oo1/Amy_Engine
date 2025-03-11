@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Name"};
             }
 
-            static const string Get_Name_Attribute(shared_ptr<Bone_Raw> Instance){
+            static const string& Get_Name_Attribute(shared_ptr<Bone_Raw> Instance){
                 return Instance->m_Name;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Current_Index"};
             }
 
-            static const size_t Get_Current_Index_Attribute(shared_ptr<Bone_Raw> Instance){
+            static const size_t& Get_Current_Index_Attribute(shared_ptr<Bone_Raw> Instance){
                 return Instance->m_Current_Index;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Parent_Index"};
             }
 
-            static const size_t Get_Parent_Index_Attribute(shared_ptr<Bone_Raw> Instance){
+            static const size_t& Get_Parent_Index_Attribute(shared_ptr<Bone_Raw> Instance){
                 return Instance->m_Parent_Index;
             }
 
@@ -131,7 +131,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Binding_Pose"};
             }
 
-            static const Affine_Transform Get_Binding_Pose_Attribute(shared_ptr<Bone_Raw> Instance){
+            static const Affine_Transform& Get_Binding_Pose_Attribute(shared_ptr<Bone_Raw> Instance){
                 return Instance->m_Binding_Pose;
             }
 
@@ -158,7 +158,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Tpose_Matrix"};
             }
 
-            static const Matrix4x4 Get_Tpose_Matrix_Attribute(shared_ptr<Bone_Raw> Instance){
+            static const Matrix4x4& Get_Tpose_Matrix_Attribute(shared_ptr<Bone_Raw> Instance){
                 return Instance->m_Tpose_Matrix;
             }
 
@@ -217,7 +217,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Bones"};
             }
 
-            static const vector<shared_ptr<Bone_Raw>> Get_Bones_Attribute(shared_ptr<Skeleton_Data> Instance){
+            static const vector<shared_ptr<Bone_Raw>>& Get_Bones_Attribute(shared_ptr<Skeleton_Data> Instance){
                 return Instance->m_Bones;
             }
 
@@ -241,12 +241,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Bones.size();
                 }
 
-                static const shared_ptr<Bone_Raw> Get_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index){
+                static const shared_ptr<Bone_Raw>& Get_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index){
                     return Instance->m_Bones[Index];
                 }
 
                 static void Set_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index, const shared_ptr<Bone_Raw>& Value){
                     Instance->m_Bones[Index]=Value;
+                }
+
+                static void Reserve_Bones_CPPVector(shared_ptr<Skeleton_Data> Instance, size_t Capacity){
+                    Instance->m_Bones.reserve(Capacity);
+                }
+
+                static void Push_Back_Bones_CPPVector(shared_ptr<Skeleton_Data> Instance, const shared_ptr<Bone_Raw>& Value){
+                    Instance->m_Bones.push_back(Value);
                 }
 
             static const string Get_Is_Flat_Type_Spelling(void){
@@ -262,7 +270,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Is_Flat"};
             }
 
-            static const bool Get_Is_Flat_Attribute(shared_ptr<Skeleton_Data> Instance){
+            static const bool& Get_Is_Flat_Attribute(shared_ptr<Skeleton_Data> Instance){
                 return Instance->m_Is_Flat;
             }
 
@@ -276,28 +284,28 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_root_index_Type_Spelling(void){
+            static const string Get_Root_Index_Type_Spelling(void){
                 return string{"size_t"};
             }
 
-            static const string Get_root_index_Spelling(void){
-                return string{"root_index"};
+            static const string Get_Root_Index_Spelling(void){
+                return string{"Root_Index"};
             }
 
 
-            static const string Get_root_index_Display_Name(void){
-                return string{"root_index"};
+            static const string Get_Root_Index_Display_Name(void){
+                return string{"Root_Index"};
             }
 
-            static const size_t Get_root_index_Attribute(shared_ptr<Skeleton_Data> Instance){
-                return Instance->root_index;
+            static const size_t& Get_Root_Index_Attribute(shared_ptr<Skeleton_Data> Instance){
+                return Instance->Root_Index;
             }
 
-            static void Set_Field_root_index_Attribute(shared_ptr<Skeleton_Data> Instance, const size_t& Value){
-                Instance->root_index=Value;
+            static void Set_Field_Root_Index_Attribute(shared_ptr<Skeleton_Data> Instance, const size_t& Value){
+                Instance->Root_Index=Value;
             }
 
-            static const bool Is_Filed_root_index_CPPVector(void){
+            static const bool Is_Filed_Root_Index_CPPVector(void){
                 return  false;
             }
 
@@ -316,7 +324,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"In_Topological_Order"};
             }
 
-            static const bool Get_In_Topological_Order_Attribute(shared_ptr<Skeleton_Data> Instance){
+            static const bool& Get_In_Topological_Order_Attribute(shared_ptr<Skeleton_Data> Instance){
                 return Instance->In_Topological_Order;
             }
 

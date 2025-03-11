@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Base_Colour_Texture_File_Path"};
             }
 
-            static const path Get_Base_Colour_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
+            static const path& Get_Base_Colour_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
                 return Instance->m_Base_Colour_Texture_File_Path;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Metallic_Roughness_Texture_File_Path"};
             }
 
-            static const path Get_Metallic_Roughness_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
+            static const path& Get_Metallic_Roughness_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
                 return Instance->m_Metallic_Roughness_Texture_File_Path;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Normal_Texture_File_Path"};
             }
 
-            static const path Get_Normal_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
+            static const path& Get_Normal_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
                 return Instance->m_Normal_Texture_File_Path;
             }
 
@@ -131,7 +131,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Occlusion_Texture_File_Path"};
             }
 
-            static const path Get_Occlusion_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
+            static const path& Get_Occlusion_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
                 return Instance->m_Occlusion_Texture_File_Path;
             }
 
@@ -158,7 +158,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Emissive_Texture_File_Path"};
             }
 
-            static const path Get_Emissive_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
+            static const path& Get_Emissive_Texture_File_Path_Attribute(shared_ptr<Material> Instance){
                 return Instance->m_Emissive_Texture_File_Path;
             }
 

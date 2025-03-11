@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Negative_X_Map"};
             }
 
-            static const string Get_Negative_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+            static const string& Get_Negative_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
                 return Instance->m_Negative_X_Map;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Positive_X_Map"};
             }
 
-            static const string Get_Positive_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+            static const string& Get_Positive_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
                 return Instance->m_Positive_X_Map;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Negative_Y_Map"};
             }
 
-            static const string Get_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+            static const string& Get_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
                 return Instance->m_Negative_Y_Map;
             }
 
@@ -131,7 +131,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Positive_Y_Map"};
             }
 
-            static const string Get_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+            static const string& Get_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
                 return Instance->m_Positive_Y_Map;
             }
 
@@ -158,7 +158,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Negative_Z_Map"};
             }
 
-            static const string Get_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+            static const string& Get_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
                 return Instance->m_Negative_Z_Map;
             }
 
@@ -185,7 +185,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Positive_Z_Map"};
             }
 
-            static const string Get_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+            static const string& Get_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
                 return Instance->m_Positive_Z_Map;
             }
 
@@ -244,7 +244,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Negative_X_Map"};
             }
 
-            static const string Get_Negative_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+            static const string& Get_Negative_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
                 return Instance->m_Negative_X_Map;
             }
 
@@ -271,7 +271,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Positive_X_Map"};
             }
 
-            static const string Get_Positive_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+            static const string& Get_Positive_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
                 return Instance->m_Positive_X_Map;
             }
 
@@ -298,7 +298,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Negative_Y_Map"};
             }
 
-            static const string Get_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+            static const string& Get_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
                 return Instance->m_Negative_Y_Map;
             }
 
@@ -325,7 +325,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Positive_Y_Map"};
             }
 
-            static const string Get_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+            static const string& Get_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
                 return Instance->m_Positive_Y_Map;
             }
 
@@ -352,7 +352,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Negative_Z_Map"};
             }
 
-            static const string Get_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+            static const string& Get_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
                 return Instance->m_Negative_Z_Map;
             }
 
@@ -379,7 +379,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Positive_Z_Map"};
             }
 
-            static const string Get_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+            static const string& Get_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
                 return Instance->m_Positive_Z_Map;
             }
 
@@ -438,7 +438,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Direction_List"};
             }
 
-            static const Vector3 Get_Direction_List_Attribute(shared_ptr<Directional_Light> Instance){
+            static const Vector3& Get_Direction_List_Attribute(shared_ptr<Directional_Light> Instance){
                 return Instance->m_Direction_List;
             }
 
@@ -465,7 +465,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Color"};
             }
 
-            static const Color Get_Color_Attribute(shared_ptr<Directional_Light> Instance){
+            static const Color& Get_Color_Attribute(shared_ptr<Directional_Light> Instance){
                 return Instance->m_Color;
             }
 
@@ -524,7 +524,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Enable_FXAA"};
             }
 
-            static const bool Get_Enable_FXAA_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const bool& Get_Enable_FXAA_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Enable_FXAA;
             }
 
@@ -551,7 +551,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Skybox_Irradiance_Map"};
             }
 
-            static const SkyBox_Irradiance_Map Get_Skybox_Irradiance_Map_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const SkyBox_Irradiance_Map& Get_Skybox_Irradiance_Map_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Skybox_Irradiance_Map;
             }
 
@@ -578,7 +578,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Skybox_Specular_Map"};
             }
 
-            static const SkyBox_Specular_Map Get_Skybox_Specular_Map_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const SkyBox_Specular_Map& Get_Skybox_Specular_Map_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Skybox_Specular_Map;
             }
 
@@ -605,7 +605,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"BRDF_Map"};
             }
 
-            static const std::string Get_BRDF_Map_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const std::string& Get_BRDF_Map_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_BRDF_Map;
             }
 
@@ -632,7 +632,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Color_Grading_Map"};
             }
 
-            static const std::string Get_Color_Grading_Map_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const std::string& Get_Color_Grading_Map_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Color_Grading_Map;
             }
 
@@ -659,7 +659,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Sky_Color"};
             }
 
-            static const Color Get_Sky_Color_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const Color& Get_Sky_Color_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Sky_Color;
             }
 
@@ -686,7 +686,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Ambient_Light"};
             }
 
-            static const Color Get_Ambient_Light_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const Color& Get_Ambient_Light_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Ambient_Light;
             }
 
@@ -713,7 +713,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Camera_Config"};
             }
 
-            static const Camera_Config Get_Camera_Config_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const Camera_Config& Get_Camera_Config_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Camera_Config;
             }
 
@@ -740,7 +740,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Directional_Light"};
             }
 
-            static const Directional_Light Get_Directional_Light_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const Directional_Light& Get_Directional_Light_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Directional_Light;
             }
 

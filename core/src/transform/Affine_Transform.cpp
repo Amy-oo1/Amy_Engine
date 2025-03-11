@@ -2,7 +2,7 @@
 
 namespace NameSpace_Core::NameSpace_Transform {
 
-	Affine_Transform::Affine_Transform( const Vector3& Scale, const Quaternion& Rotate_Quaternion, const Vector3& Translate) :
+	Affine_Transform::Affine_Transform(const Vector3& Scale, const Quaternion& Rotate_Quaternion, const Vector3& Translate) :
 		m_Basis{ Rotate_Quaternion.Get_Rotation_Matrix3x3() * Matrix3x3::Generate_Scale(Scale) },
 		m_Translation{ Translate } {
 	}
@@ -10,6 +10,11 @@ namespace NameSpace_Core::NameSpace_Transform {
 	Affine_Transform::Affine_Transform(const Matrix3x3& Basis, const Vector3 Translate) :
 		m_Basis{ Basis },
 		m_Translation{ Translate } {
+	}
+
+	Affine_Transform::Affine_Transform(const Matrix4x4& Mat) :
+		m_Basis{ Mat.Get_LeftTop_Matrix3x3() },
+		m_Translation{ Mat.Get_Column(3).Get_XYZ() } {
 	}
 
 	Affine_Transform::Affine_Transform(const Quaternion& Rotate_Quaternion, const Vector3& Translate_Vector3) :

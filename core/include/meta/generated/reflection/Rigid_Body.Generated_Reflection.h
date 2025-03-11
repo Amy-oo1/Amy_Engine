@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Global_Transform"};
             }
 
-            static const Orthogonal_Transform Get_Global_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Orthogonal_Transform& Get_Global_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Global_Transform;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Local_Transform"};
             }
 
-            static const Orthogonal_Transform Get_Local_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Orthogonal_Transform& Get_Local_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Local_Transform;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Bounding_Box"};
             }
 
-            static const AxisAligned_Bounding_Box Get_Bounding_Box_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const AxisAligned_Bounding_Box& Get_Bounding_Box_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Bounding_Box;
             }
 
@@ -131,7 +131,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Type"};
             }
 
-            static const Rigid_Body_Type Get_Type_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Rigid_Body_Type& Get_Type_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Type;
             }
 
@@ -158,7 +158,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Instance"};
             }
 
-            static const Reflection_Instance<Geometry_Base> Get_Instance_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Reflection_Instance<Geometry_Base>& Get_Instance_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Instance;
             }
 
@@ -217,7 +217,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Shapes"};
             }
 
-            static const vector<Rigid_Body_Shape> Get_Shapes_Attribute(shared_ptr<Rigid_Body> Instance){
+            static const vector<Rigid_Body_Shape>& Get_Shapes_Attribute(shared_ptr<Rigid_Body> Instance){
                 return Instance->m_Shapes;
             }
 
@@ -241,12 +241,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Shapes.size();
                 }
 
-                static const Rigid_Body_Shape Get_Shapes_CPPVector_Element(shared_ptr<Rigid_Body> Instance, size_t Index){
+                static const Rigid_Body_Shape& Get_Shapes_CPPVector_Element(shared_ptr<Rigid_Body> Instance, size_t Index){
                     return Instance->m_Shapes[Index];
                 }
 
                 static void Set_Shapes_CPPVector_Element(shared_ptr<Rigid_Body> Instance, size_t Index, const Rigid_Body_Shape& Value){
                     Instance->m_Shapes[Index]=Value;
+                }
+
+                static void Reserve_Shapes_CPPVector(shared_ptr<Rigid_Body> Instance, size_t Capacity){
+                    Instance->m_Shapes.reserve(Capacity);
+                }
+
+                static void Push_Back_Shapes_CPPVector(shared_ptr<Rigid_Body> Instance, const Rigid_Body_Shape& Value){
+                    Instance->m_Shapes.push_back(Value);
                 }
 
             static const string Get_Inverse_Mass_Type_Spelling(void){
@@ -262,7 +270,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Inverse_Mass"};
             }
 
-            static const float Get_Inverse_Mass_Attribute(shared_ptr<Rigid_Body> Instance){
+            static const float& Get_Inverse_Mass_Attribute(shared_ptr<Rigid_Body> Instance){
                 return Instance->m_Inverse_Mass;
             }
 
@@ -289,7 +297,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Actor_Type"};
             }
 
-            static const int Get_Actor_Type_Attribute(shared_ptr<Rigid_Body> Instance){
+            static const int& Get_Actor_Type_Attribute(shared_ptr<Rigid_Body> Instance){
                 return Instance->m_Actor_Type;
             }
 

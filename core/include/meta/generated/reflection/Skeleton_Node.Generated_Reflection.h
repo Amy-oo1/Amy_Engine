@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Convert"};
             }
 
-            static const vector<size_t> Get_Convert_Attribute(shared_ptr<Skeleton_Node_Map> Instance){
+            static const vector<size_t>& Get_Convert_Attribute(shared_ptr<Skeleton_Node_Map> Instance){
                 return Instance->m_Convert;
             }
 
@@ -74,12 +74,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Convert.size();
                 }
 
-                static const size_t Get_Convert_CPPVector_Element(shared_ptr<Skeleton_Node_Map> Instance, size_t Index){
+                static const size_t& Get_Convert_CPPVector_Element(shared_ptr<Skeleton_Node_Map> Instance, size_t Index){
                     return Instance->m_Convert[Index];
                 }
 
                 static void Set_Convert_CPPVector_Element(shared_ptr<Skeleton_Node_Map> Instance, size_t Index, const size_t& Value){
                     Instance->m_Convert[Index]=Value;
+                }
+
+                static void Reserve_Convert_CPPVector(shared_ptr<Skeleton_Node_Map> Instance, size_t Capacity){
+                    Instance->m_Convert.reserve(Capacity);
+                }
+
+                static void Push_Back_Convert_CPPVector(shared_ptr<Skeleton_Node_Map> Instance, const size_t& Value){
+                    Instance->m_Convert.push_back(Value);
                 }
 
 

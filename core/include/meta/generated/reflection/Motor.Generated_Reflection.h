@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Cylinder"};
             }
 
-            static const Geometry_Cylinder Get_Cylinder_Attribute(shared_ptr<Physics_Controller_Config> Instance){
+            static const Geometry_Cylinder& Get_Cylinder_Attribute(shared_ptr<Physics_Controller_Config> Instance){
                 return Instance->m_Cylinder;
             }
 
@@ -109,7 +109,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Physics_Controller_Config"};
             }
 
-            static const Reflection_Instance<Physics_Controller_Config> Get_Physics_Controller_Config_Attribute(shared_ptr<Motor> Instance){
+            static const Reflection_Instance<Physics_Controller_Config>& Get_Physics_Controller_Config_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Physics_Controller_Config;
             }
 
@@ -136,7 +136,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Move_Speed"};
             }
 
-            static const float Get_Move_Speed_Attribute(shared_ptr<Motor> Instance){
+            static const float& Get_Move_Speed_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Move_Speed;
             }
 
@@ -163,7 +163,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Jump_Height"};
             }
 
-            static const float Get_Jump_Height_Attribute(shared_ptr<Motor> Instance){
+            static const float& Get_Jump_Height_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Jump_Height;
             }
 
@@ -190,7 +190,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Max_Move_Speed_Ratio"};
             }
 
-            static const float Get_Max_Move_Speed_Ratio_Attribute(shared_ptr<Motor> Instance){
+            static const float& Get_Max_Move_Speed_Ratio_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Max_Move_Speed_Ratio;
             }
 
@@ -217,7 +217,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Max_Sprint_Speed_Ratio"};
             }
 
-            static const float Get_Max_Sprint_Speed_Ratio_Attribute(shared_ptr<Motor> Instance){
+            static const float& Get_Max_Sprint_Speed_Ratio_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Max_Sprint_Speed_Ratio;
             }
 
@@ -244,7 +244,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Move_Acceleration"};
             }
 
-            static const float Get_Move_Acceleration_Attribute(shared_ptr<Motor> Instance){
+            static const float& Get_Move_Acceleration_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Move_Acceleration;
             }
 
@@ -271,7 +271,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Sprint_Acceleration"};
             }
 
-            static const float Get_Sprint_Acceleration_Attribute(shared_ptr<Motor> Instance){
+            static const float& Get_Sprint_Acceleration_Attribute(shared_ptr<Motor> Instance){
                 return Instance->m_Sprint_Acceleration;
             }
 

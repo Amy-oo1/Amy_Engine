@@ -37,49 +37,57 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
-            static const string Get_onvert_Type_Spelling(void){
+            static const string Get_Convert_Type_Spelling(void){
                 return string{"vector<string>"};
             }
 
-            static const string Get_onvert_Spelling(void){
-                return string{"m_onvert"};
+            static const string Get_Convert_Spelling(void){
+                return string{"m_Convert"};
             }
 
 
-            static const string Get_onvert_Display_Name(void){
-                return string{"onvert"};
+            static const string Get_Convert_Display_Name(void){
+                return string{"Convert"};
             }
 
-            static const vector<string> Get_onvert_Attribute(shared_ptr<Animation_Node_Map> Instance){
-                return Instance->m_onvert;
+            static const vector<string>& Get_Convert_Attribute(shared_ptr<Animation_Node_Map> Instance){
+                return Instance->m_Convert;
             }
 
-            static void Set_Field_onvert_Attribute(shared_ptr<Animation_Node_Map> Instance, const vector<string>& Value){
-                Instance->m_onvert=Value;
+            static void Set_Field_Convert_Attribute(shared_ptr<Animation_Node_Map> Instance, const vector<string>& Value){
+                Instance->m_Convert=Value;
             }
 
-            static const bool Is_Filed_onvert_CPPVector(void){
+            static const bool Is_Filed_Convert_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_onvert_CPPVector_Element_Type_Spelling(void){
+                static const string Get_Convert_CPPVector_Element_Type_Spelling(void){
                     return string {"string"};
                 }
 
-                static const size_t Get_onvert_CPPVector_Capacity(shared_ptr<Animation_Node_Map> Instance){
-                    return Instance->m_onvert.capacity();
+                static const size_t Get_Convert_CPPVector_Capacity(shared_ptr<Animation_Node_Map> Instance){
+                    return Instance->m_Convert.capacity();
                 }
 
-                static const size_t Get_onvert_CPPVector_Size(shared_ptr<Animation_Node_Map> Instance){
-                    return Instance->m_onvert.size();
+                static const size_t Get_Convert_CPPVector_Size(shared_ptr<Animation_Node_Map> Instance){
+                    return Instance->m_Convert.size();
                 }
 
-                static const string Get_onvert_CPPVector_Element(shared_ptr<Animation_Node_Map> Instance, size_t Index){
-                    return Instance->m_onvert[Index];
+                static const string& Get_Convert_CPPVector_Element(shared_ptr<Animation_Node_Map> Instance, size_t Index){
+                    return Instance->m_Convert[Index];
                 }
 
-                static void Set_onvert_CPPVector_Element(shared_ptr<Animation_Node_Map> Instance, size_t Index, const string& Value){
-                    Instance->m_onvert[Index]=Value;
+                static void Set_Convert_CPPVector_Element(shared_ptr<Animation_Node_Map> Instance, size_t Index, const string& Value){
+                    Instance->m_Convert[Index]=Value;
+                }
+
+                static void Reserve_Convert_CPPVector(shared_ptr<Animation_Node_Map> Instance, size_t Capacity){
+                    Instance->m_Convert.reserve(Capacity);
+                }
+
+                static void Push_Back_Convert_CPPVector(shared_ptr<Animation_Node_Map> Instance, const string& Value){
+                    Instance->m_Convert.push_back(Value);
                 }
 
 
@@ -127,7 +135,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Name"};
             }
 
-            static const string Get_Name_Attribute(shared_ptr<Animation_Channel> Instance){
+            static const string& Get_Name_Attribute(shared_ptr<Animation_Channel> Instance){
                 return Instance->m_Name;
             }
 
@@ -154,7 +162,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Positions_Keys"};
             }
 
-            static const vector<Vector3> Get_Positions_Keys_Attribute(shared_ptr<Animation_Channel> Instance){
+            static const vector<Vector3>& Get_Positions_Keys_Attribute(shared_ptr<Animation_Channel> Instance){
                 return Instance->m_Positions_Keys;
             }
 
@@ -178,12 +186,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Positions_Keys.size();
                 }
 
-                static const Vector3 Get_Positions_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
+                static const Vector3& Get_Positions_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
                     return Instance->m_Positions_Keys[Index];
                 }
 
                 static void Set_Positions_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index, const Vector3& Value){
                     Instance->m_Positions_Keys[Index]=Value;
+                }
+
+                static void Reserve_Positions_Keys_CPPVector(shared_ptr<Animation_Channel> Instance, size_t Capacity){
+                    Instance->m_Positions_Keys.reserve(Capacity);
+                }
+
+                static void Push_Back_Positions_Keys_CPPVector(shared_ptr<Animation_Channel> Instance, const Vector3& Value){
+                    Instance->m_Positions_Keys.push_back(Value);
                 }
 
             static const string Get_Rotations_Keys_Type_Spelling(void){
@@ -199,7 +215,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Rotations_Keys"};
             }
 
-            static const vector<Quaternion> Get_Rotations_Keys_Attribute(shared_ptr<Animation_Channel> Instance){
+            static const vector<Quaternion>& Get_Rotations_Keys_Attribute(shared_ptr<Animation_Channel> Instance){
                 return Instance->m_Rotations_Keys;
             }
 
@@ -223,12 +239,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Rotations_Keys.size();
                 }
 
-                static const Quaternion Get_Rotations_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
+                static const Quaternion& Get_Rotations_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
                     return Instance->m_Rotations_Keys[Index];
                 }
 
                 static void Set_Rotations_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index, const Quaternion& Value){
                     Instance->m_Rotations_Keys[Index]=Value;
+                }
+
+                static void Reserve_Rotations_Keys_CPPVector(shared_ptr<Animation_Channel> Instance, size_t Capacity){
+                    Instance->m_Rotations_Keys.reserve(Capacity);
+                }
+
+                static void Push_Back_Rotations_Keys_CPPVector(shared_ptr<Animation_Channel> Instance, const Quaternion& Value){
+                    Instance->m_Rotations_Keys.push_back(Value);
                 }
 
             static const string Get_Scales_Keys_Type_Spelling(void){
@@ -244,7 +268,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Scales_Keys"};
             }
 
-            static const vector<Vector3> Get_Scales_Keys_Attribute(shared_ptr<Animation_Channel> Instance){
+            static const vector<Vector3>& Get_Scales_Keys_Attribute(shared_ptr<Animation_Channel> Instance){
                 return Instance->m_Scales_Keys;
             }
 
@@ -268,12 +292,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Scales_Keys.size();
                 }
 
-                static const Vector3 Get_Scales_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
+                static const Vector3& Get_Scales_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index){
                     return Instance->m_Scales_Keys[Index];
                 }
 
                 static void Set_Scales_Keys_CPPVector_Element(shared_ptr<Animation_Channel> Instance, size_t Index, const Vector3& Value){
                     Instance->m_Scales_Keys[Index]=Value;
+                }
+
+                static void Reserve_Scales_Keys_CPPVector(shared_ptr<Animation_Channel> Instance, size_t Capacity){
+                    Instance->m_Scales_Keys.reserve(Capacity);
+                }
+
+                static void Push_Back_Scales_Keys_CPPVector(shared_ptr<Animation_Channel> Instance, const Vector3& Value){
+                    Instance->m_Scales_Keys.push_back(Value);
                 }
 
 
@@ -321,7 +353,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Total_Frame"};
             }
 
-            static const size_t Get_Total_Frame_Attribute(shared_ptr<Animation_Clip> Instance){
+            static const size_t& Get_Total_Frame_Attribute(shared_ptr<Animation_Clip> Instance){
                 return Instance->Total_Frame;
             }
 
@@ -348,7 +380,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Node_Channels"};
             }
 
-            static const vector<shared_ptr<Animation_Channel>> Get_Node_Channels_Attribute(shared_ptr<Animation_Clip> Instance){
+            static const vector<shared_ptr<Animation_Channel>>& Get_Node_Channels_Attribute(shared_ptr<Animation_Clip> Instance){
                 return Instance->m_Node_Channels;
             }
 
@@ -372,12 +404,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Node_Channels.size();
                 }
 
-                static const shared_ptr<Animation_Channel> Get_Node_Channels_CPPVector_Element(shared_ptr<Animation_Clip> Instance, size_t Index){
+                static const shared_ptr<Animation_Channel>& Get_Node_Channels_CPPVector_Element(shared_ptr<Animation_Clip> Instance, size_t Index){
                     return Instance->m_Node_Channels[Index];
                 }
 
                 static void Set_Node_Channels_CPPVector_Element(shared_ptr<Animation_Clip> Instance, size_t Index, const shared_ptr<Animation_Channel>& Value){
                     Instance->m_Node_Channels[Index]=Value;
+                }
+
+                static void Reserve_Node_Channels_CPPVector(shared_ptr<Animation_Clip> Instance, size_t Capacity){
+                    Instance->m_Node_Channels.reserve(Capacity);
+                }
+
+                static void Push_Back_Node_Channels_CPPVector(shared_ptr<Animation_Clip> Instance, const shared_ptr<Animation_Channel>& Value){
+                    Instance->m_Node_Channels.push_back(Value);
                 }
 
 
@@ -425,7 +465,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Skeleton_File_Path"};
             }
 
-            static const path Get_Skeleton_File_Path_Attribute(shared_ptr<Animation_Data> Instance){
+            static const path& Get_Skeleton_File_Path_Attribute(shared_ptr<Animation_Data> Instance){
                 return Instance->m_Skeleton_File_Path;
             }
 
@@ -452,7 +492,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Node_Map"};
             }
 
-            static const shared_ptr<Animation_Node_Map> Get_Node_Map_Attribute(shared_ptr<Animation_Data> Instance){
+            static const shared_ptr<Animation_Node_Map>& Get_Node_Map_Attribute(shared_ptr<Animation_Data> Instance){
                 return Instance->m_Node_Map;
             }
 
@@ -479,7 +519,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Clips"};
             }
 
-            static const vector<shared_ptr<Animation_Clip>> Get_Clips_Attribute(shared_ptr<Animation_Data> Instance){
+            static const vector<shared_ptr<Animation_Clip>>& Get_Clips_Attribute(shared_ptr<Animation_Data> Instance){
                 return Instance->m_Clips;
             }
 
@@ -503,12 +543,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Clips.size();
                 }
 
-                static const shared_ptr<Animation_Clip> Get_Clips_CPPVector_Element(shared_ptr<Animation_Data> Instance, size_t Index){
+                static const shared_ptr<Animation_Clip>& Get_Clips_CPPVector_Element(shared_ptr<Animation_Data> Instance, size_t Index){
                     return Instance->m_Clips[Index];
                 }
 
                 static void Set_Clips_CPPVector_Element(shared_ptr<Animation_Data> Instance, size_t Index, const shared_ptr<Animation_Clip>& Value){
                     Instance->m_Clips[Index]=Value;
+                }
+
+                static void Reserve_Clips_CPPVector(shared_ptr<Animation_Data> Instance, size_t Capacity){
+                    Instance->m_Clips.reserve(Capacity);
+                }
+
+                static void Push_Back_Clips_CPPVector(shared_ptr<Animation_Data> Instance, const shared_ptr<Animation_Clip>& Value){
+                    Instance->m_Clips.push_back(Value);
                 }
 
 

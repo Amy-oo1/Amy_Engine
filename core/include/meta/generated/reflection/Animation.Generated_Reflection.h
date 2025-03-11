@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Index"};
             }
 
-            static const size_t Get_Index_Attribute(shared_ptr<Animation_Effect_Element> Instance){
+            static const size_t& Get_Index_Attribute(shared_ptr<Animation_Effect_Element> Instance){
                 return Instance->m_Index;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Transform"};
             }
 
-            static const Affine_Transform Get_Transform_Attribute(shared_ptr<Animation_Effect_Element> Instance){
+            static const Affine_Transform& Get_Transform_Attribute(shared_ptr<Animation_Effect_Element> Instance){
                 return Instance->m_Transform;
             }
 
@@ -124,7 +124,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const string Get_Effects_Type_Spelling(void){
-                return string{"vector<Animation_Effect_Element>"};
+                return string{"vector<shared_ptr<Animation_Effect_Element>>"};
             }
 
             static const string Get_Effects_Spelling(void){
@@ -136,11 +136,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Effects"};
             }
 
-            static const vector<Animation_Effect_Element> Get_Effects_Attribute(shared_ptr<Animation_Effect> Instance){
+            static const vector<shared_ptr<Animation_Effect_Element>>& Get_Effects_Attribute(shared_ptr<Animation_Effect> Instance){
                 return Instance->m_Effects;
             }
 
-            static void Set_Field_Effects_Attribute(shared_ptr<Animation_Effect> Instance, const vector<Animation_Effect_Element>& Value){
+            static void Set_Field_Effects_Attribute(shared_ptr<Animation_Effect> Instance, const vector<shared_ptr<Animation_Effect_Element>>& Value){
                 Instance->m_Effects=Value;
             }
 
@@ -149,7 +149,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Effects_CPPVector_Element_Type_Spelling(void){
-                    return string {"Animation_Effect_Element"};
+                    return string {"shared_ptr<Animation_Effect_Element>"};
                 }
 
                 static const size_t Get_Effects_CPPVector_Capacity(shared_ptr<Animation_Effect> Instance){
@@ -160,12 +160,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Effects.size();
                 }
 
-                static const Animation_Effect_Element Get_Effects_CPPVector_Element(shared_ptr<Animation_Effect> Instance, size_t Index){
+                static const shared_ptr<Animation_Effect_Element>& Get_Effects_CPPVector_Element(shared_ptr<Animation_Effect> Instance, size_t Index){
                     return Instance->m_Effects[Index];
                 }
 
-                static void Set_Effects_CPPVector_Element(shared_ptr<Animation_Effect> Instance, size_t Index, const Animation_Effect_Element& Value){
+                static void Set_Effects_CPPVector_Element(shared_ptr<Animation_Effect> Instance, size_t Index, const shared_ptr<Animation_Effect_Element>& Value){
                     Instance->m_Effects[Index]=Value;
+                }
+
+                static void Reserve_Effects_CPPVector(shared_ptr<Animation_Effect> Instance, size_t Capacity){
+                    Instance->m_Effects.reserve(Capacity);
+                }
+
+                static void Push_Back_Effects_CPPVector(shared_ptr<Animation_Effect> Instance, const shared_ptr<Animation_Effect_Element>& Value){
+                    Instance->m_Effects.push_back(Value);
                 }
 
 
@@ -213,7 +221,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"skeleton_File_Path"};
             }
 
-            static const path Get_skeleton_File_Path_Attribute(shared_ptr<Animation_Component_Res> Instance){
+            static const path& Get_skeleton_File_Path_Attribute(shared_ptr<Animation_Component_Res> Instance){
                 return Instance->m_skeleton_File_Path;
             }
 
@@ -228,7 +236,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             
 
             static const string Get_Blend_State_Type_Spelling(void){
-                return string{"Blend_State"};
+                return string{"shared_ptr<Blend_State>"};
             }
 
             static const string Get_Blend_State_Spelling(void){
@@ -240,11 +248,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_State"};
             }
 
-            static const Blend_State Get_Blend_State_Attribute(shared_ptr<Animation_Component_Res> Instance){
+            static const shared_ptr<Blend_State>& Get_Blend_State_Attribute(shared_ptr<Animation_Component_Res> Instance){
                 return Instance->m_Blend_State;
             }
 
-            static void Set_Field_Blend_State_Attribute(shared_ptr<Animation_Component_Res> Instance, const Blend_State& Value){
+            static void Set_Field_Blend_State_Attribute(shared_ptr<Animation_Component_Res> Instance, const shared_ptr<Blend_State>& Value){
                 Instance->m_Blend_State=Value;
             }
 
@@ -255,7 +263,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             
 
             static const string Get_Effect_Type_Spelling(void){
-                return string{"Animation_Effect"};
+                return string{"shared_ptr<Animation_Effect>"};
             }
 
             static const string Get_Effect_Spelling(void){
@@ -267,11 +275,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Effect"};
             }
 
-            static const Animation_Effect Get_Effect_Attribute(shared_ptr<Animation_Component_Res> Instance){
+            static const shared_ptr<Animation_Effect>& Get_Effect_Attribute(shared_ptr<Animation_Component_Res> Instance){
                 return Instance->m_Effect;
             }
 
-            static void Set_Field_Effect_Attribute(shared_ptr<Animation_Component_Res> Instance, const Animation_Effect& Value){
+            static void Set_Field_Effect_Attribute(shared_ptr<Animation_Component_Res> Instance, const shared_ptr<Animation_Effect>& Value){
                 Instance->m_Effect=Value;
             }
 

@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Object_Path"};
             }
 
-            static const path Get_Object_Path_Attribute(shared_ptr<Mesh_Sub> Instance){
+            static const path& Get_Object_Path_Attribute(shared_ptr<Mesh_Sub> Instance){
                 return Instance->m_Object_Path;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Transform"};
             }
 
-            static const Affine_Transform Get_Transform_Attribute(shared_ptr<Mesh_Sub> Instance){
+            static const Affine_Transform& Get_Transform_Attribute(shared_ptr<Mesh_Sub> Instance){
                 return Instance->m_Transform;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Material"};
             }
 
-            static const string Get_Material_Attribute(shared_ptr<Mesh_Sub> Instance){
+            static const string& Get_Material_Attribute(shared_ptr<Mesh_Sub> Instance){
                 return Instance->m_Material;
             }
 
@@ -163,7 +163,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Meshes"};
             }
 
-            static const vector<Mesh_Sub> Get_Meshes_Attribute(shared_ptr<Mesh> Instance){
+            static const vector<Mesh_Sub>& Get_Meshes_Attribute(shared_ptr<Mesh> Instance){
                 return Instance->m_Meshes;
             }
 
@@ -187,12 +187,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Meshes.size();
                 }
 
-                static const Mesh_Sub Get_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index){
+                static const Mesh_Sub& Get_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index){
                     return Instance->m_Meshes[Index];
                 }
 
                 static void Set_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index, const Mesh_Sub& Value){
                     Instance->m_Meshes[Index]=Value;
+                }
+
+                static void Reserve_Meshes_CPPVector(shared_ptr<Mesh> Instance, size_t Capacity){
+                    Instance->m_Meshes.reserve(Capacity);
+                }
+
+                static void Push_Back_Meshes_CPPVector(shared_ptr<Mesh> Instance, const Mesh_Sub& Value){
+                    Instance->m_Meshes.push_back(Value);
                 }
 
 

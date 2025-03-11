@@ -51,7 +51,9 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 		shared_ptr<Bone_Raw> Get_Definition(void) const;
 
-		const Affine_Transform Get_Transform(void);
+		const Affine_Transform& Get_Transform(void);
+
+		const Affine_Transform& Get_Derived_Transform(void);
 
 		void Set_Transform(const Affine_Transform& Transform);
 

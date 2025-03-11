@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Weights"};
             }
 
-            static const vector<float> Get_Blend_Weights_Attribute(shared_ptr<Bone_Blend_Weight> Instance){
+            static const vector<float>& Get_Blend_Weights_Attribute(shared_ptr<Bone_Blend_Weight> Instance){
                 return Instance->m_Blend_Weights;
             }
 
@@ -74,12 +74,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Weights.size();
                 }
 
-                static const float Get_Blend_Weights_CPPVector_Element(shared_ptr<Bone_Blend_Weight> Instance, size_t Index){
+                static const float& Get_Blend_Weights_CPPVector_Element(shared_ptr<Bone_Blend_Weight> Instance, size_t Index){
                     return Instance->m_Blend_Weights[Index];
                 }
 
                 static void Set_Blend_Weights_CPPVector_Element(shared_ptr<Bone_Blend_Weight> Instance, size_t Index, const float& Value){
                     Instance->m_Blend_Weights[Index]=Value;
+                }
+
+                static void Reserve_Blend_Weights_CPPVector(shared_ptr<Bone_Blend_Weight> Instance, size_t Capacity){
+                    Instance->m_Blend_Weights.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Weights_CPPVector(shared_ptr<Bone_Blend_Weight> Instance, const float& Value){
+                    Instance->m_Blend_Weights.push_back(Value);
                 }
 
 
@@ -127,7 +135,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Clip"};
             }
 
-            static const vector<shared_ptr<Animation_Clip>> Get_Blend_Clip_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<shared_ptr<Animation_Clip>>& Get_Blend_Clip_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_Clip;
             }
 
@@ -151,12 +159,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Clip.size();
                 }
 
-                static const shared_ptr<Animation_Clip> Get_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const shared_ptr<Animation_Clip>& Get_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_Clip[Index];
                 }
 
                 static void Set_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const shared_ptr<Animation_Clip>& Value){
                     Instance->m_Blend_Clip[Index]=Value;
+                }
+
+                static void Reserve_Blend_Clip_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Capacity){
+                    Instance->m_Blend_Clip.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Clip_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, const shared_ptr<Animation_Clip>& Value){
+                    Instance->m_Blend_Clip.push_back(Value);
                 }
 
             static const string Get_Blend_Skeleton_Type_Spelling(void){
@@ -172,7 +188,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Skeleton"};
             }
 
-            static const vector<shared_ptr<Skeleton_Node_Map>> Get_Blend_Skeleton_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<shared_ptr<Skeleton_Node_Map>>& Get_Blend_Skeleton_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_Skeleton;
             }
 
@@ -196,12 +212,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Skeleton.size();
                 }
 
-                static const shared_ptr<Skeleton_Node_Map> Get_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const shared_ptr<Skeleton_Node_Map>& Get_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_Skeleton[Index];
                 }
 
                 static void Set_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const shared_ptr<Skeleton_Node_Map>& Value){
                     Instance->m_Blend_Skeleton[Index]=Value;
+                }
+
+                static void Reserve_Blend_Skeleton_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Capacity){
+                    Instance->m_Blend_Skeleton.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Skeleton_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, const shared_ptr<Skeleton_Node_Map>& Value){
+                    Instance->m_Blend_Skeleton.push_back(Value);
                 }
 
             static const string Get_Blend_Weights_Type_Spelling(void){
@@ -217,7 +241,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Weights"};
             }
 
-            static const vector<shared_ptr<Bone_Blend_Weight>> Get_Blend_Weights_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<shared_ptr<Bone_Blend_Weight>>& Get_Blend_Weights_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_Weights;
             }
 
@@ -241,12 +265,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Weights.size();
                 }
 
-                static const shared_ptr<Bone_Blend_Weight> Get_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const shared_ptr<Bone_Blend_Weight>& Get_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_Weights[Index];
                 }
 
                 static void Set_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const shared_ptr<Bone_Blend_Weight>& Value){
                     Instance->m_Blend_Weights[Index]=Value;
+                }
+
+                static void Reserve_Blend_Weights_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Capacity){
+                    Instance->m_Blend_Weights.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Weights_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, const shared_ptr<Bone_Blend_Weight>& Value){
+                    Instance->m_Blend_Weights.push_back(Value);
                 }
 
             static const string Get_Blend_ratio_Type_Spelling(void){
@@ -262,7 +294,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_ratio"};
             }
 
-            static const vector<float> Get_Blend_ratio_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<float>& Get_Blend_ratio_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_ratio;
             }
 
@@ -286,12 +318,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_ratio.size();
                 }
 
-                static const float Get_Blend_ratio_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const float& Get_Blend_ratio_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_ratio[Index];
                 }
 
                 static void Set_Blend_ratio_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const float& Value){
                     Instance->m_Blend_ratio[Index]=Value;
+                }
+
+                static void Reserve_Blend_ratio_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Capacity){
+                    Instance->m_Blend_ratio.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_ratio_CPPVector(shared_ptr<BlendState_With_Clip_Data> Instance, const float& Value){
+                    Instance->m_Blend_ratio.push_back(Value);
                 }
 
 
@@ -339,7 +379,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Clip_File_Path"};
             }
 
-            static const vector<path> Get_Blend_Clip_File_Path_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<path>& Get_Blend_Clip_File_Path_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_Blend_Clip_File_Path;
             }
 
@@ -363,12 +403,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Clip_File_Path.size();
                 }
 
-                static const path Get_Blend_Clip_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const path& Get_Blend_Clip_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_Blend_Clip_File_Path[Index];
                 }
 
                 static void Set_Blend_Clip_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const path& Value){
                     Instance->m_Blend_Clip_File_Path[Index]=Value;
+                }
+
+                static void Reserve_Blend_Clip_File_Path_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_Blend_Clip_File_Path.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Clip_File_Path_CPPVector(shared_ptr<Blend_State> Instance, const path& Value){
+                    Instance->m_Blend_Clip_File_Path.push_back(Value);
                 }
 
             static const string Get_Blend_Clip_File_Length_Type_Spelling(void){
@@ -384,7 +432,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Clip_File_Length"};
             }
 
-            static const vector<float> Get_Blend_Clip_File_Length_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<float>& Get_Blend_Clip_File_Length_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_Blend_Clip_File_Length;
             }
 
@@ -408,12 +456,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Clip_File_Length.size();
                 }
 
-                static const float Get_Blend_Clip_File_Length_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const float& Get_Blend_Clip_File_Length_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_Blend_Clip_File_Length[Index];
                 }
 
                 static void Set_Blend_Clip_File_Length_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const float& Value){
                     Instance->m_Blend_Clip_File_Length[Index]=Value;
+                }
+
+                static void Reserve_Blend_Clip_File_Length_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_Blend_Clip_File_Length.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Clip_File_Length_CPPVector(shared_ptr<Blend_State> Instance, const float& Value){
+                    Instance->m_Blend_Clip_File_Length.push_back(Value);
                 }
 
             static const string Get_Blend_Skeleton_Map_File_Path_Type_Spelling(void){
@@ -429,7 +485,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Skeleton_Map_File_Path"};
             }
 
-            static const vector<path> Get_Blend_Skeleton_Map_File_Path_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<path>& Get_Blend_Skeleton_Map_File_Path_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_Blend_Skeleton_Map_File_Path;
             }
 
@@ -453,12 +509,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Skeleton_Map_File_Path.size();
                 }
 
-                static const path Get_Blend_Skeleton_Map_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const path& Get_Blend_Skeleton_Map_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_Blend_Skeleton_Map_File_Path[Index];
                 }
 
                 static void Set_Blend_Skeleton_Map_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const path& Value){
                     Instance->m_Blend_Skeleton_Map_File_Path[Index]=Value;
+                }
+
+                static void Reserve_Blend_Skeleton_Map_File_Path_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_Blend_Skeleton_Map_File_Path.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Skeleton_Map_File_Path_CPPVector(shared_ptr<Blend_State> Instance, const path& Value){
+                    Instance->m_Blend_Skeleton_Map_File_Path.push_back(Value);
                 }
 
             static const string Get_Blend_Weights_Type_Spelling(void){
@@ -474,7 +538,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Weights"};
             }
 
-            static const vector<float> Get_Blend_Weights_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<float>& Get_Blend_Weights_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_Blend_Weights;
             }
 
@@ -498,12 +562,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Weights.size();
                 }
 
-                static const float Get_Blend_Weights_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const float& Get_Blend_Weights_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_Blend_Weights[Index];
                 }
 
                 static void Set_Blend_Weights_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const float& Value){
                     Instance->m_Blend_Weights[Index]=Value;
+                }
+
+                static void Reserve_Blend_Weights_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_Blend_Weights.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Weights_CPPVector(shared_ptr<Blend_State> Instance, const float& Value){
+                    Instance->m_Blend_Weights.push_back(Value);
                 }
 
             static const string Get_Blend_Mask_File_Path_Type_Spelling(void){
@@ -519,7 +591,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Mask_File_Path"};
             }
 
-            static const vector<path> Get_Blend_Mask_File_Path_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<path>& Get_Blend_Mask_File_Path_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_Blend_Mask_File_Path;
             }
 
@@ -543,12 +615,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Mask_File_Path.size();
                 }
 
-                static const path Get_Blend_Mask_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const path& Get_Blend_Mask_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_Blend_Mask_File_Path[Index];
                 }
 
                 static void Set_Blend_Mask_File_Path_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const path& Value){
                     Instance->m_Blend_Mask_File_Path[Index]=Value;
+                }
+
+                static void Reserve_Blend_Mask_File_Path_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_Blend_Mask_File_Path.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_Mask_File_Path_CPPVector(shared_ptr<Blend_State> Instance, const path& Value){
+                    Instance->m_Blend_Mask_File_Path.push_back(Value);
                 }
 
             static const string Get_BlendState_Type_Spelling(void){
@@ -564,7 +644,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"BlendState"};
             }
 
-            static const vector<shared_ptr<BlendState_With_Clip_Data>> Get_BlendState_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<shared_ptr<BlendState_With_Clip_Data>>& Get_BlendState_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_BlendState;
             }
 
@@ -588,12 +668,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_BlendState.size();
                 }
 
-                static const shared_ptr<BlendState_With_Clip_Data> Get_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const shared_ptr<BlendState_With_Clip_Data>& Get_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_BlendState[Index];
                 }
 
                 static void Set_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const shared_ptr<BlendState_With_Clip_Data>& Value){
                     Instance->m_BlendState[Index]=Value;
+                }
+
+                static void Reserve_BlendState_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_BlendState.reserve(Capacity);
+                }
+
+                static void Push_Back_BlendState_CPPVector(shared_ptr<Blend_State> Instance, const shared_ptr<BlendState_With_Clip_Data>& Value){
+                    Instance->m_BlendState.push_back(Value);
                 }
 
             static const string Get_Blend_ratio_Type_Spelling(void){
@@ -609,7 +697,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_ratio"};
             }
 
-            static const vector<float> Get_Blend_ratio_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<float>& Get_Blend_ratio_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_Blend_ratio;
             }
 
@@ -633,12 +721,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_ratio.size();
                 }
 
-                static const float Get_Blend_ratio_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const float& Get_Blend_ratio_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_Blend_ratio[Index];
                 }
 
                 static void Set_Blend_ratio_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const float& Value){
                     Instance->m_Blend_ratio[Index]=Value;
+                }
+
+                static void Reserve_Blend_ratio_CPPVector(shared_ptr<Blend_State> Instance, size_t Capacity){
+                    Instance->m_Blend_ratio.reserve(Capacity);
+                }
+
+                static void Push_Back_Blend_ratio_CPPVector(shared_ptr<Blend_State> Instance, const float& Value){
+                    Instance->m_Blend_ratio.push_back(Value);
                 }
 
 

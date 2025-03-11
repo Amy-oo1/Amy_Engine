@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Name"};
             }
 
-            static const string Get_Name_Attribute(shared_ptr<World> Instance){
+            static const string& Get_Name_Attribute(shared_ptr<World> Instance){
                 return Instance->m_Name;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Default_Level_URL"};
             }
 
-            static const path Get_Default_Level_URL_Attribute(shared_ptr<World> Instance){
+            static const path& Get_Default_Level_URL_Attribute(shared_ptr<World> Instance){
                 return Instance->m_Default_Level_URL;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Levels_URL"};
             }
 
-            static const vector<path> Get_Levels_URL_Attribute(shared_ptr<World> Instance){
+            static const vector<path>& Get_Levels_URL_Attribute(shared_ptr<World> Instance){
                 return Instance->m_Levels_URL;
             }
 
@@ -128,12 +128,20 @@ namespace NameSpace_Resource::NameSpace_Common{
                     return Instance->m_Levels_URL.size();
                 }
 
-                static const path Get_Levels_URL_CPPVector_Element(shared_ptr<World> Instance, size_t Index){
+                static const path& Get_Levels_URL_CPPVector_Element(shared_ptr<World> Instance, size_t Index){
                     return Instance->m_Levels_URL[Index];
                 }
 
                 static void Set_Levels_URL_CPPVector_Element(shared_ptr<World> Instance, size_t Index, const path& Value){
                     Instance->m_Levels_URL[Index]=Value;
+                }
+
+                static void Reserve_Levels_URL_CPPVector(shared_ptr<World> Instance, size_t Capacity){
+                    Instance->m_Levels_URL.reserve(Capacity);
+                }
+
+                static void Push_Back_Levels_URL_CPPVector(shared_ptr<World> Instance, const path& Value){
+                    Instance->m_Levels_URL.push_back(Value);
                 }
 
 

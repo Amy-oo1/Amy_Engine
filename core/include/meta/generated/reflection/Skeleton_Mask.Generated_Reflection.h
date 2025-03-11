@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Skeleton_File_Path"};
             }
 
-            static const path Get_Skeleton_File_Path_Attribute(shared_ptr<Skeleton_Mask> Instance){
+            static const path& Get_Skeleton_File_Path_Attribute(shared_ptr<Skeleton_Mask> Instance){
                 return Instance->m_Skeleton_File_Path;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"enabled"};
             }
 
-            static const vector<size_t> Get_enabled_Attribute(shared_ptr<Skeleton_Mask> Instance){
+            static const vector<size_t>& Get_enabled_Attribute(shared_ptr<Skeleton_Mask> Instance){
                 return Instance->enabled;
             }
 
@@ -101,12 +101,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->enabled.size();
                 }
 
-                static const size_t Get_enabled_CPPVector_Element(shared_ptr<Skeleton_Mask> Instance, size_t Index){
+                static const size_t& Get_enabled_CPPVector_Element(shared_ptr<Skeleton_Mask> Instance, size_t Index){
                     return Instance->enabled[Index];
                 }
 
                 static void Set_enabled_CPPVector_Element(shared_ptr<Skeleton_Mask> Instance, size_t Index, const size_t& Value){
                     Instance->enabled[Index]=Value;
+                }
+
+                static void Reserve_enabled_CPPVector(shared_ptr<Skeleton_Mask> Instance, size_t Capacity){
+                    Instance->enabled.reserve(Capacity);
+                }
+
+                static void Push_Back_enabled_CPPVector(shared_ptr<Skeleton_Mask> Instance, const size_t& Value){
+                    Instance->enabled.push_back(Value);
                 }
 
 

@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Position"};
             }
 
-            static const Vector3 Get_Position_Attribute(shared_ptr<Mesh_Vertex> Instance){
+            static const Vector3& Get_Position_Attribute(shared_ptr<Mesh_Vertex> Instance){
                 return Instance->m_Position;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Normal"};
             }
 
-            static const Vector3 Get_Normal_Attribute(shared_ptr<Mesh_Vertex> Instance){
+            static const Vector3& Get_Normal_Attribute(shared_ptr<Mesh_Vertex> Instance){
                 return Instance->m_Normal;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Tangent"};
             }
 
-            static const Vector3 Get_Tangent_Attribute(shared_ptr<Mesh_Vertex> Instance){
+            static const Vector3& Get_Tangent_Attribute(shared_ptr<Mesh_Vertex> Instance){
                 return Instance->m_Tangent;
             }
 
@@ -131,7 +131,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Bitangent"};
             }
 
-            static const Vector3 Get_Bitangent_Attribute(shared_ptr<Mesh_Vertex> Instance){
+            static const Vector3& Get_Bitangent_Attribute(shared_ptr<Mesh_Vertex> Instance){
                 return Instance->m_Bitangent;
             }
 
@@ -158,7 +158,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Texture_Coordinate"};
             }
 
-            static const Vector2 Get_Texture_Coordinate_Attribute(shared_ptr<Mesh_Vertex> Instance){
+            static const Vector2& Get_Texture_Coordinate_Attribute(shared_ptr<Mesh_Vertex> Instance){
                 return Instance->m_Texture_Coordinate;
             }
 
@@ -217,7 +217,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Bone_Indices"};
             }
 
-            static const vector<int> Get_Bone_Indices_Attribute(shared_ptr<Meah_SkeletonBinding> Instance){
+            static const vector<int>& Get_Bone_Indices_Attribute(shared_ptr<Meah_SkeletonBinding> Instance){
                 return Instance->m_Bone_Indices;
             }
 
@@ -241,12 +241,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Bone_Indices.size();
                 }
 
-                static const int Get_Bone_Indices_CPPVector_Element(shared_ptr<Meah_SkeletonBinding> Instance, size_t Index){
+                static const int& Get_Bone_Indices_CPPVector_Element(shared_ptr<Meah_SkeletonBinding> Instance, size_t Index){
                     return Instance->m_Bone_Indices[Index];
                 }
 
                 static void Set_Bone_Indices_CPPVector_Element(shared_ptr<Meah_SkeletonBinding> Instance, size_t Index, const int& Value){
                     Instance->m_Bone_Indices[Index]=Value;
+                }
+
+                static void Reserve_Bone_Indices_CPPVector(shared_ptr<Meah_SkeletonBinding> Instance, size_t Capacity){
+                    Instance->m_Bone_Indices.reserve(Capacity);
+                }
+
+                static void Push_Back_Bone_Indices_CPPVector(shared_ptr<Meah_SkeletonBinding> Instance, const int& Value){
+                    Instance->m_Bone_Indices.push_back(Value);
                 }
 
             static const string Get_Weights_Type_Spelling(void){
@@ -262,7 +270,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Weights"};
             }
 
-            static const Vector4 Get_Weights_Attribute(shared_ptr<Meah_SkeletonBinding> Instance){
+            static const Vector4& Get_Weights_Attribute(shared_ptr<Meah_SkeletonBinding> Instance){
                 return Instance->m_Weights;
             }
 
@@ -321,7 +329,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Vertices_buffer"};
             }
 
-            static const vector<Mesh_Vertex> Get_Vertices_buffer_Attribute(shared_ptr<Mesh_Data> Instance){
+            static const vector<Mesh_Vertex>& Get_Vertices_buffer_Attribute(shared_ptr<Mesh_Data> Instance){
                 return Instance->m_Vertices_buffer;
             }
 
@@ -345,12 +353,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Vertices_buffer.size();
                 }
 
-                static const Mesh_Vertex Get_Vertices_buffer_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index){
+                static const Mesh_Vertex& Get_Vertices_buffer_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index){
                     return Instance->m_Vertices_buffer[Index];
                 }
 
                 static void Set_Vertices_buffer_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index, const Mesh_Vertex& Value){
                     Instance->m_Vertices_buffer[Index]=Value;
+                }
+
+                static void Reserve_Vertices_buffer_CPPVector(shared_ptr<Mesh_Data> Instance, size_t Capacity){
+                    Instance->m_Vertices_buffer.reserve(Capacity);
+                }
+
+                static void Push_Back_Vertices_buffer_CPPVector(shared_ptr<Mesh_Data> Instance, const Mesh_Vertex& Value){
+                    Instance->m_Vertices_buffer.push_back(Value);
                 }
 
             static const string Get_Indices_Buffer_Type_Spelling(void){
@@ -366,7 +382,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Indices_Buffer"};
             }
 
-            static const vector<size_t> Get_Indices_Buffer_Attribute(shared_ptr<Mesh_Data> Instance){
+            static const vector<size_t>& Get_Indices_Buffer_Attribute(shared_ptr<Mesh_Data> Instance){
                 return Instance->m_Indices_Buffer;
             }
 
@@ -390,12 +406,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Indices_Buffer.size();
                 }
 
-                static const size_t Get_Indices_Buffer_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index){
+                static const size_t& Get_Indices_Buffer_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index){
                     return Instance->m_Indices_Buffer[Index];
                 }
 
                 static void Set_Indices_Buffer_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index, const size_t& Value){
                     Instance->m_Indices_Buffer[Index]=Value;
+                }
+
+                static void Reserve_Indices_Buffer_CPPVector(shared_ptr<Mesh_Data> Instance, size_t Capacity){
+                    Instance->m_Indices_Buffer.reserve(Capacity);
+                }
+
+                static void Push_Back_Indices_Buffer_CPPVector(shared_ptr<Mesh_Data> Instance, const size_t& Value){
+                    Instance->m_Indices_Buffer.push_back(Value);
                 }
 
             static const string Get_SkeletonBindings_Type_Spelling(void){
@@ -411,7 +435,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"SkeletonBindings"};
             }
 
-            static const vector<Meah_SkeletonBinding> Get_SkeletonBindings_Attribute(shared_ptr<Mesh_Data> Instance){
+            static const vector<Meah_SkeletonBinding>& Get_SkeletonBindings_Attribute(shared_ptr<Mesh_Data> Instance){
                 return Instance->m_SkeletonBindings;
             }
 
@@ -435,12 +459,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_SkeletonBindings.size();
                 }
 
-                static const Meah_SkeletonBinding Get_SkeletonBindings_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index){
+                static const Meah_SkeletonBinding& Get_SkeletonBindings_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index){
                     return Instance->m_SkeletonBindings[Index];
                 }
 
                 static void Set_SkeletonBindings_CPPVector_Element(shared_ptr<Mesh_Data> Instance, size_t Index, const Meah_SkeletonBinding& Value){
                     Instance->m_SkeletonBindings[Index]=Value;
+                }
+
+                static void Reserve_SkeletonBindings_CPPVector(shared_ptr<Mesh_Data> Instance, size_t Capacity){
+                    Instance->m_SkeletonBindings.reserve(Capacity);
+                }
+
+                static void Push_Back_SkeletonBindings_CPPVector(shared_ptr<Mesh_Data> Instance, const Meah_SkeletonBinding& Value){
+                    Instance->m_SkeletonBindings.push_back(Value);
                 }
 
 

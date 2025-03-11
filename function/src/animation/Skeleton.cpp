@@ -1,10 +1,13 @@
 #include "animation/Skeleton.h"
 
 #include<limits>
+#include<iterator>
+#include<algorithm>
 
 #include "logger/System_Logger.h"
 
 #include "math/Vector3.h"
+#include "math/Matrix4x4.h"
 #include "math/Utilities.h"
 
 #include "transform/Orthogonal_Transform.h"
@@ -14,17 +17,20 @@
 #include "meta/generated/reflection/Skeleton_Data.Generated_Reflection.h"
 #include "meta/generated/reflection/Animation_Clip.Generated_Reflection.h"
 #include "meta/generated/reflection/Blend_State.Generated_Reflection.h"
+#include "meta/generated/reflection/Animation.Generated_Reflection.h"
 
 #include "animation/Utilities.h"
 
 namespace NameSpace_Function::NameSpace_Animation {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
-
+	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Math::Quaternion;
 	using namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities;
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
+
+	using NameSpace_Resource::NameSpace_Components::Animation_Effect;
 
 	using NameSpace_Resource::NameSpace_Components::Reflection_Bone_Raw_Operator;
 	using NameSpace_Resource::NameSpace_Components::Reflection_Skeleton_Node_Map_Operator;
@@ -32,7 +38,8 @@ namespace NameSpace_Function::NameSpace_Animation {
 	using NameSpace_Resource::NameSpace_Components::Reflection_Animation_Clip_Operator;
 	using NameSpace_Resource::NameSpace_Components::Reflection_BlendState_With_Clip_Data_Operator;
 	using NameSpace_Resource::NameSpace_Components::Reflection_Skeleton_Data_Operator;
-
+	using NameSpace_Resource::NameSpace_Components::Reflection_Animation_Effect_Element_Operator;
+	using NameSpace_Resource::NameSpace_Components::Reflection_Animation_Effect_Operator;
 
 	Skeleton::Skeleton(shared_ptr<Skeleton_Data> Skeleton_Data)
 		:m_Skeleton_Data{ Skeleton_Data } {
@@ -67,6 +74,14 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 		for (auto& Bone : this->m_Bones)
 			Bone->UpData_Derived_Transform();
+	}
+
+	void Skeleton::OutPut_Animation(void) const {
+		shared_ptr<Animation_Effect> Animation_Result = std::make_shared<Animation_Effect>();
+		Reflection_Animation_Effect_Operator::Reserve_Effects_CPPVector(Animation_Result, this->m_Bones.size());
+
+		for (const auto& Bone : this->m_Bones)
+			Reflection_Animation_Effect_Operator::Push_Back_Effects_CPPVector(Animation_Result, this->Create_Bone_Result_Element(Bone));
 	}
 
 	void Skeleton::ReSet_Init_Skeleton(void) {
@@ -104,7 +119,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return { Current_Low, Current_High, Lerp_ratio };
 	}
 
-	void Skeleton::Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Temp_Skeleton_Node_Map, int Low_Frame, int Height_Fram, int Lerp_Raotio) {
+	void Skeleton::Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Temp_Skeleton_Node_Map, int Low_Frame, int Height_Fram, float Lerp_Raotio) {
 		for (size_t Index_Node = 0;
 			Index_Node < Reflection_Skeleton_Node_Map_Operator::Get_Convert_CPPVector_Size(Temp_Skeleton_Node_Map) &&
 			Index_Node < Reflection_Animation_Clip_Operator::Get_Node_Channels_CPPVector_Size(Temp_Clip);
@@ -123,7 +138,6 @@ namespace NameSpace_Function::NameSpace_Animation {
 			this->Apply_Bone_Transform(Temp_Channel, Temp_Bone, Low_Frame, Height_Fram, Lerp_Raotio);
 		}
 	}
-
 
 	tuple<int, int> Skeleton::Clamp_Frame_Indices(const shared_ptr<Animation_Channel>& Temp_Animation_Channel, int low_Frame, int Height_Frame) const {
 		int Clamp_Height_Frame = Min({
@@ -155,6 +169,24 @@ namespace NameSpace_Function::NameSpace_Animation {
 			Apply_Bone->Get_Transform().Get_Translation() + Lerp_Transform.Get_Translation()
 			}
 		);
+	}
+
+	shared_ptr<Animation_Effect_Element> Skeleton::Create_Bone_Result_Element(const shared_ptr<Bone>& Temp_Bone) const {
+		shared_ptr<Animation_Effect_Element> Result = std::make_shared<Animation_Effect_Element>();
+
+		Reflection_Animation_Effect_Element_Operator::Set_Field_Index_Attribute(
+			Result,
+			Reflection_Bone_Raw_Operator::Get_Current_Index_Attribute(Temp_Bone->Get_Definition()) + 1
+		);
+
+		Matrix4x4 OBJ_Mat{ Temp_Bone->Get_Derived_Transform() };
+
+		Reflection_Animation_Effect_Element_Operator::Set_Field_Transform_Attribute(
+			Result,
+			Affine_Transform{ OBJ_Mat * Matrix4x4{ Reflection_Bone_Raw_Operator::Get_Tpose_Matrix_Attribute(Temp_Bone->Get_Definition()) } }
+		);
+
+		return Result;
 	}
 
 }// namespace NameSpace_Function::NameSpace_Animation

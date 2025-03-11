@@ -34,7 +34,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Animation_Node_Map(void) = default;
 
 	private:
-		vector<string> m_onvert{};
+		vector<string> m_Convert{};
 
 	};
 

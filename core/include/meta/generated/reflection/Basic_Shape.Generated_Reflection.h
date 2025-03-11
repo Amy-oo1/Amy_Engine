@@ -83,7 +83,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Half_Extents"};
             }
 
-            static const Vector3 Get_Half_Extents_Attribute(shared_ptr<Geometry_Box> Instance){
+            static const Vector3& Get_Half_Extents_Attribute(shared_ptr<Geometry_Box> Instance){
                 return Instance->m_Half_Extents;
             }
 
@@ -142,7 +142,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"radius"};
             }
 
-            static const float Get_radius_Attribute(shared_ptr<Geometry_Sphere> Instance){
+            static const float& Get_radius_Attribute(shared_ptr<Geometry_Sphere> Instance){
                 return Instance->m_radius;
             }
 
@@ -201,7 +201,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Radius"};
             }
 
-            static const float Get_Radius_Attribute(shared_ptr<Geometry_Cylinder> Instance){
+            static const float& Get_Radius_Attribute(shared_ptr<Geometry_Cylinder> Instance){
                 return Instance->m_Radius;
             }
 
@@ -228,7 +228,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Half_Height"};
             }
 
-            static const float Get_Half_Height_Attribute(shared_ptr<Geometry_Cylinder> Instance){
+            static const float& Get_Half_Height_Attribute(shared_ptr<Geometry_Cylinder> Instance){
                 return Instance->m_Half_Height;
             }
 

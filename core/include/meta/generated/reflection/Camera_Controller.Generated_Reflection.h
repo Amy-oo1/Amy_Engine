@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Position"};
             }
 
-            static const Vector3 Get_Position_Attribute(shared_ptr<Camera_Pose> Instance){
+            static const Vector3& Get_Position_Attribute(shared_ptr<Camera_Pose> Instance){
                 return Instance->m_Position;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Target"};
             }
 
-            static const Vector3 Get_Target_Attribute(shared_ptr<Camera_Pose> Instance){
+            static const Vector3& Get_Target_Attribute(shared_ptr<Camera_Pose> Instance){
                 return Instance->m_Target;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Up"};
             }
 
-            static const Vector3 Get_Up_Attribute(shared_ptr<Camera_Pose> Instance){
+            static const Vector3& Get_Up_Attribute(shared_ptr<Camera_Pose> Instance){
                 return Instance->m_Up;
             }
 
@@ -163,7 +163,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"M_Pose"};
             }
 
-            static const Camera_Pose Get_M_Pose_Attribute(shared_ptr<Camera_Config> Instance){
+            static const Camera_Pose& Get_M_Pose_Attribute(shared_ptr<Camera_Config> Instance){
                 return Instance->M_Pose;
             }
 
@@ -190,7 +190,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Aspect"};
             }
 
-            static const Vector2 Get_Aspect_Attribute(shared_ptr<Camera_Config> Instance){
+            static const Vector2& Get_Aspect_Attribute(shared_ptr<Camera_Config> Instance){
                 return Instance->m_Aspect;
             }
 
@@ -217,7 +217,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Z_Near"};
             }
 
-            static const float Get_Z_Near_Attribute(shared_ptr<Camera_Config> Instance){
+            static const float& Get_Z_Near_Attribute(shared_ptr<Camera_Config> Instance){
                 return Instance->m_Z_Near;
             }
 
@@ -244,7 +244,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Z_Far"};
             }
 
-            static const float Get_Z_Far_Attribute(shared_ptr<Camera_Config> Instance){
+            static const float& Get_Z_Far_Attribute(shared_ptr<Camera_Config> Instance){
                 return Instance->m_Z_Far;
             }
 

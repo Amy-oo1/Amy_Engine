@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"FOV"};
             }
 
-            static const float Get_FOV_Attribute(shared_ptr<Camera_Base> Instance){
+            static const float& Get_FOV_Attribute(shared_ptr<Camera_Base> Instance){
                 return Instance->m_FOV;
             }
 
@@ -109,7 +109,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Vertical_Offset"};
             }
 
-            static const float Get_Vertical_Offset_Attribute(shared_ptr<Camera_First_Persion> Instance){
+            static const float& Get_Vertical_Offset_Attribute(shared_ptr<Camera_First_Persion> Instance){
                 return Instance->m_Vertical_Offset;
             }
 
@@ -168,7 +168,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Horizontal_Offset"};
             }
 
-            static const float Get_Horizontal_Offset_Attribute(shared_ptr<Camera_Third_Persion> Instance){
+            static const float& Get_Horizontal_Offset_Attribute(shared_ptr<Camera_Third_Persion> Instance){
                 return Instance->m_Horizontal_Offset;
             }
 
@@ -195,7 +195,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Vertical_Offset"};
             }
 
-            static const float Get_Vertical_Offset_Attribute(shared_ptr<Camera_Third_Persion> Instance){
+            static const float& Get_Vertical_Offset_Attribute(shared_ptr<Camera_Third_Persion> Instance){
                 return Instance->m_Vertical_Offset;
             }
 
@@ -222,7 +222,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Cursor_Pitch"};
             }
 
-            static const Quaternion Get_Cursor_Pitch_Attribute(shared_ptr<Camera_Third_Persion> Instance){
+            static const Quaternion& Get_Cursor_Pitch_Attribute(shared_ptr<Camera_Third_Persion> Instance){
                 return Instance->m_Cursor_Pitch;
             }
 
@@ -249,7 +249,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Cursor_Yaw"};
             }
 
-            static const Quaternion Get_Cursor_Yaw_Attribute(shared_ptr<Camera_Third_Persion> Instance){
+            static const Quaternion& Get_Cursor_Yaw_Attribute(shared_ptr<Camera_Third_Persion> Instance){
                 return Instance->m_Cursor_Yaw;
             }
 
@@ -308,7 +308,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Speed"};
             }
 
-            static const float Get_Speed_Attribute(shared_ptr<Camera_Free> Instance){
+            static const float& Get_Speed_Attribute(shared_ptr<Camera_Free> Instance){
                 return Instance->m_Speed;
             }
 
@@ -367,7 +367,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Camera"};
             }
 
-            static const Reflection_Instance<Camera_Base> Get_Camera_Attribute(shared_ptr<Camera> Instance){
+            static const Reflection_Instance<Camera_Base>& Get_Camera_Attribute(shared_ptr<Camera> Instance){
                 return Instance->m_Camera;
             }
 

@@ -7,6 +7,7 @@
 #include "components/skeleton/Skeleton_Data.h"
 #include "components/skeleton/Skeleton_Node.h"
 #include "components/animation/Blend_State.h"
+#include "components/animation/Animation.h"
 
 #include "animation/Bone.h"
 
@@ -20,6 +21,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 	using NameSpace_Resource::NameSpace_Components::Animation_Channel;
 	using NameSpace_Resource::NameSpace_Components::Animation_Clip;
 	using NameSpace_Resource::NameSpace_Components::BlendState_With_Clip_Data;
+	using NameSpace_Resource::NameSpace_Components::Animation_Effect_Element;
 
 	class Skeleton final {
 	private:
@@ -39,6 +41,8 @@ namespace NameSpace_Function::NameSpace_Animation {
 	public:
 		void Apply_Animation(const shared_ptr<BlendState_With_Clip_Data>& Blend_State_Clip_Data);
 
+		void OutPut_Animation(void)const;
+
 	private:
 		void ReSet_Init_Skeleton(void);
 
@@ -48,9 +52,11 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 		tuple<int, int> Clamp_Frame_Indices(const shared_ptr<Animation_Channel>& Temp_Animation_Channel, int low_Frame, int Height_Frame) const;
 
-		void Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Animotaon_Map, int Low_Frame, int Height_Fram, int Lerp_Raotio);
+		void Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Animotaon_Map, int Low_Frame, int Height_Fram, float Lerp_Raotio);
 
 		void Apply_Bone_Transform(const shared_ptr<Animation_Channel>& Temp_Animation_Channel, shared_ptr<Bone>& Apply_Bone, int Low_Frame, int Height_Frame, float Lerp_Ratio);
+
+		shared_ptr<Animation_Effect_Element> Create_Bone_Result_Element(const shared_ptr<Bone>& Temp_Bone)const;
 
 	private:
 		shared_ptr<Skeleton_Data> m_Skeleton_Data;

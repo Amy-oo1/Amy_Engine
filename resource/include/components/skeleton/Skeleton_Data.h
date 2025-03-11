@@ -4,6 +4,7 @@
 #include<vector>
 #include<cstddef>
 #include<memory>
+#include<limits>
 
 #include "meta/reflection/Reflection_Macro.h"
 
@@ -32,8 +33,8 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	private:
 		string m_Name{};
-		size_t m_Current_Index;
-		size_t m_Parent_Index;
+		size_t m_Current_Index{ std::numeric_limits<size_t>::max() };
+		size_t m_Parent_Index{ std::numeric_limits<size_t>::max() };
 
 		Affine_Transform m_Binding_Pose{ Affine_Transform::IDENTITY };
 		Matrix4x4 m_Tpose_Matrix{ Matrix4x4::IDENTITY };
@@ -53,7 +54,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		vector<shared_ptr<Bone_Raw>> m_Bones{};
 
 		bool m_Is_Flat = false; //"bone.index" equals index in bones_map
-		size_t root_index;
+		size_t Root_Index{ std::numeric_limits<size_t>::max() };
 		bool In_Topological_Order = false; // TODO: if not in topological order, we need to topology sort in skeleton
 
 	};

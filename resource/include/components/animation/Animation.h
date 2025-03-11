@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<string>
+#include<memory>
 #include<cstddef>
 
 #include "meta/reflection/Reflection_Macro.h"
@@ -14,6 +15,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	using std::vector;
 	using std::string;
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
 	using  NameSpace_Platform::NameSpace_File::path;
@@ -43,7 +45,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Animation_Effect(void) = default;
 
 	private:
-		vector<Animation_Effect_Element> m_Effects{};
+		vector<shared_ptr<Animation_Effect_Element>> m_Effects{};
 
 	};
 
@@ -59,9 +61,9 @@ namespace NameSpace_Resource::NameSpace_Components {
 	private:
 		path m_skeleton_File_Path{};
 
-		Blend_State m_Blend_State{};
+		shared_ptr<Blend_State> m_Blend_State{};
 
-		Animation_Effect m_Effect{};
+		shared_ptr<Animation_Effect> m_Effect{};
 
 	};
 

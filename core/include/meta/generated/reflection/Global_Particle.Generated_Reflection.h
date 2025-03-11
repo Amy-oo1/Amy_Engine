@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Emit_Gap"};
             }
 
-            static const int Get_Emit_Gap_Attribute(shared_ptr<Global_Particle> Instance){
+            static const int& Get_Emit_Gap_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Emit_Gap;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Emit_Count"};
             }
 
-            static const int Get_Emit_Count_Attribute(shared_ptr<Global_Particle> Instance){
+            static const int& Get_Emit_Count_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Emit_Count;
             }
 
@@ -104,7 +104,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Time_Step"};
             }
 
-            static const int Get_Time_Step_Attribute(shared_ptr<Global_Particle> Instance){
+            static const int& Get_Time_Step_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Time_Step;
             }
 
@@ -131,7 +131,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Max_Life"};
             }
 
-            static const float Get_Max_Life_Attribute(shared_ptr<Global_Particle> Instance){
+            static const float& Get_Max_Life_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Max_Life;
             }
 
@@ -158,7 +158,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Gravity"};
             }
 
-            static const Vector3 Get_Gravity_Attribute(shared_ptr<Global_Particle> Instance){
+            static const Vector3& Get_Gravity_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Gravity;
             }
 
@@ -185,7 +185,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Particle_Billboard_Texture_File_Path"};
             }
 
-            static const path Get_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
+            static const path& Get_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Particle_Billboard_Texture_File_Path;
             }
 
@@ -212,7 +212,7 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Logo_Texture_File_Path"};
             }
 
-            static const path Get_Logo_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
+            static const path& Get_Logo_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
                 return Instance->m_Logo_Texture_File_Path;
             }
 

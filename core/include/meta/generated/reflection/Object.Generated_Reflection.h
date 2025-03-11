@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Type_Name"};
             }
 
-            static const string Get_Type_Name_Attribute(shared_ptr<Component_Definition> Instance){
+            static const string& Get_Type_Name_Attribute(shared_ptr<Component_Definition> Instance){
                 return Instance->m_Type_Name;
             }
 
@@ -77,7 +77,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Component"};
             }
 
-            static const string Get_Component_Attribute(shared_ptr<Component_Definition> Instance){
+            static const string& Get_Component_Attribute(shared_ptr<Component_Definition> Instance){
                 return Instance->m_Component;
             }
 
@@ -136,7 +136,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Seplling"};
             }
 
-            static const string Get_Seplling_Attribute(shared_ptr<Object_Definition> Instance){
+            static const string& Get_Seplling_Attribute(shared_ptr<Object_Definition> Instance){
                 return Instance->m_Seplling;
             }
 
@@ -163,7 +163,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Components"};
             }
 
-            static const vector<Reflection_Instance<Component>> Get_Components_Attribute(shared_ptr<Object_Definition> Instance){
+            static const vector<Reflection_Instance<Component>>& Get_Components_Attribute(shared_ptr<Object_Definition> Instance){
                 return Instance->m_Components;
             }
 
@@ -187,12 +187,20 @@ namespace NameSpace_Resource::NameSpace_Common{
                     return Instance->m_Components.size();
                 }
 
-                static const Reflection_Instance<Component> Get_Components_CPPVector_Element(shared_ptr<Object_Definition> Instance, size_t Index){
+                static const Reflection_Instance<Component>& Get_Components_CPPVector_Element(shared_ptr<Object_Definition> Instance, size_t Index){
                     return Instance->m_Components[Index];
                 }
 
                 static void Set_Components_CPPVector_Element(shared_ptr<Object_Definition> Instance, size_t Index, const Reflection_Instance<Component>& Value){
                     Instance->m_Components[Index]=Value;
+                }
+
+                static void Reserve_Components_CPPVector(shared_ptr<Object_Definition> Instance, size_t Capacity){
+                    Instance->m_Components.reserve(Capacity);
+                }
+
+                static void Push_Back_Components_CPPVector(shared_ptr<Object_Definition> Instance, const Reflection_Instance<Component>& Value){
+                    Instance->m_Components.push_back(Value);
                 }
 
 
@@ -240,7 +248,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Name"};
             }
 
-            static const std::string Get_Name_Attribute(shared_ptr<Object_Instance> Instance){
+            static const std::string& Get_Name_Attribute(shared_ptr<Object_Instance> Instance){
                 return Instance->m_Name;
             }
 
@@ -267,7 +275,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Definition"};
             }
 
-            static const std::string Get_Definition_Attribute(shared_ptr<Object_Instance> Instance){
+            static const std::string& Get_Definition_Attribute(shared_ptr<Object_Instance> Instance){
                 return Instance->m_Definition;
             }
 
@@ -294,7 +302,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Instanced_Components"};
             }
 
-            static const std::vector<Reflection_Instance<Component>> Get_Instanced_Components_Attribute(shared_ptr<Object_Instance> Instance){
+            static const std::vector<Reflection_Instance<Component>>& Get_Instanced_Components_Attribute(shared_ptr<Object_Instance> Instance){
                 return Instance->m_Instanced_Components;
             }
 
@@ -318,12 +326,20 @@ namespace NameSpace_Resource::NameSpace_Common{
                     return Instance->m_Instanced_Components.size();
                 }
 
-                static const Reflection_Instance<Component> Get_Instanced_Components_CPPVector_Element(shared_ptr<Object_Instance> Instance, size_t Index){
+                static const Reflection_Instance<Component>& Get_Instanced_Components_CPPVector_Element(shared_ptr<Object_Instance> Instance, size_t Index){
                     return Instance->m_Instanced_Components[Index];
                 }
 
                 static void Set_Instanced_Components_CPPVector_Element(shared_ptr<Object_Instance> Instance, size_t Index, const Reflection_Instance<Component>& Value){
                     Instance->m_Instanced_Components[Index]=Value;
+                }
+
+                static void Reserve_Instanced_Components_CPPVector(shared_ptr<Object_Instance> Instance, size_t Capacity){
+                    Instance->m_Instanced_Components.reserve(Capacity);
+                }
+
+                static void Push_Back_Instanced_Components_CPPVector(shared_ptr<Object_Instance> Instance, const Reflection_Instance<Component>& Value){
+                    Instance->m_Instanced_Components.push_back(Value);
                 }
 
 

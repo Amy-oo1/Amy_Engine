@@ -29,8 +29,12 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return this->m_Definition;
 	}
 
-	const Affine_Transform Bone::Get_Transform(void) {
+	const Affine_Transform& Bone::Get_Transform(void) {
 		return this->m_Transform;
+	}
+
+	const Affine_Transform& Bone::Get_Derived_Transform(void) {
+		return this->m_Derived_Transform;
 	}
 
 	void Bone::Set_Transform(const Affine_Transform& Transform) {

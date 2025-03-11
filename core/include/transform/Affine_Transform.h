@@ -27,6 +27,7 @@ namespace NameSpace_Core::NameSpace_Transform {
 		Affine_Transform( const Vector3& Scale, const Quaternion& Rotate_Quaternion, const Vector3& Translate);
 		Affine_Transform(const Matrix3x3& Basis, const Vector3 Translate);
 
+		explicit Affine_Transform(const Matrix4x4& Mat);
 		explicit Affine_Transform(const Quaternion& Rotate_Quaternion, const Vector3& Translate = Vector3::ZERO);
 		explicit Affine_Transform(const Vector3& Translate);
 

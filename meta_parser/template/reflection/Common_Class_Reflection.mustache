@@ -58,7 +58,7 @@ namespace {{Class_NameSpace}}{
                 return string{"{{& Field_Display_Name}}"};
             }
 
-            static const {{& Field_Type_Spelling}} Get_{{& Field_Display_Name}}_Attribute(shared_ptr<{{& Class_Spelling}}> Instance){
+            static const {{& Field_Type_Spelling}}& Get_{{& Field_Display_Name}}_Attribute(shared_ptr<{{& Class_Spelling}}> Instance){
                 return Instance->{{& Field_Spelling}};
             }
 
@@ -83,12 +83,20 @@ namespace {{Class_NameSpace}}{
                     return Instance->{{& Field_Spelling}}.size();
                 }
 
-                static const {{& Filed_CPPVector_Element_Type_Spelling}} Get_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<{{& Class_Spelling}}> Instance, size_t Index){
+                static const {{& Filed_CPPVector_Element_Type_Spelling}}& Get_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<{{& Class_Spelling}}> Instance, size_t Index){
                     return Instance->{{& Field_Spelling}}[Index];
                 }
 
                 static void Set_{{& Field_Display_Name}}_CPPVector_Element(shared_ptr<{{& Class_Spelling}}> Instance, size_t Index, const {{& Filed_CPPVector_Element_Type_Spelling}}& Value){
                     Instance->{{& Field_Spelling}}[Index]=Value;
+                }
+
+                static void Reserve_{{& Field_Display_Name}}_CPPVector(shared_ptr<{{& Class_Spelling}}> Instance, size_t Capacity){
+                    Instance->{{& Field_Spelling}}.reserve(Capacity);
+                }
+
+                static void Push_Back_{{& Field_Display_Name}}_CPPVector(shared_ptr<{{& Class_Spelling}}> Instance, const {{& Filed_CPPVector_Element_Type_Spelling}}& Value){
+                    Instance->{{& Field_Spelling}}.push_back(Value);
                 }
             {{/Filed_CPPVector_Define_List}}
 
