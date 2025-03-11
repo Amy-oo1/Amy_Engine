@@ -8,7 +8,7 @@
 #include "meta/Reflection/Reflection_Instance.h"
 #include "meta/Reflection/Reflection_Register.h"
 
-#include "D:/Amy_Engine/resource/include/components/animation/Skeleton_Node.h"
+#include "D:/Amy_Engine/resource/include/components/skeleton/Skeleton_Node.h"
 
 namespace NameSpace_Resource::NameSpace_Components{
 

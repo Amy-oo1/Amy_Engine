@@ -47,6 +47,33 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
+            static const string Get_Field_Skeleton_File_Path_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_Skeleton_File_Path_Spelling(void){
+                return string{"m_Skeleton_File_Path"};
+            }
+
+
+            static const string Get_Field_Skeleton_File_Path_Display_Name(void){
+                return string{"Skeleton_File_Path"};
+            }
+
+            static const void *const Get_Filed_Skeleton_File_Path_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Skeleton_Mask>(Instance)->m_Skeleton_File_Path);
+            }
+
+            static void Set_Field_Skeleton_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Skeleton_Mask>(Instance)->m_Skeleton_File_Path=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_Skeleton_File_Path_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_enabled_Type_Spelling(void){
                 return string{"vector<size_t>"};
             }
@@ -107,6 +134,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Skeleton_Mask_Operator::Get_Base_Class_Skeleton_Mask_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Skeleton_File_Path"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Skeleton_Mask_Operator::Get_Field_Skeleton_File_Path_Type_Spelling,
+                        Reflection_Skeleton_Mask_Operator::Get_Field_Skeleton_File_Path_Spelling,
+                        Reflection_Skeleton_Mask_Operator::Get_Field_Skeleton_File_Path_Display_Name,
+                        Reflection_Skeleton_Mask_Operator::Get_Filed_Skeleton_File_Path_Attribute,
+                        Reflection_Skeleton_Mask_Operator::Set_Field_Skeleton_File_Path_Attribute,
+                        Reflection_Skeleton_Mask_Operator::Is_Filed_Skeleton_File_Path_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"enabled"},

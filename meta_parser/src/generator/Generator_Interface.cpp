@@ -8,10 +8,11 @@
 namespace NameSpace_Meta_Parser::NameSpace_Generator {
 
 	const mustache::data Generator_Interface::Generate_Class_Field_RenderData(shared_ptr<Class> Current_Class) {
-		mustache::data Field_Define{ mustache::data::type::object };
+		mustache::data Field_Define_List{ mustache::data::type::list };
 
 		for (const auto& Temp_Field : Current_Class->Get_Fields())
 			if (Temp_Field->Should_Compile()) {
+				mustache::data Field_Define{ mustache::data::type::object };
 
 				Field_Define.set(NameSpace_Generator_Config::Parameter_Field_Type_Spelling, Temp_Field->Get_Field_Type_Spelling());
 				Field_Define.set(NameSpace_Generator_Config::Parameter_Field_Spelling, Temp_Field->Get_Field_Spelling());
@@ -23,12 +24,15 @@ namespace NameSpace_Meta_Parser::NameSpace_Generator {
 
 				if (Is_CPPVector) {
 					mustache::data Field_CPPVector_Define_List{ mustache::data::type::list };
+
 					Field_CPPVector_Define_List.push_back(mustache::data{ NameSpace_Generator_Config::Parameter_Filed_CPPVector_Element_Type_Spelling ,NameSpace_Generator_Utils::Get_CPPVector_Element_Type(Temp_Field->Get_Field_Type_Spelling()) });
 					Field_Define.set(NameSpace_Generator_Config::Parameter_Filed_CPPVector_Define_List, Field_CPPVector_Define_List);
 				}
+
+				Field_Define_List.push_back(Field_Define);
 			}
 
-		return Field_Define;
+		return Field_Define_List;
 	}
 
 	const mustache::data Generator_Interface::Generate_Class_Method_RenderData(shared_ptr<Class> Current_Class) {

@@ -47,6 +47,114 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
+            static const string Get_Field_Base_Colour_Texture_File_Path_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_Base_Colour_Texture_File_Path_Spelling(void){
+                return string{"m_Base_Colour_Texture_File_Path"};
+            }
+
+
+            static const string Get_Field_Base_Colour_Texture_File_Path_Display_Name(void){
+                return string{"Base_Colour_Texture_File_Path"};
+            }
+
+            static const void *const Get_Filed_Base_Colour_Texture_File_Path_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Material>(Instance)->m_Base_Colour_Texture_File_Path);
+            }
+
+            static void Set_Field_Base_Colour_Texture_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Material>(Instance)->m_Base_Colour_Texture_File_Path=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_Base_Colour_Texture_File_Path_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Metallic_Roughness_Texture_File_Path_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_Metallic_Roughness_Texture_File_Path_Spelling(void){
+                return string{"m_Metallic_Roughness_Texture_File_Path"};
+            }
+
+
+            static const string Get_Field_Metallic_Roughness_Texture_File_Path_Display_Name(void){
+                return string{"Metallic_Roughness_Texture_File_Path"};
+            }
+
+            static const void *const Get_Filed_Metallic_Roughness_Texture_File_Path_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Material>(Instance)->m_Metallic_Roughness_Texture_File_Path);
+            }
+
+            static void Set_Field_Metallic_Roughness_Texture_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Material>(Instance)->m_Metallic_Roughness_Texture_File_Path=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_Metallic_Roughness_Texture_File_Path_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Normal_Texture_File_Path_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_Normal_Texture_File_Path_Spelling(void){
+                return string{"m_Normal_Texture_File_Path"};
+            }
+
+
+            static const string Get_Field_Normal_Texture_File_Path_Display_Name(void){
+                return string{"Normal_Texture_File_Path"};
+            }
+
+            static const void *const Get_Filed_Normal_Texture_File_Path_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Material>(Instance)->m_Normal_Texture_File_Path);
+            }
+
+            static void Set_Field_Normal_Texture_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Material>(Instance)->m_Normal_Texture_File_Path=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_Normal_Texture_File_Path_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Occlusion_Texture_File_Path_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_Occlusion_Texture_File_Path_Spelling(void){
+                return string{"m_Occlusion_Texture_File_Path"};
+            }
+
+
+            static const string Get_Field_Occlusion_Texture_File_Path_Display_Name(void){
+                return string{"Occlusion_Texture_File_Path"};
+            }
+
+            static const void *const Get_Filed_Occlusion_Texture_File_Path_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Material>(Instance)->m_Occlusion_Texture_File_Path);
+            }
+
+            static void Set_Field_Occlusion_Texture_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Material>(Instance)->m_Occlusion_Texture_File_Path=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_Occlusion_Texture_File_Path_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Emissive_Texture_File_Path_Type_Spelling(void){
                 return string{"path"};
             }
@@ -89,6 +197,62 @@ namespace NameSpace_Resource::NameSpace_Components{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Material_Operator::Get_Base_Class_Material_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Base_Colour_Texture_File_Path"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Material_Operator::Get_Field_Base_Colour_Texture_File_Path_Type_Spelling,
+                        Reflection_Material_Operator::Get_Field_Base_Colour_Texture_File_Path_Spelling,
+                        Reflection_Material_Operator::Get_Field_Base_Colour_Texture_File_Path_Display_Name,
+                        Reflection_Material_Operator::Get_Filed_Base_Colour_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Set_Field_Base_Colour_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Is_Filed_Base_Colour_Texture_File_Path_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Metallic_Roughness_Texture_File_Path"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Material_Operator::Get_Field_Metallic_Roughness_Texture_File_Path_Type_Spelling,
+                        Reflection_Material_Operator::Get_Field_Metallic_Roughness_Texture_File_Path_Spelling,
+                        Reflection_Material_Operator::Get_Field_Metallic_Roughness_Texture_File_Path_Display_Name,
+                        Reflection_Material_Operator::Get_Filed_Metallic_Roughness_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Set_Field_Metallic_Roughness_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Is_Filed_Metallic_Roughness_Texture_File_Path_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Normal_Texture_File_Path"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Material_Operator::Get_Field_Normal_Texture_File_Path_Type_Spelling,
+                        Reflection_Material_Operator::Get_Field_Normal_Texture_File_Path_Spelling,
+                        Reflection_Material_Operator::Get_Field_Normal_Texture_File_Path_Display_Name,
+                        Reflection_Material_Operator::Get_Filed_Normal_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Set_Field_Normal_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Is_Filed_Normal_Texture_File_Path_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Occlusion_Texture_File_Path"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Material_Operator::Get_Field_Occlusion_Texture_File_Path_Type_Spelling,
+                        Reflection_Material_Operator::Get_Field_Occlusion_Texture_File_Path_Spelling,
+                        Reflection_Material_Operator::Get_Field_Occlusion_Texture_File_Path_Display_Name,
+                        Reflection_Material_Operator::Get_Filed_Occlusion_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Set_Field_Occlusion_Texture_File_Path_Attribute,
+                        Reflection_Material_Operator::Is_Filed_Occlusion_Texture_File_Path_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Emissive_Texture_File_Path"},

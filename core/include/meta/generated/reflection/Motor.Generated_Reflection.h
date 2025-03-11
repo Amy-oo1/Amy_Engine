@@ -152,6 +152,168 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
+            static const string Get_Field_Physics_Controller_Config_Type_Spelling(void){
+                return string{"Reflection_Instance<Physics_Controller_Config>"};
+            }
+
+            static const string Get_Field_Physics_Controller_Config_Spelling(void){
+                return string{"m_Physics_Controller_Config"};
+            }
+
+
+            static const string Get_Field_Physics_Controller_Config_Display_Name(void){
+                return string{"Physics_Controller_Config"};
+            }
+
+            static const void *const Get_Filed_Physics_Controller_Config_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Motor>(Instance)->m_Physics_Controller_Config);
+            }
+
+            static void Set_Field_Physics_Controller_Config_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Motor>(Instance)->m_Physics_Controller_Config=*static_cast<const Reflection_Instance<Physics_Controller_Config>*>(Value);
+            }
+
+            static const bool Is_Filed_Physics_Controller_Config_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Move_Speed_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Move_Speed_Spelling(void){
+                return string{"m_Move_Speed"};
+            }
+
+
+            static const string Get_Field_Move_Speed_Display_Name(void){
+                return string{"Move_Speed"};
+            }
+
+            static const void *const Get_Filed_Move_Speed_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Motor>(Instance)->m_Move_Speed);
+            }
+
+            static void Set_Field_Move_Speed_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Motor>(Instance)->m_Move_Speed=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Move_Speed_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Jump_Height_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Jump_Height_Spelling(void){
+                return string{"m_Jump_Height"};
+            }
+
+
+            static const string Get_Field_Jump_Height_Display_Name(void){
+                return string{"Jump_Height"};
+            }
+
+            static const void *const Get_Filed_Jump_Height_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Motor>(Instance)->m_Jump_Height);
+            }
+
+            static void Set_Field_Jump_Height_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Motor>(Instance)->m_Jump_Height=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Jump_Height_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Max_Move_Speed_Ratio_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Max_Move_Speed_Ratio_Spelling(void){
+                return string{"m_Max_Move_Speed_Ratio"};
+            }
+
+
+            static const string Get_Field_Max_Move_Speed_Ratio_Display_Name(void){
+                return string{"Max_Move_Speed_Ratio"};
+            }
+
+            static const void *const Get_Filed_Max_Move_Speed_Ratio_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Motor>(Instance)->m_Max_Move_Speed_Ratio);
+            }
+
+            static void Set_Field_Max_Move_Speed_Ratio_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Motor>(Instance)->m_Max_Move_Speed_Ratio=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Max_Move_Speed_Ratio_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Max_Sprint_Speed_Ratio_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Max_Sprint_Speed_Ratio_Spelling(void){
+                return string{"m_Max_Sprint_Speed_Ratio"};
+            }
+
+
+            static const string Get_Field_Max_Sprint_Speed_Ratio_Display_Name(void){
+                return string{"Max_Sprint_Speed_Ratio"};
+            }
+
+            static const void *const Get_Filed_Max_Sprint_Speed_Ratio_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Motor>(Instance)->m_Max_Sprint_Speed_Ratio);
+            }
+
+            static void Set_Field_Max_Sprint_Speed_Ratio_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Motor>(Instance)->m_Max_Sprint_Speed_Ratio=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Max_Sprint_Speed_Ratio_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Move_Acceleration_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Move_Acceleration_Spelling(void){
+                return string{"m_Move_Acceleration"};
+            }
+
+
+            static const string Get_Field_Move_Acceleration_Display_Name(void){
+                return string{"Move_Acceleration"};
+            }
+
+            static const void *const Get_Filed_Move_Acceleration_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Motor>(Instance)->m_Move_Acceleration);
+            }
+
+            static void Set_Field_Move_Acceleration_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Motor>(Instance)->m_Move_Acceleration=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Move_Acceleration_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Sprint_Acceleration_Type_Spelling(void){
                 return string{"float"};
             }
@@ -194,6 +356,90 @@ namespace NameSpace_Resource::NameSpace_Components{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Motor_Operator::Get_Base_Class_Motor_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Physics_Controller_Config"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Motor_Operator::Get_Field_Physics_Controller_Config_Type_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Physics_Controller_Config_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Physics_Controller_Config_Display_Name,
+                        Reflection_Motor_Operator::Get_Filed_Physics_Controller_Config_Attribute,
+                        Reflection_Motor_Operator::Set_Field_Physics_Controller_Config_Attribute,
+                        Reflection_Motor_Operator::Is_Filed_Physics_Controller_Config_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Move_Speed"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Motor_Operator::Get_Field_Move_Speed_Type_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Move_Speed_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Move_Speed_Display_Name,
+                        Reflection_Motor_Operator::Get_Filed_Move_Speed_Attribute,
+                        Reflection_Motor_Operator::Set_Field_Move_Speed_Attribute,
+                        Reflection_Motor_Operator::Is_Filed_Move_Speed_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Jump_Height"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Motor_Operator::Get_Field_Jump_Height_Type_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Jump_Height_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Jump_Height_Display_Name,
+                        Reflection_Motor_Operator::Get_Filed_Jump_Height_Attribute,
+                        Reflection_Motor_Operator::Set_Field_Jump_Height_Attribute,
+                        Reflection_Motor_Operator::Is_Filed_Jump_Height_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Max_Move_Speed_Ratio"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Motor_Operator::Get_Field_Max_Move_Speed_Ratio_Type_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Max_Move_Speed_Ratio_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Max_Move_Speed_Ratio_Display_Name,
+                        Reflection_Motor_Operator::Get_Filed_Max_Move_Speed_Ratio_Attribute,
+                        Reflection_Motor_Operator::Set_Field_Max_Move_Speed_Ratio_Attribute,
+                        Reflection_Motor_Operator::Is_Filed_Max_Move_Speed_Ratio_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Max_Sprint_Speed_Ratio"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Motor_Operator::Get_Field_Max_Sprint_Speed_Ratio_Type_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Max_Sprint_Speed_Ratio_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Max_Sprint_Speed_Ratio_Display_Name,
+                        Reflection_Motor_Operator::Get_Filed_Max_Sprint_Speed_Ratio_Attribute,
+                        Reflection_Motor_Operator::Set_Field_Max_Sprint_Speed_Ratio_Attribute,
+                        Reflection_Motor_Operator::Is_Filed_Max_Sprint_Speed_Ratio_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Move_Acceleration"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Motor_Operator::Get_Field_Move_Acceleration_Type_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Move_Acceleration_Spelling,
+                        Reflection_Motor_Operator::Get_Field_Move_Acceleration_Display_Name,
+                        Reflection_Motor_Operator::Get_Filed_Move_Acceleration_Attribute,
+                        Reflection_Motor_Operator::Set_Field_Move_Acceleration_Attribute,
+                        Reflection_Motor_Operator::Is_Filed_Move_Acceleration_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Sprint_Acceleration"},

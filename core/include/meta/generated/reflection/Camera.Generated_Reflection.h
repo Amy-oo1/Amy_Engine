@@ -257,6 +257,87 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
+            static const string Get_Field_Horizontal_Offset_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Horizontal_Offset_Spelling(void){
+                return string{"m_Horizontal_Offset"};
+            }
+
+
+            static const string Get_Field_Horizontal_Offset_Display_Name(void){
+                return string{"Horizontal_Offset"};
+            }
+
+            static const void *const Get_Filed_Horizontal_Offset_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Camera_Third_Persion>(Instance)->m_Horizontal_Offset);
+            }
+
+            static void Set_Field_Horizontal_Offset_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Camera_Third_Persion>(Instance)->m_Horizontal_Offset=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Horizontal_Offset_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Vertical_Offset_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Vertical_Offset_Spelling(void){
+                return string{"m_Vertical_Offset"};
+            }
+
+
+            static const string Get_Field_Vertical_Offset_Display_Name(void){
+                return string{"Vertical_Offset"};
+            }
+
+            static const void *const Get_Filed_Vertical_Offset_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Camera_Third_Persion>(Instance)->m_Vertical_Offset);
+            }
+
+            static void Set_Field_Vertical_Offset_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Camera_Third_Persion>(Instance)->m_Vertical_Offset=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Vertical_Offset_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Cursor_Pitch_Type_Spelling(void){
+                return string{"Quaternion"};
+            }
+
+            static const string Get_Field_Cursor_Pitch_Spelling(void){
+                return string{"m_Cursor_Pitch"};
+            }
+
+
+            static const string Get_Field_Cursor_Pitch_Display_Name(void){
+                return string{"Cursor_Pitch"};
+            }
+
+            static const void *const Get_Filed_Cursor_Pitch_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Camera_Third_Persion>(Instance)->m_Cursor_Pitch);
+            }
+
+            static void Set_Field_Cursor_Pitch_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Camera_Third_Persion>(Instance)->m_Cursor_Pitch=*static_cast<const Quaternion*>(Value);
+            }
+
+            static const bool Is_Filed_Cursor_Pitch_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Cursor_Yaw_Type_Spelling(void){
                 return string{"Quaternion"};
             }
@@ -299,6 +380,48 @@ namespace NameSpace_Resource::NameSpace_Components{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Camera_Third_Persion_Operator::Get_Base_Class_Camera_Third_Persion_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Horizontal_Offset"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Horizontal_Offset_Type_Spelling,
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Horizontal_Offset_Spelling,
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Horizontal_Offset_Display_Name,
+                        Reflection_Camera_Third_Persion_Operator::Get_Filed_Horizontal_Offset_Attribute,
+                        Reflection_Camera_Third_Persion_Operator::Set_Field_Horizontal_Offset_Attribute,
+                        Reflection_Camera_Third_Persion_Operator::Is_Filed_Horizontal_Offset_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Vertical_Offset"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Vertical_Offset_Type_Spelling,
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Vertical_Offset_Spelling,
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Vertical_Offset_Display_Name,
+                        Reflection_Camera_Third_Persion_Operator::Get_Filed_Vertical_Offset_Attribute,
+                        Reflection_Camera_Third_Persion_Operator::Set_Field_Vertical_Offset_Attribute,
+                        Reflection_Camera_Third_Persion_Operator::Is_Filed_Vertical_Offset_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Cursor_Pitch"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Cursor_Pitch_Type_Spelling,
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Cursor_Pitch_Spelling,
+                        Reflection_Camera_Third_Persion_Operator::Get_Field_Cursor_Pitch_Display_Name,
+                        Reflection_Camera_Third_Persion_Operator::Get_Filed_Cursor_Pitch_Attribute,
+                        Reflection_Camera_Third_Persion_Operator::Set_Field_Cursor_Pitch_Attribute,
+                        Reflection_Camera_Third_Persion_Operator::Is_Filed_Cursor_Pitch_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Cursor_Yaw"},

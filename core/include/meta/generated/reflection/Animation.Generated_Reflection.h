@@ -47,6 +47,33 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
+            static const string Get_Field_Index_Type_Spelling(void){
+                return string{"size_t"};
+            }
+
+            static const string Get_Field_Index_Spelling(void){
+                return string{"m_Index"};
+            }
+
+
+            static const string Get_Field_Index_Display_Name(void){
+                return string{"Index"};
+            }
+
+            static const void *const Get_Filed_Index_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Animation_Effect_Element>(Instance)->m_Index);
+            }
+
+            static void Set_Field_Index_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Animation_Effect_Element>(Instance)->m_Index=*static_cast<const size_t*>(Value);
+            }
+
+            static const bool Is_Filed_Index_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Transform_Type_Spelling(void){
                 return string{"Affine_Transform"};
             }
@@ -89,6 +116,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Animation_Effect_Element_Operator::Get_Base_Class_Animation_Effect_Element_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Index"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Animation_Effect_Element_Operator::Get_Field_Index_Type_Spelling,
+                        Reflection_Animation_Effect_Element_Operator::Get_Field_Index_Spelling,
+                        Reflection_Animation_Effect_Element_Operator::Get_Field_Index_Display_Name,
+                        Reflection_Animation_Effect_Element_Operator::Get_Filed_Index_Attribute,
+                        Reflection_Animation_Effect_Element_Operator::Set_Field_Index_Attribute,
+                        Reflection_Animation_Effect_Element_Operator::Is_Filed_Index_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Transform"},
@@ -265,24 +306,78 @@ namespace NameSpace_Resource::NameSpace_Components{
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Register;
 
 
-    class Reflection_Animation_Operator {
+    class Reflection_Animation_Component_Res_Operator {
     public:
 
-        static const string Get_Class_Animation_Spelling(void){
-            return string{"Animation"};
+        static const string Get_Class_Animation_Component_Res_Spelling(void){
+            return string{"Animation_Component_Res"};
         }
 
         static const string Get_Class_Displaying_Name(void){
-            return string{"Animation"};            
+            return string{"Animation_Component_Res"};            
         }
 
-            static const vector<Reflection_Instance<void>> Get_Base_Class_Animation_Reflection_Instance_List(shared_ptr<void> Instance){
+            static const vector<Reflection_Instance<void>> Get_Base_Class_Animation_Component_Res_Reflection_Instance_List(shared_ptr<void> Instance){
                 vector<Reflection_Instance<void>> Table;
 
                     
 
                 return Table;
             }
+
+            static const string Get_Field_skeleton_File_Path_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_skeleton_File_Path_Spelling(void){
+                return string{"m_skeleton_File_Path"};
+            }
+
+
+            static const string Get_Field_skeleton_File_Path_Display_Name(void){
+                return string{"skeleton_File_Path"};
+            }
+
+            static const void *const Get_Filed_skeleton_File_Path_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Animation_Component_Res>(Instance)->m_skeleton_File_Path);
+            }
+
+            static void Set_Field_skeleton_File_Path_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Animation_Component_Res>(Instance)->m_skeleton_File_Path=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_skeleton_File_Path_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Blend_State_Type_Spelling(void){
+                return string{"Blend_State"};
+            }
+
+            static const string Get_Field_Blend_State_Spelling(void){
+                return string{"m_Blend_State"};
+            }
+
+
+            static const string Get_Field_Blend_State_Display_Name(void){
+                return string{"Blend_State"};
+            }
+
+            static const void *const Get_Filed_Blend_State_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Animation_Component_Res>(Instance)->m_Blend_State);
+            }
+
+            static void Set_Field_Blend_State_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Animation_Component_Res>(Instance)->m_Blend_State=*static_cast<const Blend_State*>(Value);
+            }
+
+            static const bool Is_Filed_Blend_State_CPPVector(void){
+                return  false;
+            }
+
+            
 
             static const string Get_Field_Effect_Type_Spelling(void){
                 return string{"Animation_Effect"};
@@ -298,11 +393,11 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const void *const Get_Filed_Effect_Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Animation>(Instance)->m_Effect);
+                return static_cast<void*>(&static_pointer_cast<Animation_Component_Res>(Instance)->m_Effect);
             }
 
             static void Set_Field_Effect_Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Animation>(Instance)->m_Effect=*static_cast<const Animation_Effect*>(Value);
+                static_pointer_cast<Animation_Component_Res>(Instance)->m_Effect=*static_cast<const Animation_Effect*>(Value);
             }
 
             static const bool Is_Filed_Effect_CPPVector(void){
@@ -319,33 +414,61 @@ namespace NameSpace_Resource::NameSpace_Components{
                 shared_ptr<std::unordered_map<string, shared_ptr<Class_Filed_CPPVector_Func_Tuple>>> Temp_Class_Filed_CPPVector_Func_Tuple_Map{nullptr};
 
                 Temp_Class_Func_Tuple = make_shared<Class_Func_Tuple>(
-                    Reflection_Animation_Operator::Get_Class_Animation_Spelling,
-                    Reflection_Animation_Operator::Get_Class_Displaying_Name
+                    Reflection_Animation_Component_Res_Operator::Get_Class_Animation_Component_Res_Spelling,
+                    Reflection_Animation_Component_Res_Operator::Get_Class_Displaying_Name
                 );
 
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
-                    Reflection_Animation_Operator::Get_Base_Class_Animation_Reflection_Instance_List
+                    Reflection_Animation_Component_Res_Operator::Get_Base_Class_Animation_Component_Res_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_skeleton_File_Path"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Animation_Component_Res_Operator::Get_Field_skeleton_File_Path_Type_Spelling,
+                        Reflection_Animation_Component_Res_Operator::Get_Field_skeleton_File_Path_Spelling,
+                        Reflection_Animation_Component_Res_Operator::Get_Field_skeleton_File_Path_Display_Name,
+                        Reflection_Animation_Component_Res_Operator::Get_Filed_skeleton_File_Path_Attribute,
+                        Reflection_Animation_Component_Res_Operator::Set_Field_skeleton_File_Path_Attribute,
+                        Reflection_Animation_Component_Res_Operator::Is_Filed_skeleton_File_Path_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Blend_State"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Animation_Component_Res_Operator::Get_Field_Blend_State_Type_Spelling,
+                        Reflection_Animation_Component_Res_Operator::Get_Field_Blend_State_Spelling,
+                        Reflection_Animation_Component_Res_Operator::Get_Field_Blend_State_Display_Name,
+                        Reflection_Animation_Component_Res_Operator::Get_Filed_Blend_State_Attribute,
+                        Reflection_Animation_Component_Res_Operator::Set_Field_Blend_State_Attribute,
+                        Reflection_Animation_Component_Res_Operator::Is_Filed_Blend_State_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Effect"},
                     make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Animation_Operator::Get_Field_Effect_Type_Spelling,
-                        Reflection_Animation_Operator::Get_Field_Effect_Spelling,
-                        Reflection_Animation_Operator::Get_Field_Effect_Display_Name,
-                        Reflection_Animation_Operator::Get_Filed_Effect_Attribute,
-                        Reflection_Animation_Operator::Set_Field_Effect_Attribute,
-                        Reflection_Animation_Operator::Is_Filed_Effect_CPPVector
+                        Reflection_Animation_Component_Res_Operator::Get_Field_Effect_Type_Spelling,
+                        Reflection_Animation_Component_Res_Operator::Get_Field_Effect_Spelling,
+                        Reflection_Animation_Component_Res_Operator::Get_Field_Effect_Display_Name,
+                        Reflection_Animation_Component_Res_Operator::Get_Filed_Effect_Attribute,
+                        Reflection_Animation_Component_Res_Operator::Set_Field_Effect_Attribute,
+                        Reflection_Animation_Component_Res_Operator::Is_Filed_Effect_CPPVector
                     )
                 );
 
                 
 
                 
-            Reflection_Register::Get_Instance().Register_Class(string{"Animation"},Temp_Class_Func_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Animation"},Temp_Class_Base_Class_Tuple);
-            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Animation"},Temp_Class_Field_Func_Tuple_Map);
-            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Animation"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
+            Reflection_Register::Get_Instance().Register_Class(string{"Animation_Component_Res"},Temp_Class_Func_Tuple);
+            Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Animation_Component_Res"},Temp_Class_Base_Class_Tuple);
+            Reflection_Register::Get_Instance().Register_Class_Filed(string{"Animation_Component_Res"},Temp_Class_Field_Func_Tuple_Map);
+            Reflection_Register::Get_Instance().Register_Class_Field_CPPVector(string{"Animation_Component_Res"},Temp_Class_Filed_CPPVector_Func_Tuple_Map);
         }
 
     };

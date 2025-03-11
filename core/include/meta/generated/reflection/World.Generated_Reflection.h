@@ -47,6 +47,60 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return Table;
             }
 
+            static const string Get_Field_Name_Type_Spelling(void){
+                return string{"string"};
+            }
+
+            static const string Get_Field_Name_Spelling(void){
+                return string{"m_Name"};
+            }
+
+
+            static const string Get_Field_Name_Display_Name(void){
+                return string{"Name"};
+            }
+
+            static const void *const Get_Filed_Name_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<World>(Instance)->m_Name);
+            }
+
+            static void Set_Field_Name_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<World>(Instance)->m_Name=*static_cast<const string*>(Value);
+            }
+
+            static const bool Is_Filed_Name_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Default_Level_URL_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Field_Default_Level_URL_Spelling(void){
+                return string{"m_Default_Level_URL"};
+            }
+
+
+            static const string Get_Field_Default_Level_URL_Display_Name(void){
+                return string{"Default_Level_URL"};
+            }
+
+            static const void *const Get_Filed_Default_Level_URL_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<World>(Instance)->m_Default_Level_URL);
+            }
+
+            static void Set_Field_Default_Level_URL_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<World>(Instance)->m_Default_Level_URL=*static_cast<const path*>(Value);
+            }
+
+            static const bool Is_Filed_Default_Level_URL_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Levels_URL_Type_Spelling(void){
                 return string{"vector<path>"};
             }
@@ -107,6 +161,34 @@ namespace NameSpace_Resource::NameSpace_Common{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_World_Operator::Get_Base_Class_World_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Name"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_World_Operator::Get_Field_Name_Type_Spelling,
+                        Reflection_World_Operator::Get_Field_Name_Spelling,
+                        Reflection_World_Operator::Get_Field_Name_Display_Name,
+                        Reflection_World_Operator::Get_Filed_Name_Attribute,
+                        Reflection_World_Operator::Set_Field_Name_Attribute,
+                        Reflection_World_Operator::Is_Filed_Name_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Default_Level_URL"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_World_Operator::Get_Field_Default_Level_URL_Type_Spelling,
+                        Reflection_World_Operator::Get_Field_Default_Level_URL_Spelling,
+                        Reflection_World_Operator::Get_Field_Default_Level_URL_Display_Name,
+                        Reflection_World_Operator::Get_Filed_Default_Level_URL_Attribute,
+                        Reflection_World_Operator::Set_Field_Default_Level_URL_Attribute,
+                        Reflection_World_Operator::Is_Filed_Default_Level_URL_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Levels_URL"},

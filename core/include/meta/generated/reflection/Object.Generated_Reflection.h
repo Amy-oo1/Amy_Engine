@@ -47,6 +47,33 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return Table;
             }
 
+            static const string Get_Field_Type_Name_Type_Spelling(void){
+                return string{"string"};
+            }
+
+            static const string Get_Field_Type_Name_Spelling(void){
+                return string{"m_Type_Name"};
+            }
+
+
+            static const string Get_Field_Type_Name_Display_Name(void){
+                return string{"Type_Name"};
+            }
+
+            static const void *const Get_Filed_Type_Name_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Component_Definition>(Instance)->m_Type_Name);
+            }
+
+            static void Set_Field_Type_Name_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Component_Definition>(Instance)->m_Type_Name=*static_cast<const string*>(Value);
+            }
+
+            static const bool Is_Filed_Type_Name_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Component_Type_Spelling(void){
                 return string{"string"};
             }
@@ -89,6 +116,20 @@ namespace NameSpace_Resource::NameSpace_Common{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Component_Definition_Operator::Get_Base_Class_Component_Definition_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Type_Name"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Component_Definition_Operator::Get_Field_Type_Name_Type_Spelling,
+                        Reflection_Component_Definition_Operator::Get_Field_Type_Name_Spelling,
+                        Reflection_Component_Definition_Operator::Get_Field_Type_Name_Display_Name,
+                        Reflection_Component_Definition_Operator::Get_Filed_Type_Name_Attribute,
+                        Reflection_Component_Definition_Operator::Set_Field_Type_Name_Attribute,
+                        Reflection_Component_Definition_Operator::Is_Filed_Type_Name_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Component"},
@@ -152,6 +193,33 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return Table;
             }
 
+            static const string Get_Field_Seplling_Type_Spelling(void){
+                return string{"string"};
+            }
+
+            static const string Get_Field_Seplling_Spelling(void){
+                return string{"m_Seplling"};
+            }
+
+
+            static const string Get_Field_Seplling_Display_Name(void){
+                return string{"Seplling"};
+            }
+
+            static const void *const Get_Filed_Seplling_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Object_Definition>(Instance)->m_Seplling);
+            }
+
+            static void Set_Field_Seplling_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Object_Definition>(Instance)->m_Seplling=*static_cast<const string*>(Value);
+            }
+
+            static const bool Is_Filed_Seplling_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Components_Type_Spelling(void){
                 return string{"vector<Reflection_Instance<Component>>"};
             }
@@ -212,6 +280,20 @@ namespace NameSpace_Resource::NameSpace_Common{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Object_Definition_Operator::Get_Base_Class_Object_Definition_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Seplling"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Object_Definition_Operator::Get_Field_Seplling_Type_Spelling,
+                        Reflection_Object_Definition_Operator::Get_Field_Seplling_Spelling,
+                        Reflection_Object_Definition_Operator::Get_Field_Seplling_Display_Name,
+                        Reflection_Object_Definition_Operator::Get_Filed_Seplling_Attribute,
+                        Reflection_Object_Definition_Operator::Set_Field_Seplling_Attribute,
+                        Reflection_Object_Definition_Operator::Is_Filed_Seplling_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Components"},
@@ -284,6 +366,60 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return Table;
             }
 
+            static const string Get_Field_Name_Type_Spelling(void){
+                return string{"std::string"};
+            }
+
+            static const string Get_Field_Name_Spelling(void){
+                return string{"m_Name"};
+            }
+
+
+            static const string Get_Field_Name_Display_Name(void){
+                return string{"Name"};
+            }
+
+            static const void *const Get_Filed_Name_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Object_Instance>(Instance)->m_Name);
+            }
+
+            static void Set_Field_Name_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Object_Instance>(Instance)->m_Name=*static_cast<const std::string*>(Value);
+            }
+
+            static const bool Is_Filed_Name_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Definition_Type_Spelling(void){
+                return string{"std::string"};
+            }
+
+            static const string Get_Field_Definition_Spelling(void){
+                return string{"m_Definition"};
+            }
+
+
+            static const string Get_Field_Definition_Display_Name(void){
+                return string{"Definition"};
+            }
+
+            static const void *const Get_Filed_Definition_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Object_Instance>(Instance)->m_Definition);
+            }
+
+            static void Set_Field_Definition_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Object_Instance>(Instance)->m_Definition=*static_cast<const std::string*>(Value);
+            }
+
+            static const bool Is_Filed_Definition_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Instanced_Components_Type_Spelling(void){
                 return string{"std::vector<Reflection_Instance<Component>>"};
             }
@@ -344,6 +480,34 @@ namespace NameSpace_Resource::NameSpace_Common{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Object_Instance_Operator::Get_Base_Class_Object_Instance_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Name"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Object_Instance_Operator::Get_Field_Name_Type_Spelling,
+                        Reflection_Object_Instance_Operator::Get_Field_Name_Spelling,
+                        Reflection_Object_Instance_Operator::Get_Field_Name_Display_Name,
+                        Reflection_Object_Instance_Operator::Get_Filed_Name_Attribute,
+                        Reflection_Object_Instance_Operator::Set_Field_Name_Attribute,
+                        Reflection_Object_Instance_Operator::Is_Filed_Name_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Definition"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Object_Instance_Operator::Get_Field_Definition_Type_Spelling,
+                        Reflection_Object_Instance_Operator::Get_Field_Definition_Spelling,
+                        Reflection_Object_Instance_Operator::Get_Field_Definition_Display_Name,
+                        Reflection_Object_Instance_Operator::Get_Filed_Definition_Attribute,
+                        Reflection_Object_Instance_Operator::Set_Field_Definition_Attribute,
+                        Reflection_Object_Instance_Operator::Is_Filed_Definition_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Instanced_Components"},

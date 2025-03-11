@@ -159,6 +159,7 @@ Parser_Header.o: \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\locale \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xlocbuf \
   C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include\xlocmes \
+  D:\Amy_Engine\resource\include\components\skeleton\Skeleton_Node.h \
   D:\Amy_Engine\resource\include\components\animation\Animation_Clip.h \
   D:\Amy_Engine\core\include\transform\Affine_Transform.h \
   D:\Amy_Engine\core\include\math\Head_Math.h \

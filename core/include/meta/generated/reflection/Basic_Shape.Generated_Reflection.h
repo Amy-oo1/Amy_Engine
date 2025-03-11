@@ -47,33 +47,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
-            static const string Get_Field__Type_Spelling(void){
-                return string{""};
-            }
-
-            static const string Get_Field__Spelling(void){
-                return string{""};
-            }
-
-
-            static const string Get_Field__Display_Name(void){
-                return string{""};
-            }
-
-            static const void *const Get_Filed__Attribute(shared_ptr<void> Instance){
-                return static_cast<void*>(&static_pointer_cast<Geometry_Base>(Instance)->);
-            }
-
-            static void Set_Field__Attribute(shared_ptr<void> Instance, const void * Value){
-                static_pointer_cast<Geometry_Base>(Instance)->=*static_cast<const *>(Value);
-            }
-
-            static const bool Is_Filed__CPPVector(void){
-                return  false;
-            }
-
-            
-
+        
 
             static void TypeWrapper_Rigster(void){
                 shared_ptr<Class_Func_Tuple> Temp_Class_Func_Tuple{nullptr};
@@ -90,20 +64,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                     Reflection_Geometry_Base_Operator::Get_Base_Class_Geometry_Base_Reflection_Instance_List
                 );
 
-                    Temp_Class_Field_Func_Tuple_Map->emplace(
-                    string{""},
-                    make_shared<Class_Field_Func_Tuple>(
-                        Reflection_Geometry_Base_Operator::Get_Field__Type_Spelling,
-                        Reflection_Geometry_Base_Operator::Get_Field__Spelling,
-                        Reflection_Geometry_Base_Operator::Get_Field__Display_Name,
-                        Reflection_Geometry_Base_Operator::Get_Filed__Attribute,
-                        Reflection_Geometry_Base_Operator::Set_Field__Attribute,
-                        Reflection_Geometry_Base_Operator::Is_Filed__CPPVector
-                    )
-                );
-
-                
-
+            
                 
             Reflection_Register::Get_Instance().Register_Class(string{"Geometry_Base"},Temp_Class_Func_Tuple);
             Reflection_Register::Get_Instance().Register_Class_Base_Class(string{"Geometry_Base"},Temp_Class_Base_Class_Tuple);
@@ -362,6 +323,33 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
+            static const string Get_Field_Radius_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Field_Radius_Spelling(void){
+                return string{"m_Radius"};
+            }
+
+
+            static const string Get_Field_Radius_Display_Name(void){
+                return string{"Radius"};
+            }
+
+            static const void *const Get_Filed_Radius_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Geometry_Cylinder>(Instance)->m_Radius);
+            }
+
+            static void Set_Field_Radius_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Geometry_Cylinder>(Instance)->m_Radius=*static_cast<const float*>(Value);
+            }
+
+            static const bool Is_Filed_Radius_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Half_Height_Type_Spelling(void){
                 return string{"float"};
             }
@@ -404,6 +392,20 @@ namespace NameSpace_Resource::NameSpace_Components{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Geometry_Cylinder_Operator::Get_Base_Class_Geometry_Cylinder_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Radius"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Geometry_Cylinder_Operator::Get_Field_Radius_Type_Spelling,
+                        Reflection_Geometry_Cylinder_Operator::Get_Field_Radius_Spelling,
+                        Reflection_Geometry_Cylinder_Operator::Get_Field_Radius_Display_Name,
+                        Reflection_Geometry_Cylinder_Operator::Get_Filed_Radius_Attribute,
+                        Reflection_Geometry_Cylinder_Operator::Set_Field_Radius_Attribute,
+                        Reflection_Geometry_Cylinder_Operator::Is_Filed_Radius_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Half_Height"},

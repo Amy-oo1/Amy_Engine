@@ -47,6 +47,60 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return Table;
             }
 
+            static const string Get_Field_Gravity_Type_Spelling(void){
+                return string{"Vector3"};
+            }
+
+            static const string Get_Field_Gravity_Spelling(void){
+                return string{"m_Gravity"};
+            }
+
+
+            static const string Get_Field_Gravity_Display_Name(void){
+                return string{"Gravity"};
+            }
+
+            static const void *const Get_Filed_Gravity_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Level>(Instance)->m_Gravity);
+            }
+
+            static void Set_Field_Gravity_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Level>(Instance)->m_Gravity=*static_cast<const Vector3*>(Value);
+            }
+
+            static const bool Is_Filed_Gravity_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Field_Character_Name_Type_Spelling(void){
+                return string{"string"};
+            }
+
+            static const string Get_Field_Character_Name_Spelling(void){
+                return string{"m_Character_Name"};
+            }
+
+
+            static const string Get_Field_Character_Name_Display_Name(void){
+                return string{"Character_Name"};
+            }
+
+            static const void *const Get_Filed_Character_Name_Attribute(shared_ptr<void> Instance){
+                return static_cast<void*>(&static_pointer_cast<Level>(Instance)->m_Character_Name);
+            }
+
+            static void Set_Field_Character_Name_Attribute(shared_ptr<void> Instance, const void * Value){
+                static_pointer_cast<Level>(Instance)->m_Character_Name=*static_cast<const string*>(Value);
+            }
+
+            static const bool Is_Filed_Character_Name_CPPVector(void){
+                return  false;
+            }
+
+            
+
             static const string Get_Field_Objects_Type_Spelling(void){
                 return string{"vector<Object_Instance>"};
             }
@@ -107,6 +161,34 @@ namespace NameSpace_Resource::NameSpace_Common{
                 Temp_Class_Base_Class_Tuple = make_shared<Class_Base_Class_Tuple>(
                     Reflection_Level_Operator::Get_Base_Class_Level_Reflection_Instance_List
                 );
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Gravity"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Level_Operator::Get_Field_Gravity_Type_Spelling,
+                        Reflection_Level_Operator::Get_Field_Gravity_Spelling,
+                        Reflection_Level_Operator::Get_Field_Gravity_Display_Name,
+                        Reflection_Level_Operator::Get_Filed_Gravity_Attribute,
+                        Reflection_Level_Operator::Set_Field_Gravity_Attribute,
+                        Reflection_Level_Operator::Is_Filed_Gravity_CPPVector
+                    )
+                );
+
+                
+
+                    Temp_Class_Field_Func_Tuple_Map->emplace(
+                    string{"m_Character_Name"},
+                    make_shared<Class_Field_Func_Tuple>(
+                        Reflection_Level_Operator::Get_Field_Character_Name_Type_Spelling,
+                        Reflection_Level_Operator::Get_Field_Character_Name_Spelling,
+                        Reflection_Level_Operator::Get_Field_Character_Name_Display_Name,
+                        Reflection_Level_Operator::Get_Filed_Character_Name_Attribute,
+                        Reflection_Level_Operator::Set_Field_Character_Name_Attribute,
+                        Reflection_Level_Operator::Is_Filed_Character_Name_CPPVector
+                    )
+                );
+
+                
 
                     Temp_Class_Field_Func_Tuple_Map->emplace(
                     string{"m_Objects"},
