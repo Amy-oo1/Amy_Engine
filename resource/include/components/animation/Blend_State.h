@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<string>
+#include<memory>
 #include<cstddef>
 
 #include "meta/reflection/Reflection_Macro.h"
@@ -14,6 +15,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	using std::vector;
 	using std::string;
+	using std::shared_ptr;
 
 	using  NameSpace_Platform::NameSpace_File::path;
 
@@ -41,9 +43,9 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~BlendState_With_Clip_Data(void) = default;
 
 	private:
-		vector<Animation_Clip> m_Blend_Clip{};
-		vector<Skeleton_Node_Map> m_Blend_Skeleton{};
-		vector<Bone_Blend_Weight> m_Blend_Weights{};
+		vector<shared_ptr<Animation_Clip>> m_Blend_Clip{};
+		vector<shared_ptr<Skeleton_Node_Map>> m_Blend_Skeleton{};
+		vector<shared_ptr<Bone_Blend_Weight>> m_Blend_Weights{};
 		vector<float> m_Blend_ratio{};
 
 	};
@@ -67,7 +69,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 		vector<path> m_Blend_Mask_File_Path{};
 
-		vector<BlendState_With_Clip_Data> m_BlendState{};
+		vector<shared_ptr<BlendState_With_Clip_Data>> m_BlendState{};
 
 		vector<float> m_Blend_ratio{};
 

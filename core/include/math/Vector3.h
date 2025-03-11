@@ -86,6 +86,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		const Vector3 Ceil(void)const;
 		const Vector3 Floor(void)const;
+		const Vector3 Clamp(const Vector3& Value, const Vector3& Min, const Vector3& Max)const;
 
 		const Radian Angle_Between(const Vector3& R_HS)const;
 
@@ -102,6 +103,9 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		bool Is_NaN(void)const;
 		bool Is_Unit(void)const;
+
+	public:
+		static const Vector3 Lerp(const Vector3& Start, const Vector3& End, float Ratio);
 
 	public:
 		static const Vector3 ZERO;

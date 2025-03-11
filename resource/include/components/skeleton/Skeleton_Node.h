@@ -19,7 +19,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Skeleton_Node_Map(void) = default;
 
 	private:
-		vector<size_t> Convert{};
+		vector<size_t> m_Convert{};
 
 	};
 

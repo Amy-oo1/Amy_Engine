@@ -247,6 +247,14 @@ namespace NameSpace_Core::NameSpace_Math {
 		};
 	}
 
+	const Vector3 Vector3::Clamp(const Vector3& Value, const Vector3& Min, const Vector3& Max)const {
+		return Vector3{
+			NameSpace_Utilities::Clamp(Value.m_X, Min.m_X, Max.m_X),
+			NameSpace_Utilities::Clamp(Value.m_Y, Min.m_Y, Max.m_Y),
+			NameSpace_Utilities::Clamp(Value.m_Z, Min.m_Z, Max.m_Z)
+		};
+	}
+
 	const Radian Vector3::Angle_Between(const Vector3& R_HS) const {
 		assert(*this != Vector3::ZERO && R_HS != Vector3::ZERO);
 
@@ -294,6 +302,10 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	bool Vector3::Is_Unit(void) const {
 		return   NameSpace_Utilities::Real_Equal(this->Length_Square(), 1.f);
+	}
+
+	const Vector3 Vector3::Lerp(const Vector3& Start, const Vector3& End, float Ratio) {
+		return Start + (End - Start) * Ratio;
 	}
 
 	const Vector3 Vector3::ZERO{};

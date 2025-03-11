@@ -94,6 +94,7 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		const Vector2 Ceil(void)const;
 		const Vector2 Floor(void)const;
+		const Vector2 Clamp(const Vector2& Value, const Vector2& Min, const Vector2& Max)const;
 
 		const Vector2 Middle_Point(const Vector2& R_HS)const;
 
@@ -106,6 +107,10 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		bool Is_NaN(void) const;
 		bool Is_Unit(void) const;
+
+	public:
+		static const Vector2 Lerp(const Vector2& Start, const Vector2& End, float Ratio);
+
 
 	public:
 		static const Vector2 ZERO;

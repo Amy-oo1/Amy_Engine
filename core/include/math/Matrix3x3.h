@@ -109,6 +109,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		static const Matrix3x3 Generate_Column_Order(const float CArray[3][3]);
 		static const Matrix3x3 Generate_Column_Order(const float Carrays[9]);
 
+		static const Matrix3x3 Generate_Scale(const Vector3& Scale);
+
 	public:
 		static const Matrix3x3 ZERO;
 		static const Matrix3x3 IDENTITY;

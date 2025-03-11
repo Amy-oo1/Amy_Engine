@@ -28,9 +28,9 @@ namespace NameSpace_Function::NameSpace_Animation {
 			//NOTE : Transform is relative to the local space
 			LOCAL,
 			//NOTE : Transform is relative to the parent space
-			AREN,
+			Parent,
 			//NOTE : Transform is relative to object space
-			OBJECT,
+			Model,
 		};
 
 	public:
@@ -51,16 +51,25 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 		shared_ptr<Bone_Raw> Get_Definition(void) const;
 
-		void Set_Parent(const shared_ptr<Bone>& parent);
+		const Affine_Transform Get_Transform(void);
+
+		void Set_Transform(const Affine_Transform& Transform);
+
+		void Reset_To_Binding_Pose(void);
+
+		void UpData_Derived_Transform(void);
 
 		bool Is_Dirty(void) const;
 
 	private:
+		void Set_Parent(const shared_ptr<Bone>& parent);
+
+	public:
 		weak_ptr<Bone> m_Parent_Bone{};
 
 		shared_ptr<Bone_Raw> m_Definition{};
 
-		Affine_Transform m_Initial_Transform{ Affine_Transform::IDENTITY };
+		Affine_Transform m_Transform{ Affine_Transform::IDENTITY };
 		Affine_Transform m_Derived_Transform{ Affine_Transform::IDENTITY };
 
 		bool m_Is_Dirty{ true };

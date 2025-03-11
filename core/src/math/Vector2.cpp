@@ -274,6 +274,10 @@ namespace NameSpace_Core::NameSpace_Math {
 		return NameSpace_Utilities::Real_Equal(this->Length(), 1.f);
 	}
 
+	const Vector2 Vector2::Lerp(const Vector2& Start, const Vector2& End, float Ratio) {
+		return Start + (End - Start) * Ratio;
+	}
+
 	const Vector2 Vector2::ZERO{};
 	const Vector2 Vector2::ONE{ 1.f };
 	const Vector2 Vector2::UNIT_X{ 1.f,0.f };

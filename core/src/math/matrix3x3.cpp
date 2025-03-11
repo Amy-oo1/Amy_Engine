@@ -328,6 +328,14 @@ namespace NameSpace_Core::NameSpace_Math {
 		return Matrix3x3{ Carrays }.Transpose();
 	}
 
+	const Matrix3x3 Matrix3x3::Generate_Scale(const Vector3& Scale){
+		return Matrix3x3{
+			Vector3{Scale.Get_X(),0.f,0.f},
+			Vector3{0.f,Scale.Get_Y(),0.f},
+			Vector3{0.f,0.f,Scale.Get_Z()}
+		};
+	}
+
 	const Matrix3x3 Matrix3x3::ZERO{};
 	const Matrix3x3 Matrix3x3::IDENTITY{ Vector3::UNIT_X,Vector3::UNIT_Y,Vector3::UNIT_Z };
 

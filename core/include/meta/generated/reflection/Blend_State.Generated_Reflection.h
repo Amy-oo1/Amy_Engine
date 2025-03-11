@@ -115,7 +115,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const string Get_Blend_Clip_Type_Spelling(void){
-                return string{"vector<Animation_Clip>"};
+                return string{"vector<shared_ptr<Animation_Clip>>"};
             }
 
             static const string Get_Blend_Clip_Spelling(void){
@@ -127,11 +127,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Clip"};
             }
 
-            static const vector<Animation_Clip> Get_Blend_Clip_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<shared_ptr<Animation_Clip>> Get_Blend_Clip_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_Clip;
             }
 
-            static void Set_Field_Blend_Clip_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance, const vector<Animation_Clip>& Value){
+            static void Set_Field_Blend_Clip_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance, const vector<shared_ptr<Animation_Clip>>& Value){
                 Instance->m_Blend_Clip=Value;
             }
 
@@ -140,7 +140,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Blend_Clip_CPPVector_Element_Type_Spelling(void){
-                    return string {"Animation_Clip"};
+                    return string {"shared_ptr<Animation_Clip>"};
                 }
 
                 static const size_t Get_Blend_Clip_CPPVector_Capacity(shared_ptr<BlendState_With_Clip_Data> Instance){
@@ -151,16 +151,16 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Clip.size();
                 }
 
-                static const Animation_Clip Get_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const shared_ptr<Animation_Clip> Get_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_Clip[Index];
                 }
 
-                static void Set_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const Animation_Clip& Value){
+                static void Set_Blend_Clip_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const shared_ptr<Animation_Clip>& Value){
                     Instance->m_Blend_Clip[Index]=Value;
                 }
 
             static const string Get_Blend_Skeleton_Type_Spelling(void){
-                return string{"vector<Skeleton_Node_Map>"};
+                return string{"vector<shared_ptr<Skeleton_Node_Map>>"};
             }
 
             static const string Get_Blend_Skeleton_Spelling(void){
@@ -172,11 +172,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Skeleton"};
             }
 
-            static const vector<Skeleton_Node_Map> Get_Blend_Skeleton_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<shared_ptr<Skeleton_Node_Map>> Get_Blend_Skeleton_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_Skeleton;
             }
 
-            static void Set_Field_Blend_Skeleton_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance, const vector<Skeleton_Node_Map>& Value){
+            static void Set_Field_Blend_Skeleton_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance, const vector<shared_ptr<Skeleton_Node_Map>>& Value){
                 Instance->m_Blend_Skeleton=Value;
             }
 
@@ -185,7 +185,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Blend_Skeleton_CPPVector_Element_Type_Spelling(void){
-                    return string {"Skeleton_Node_Map"};
+                    return string {"shared_ptr<Skeleton_Node_Map>"};
                 }
 
                 static const size_t Get_Blend_Skeleton_CPPVector_Capacity(shared_ptr<BlendState_With_Clip_Data> Instance){
@@ -196,16 +196,16 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Skeleton.size();
                 }
 
-                static const Skeleton_Node_Map Get_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const shared_ptr<Skeleton_Node_Map> Get_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_Skeleton[Index];
                 }
 
-                static void Set_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const Skeleton_Node_Map& Value){
+                static void Set_Blend_Skeleton_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const shared_ptr<Skeleton_Node_Map>& Value){
                     Instance->m_Blend_Skeleton[Index]=Value;
                 }
 
             static const string Get_Blend_Weights_Type_Spelling(void){
-                return string{"vector<Bone_Blend_Weight>"};
+                return string{"vector<shared_ptr<Bone_Blend_Weight>>"};
             }
 
             static const string Get_Blend_Weights_Spelling(void){
@@ -217,11 +217,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Blend_Weights"};
             }
 
-            static const vector<Bone_Blend_Weight> Get_Blend_Weights_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
+            static const vector<shared_ptr<Bone_Blend_Weight>> Get_Blend_Weights_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance){
                 return Instance->m_Blend_Weights;
             }
 
-            static void Set_Field_Blend_Weights_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance, const vector<Bone_Blend_Weight>& Value){
+            static void Set_Field_Blend_Weights_Attribute(shared_ptr<BlendState_With_Clip_Data> Instance, const vector<shared_ptr<Bone_Blend_Weight>>& Value){
                 Instance->m_Blend_Weights=Value;
             }
 
@@ -230,7 +230,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Blend_Weights_CPPVector_Element_Type_Spelling(void){
-                    return string {"Bone_Blend_Weight"};
+                    return string {"shared_ptr<Bone_Blend_Weight>"};
                 }
 
                 static const size_t Get_Blend_Weights_CPPVector_Capacity(shared_ptr<BlendState_With_Clip_Data> Instance){
@@ -241,11 +241,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Blend_Weights.size();
                 }
 
-                static const Bone_Blend_Weight Get_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
+                static const shared_ptr<Bone_Blend_Weight> Get_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index){
                     return Instance->m_Blend_Weights[Index];
                 }
 
-                static void Set_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const Bone_Blend_Weight& Value){
+                static void Set_Blend_Weights_CPPVector_Element(shared_ptr<BlendState_With_Clip_Data> Instance, size_t Index, const shared_ptr<Bone_Blend_Weight>& Value){
                     Instance->m_Blend_Weights[Index]=Value;
                 }
 
@@ -552,7 +552,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                 }
 
             static const string Get_BlendState_Type_Spelling(void){
-                return string{"vector<BlendState_With_Clip_Data>"};
+                return string{"vector<shared_ptr<BlendState_With_Clip_Data>>"};
             }
 
             static const string Get_BlendState_Spelling(void){
@@ -564,11 +564,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"BlendState"};
             }
 
-            static const vector<BlendState_With_Clip_Data> Get_BlendState_Attribute(shared_ptr<Blend_State> Instance){
+            static const vector<shared_ptr<BlendState_With_Clip_Data>> Get_BlendState_Attribute(shared_ptr<Blend_State> Instance){
                 return Instance->m_BlendState;
             }
 
-            static void Set_Field_BlendState_Attribute(shared_ptr<Blend_State> Instance, const vector<BlendState_With_Clip_Data>& Value){
+            static void Set_Field_BlendState_Attribute(shared_ptr<Blend_State> Instance, const vector<shared_ptr<BlendState_With_Clip_Data>>& Value){
                 Instance->m_BlendState=Value;
             }
 
@@ -577,7 +577,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_BlendState_CPPVector_Element_Type_Spelling(void){
-                    return string {"BlendState_With_Clip_Data"};
+                    return string {"shared_ptr<BlendState_With_Clip_Data>"};
                 }
 
                 static const size_t Get_BlendState_CPPVector_Capacity(shared_ptr<Blend_State> Instance){
@@ -588,11 +588,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_BlendState.size();
                 }
 
-                static const BlendState_With_Clip_Data Get_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
+                static const shared_ptr<BlendState_With_Clip_Data> Get_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index){
                     return Instance->m_BlendState[Index];
                 }
 
-                static void Set_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const BlendState_With_Clip_Data& Value){
+                static void Set_BlendState_CPPVector_Element(shared_ptr<Blend_State> Instance, size_t Index, const shared_ptr<BlendState_With_Clip_Data>& Value){
                     Instance->m_BlendState[Index]=Value;
                 }
 
