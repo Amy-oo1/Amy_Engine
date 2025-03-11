@@ -3,20 +3,23 @@
 #include<string>
 #include<vector>
 #include<cstddef>
+#include<memory>
 
 #include "meta/reflection/Reflection_Macro.h"
 
 #include "math/Matrix4x4.h"
 #include "transform/Orthogonal_Transform.h"
+#include "transform/Affine_Transform.h"
 
 namespace NameSpace_Resource::NameSpace_Components {
 
 	using std::vector;
 	using std::string;
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 	using NameSpace_Core::NameSpace_Transform::Orthogonal_Transform;
-
+	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
 
 	REFLECTION_HEADER(Bone_Raw);
 	REFLECTION_CLASS(Bone_Raw, All) final
@@ -29,10 +32,10 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	private:
 		string m_Name{};
-		size_t m_CurrentIndex;
+		size_t m_Current_Index;
 		size_t m_Parent_Index;
 
-		Orthogonal_Transform m_Binding_Pose{ Orthogonal_Transform::IDENTITY };
+		Affine_Transform m_Binding_Pose{ Affine_Transform::IDENTITY };
 		Matrix4x4 m_Tpose_Matrix{ Matrix4x4::IDENTITY };
 
 	};
@@ -47,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Skeleton_Data(void) = default;
 
 	private:
-		vector<Bone_Raw> m_Bones{};
+		vector<shared_ptr<Bone_Raw>> m_Bones{};
 
 		bool m_Is_Flat = false; //"bone.index" equals index in bones_map
 		size_t root_index;

@@ -47,30 +47,23 @@ namespace NameSpace_Function::NameSpace_Animation {
 		~Bone(void) = default;
 
 	public:
-		bool Is_Dirty(void) const;
-
-		const string Get_Name(void) const;
-
 		shared_ptr<Bone> Get_Parent(void) const;
 
-		const Affine_Transform Get_Relative_Transform(void) const;
+		shared_ptr<Bone_Raw> Get_Definition(void) const;
 
-		void Set_Relative_Transform(const Affine_Transform& Temp_Affine_Transform);
+		void Set_Parent(const shared_ptr<Bone>& parent);
 
-		virtual void Set_Parent(const shared_ptr<Bone>& parent);
+		bool Is_Dirty(void) const;
 
 	private:
-		bool m_Is_Dirty{ true };
+		weak_ptr<Bone> m_Parent_Bone{};
 
-		weak_ptr<Bone> m_Parent_Bone;
+		shared_ptr<Bone_Raw> m_Definition{};
 
-		string m_Name{};
-
-		Affine_Transform m_Relative_Transform{ Affine_Transform::IDENTITY };
-		Affine_Transform m_Derived_Transform{ Affine_Transform::IDENTITY };
 		Affine_Transform m_Initial_Transform{ Affine_Transform::IDENTITY };
+		Affine_Transform m_Derived_Transform{ Affine_Transform::IDENTITY };
 
-		Matrix4x4 m_Inverse_Tpose{ Matrix4x4::IDENTITY };
+		bool m_Is_Dirty{ true };
 
 	};
 

@@ -64,28 +64,28 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_CurrentIndex_Type_Spelling(void){
+            static const string Get_Current_Index_Type_Spelling(void){
                 return string{"size_t"};
             }
 
-            static const string Get_CurrentIndex_Spelling(void){
-                return string{"m_CurrentIndex"};
+            static const string Get_Current_Index_Spelling(void){
+                return string{"m_Current_Index"};
             }
 
 
-            static const string Get_CurrentIndex_Display_Name(void){
-                return string{"CurrentIndex"};
+            static const string Get_Current_Index_Display_Name(void){
+                return string{"Current_Index"};
             }
 
-            static const size_t Get_CurrentIndex_Attribute(shared_ptr<Bone_Raw> Instance){
-                return Instance->m_CurrentIndex;
+            static const size_t Get_Current_Index_Attribute(shared_ptr<Bone_Raw> Instance){
+                return Instance->m_Current_Index;
             }
 
-            static void Set_Field_CurrentIndex_Attribute(shared_ptr<Bone_Raw> Instance, const size_t& Value){
-                Instance->m_CurrentIndex=Value;
+            static void Set_Field_Current_Index_Attribute(shared_ptr<Bone_Raw> Instance, const size_t& Value){
+                Instance->m_Current_Index=Value;
             }
 
-            static const bool Is_Filed_CurrentIndex_CPPVector(void){
+            static const bool Is_Filed_Current_Index_CPPVector(void){
                 return  false;
             }
 
@@ -119,7 +119,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             
 
             static const string Get_Binding_Pose_Type_Spelling(void){
-                return string{"Orthogonal_Transform"};
+                return string{"Affine_Transform"};
             }
 
             static const string Get_Binding_Pose_Spelling(void){
@@ -131,11 +131,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Binding_Pose"};
             }
 
-            static const Orthogonal_Transform Get_Binding_Pose_Attribute(shared_ptr<Bone_Raw> Instance){
+            static const Affine_Transform Get_Binding_Pose_Attribute(shared_ptr<Bone_Raw> Instance){
                 return Instance->m_Binding_Pose;
             }
 
-            static void Set_Field_Binding_Pose_Attribute(shared_ptr<Bone_Raw> Instance, const Orthogonal_Transform& Value){
+            static void Set_Field_Binding_Pose_Attribute(shared_ptr<Bone_Raw> Instance, const Affine_Transform& Value){
                 Instance->m_Binding_Pose=Value;
             }
 
@@ -205,7 +205,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const string Get_Bones_Type_Spelling(void){
-                return string{"vector<Bone_Raw>"};
+                return string{"vector<shared_ptr<Bone_Raw>>"};
             }
 
             static const string Get_Bones_Spelling(void){
@@ -217,11 +217,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Bones"};
             }
 
-            static const vector<Bone_Raw> Get_Bones_Attribute(shared_ptr<Skeleton_Data> Instance){
+            static const vector<shared_ptr<Bone_Raw>> Get_Bones_Attribute(shared_ptr<Skeleton_Data> Instance){
                 return Instance->m_Bones;
             }
 
-            static void Set_Field_Bones_Attribute(shared_ptr<Skeleton_Data> Instance, const vector<Bone_Raw>& Value){
+            static void Set_Field_Bones_Attribute(shared_ptr<Skeleton_Data> Instance, const vector<shared_ptr<Bone_Raw>>& Value){
                 Instance->m_Bones=Value;
             }
 
@@ -230,7 +230,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Bones_CPPVector_Element_Type_Spelling(void){
-                    return string {"Bone_Raw"};
+                    return string {"shared_ptr<Bone_Raw>"};
                 }
 
                 static const size_t Get_Bones_CPPVector_Capacity(shared_ptr<Skeleton_Data> Instance){
@@ -241,11 +241,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Bones.size();
                 }
 
-                static const Bone_Raw Get_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index){
+                static const shared_ptr<Bone_Raw> Get_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index){
                     return Instance->m_Bones[Index];
                 }
 
-                static void Set_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index, const Bone_Raw& Value){
+                static void Set_Bones_CPPVector_Element(shared_ptr<Skeleton_Data> Instance, size_t Index, const shared_ptr<Bone_Raw>& Value){
                     Instance->m_Bones[Index]=Value;
                 }
 

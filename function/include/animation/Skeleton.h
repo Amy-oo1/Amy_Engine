@@ -17,25 +17,21 @@ namespace NameSpace_Function::NameSpace_Animation {
 	class Skeleton final {
 	private:
 		Skeleton(void) = delete;
+
 		Skeleton(const Skeleton&) = delete;
 		Skeleton(Skeleton&&) = delete;
+
 		Skeleton& operator=(const Skeleton&) = delete;
 		Skeleton& operator=(Skeleton&&) = delete;
+
 		~Skeleton(void) = default;
 
 	public:
-		Skeleton(const Skeleton_Data& skeleton_data);
-		Skeleton(const Skeleton_Data& skeleton_data, const BlendState_With_Clip_Data& blend_state_with_clip_data);
-		Skeleton(const Skeleton_Data& skeleton_data, const vector<BlendState_With_Clip_Data>& blend_state_with_clip_data);
-		Skeleton(const Skeleton_Data& skeleton_data, const vector<BlendState_With_Clip_Data>& blend_state_with_clip_data, const vector<Bone>& bones);
-		Skeleton(const Skeleton_Data& skeleton_data, const vector<BlendState_With_Clip_Data>& blend_state_with_clip_data, const vector<Bone>& bones, const vector<Bone>& flat_bones);
-		Skeleton(const Skeleton_Data& skeleton_data, const vector<BlendState_With_Clip_Data>& blend_state_with_clip_data, const vector<Bone>& bones, const vector<Bone>& flat_bones, const vector<Bone>& flat_bones_with_clip);
+		Skeleton(shared_ptr<Skeleton_Data> Skeleton_Data);
 
 	private:
-		bool is_flat{ false };
-		//TODO : Implement the flat array of bones
-		Bone* m_Bones{ nullptr };
-		size_t m_Bones_Size{ 0 };
+		shared_ptr<Skeleton_Data> m_Skeleton_Data;
+		vector<shared_ptr<Bone>> m_Bones{};
 
 	};
 
