@@ -48,7 +48,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 		tuple<int, int> Clamp_Frame_Indices(const shared_ptr<Animation_Channel>& Temp_Animation_Channel, int low_Frame, int Height_Frame) const;
 
-		void Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Animotaon_Map, int Low_Frame, int Height_Fram, int Lerp_Raotio);
+		void Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Animotaon_Map, int Low_Frame, int Height_Fram, float Lerp_Raotio);
 
 		void Apply_Bone_Transform(const shared_ptr<Animation_Channel>& Temp_Animation_Channel, shared_ptr<Bone>& Apply_Bone, int Low_Frame, int Height_Frame, float Lerp_Ratio);
 

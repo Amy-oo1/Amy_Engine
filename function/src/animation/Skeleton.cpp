@@ -104,7 +104,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return { Current_Low, Current_High, Lerp_ratio };
 	}
 
-	void Skeleton::Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Temp_Skeleton_Node_Map, int Low_Frame, int Height_Fram, int Lerp_Raotio) {
+	void Skeleton::Apply_Clip_To_Skeleton(shared_ptr<Animation_Clip> Temp_Clip, shared_ptr<Skeleton_Node_Map> Temp_Skeleton_Node_Map, int Low_Frame, int Height_Fram, float Lerp_Raotio) {
 		for (size_t Index_Node = 0;
 			Index_Node < Reflection_Skeleton_Node_Map_Operator::Get_Convert_CPPVector_Size(Temp_Skeleton_Node_Map) &&
 			Index_Node < Reflection_Animation_Clip_Operator::Get_Node_Channels_CPPVector_Size(Temp_Clip);
