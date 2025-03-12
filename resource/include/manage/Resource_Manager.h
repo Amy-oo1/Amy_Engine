@@ -22,10 +22,10 @@ namespace NameSpace_Resource::NameSpace_Manage {
 	using NameSpace_Platform::NameSpace_File::path;
 	using NameSpace_Config::Resource_Configer;
 	using NameSpace_Core::NameSpace_Meta::NameSpacce_Serializer::JSON;
-	using NameSpace_Core::NameSpace_Meta ::NameSpacce_Serializer::Serializer;
+	using NameSpace_Core::NameSpace_Meta::NameSpacce_Serializer::Serializer;
 
-	class Resource_Manager final {
-	public:
+	class [[nodiscard]] Resource_Manager final {
+	private:
 		Resource_Manager(void) = delete;
 
 		Resource_Manager(const Resource_Manager&) = delete;
@@ -33,8 +33,8 @@ namespace NameSpace_Resource::NameSpace_Manage {
 
 		Resource_Manager& operator=(const Resource_Manager&) = delete;
 		Resource_Manager& operator=(Resource_Manager&&) = delete;
-	
-		Resource_Manager(const Resource_Configer& Configer, std::shared_ptr<System_Logger> Logger);
+
+		Resource_Manager(const Resource_Configer& Configer);
 
 	public:
 		~Resource_Manager(void) = default;
@@ -53,31 +53,31 @@ namespace NameSpace_Resource::NameSpace_Manage {
 
 			path Resource_Path = this->Get_Resource_Path(Resource_URL);
 			std::ifstream Resource_IFStream{ Resource_Path };
-			if(!Resource_IFStream){
+			if (!Resource_IFStream) {
 				this->m_Logger->Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} failed open ", Resource_Path.generic_string());
 				return std::nullopt;
 			}
 
-			JSON Resource_JSON{JSON::parse(Resource_IFStream)};
+			JSON Resource_JSON{ JSON::parse(Resource_IFStream) };
 			Resource_IFStream.close();
 
 			return Serializer::Read<Resource_Type>(Resource_JSON);
 		}
-		
+
 		const bool Save(const path& Resource_URL, const JSON& Resource_JSON) {
 			if (Resource_URL.empty()) {
-				this->m_Logger->Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is empty", Resource_URL.generic_string());
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is empty", Resource_URL.generic_string());
 				return false;
 			}
 			else if (!File_System::Is_File(Resource_URL)) {
-				this->m_Logger->Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is not a file ", Resource_URL.generic_string());
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is not a file ", Resource_URL.generic_string());
 				return false;
 			}
 
 			path Resource_Path = this->Get_Resource_Path(Resource_URL);
 			std::ofstream Resource_OFStream{ Resource_Path };
 			if (!Resource_OFStream) {
-				this->m_Logger->Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} failed open ", Resource_Path.generic_string());
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} failed open ", Resource_Path.generic_string());
 				return false;
 			}
 
@@ -88,14 +88,13 @@ namespace NameSpace_Resource::NameSpace_Manage {
 		}
 
 	public:
-		static Resource_Manager& Get_Instance(const Resource_Configer& Configer, std::shared_ptr<System_Logger> Logger);
+		static Resource_Manager& Get_Instance(const Resource_Configer& Configer);
 
 	private:
 		const path Get_Resource_Path(const path& Resource_URL);
 
 	private:
 		const Resource_Configer& m_Configer;
-		shared_ptr<System_Logger> m_Logger{ nullptr };
 
 	};
 

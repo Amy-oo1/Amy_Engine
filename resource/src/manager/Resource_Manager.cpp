@@ -4,13 +4,12 @@
 
 namespace NameSpace_Resource::NameSpace_Manage {
 
-	Resource_Manager::Resource_Manager(const Resource_Configer& Configer, std::shared_ptr<System_Logger> Logger) :
-		m_Configer{ Configer },
-		m_Logger{ Logger } {
+	Resource_Manager::Resource_Manager(const Resource_Configer& Configer)
+		: m_Configer{ Configer } {
 	}
 
-	Resource_Manager& Resource_Manager::Get_Instance(const Resource_Configer& Configer, std::shared_ptr<System_Logger> Logger) {
-		static Resource_Manager Instance{ Configer ,Logger };
+	Resource_Manager& Resource_Manager::Get_Instance(const Resource_Configer& Configer) {
+		static Resource_Manager Instance{ Configer };
 
 		return Instance;
 	}
