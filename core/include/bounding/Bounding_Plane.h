@@ -35,12 +35,12 @@ namespace NameSpace_Core::NameSpace_Bounding {
 		const Bounding_Plane& operator=(const Vector4& Plane);
 
 	public:
-		const Vector3 Get_Normal(void)const;
-		const Vector3 Get_Point_On_Plane(void)const;
+		[[nodiscard]] const Vector3 Get_Normal(void)const;
+		[[nodiscard]] const Vector3 Get_Point_On_Plane(void)const;
 
-		float Distance_From_Origin(void)const;
-		float Distance_From_Point(const Vector3& Point)const;
-		float Distance_From_Point(const Vector4& Point)const;
+		[[nodiscard]] float Distance_From_Origin(void)const;
+		[[nodiscard]] float Distance_From_Point(const Vector3& Point)const;
+		[[nodiscard]] float Distance_From_Point(const Vector4& Point)const;
 
 	public:
 		static const Bounding_Plane XY;
@@ -48,7 +48,7 @@ namespace NameSpace_Core::NameSpace_Bounding {
 		static const Bounding_Plane ZX;
 
 	public:
-		static const Bounding_Plane Generate_From_Points_CCW(const Vector3& Point_1, const Vector3& Point_2, const Vector3& Point_3);
+		[[nodiscard]] static const Bounding_Plane Generate_From_Points_CCW(const Vector3& Point_1, const Vector3& Point_2, const Vector3& Point_3);
 
 	private:
 		Vector4 m_Plane{ Vector4::ZERO };

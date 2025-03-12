@@ -7,7 +7,7 @@ namespace NameSpace_Core::NameSpace_Bounding {
 	using NameSpace_Math::Vector3;
 	using NameSpace_Math::Vector4;
 
-	class Bounding_Sphere final {
+	class [[nodiscard]] Bounding_Sphere final {
 	public:
 		Bounding_Sphere(void) = default;
 

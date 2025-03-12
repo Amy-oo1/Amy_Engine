@@ -40,10 +40,10 @@ namespace NameSpace_Core::NameSpace_Color {
 		const float& operator[](size_t index) const;
 
 	public:
-		float Get_R(void) const;
-		float Get_G(void) const;
-		float Get_B(void) const;
-		float Get_A(void) const;
+		[[nodiscard]] float Get_R(void) const;
+		[[nodiscard]] float Get_G(void) const;
+		[[nodiscard]] float Get_B(void) const;
+		[[nodiscard]] float Get_A(void) const;
 
 		void Set_R(float red);
 		void Set_G(float green);

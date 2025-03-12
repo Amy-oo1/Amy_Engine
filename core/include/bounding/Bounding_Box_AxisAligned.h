@@ -10,7 +10,7 @@ namespace NameSpace_Core::NameSpace_Bounding {
 
 	using NameSpace_Math::Vector3;
 
-	class AxisAligned_Bounding_Box final {
+	class [[nodiscard]] AxisAligned_Bounding_Box final {
 	public:
 		AxisAligned_Bounding_Box(void) = default;
 
@@ -31,14 +31,14 @@ namespace NameSpace_Core::NameSpace_Bounding {
 		void Add_Bounding_Box(const AxisAligned_Bounding_Box& Box);
 
 	public:
-		const Vector3 Get_Min(void)const;
-		const Vector3 Get_Max(void)const;
+		[[nodiscard]] const Vector3 Get_Min(void)const;
+		[[nodiscard]] const Vector3 Get_Max(void)const;
 
-		const Vector3 Get_Center(void)const;
-		const Vector3 Get_Dimensions(void)const;
+		[[nodiscard]] const Vector3 Get_Center(void)const;
+		[[nodiscard]] const Vector3 Get_Dimensions(void)const;
 
 	public:
-		static const AxisAligned_Bounding_Box Union(const AxisAligned_Bounding_Box& A, const AxisAligned_Bounding_Box& B);
+		[[nodiscard]] static const AxisAligned_Bounding_Box Union(const AxisAligned_Bounding_Box& A, const AxisAligned_Bounding_Box& B);
 
 	public:
 		static const AxisAligned_Bounding_Box EMPTY;

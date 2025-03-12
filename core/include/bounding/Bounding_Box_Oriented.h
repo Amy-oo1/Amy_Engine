@@ -9,7 +9,7 @@ namespace NameSpace_Core::NameSpace_Bounding {
 	using NameSpace_Transform::Uniform_Transform;
 	using NameSpace_Transform::Affine_Transform;
 
-	class Oriented_Bounding_Box final {
+	class [[nodiscard]] Oriented_Bounding_Box final {
 	public:
 		Oriented_Bounding_Box(void) = default;
 
@@ -31,8 +31,8 @@ namespace NameSpace_Core::NameSpace_Bounding {
 	public:
 		const Affine_Transform& Get_Transform(void)const;
 
-		const Vector3 Get_Center(void)const;
-		const Vector3 Get_Dimensions(void)const;
+		[[nodiscard]] const Vector3 Get_Center(void)const;
+		[[nodiscard]] const Vector3 Get_Dimensions(void)const;
 
 	public:
 		static const Oriented_Bounding_Box EMPTY;
