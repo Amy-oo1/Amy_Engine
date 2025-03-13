@@ -7,6 +7,7 @@ namespace NameSpace_Function::Namespace_Global {
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	Global_Systemer::Global_Systemer(const vector<string>& Arguments) :
+		System_Logger{ System_Logger::Get_Instance() },
 		Resource_Configer{ Resource_Configer::Get_Instance(Arguments[0]) },
 		Resource_Manager{ Resource_Manager::Get_Instance(this->Resource_Configer) },
 		Animation_Loader{ Animation_Loader::Get_Instance(this->Resource_Manager) } {

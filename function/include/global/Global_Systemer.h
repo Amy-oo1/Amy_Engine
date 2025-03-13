@@ -5,6 +5,8 @@
 
 #include "file/File_System.h"
 
+#include "logger/System_Logger.h"
+
 #include "config/Resource_Configer.h"
 #include "manage/Resource_Manager.h"
 
@@ -16,6 +18,8 @@ namespace NameSpace_Function::Namespace_Global {
 	using std::string;
 
 	using NameSpace_Platform::NameSpace_File::path;
+
+	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	using NameSpace_Resource::NameSpace_Config::Resource_Configer;
 	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
@@ -43,6 +47,8 @@ namespace NameSpace_Function::Namespace_Global {
 		static Global_Systemer& Get_Instance(void);
 
 	public:
+		System_Logger& System_Logger;
+
 		Resource_Configer& Resource_Configer;
 		Resource_Manager& Resource_Manager;
 
