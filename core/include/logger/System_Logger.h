@@ -56,8 +56,10 @@ namespace NameSpace_Core::NameSpace_Logger {
 				m_Logger->error(std::forward<TARGS>(Args)...);
 				break;
 			case Level::critical:
-				m_Logger->critical(std::forward<TARGS>(Args)...);
+				m_Logger->critical(Args...);
 				System_Logger::FatalCallBack(std::forward<TARGS>(Args)...);
+				break;
+			default:
 				break;
 			}
 		}
@@ -68,7 +70,7 @@ namespace NameSpace_Core::NameSpace_Logger {
 			throw std::runtime_error(fmt::format(std::forward<TARGS>(args)...));
 		}
 
-		shared_ptr<spdlog::logger> m_Logger = nullptr;
+		shared_ptr<spdlog::logger> m_Logger{ nullptr };
 	};
 
 }// namespace NameSpace_Core::NameSpace_Logger
