@@ -153,6 +153,7 @@
     <ClInclude Include="include\animation\Utilities.h" />
     <ClInclude Include="include\animation\Bone.h" />
     <ClInclude Include="include\frame\compoents\Compoent.h" />
+    <ClInclude Include="include\frame\compoents\transform\Transform_Component.h" />
     <ClInclude Include="include\frame\object\GObject.h" />
     <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
     <ClInclude Include="include\global\Global_Systemer.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\animation\Skeleton.cpp" />
     <ClCompile Include="src\animation\Utilities.cpp" />
     <ClCompile Include="src\frame\compoents\Compoent.cpp" />
+    <ClCompile Include="src\frame\compoents\transform\Transform_Component.cpp" />
     <ClCompile Include="src\frame\object\GObject.cpp" />
     <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp" />
     <ClCompile Include="src\global\Global_Systemer.cpp" />

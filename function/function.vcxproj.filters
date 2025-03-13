@@ -37,6 +37,12 @@
     <Filter Include="src\global">
       <UniqueIdentifier>{e418edc5-08ec-4a35-b081-e36ff20f6932}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\frame\compoents\transform">
+      <UniqueIdentifier>{bd71be09-b351-4100-be3c-3e377d502620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\compoents\transform">
+      <UniqueIdentifier>{1e68cc3b-a7c2-4f30-8a6b-0a817c4ee169}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation\Bone.h">
@@ -66,6 +72,9 @@
     <ClInclude Include="include\global\Global_Systemer.h">
       <Filter>include\global</Filter>
     </ClInclude>
+    <ClInclude Include="include\frame\compoents\transform\Transform_Component.h">
+      <Filter>include\frame\compoents\transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -94,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="src\global\Global_Systemer.cpp">
       <Filter>src\global</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\compoents\transform\Transform_Component.cpp">
+      <Filter>src\frame\compoents\transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
