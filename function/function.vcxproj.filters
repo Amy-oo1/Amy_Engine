@@ -13,6 +13,30 @@
     <Filter Include="src\animation">
       <UniqueIdentifier>{d1ecd878-f2e1-4f4b-9ff3-fdce90d96ec2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\frame">
+      <UniqueIdentifier>{f611757c-1281-40ca-9a3d-9186246a40cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame">
+      <UniqueIdentifier>{acb4b59f-dcc9-4fb1-b2ae-c23c7ee6652c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\compoents">
+      <UniqueIdentifier>{bd79508f-ef89-4817-82fd-dc5d6dacb929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\compoents">
+      <UniqueIdentifier>{c95e9b82-84e9-49e6-ad27-2758d08415f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\object">
+      <UniqueIdentifier>{ad951436-dc40-4fd3-bd97-db47500ca6b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\object">
+      <UniqueIdentifier>{1940a082-acd7-4183-9a28-5d7bd1667eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\global">
+      <UniqueIdentifier>{c04e432d-290e-45e2-a5f1-913656b2d6a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\global">
+      <UniqueIdentifier>{e418edc5-08ec-4a35-b081-e36ff20f6932}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation\Bone.h">
@@ -30,6 +54,18 @@
     <ClInclude Include="include\animation\Animation_Loader.h">
       <Filter>include\animation</Filter>
     </ClInclude>
+    <ClInclude Include="include\frame\compoents\Compoent.h">
+      <Filter>include\frame\compoents</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\object\GObject.h">
+      <Filter>include\frame\object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\object\GObject_ID_Allocator.h">
+      <Filter>include\frame\object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\global\Global_Systemer.h">
+      <Filter>include\global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -46,6 +82,18 @@
     </ClCompile>
     <ClCompile Include="src\animation\Animation_Loader.cpp">
       <Filter>src\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\compoents\Compoent.cpp">
+      <Filter>src\frame\compoents</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\object\GObject.cpp">
+      <Filter>src\frame\object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp">
+      <Filter>src\frame\object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global\Global_Systemer.cpp">
+      <Filter>src\global</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

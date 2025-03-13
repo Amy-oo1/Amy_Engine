@@ -3,6 +3,8 @@
 #include<string>
 #include<vector>
 
+#include "file/File_System.h"
+
 #include "meta/reflection/Reflection_Macro.h"
 
 #include "meta/reflection/Reflection_Instance.h"
@@ -15,6 +17,8 @@ namespace NameSpace_Resource::NameSpace_Common {
 
 	using std::string;
 	using std::vector;
+
+	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 	using NameSpace_Function::Namespace_Frame::NameSpace_Components::Component;
@@ -59,9 +63,9 @@ namespace NameSpace_Resource::NameSpace_Common {
 		~Object_Instance(void) = default;
 
 	private:
-		std::string m_Name;
-		std::string m_Definition;
+		string m_Name;
+		path m_Definition_URL;
 
-		std::vector<Reflection_Instance<Component>> m_Instanced_Components;
+		vector<Reflection_Instance<Component>> m_Instanced_Components;
 	};
 } // NameSpace_Resource::NameSpace_Common

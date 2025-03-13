@@ -236,7 +236,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             }
 
             static const string Get_Name_Type_Spelling(void){
-                return string{"std::string"};
+                return string{"string"};
             }
 
             static const string Get_Name_Spelling(void){
@@ -248,11 +248,11 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Name"};
             }
 
-            static const std::string& Get_Name_Attribute(shared_ptr<Object_Instance> Instance){
+            static const string& Get_Name_Attribute(shared_ptr<Object_Instance> Instance){
                 return Instance->m_Name;
             }
 
-            static void Set_Field_Name_Attribute(shared_ptr<Object_Instance> Instance, const std::string& Value){
+            static void Set_Field_Name_Attribute(shared_ptr<Object_Instance> Instance, const string& Value){
                 Instance->m_Name=Value;
             }
 
@@ -262,35 +262,35 @@ namespace NameSpace_Resource::NameSpace_Common{
 
             
 
-            static const string Get_Definition_Type_Spelling(void){
-                return string{"std::string"};
+            static const string Get_Definition_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Definition_Spelling(void){
-                return string{"m_Definition"};
+            static const string Get_Definition_URL_Spelling(void){
+                return string{"m_Definition_URL"};
             }
 
 
-            static const string Get_Definition_Display_Name(void){
-                return string{"Definition"};
+            static const string Get_Definition_URL_Display_Name(void){
+                return string{"Definition_URL"};
             }
 
-            static const std::string& Get_Definition_Attribute(shared_ptr<Object_Instance> Instance){
-                return Instance->m_Definition;
+            static const path& Get_Definition_URL_Attribute(shared_ptr<Object_Instance> Instance){
+                return Instance->m_Definition_URL;
             }
 
-            static void Set_Field_Definition_Attribute(shared_ptr<Object_Instance> Instance, const std::string& Value){
-                Instance->m_Definition=Value;
+            static void Set_Field_Definition_URL_Attribute(shared_ptr<Object_Instance> Instance, const path& Value){
+                Instance->m_Definition_URL=Value;
             }
 
-            static const bool Is_Filed_Definition_CPPVector(void){
+            static const bool Is_Filed_Definition_URL_CPPVector(void){
                 return  false;
             }
 
             
 
             static const string Get_Instanced_Components_Type_Spelling(void){
-                return string{"std::vector<Reflection_Instance<Component>>"};
+                return string{"vector<Reflection_Instance<Component>>"};
             }
 
             static const string Get_Instanced_Components_Spelling(void){
@@ -302,11 +302,11 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Instanced_Components"};
             }
 
-            static const std::vector<Reflection_Instance<Component>>& Get_Instanced_Components_Attribute(shared_ptr<Object_Instance> Instance){
+            static const vector<Reflection_Instance<Component>>& Get_Instanced_Components_Attribute(shared_ptr<Object_Instance> Instance){
                 return Instance->m_Instanced_Components;
             }
 
-            static void Set_Field_Instanced_Components_Attribute(shared_ptr<Object_Instance> Instance, const std::vector<Reflection_Instance<Component>>& Value){
+            static void Set_Field_Instanced_Components_Attribute(shared_ptr<Object_Instance> Instance, const vector<Reflection_Instance<Component>>& Value){
                 Instance->m_Instanced_Components=Value;
             }
 

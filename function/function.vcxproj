@@ -152,6 +152,10 @@
     <ClInclude Include="include\animation\Skeleton.h" />
     <ClInclude Include="include\animation\Utilities.h" />
     <ClInclude Include="include\animation\Bone.h" />
+    <ClInclude Include="include\frame\compoents\Compoent.h" />
+    <ClInclude Include="include\frame\object\GObject.h" />
+    <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
+    <ClInclude Include="include\global\Global_Systemer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Animation_Loader.cpp" />
@@ -162,6 +166,10 @@
     <ClCompile Include="src\animation\Bone.cpp" />
     <ClCompile Include="src\animation\Skeleton.cpp" />
     <ClCompile Include="src\animation\Utilities.cpp" />
+    <ClCompile Include="src\frame\compoents\Compoent.cpp" />
+    <ClCompile Include="src\frame\object\GObject.cpp" />
+    <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp" />
+    <ClCompile Include="src\global\Global_Systemer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
