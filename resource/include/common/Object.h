@@ -7,7 +7,7 @@
 
 #include "meta/reflection/Reflection_Instance.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Component {
+namespace NameSpace_Function::Namespace_Frame::NameSpace_Components {
 	class Component;
 }
 
@@ -17,7 +17,7 @@ namespace NameSpace_Resource::NameSpace_Common {
 	using std::vector;
 
 	using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
-	using NameSpace_Function::Namespace_Frame::NameSpace_Component::Component;
+	using NameSpace_Function::Namespace_Frame::NameSpace_Components::Component;
 
 	REFLECTION_HEADER(Component_Definition);
 	REFLECTION_CLASS(Component_Definition, All) final
