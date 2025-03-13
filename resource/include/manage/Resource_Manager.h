@@ -61,7 +61,9 @@ namespace NameSpace_Resource::NameSpace_Manage {
 			JSON Resource_JSON{ JSON::parse(Resource_IFStream) };
 			Resource_IFStream.close();
 
-			return Serializer::Read<Resource_Type>(Resource_JSON);
+			return std::nullopt;
+			//TODO ::
+			//return Serializer::Read<Resource_Type>(Resource_JSON);
 		}
 
 		const bool Save(const path& Resource_URL, const JSON& Resource_JSON);

@@ -452,28 +452,28 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return Table;
             }
 
-            static const string Get_Skeleton_File_Path_Type_Spelling(void){
+            static const string Get_Skeleton_Data_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Skeleton_File_Path_Spelling(void){
-                return string{"m_Skeleton_File_Path"};
+            static const string Get_Skeleton_Data_URL_Spelling(void){
+                return string{"m_Skeleton_Data_URL"};
             }
 
 
-            static const string Get_Skeleton_File_Path_Display_Name(void){
-                return string{"Skeleton_File_Path"};
+            static const string Get_Skeleton_Data_URL_Display_Name(void){
+                return string{"Skeleton_Data_URL"};
             }
 
-            static const path& Get_Skeleton_File_Path_Attribute(shared_ptr<Animation_Data> Instance){
-                return Instance->m_Skeleton_File_Path;
+            static const path& Get_Skeleton_Data_URL_Attribute(shared_ptr<Animation_Data> Instance){
+                return Instance->m_Skeleton_Data_URL;
             }
 
-            static void Set_Field_Skeleton_File_Path_Attribute(shared_ptr<Animation_Data> Instance, const path& Value){
-                Instance->m_Skeleton_File_Path=Value;
+            static void Set_Field_Skeleton_Data_URL_Attribute(shared_ptr<Animation_Data> Instance, const path& Value){
+                Instance->m_Skeleton_Data_URL=Value;
             }
 
-            static const bool Is_Filed_Skeleton_File_Path_CPPVector(void){
+            static const bool Is_Filed_Skeleton_Data_URL_CPPVector(void){
                 return  false;
             }
 

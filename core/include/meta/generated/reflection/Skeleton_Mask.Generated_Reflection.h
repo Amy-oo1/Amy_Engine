@@ -19,102 +19,102 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    class Reflection_Skeleton_Mask_Operator {
+    class Reflection_Bone_Blend_Mask_Operator {
     public:
         static const string Get_Spelling(void){
-            return string{"Skeleton_Mask"};
+            return string{"Bone_Blend_Mask"};
         }
 
         static const string Get_Displaying_Name(void){
-            return string{"Skeleton_Mask"};            
+            return string{"Bone_Blend_Mask"};            
         }
 
-            static const vector<Reflection_Instance<Skeleton_Mask>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Skeleton_Mask> Instance){
-                vector<Reflection_Instance<Skeleton_Mask>> Table;
+            static const vector<Reflection_Instance<Bone_Blend_Mask>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Bone_Blend_Mask> Instance){
+                vector<Reflection_Instance<Bone_Blend_Mask>> Table;
 
                     
 
                 return Table;
             }
 
-            static const string Get_Skeleton_File_Path_Type_Spelling(void){
+            static const string Get_Skeleton_Data_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Skeleton_File_Path_Spelling(void){
-                return string{"m_Skeleton_File_Path"};
+            static const string Get_Skeleton_Data_URL_Spelling(void){
+                return string{"m_Skeleton_Data_URL"};
             }
 
 
-            static const string Get_Skeleton_File_Path_Display_Name(void){
-                return string{"Skeleton_File_Path"};
+            static const string Get_Skeleton_Data_URL_Display_Name(void){
+                return string{"Skeleton_Data_URL"};
             }
 
-            static const path& Get_Skeleton_File_Path_Attribute(shared_ptr<Skeleton_Mask> Instance){
-                return Instance->m_Skeleton_File_Path;
+            static const path& Get_Skeleton_Data_URL_Attribute(shared_ptr<Bone_Blend_Mask> Instance){
+                return Instance->m_Skeleton_Data_URL;
             }
 
-            static void Set_Field_Skeleton_File_Path_Attribute(shared_ptr<Skeleton_Mask> Instance, const path& Value){
-                Instance->m_Skeleton_File_Path=Value;
+            static void Set_Field_Skeleton_Data_URL_Attribute(shared_ptr<Bone_Blend_Mask> Instance, const path& Value){
+                Instance->m_Skeleton_Data_URL=Value;
             }
 
-            static const bool Is_Filed_Skeleton_File_Path_CPPVector(void){
+            static const bool Is_Filed_Skeleton_Data_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_enabled_Type_Spelling(void){
+            static const string Get_Enabled_Type_Spelling(void){
                 return string{"vector<size_t>"};
             }
 
-            static const string Get_enabled_Spelling(void){
-                return string{"enabled"};
+            static const string Get_Enabled_Spelling(void){
+                return string{"Enabled"};
             }
 
 
-            static const string Get_enabled_Display_Name(void){
-                return string{"enabled"};
+            static const string Get_Enabled_Display_Name(void){
+                return string{"Enabled"};
             }
 
-            static const vector<size_t>& Get_enabled_Attribute(shared_ptr<Skeleton_Mask> Instance){
-                return Instance->enabled;
+            static const vector<size_t>& Get_Enabled_Attribute(shared_ptr<Bone_Blend_Mask> Instance){
+                return Instance->Enabled;
             }
 
-            static void Set_Field_enabled_Attribute(shared_ptr<Skeleton_Mask> Instance, const vector<size_t>& Value){
-                Instance->enabled=Value;
+            static void Set_Field_Enabled_Attribute(shared_ptr<Bone_Blend_Mask> Instance, const vector<size_t>& Value){
+                Instance->Enabled=Value;
             }
 
-            static const bool Is_Filed_enabled_CPPVector(void){
+            static const bool Is_Filed_Enabled_CPPVector(void){
                 return  !  false;
             }
 
-                static const string Get_enabled_CPPVector_Element_Type_Spelling(void){
+                static const string Get_Enabled_CPPVector_Element_Type_Spelling(void){
                     return string {"size_t"};
                 }
 
-                static const size_t Get_enabled_CPPVector_Capacity(shared_ptr<Skeleton_Mask> Instance){
-                    return Instance->enabled.capacity();
+                static const size_t Get_Enabled_CPPVector_Capacity(shared_ptr<Bone_Blend_Mask> Instance){
+                    return Instance->Enabled.capacity();
                 }
 
-                static const size_t Get_enabled_CPPVector_Size(shared_ptr<Skeleton_Mask> Instance){
-                    return Instance->enabled.size();
+                static const size_t Get_Enabled_CPPVector_Size(shared_ptr<Bone_Blend_Mask> Instance){
+                    return Instance->Enabled.size();
                 }
 
-                static const size_t& Get_enabled_CPPVector_Element(shared_ptr<Skeleton_Mask> Instance, size_t Index){
-                    return Instance->enabled[Index];
+                static const size_t& Get_Enabled_CPPVector_Element(shared_ptr<Bone_Blend_Mask> Instance, size_t Index){
+                    return Instance->Enabled[Index];
                 }
 
-                static void Set_enabled_CPPVector_Element(shared_ptr<Skeleton_Mask> Instance, size_t Index, const size_t& Value){
-                    Instance->enabled[Index]=Value;
+                static void Set_Enabled_CPPVector_Element(shared_ptr<Bone_Blend_Mask> Instance, size_t Index, const size_t& Value){
+                    Instance->Enabled[Index]=Value;
                 }
 
-                static void Reserve_enabled_CPPVector(shared_ptr<Skeleton_Mask> Instance, size_t Capacity){
-                    Instance->enabled.reserve(Capacity);
+                static void Reserve_Enabled_CPPVector(shared_ptr<Bone_Blend_Mask> Instance, size_t Capacity){
+                    Instance->Enabled.reserve(Capacity);
                 }
 
-                static void Push_Back_enabled_CPPVector(shared_ptr<Skeleton_Mask> Instance, const size_t& Value){
-                    Instance->enabled.push_back(Value);
+                static void Push_Back_Enabled_CPPVector(shared_ptr<Bone_Blend_Mask> Instance, const size_t& Value){
+                    Instance->Enabled.push_back(Value);
                 }
 
 

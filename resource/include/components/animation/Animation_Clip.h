@@ -81,7 +81,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Animation_Data(void) = default;
 
 	private:
-		path m_Skeleton_File_Path{};
+		path m_Skeleton_Data_URL{};
 		shared_ptr<Animation_Node_Map> m_Node_Map{};
 		vector<shared_ptr<Animation_Clip>> m_Clips{};
 	};

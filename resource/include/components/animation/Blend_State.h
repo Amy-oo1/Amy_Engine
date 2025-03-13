@@ -60,18 +60,16 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Blend_State(void) = default;
 
 	private:
-		vector<path> m_Blend_Clip_File_Path{};
-		vector<float> m_Blend_Clip_File_Length{};
+		vector<path> m_Blend_Clip_URL{};
+		vector<float> m_Blend_Clip_Length{};
 
-		vector<path> m_Blend_Skeleton_Map_File_Path{};
+		vector<path> m_Blend_Skeleton_Node_Map_URL{};
 
 		vector<float> m_Blend_Weights{};
 
-		vector<path> m_Blend_Mask_File_Path{};
+		vector<path> m_Blend_Mask_URL{};
 
-		vector<shared_ptr<BlendState_With_Clip_Data>> m_BlendState{};
-
-		vector<float> m_Blend_ratio{};
+		vector<float> m_Blend_Ratio{};
 
 	};
 
