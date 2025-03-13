@@ -102,6 +102,15 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 			return *this->m_Instance;
 		}
 
+	public:
+		const string& Get_Type_Spelling(void) const {
+			return this->m_Type_Spelling;
+		}
+
+		shared_ptr<Type> Get_Instance(void) const {
+			return this->m_Instance;
+		}
+
 	private:
 		string m_Type_Spelling{};
 		shared_ptr<Type> m_Instance{ nullptr };
