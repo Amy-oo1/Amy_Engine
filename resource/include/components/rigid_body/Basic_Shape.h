@@ -26,7 +26,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		Geometry_Box(void) = default;
 
 		~Geometry_Box(void) override = default;
-	
+
 	private:
 		Vector3 m_Half_Extents{ 0.5f, 0.5f, 0.5f };
 
@@ -57,8 +57,12 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	private:
 		float m_Radius{ 0.5f };
-		float m_Half_Height{ 1.0f };
+		float m_Half_Height{ 0.7f };
 
 	};
 
-}// namespace NameSpace_Resource::NameSpace_Componentss
+}// namespace NameSpace_Resource::NameSpace_Components
+
+CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Box)
+CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Sphere)
+CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Cylinder)
