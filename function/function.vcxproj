@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -157,6 +157,8 @@
     <ClInclude Include="include\frame\object\GObject.h" />
     <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
     <ClInclude Include="include\global\Global_Systemer.h" />
+    <ClInclude Include="include\physics\Physics_Config.h" />
+    <ClInclude Include="include\physics\Physics_Scene.h.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Animation_Loader.cpp" />
@@ -172,6 +174,8 @@
     <ClCompile Include="src\frame\object\GObject.cpp" />
     <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp" />
     <ClCompile Include="src\global\Global_Systemer.cpp" />
+    <ClCompile Include="src\physics\Physics_Config.cpp" />
+    <ClCompile Include="src\physics\Physics_Scene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

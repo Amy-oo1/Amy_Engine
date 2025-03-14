@@ -8,17 +8,17 @@ namespace NameSpace_Function::Namespace_Physics {
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 
-	class Physics_Configer final {
+	class Physics_Config final {
 	public:
-		Physics_Configer(void) = default;
+		Physics_Config(void) = default;
 
-		Physics_Configer(const Physics_Configer&) = default;
-		Physics_Configer(Physics_Configer&&) = default;
+		Physics_Config(const Physics_Config&) = default;
+		Physics_Config(Physics_Config&&) = default;
 
-		Physics_Configer& operator=(const Physics_Configer&) = default;
-		Physics_Configer& operator=(Physics_Configer&&) = default;
+		Physics_Config& operator=(const Physics_Config&) = default;
+		Physics_Config& operator=(Physics_Config&&) = default;
 
-		~Physics_Configer(void) = default;
+		~Physics_Config(void) = default;
 
 	public:
 		uint32_t Max_Body_Count{ 1024 };

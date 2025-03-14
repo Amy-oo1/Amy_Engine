@@ -43,6 +43,12 @@
     <Filter Include="include\frame\compoents\transform">
       <UniqueIdentifier>{1e68cc3b-a7c2-4f30-8a6b-0a817c4ee169}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\physics">
+      <UniqueIdentifier>{6cdb0af0-43d9-4fd5-9518-43db3876ab2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\physics">
+      <UniqueIdentifier>{50150104-2af3-454f-afb9-5734d4d8962c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation\Bone.h">
@@ -75,6 +81,12 @@
     <ClInclude Include="include\frame\compoents\transform\Transform_Component.h">
       <Filter>include\frame\compoents\transform</Filter>
     </ClInclude>
+    <ClInclude Include="include\physics\Physics_Scene.h.h">
+      <Filter>include\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\Physics_Config.h">
+      <Filter>include\physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -106,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="src\frame\compoents\transform\Transform_Component.cpp">
       <Filter>src\frame\compoents\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\Physics_Scene.cpp">
+      <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\Physics_Config.cpp">
+      <Filter>src\physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
