@@ -1,8 +1,8 @@
 #pragma once
 
-#include "meta/reflection/Reflection_Macro.h"
-
 #include"math/Vector3.h"
+#include "meta/reflection/Reflection_Macro.h"
+#include "meta/reflection/Reflection_Instance.h"
 
 namespace NameSpace_Resource::NameSpace_Components {
 
