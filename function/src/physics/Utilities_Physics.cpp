@@ -1,5 +1,6 @@
 #include "physics/Utilities_Physics.h"
 
+#include<limits>
 #include<string>
 
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
@@ -44,8 +45,11 @@ namespace NameSpace_Function::Namespace_Physics::NameSpace_Utilites {
 	}
 
 	BroadPhaseLayer BP_Layer_Interface_Impl::GetBroadPhaseLayer(ObjectLayer InLayer) const {
-		if (InLayer < Layers::NUM_LAYERS)
+		if (InLayer >= std::numeric_limits<uint8_t>::max() || InLayer >= Layers::NUM_LAYERS) {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Invalid Layer");
+
+			return BroadPhase_Layers::UNUSED;
+		}
 
 		return this->m_object_to_broad_phase[InLayer];
 	}
