@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\JoltViewer.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\JoltViewer\JoltViewer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\JoltViewer\JoltViewer.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\JoltViewer.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\JoltViewer.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\JoltViewer.dir\Distribution\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\JoltViewer\JoltViewer.cmake" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{12DA7DB7-2031-3306-BDCB-E989F40137AB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EE3B6177-533F-3286-80E6-6A71F6FA0C0D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

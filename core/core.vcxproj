@@ -160,6 +160,7 @@
     <ClInclude Include="include\meta\generated\reflection\Blend_State.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Compoent.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Particle.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Level.Generated_Reflection.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Data.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />

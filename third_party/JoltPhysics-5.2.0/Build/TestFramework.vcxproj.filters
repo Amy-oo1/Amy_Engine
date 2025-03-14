@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\TestFramework.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Application\Application.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Application\DebugUI.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\BlitSurface.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\LoadBMP.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\LoadTGA.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\Surface.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\ZoomImage.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Input\Keyboard.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Input\Mouse.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Math\Perlin.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\ConstantBuffer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\FatalErrorIfFailed.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Font.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\PipelineState.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\RenderInstances.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\RenderPrimitive.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Texture.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\DebugRendererImp.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIAnimation.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIAnimationSlide.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIButton.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UICheckBox.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIComboBox.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIElement.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIHorizontalStack.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIImage.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIManager.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UISlider.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIStaticText.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UITextButton.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIVerticalStack.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Utils\CustomMemoryHook.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Utils\Log.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Utils\ReadData.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Application\Application.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Application\DebugUI.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Application\EntryPoint.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\BlitSurface.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\LoadBMP.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\LoadTGA.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\Surface.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Image\ZoomImage.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Input\Keyboard.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Input\Mouse.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Math\Perlin.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\ConstantBuffer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\CommandQueue.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\DescriptorHeap.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\FatalErrorIfFailed.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Font.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Frustum.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\PipelineState.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\RenderInstances.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\RenderPrimitive.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\Texture.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Renderer\DebugRendererImp.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\TestFramework.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIAnimation.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIAnimationSlide.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIButton.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UICheckBox.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIComboBox.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIElement.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIEventListener.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIHorizontalStack.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIImage.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIManager.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UISlider.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIStaticText.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UITextButton.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UITexturedQuad.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\UI\UIVerticalStack.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Utils\CustomMemoryHook.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Utils\Log.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\Utils\ReadData.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\VertexConstants.h">
+      <Filter>Assets\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\TestFramework.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\TestFramework.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\TestFramework.dir\Distribution\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\FontVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\LineVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\TriangleDepthVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\TriangleVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\UIVertexShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\FontPixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\LinePixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\TriangleDepthPixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\TrianglePixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\UIPixelShader.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Assets\Shaders\UIPixelShaderUntextured.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FXCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\TestFramework\TestFramework.cmake" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Application">
+      <UniqueIdentifier>{18DE8E2E-437D-365C-9A55-3F050F1CB752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{6CD95AD4-791C-335D-B7D8-626E09B28CF3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{63534169-623B-3F08-8301-B2ED4855872B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Image">
+      <UniqueIdentifier>{34E2DE13-4622-33C4-8BA6-6F85820D2C3C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{B3D125DD-9164-36AD-9173-011EDCC206D1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{3D62F9E9-A63E-3719-B004-581AA3DB5D9D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{12DA7DB7-2031-3306-BDCB-E989F40137AB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{C76A53A4-9A2E-3F26-922B-E608D48890E5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EE3B6177-533F-3286-80E6-6A71F6FA0C0D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{1753F9E8-FAB8-3C90-AABB-6BFCE27DDE15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{E896AEFD-0BE7-3B1E-83F7-8060594515E5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

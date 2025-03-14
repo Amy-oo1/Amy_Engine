@@ -19,3 +19,5 @@
 #include "D:/Amy_Engine/resource/include/common/Object.h"
 #include "D:/Amy_Engine/resource/include/common/Level.h"
 #include "D:/Amy_Engine/resource/include/common/World.h"
+#include "D:/Amy_Engine/function/include/frame/compoents/Compoent.h"
+#include "D:/Amy_Engine/function/include/frame/compoents/transform/Transform_Component.h"

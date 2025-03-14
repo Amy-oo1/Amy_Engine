@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\UnitTests.dir\cmake_pch.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\ArrayTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\FPFlushDenormalsTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\InsertionSortTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\JobSystemTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\LinearCurveTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\PreciseMathTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\ScopeExitTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\StringToolsTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Core\QuickSortTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\ClosestPointTests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\ConvexHullBuilderTest.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\EllipseTest.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\EPATests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\GJKTests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\PlaneTests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Geometry\RayAABoxTests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\DMat44Tests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\DVec3Tests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\EigenValueSymmetricTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\HalfFloatTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\Mat44Tests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\MathTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\MatrixTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\QuatTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\UVec4Tests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\TrigonometryTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\Vec3Tests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\Vec4Tests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Math\VectorTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\ActiveEdgesTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\BroadPhaseTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\CastShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\CharacterVirtualTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\CollideShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\CollidePointTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\CollisionGroupTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\ContactListenerTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\ConvexVsTrianglesTest.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\DistanceConstraintTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\EstimateCollisionResponseTest.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\HeightFieldShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\HingeConstraintTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\MotionQualityLinearCastTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\ObjectLayerPairFilterTableTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\ObjectLayerPairFilterMaskTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\OffsetCenterOfMassShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\PathConstraintTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\PhysicsDeterminismTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\PhysicsStepListenerTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\PhysicsTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\RayShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\SensorTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\ShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\SixDOFConstraintTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\SliderConstraintTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\SoftBodyTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\SubShapeIDTest.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\TaperedCylinderShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\TransformedShapeTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Physics\WheeledVehicleTests.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\PhysicsTestContext.cpp" />
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\UnitTestFramework.cpp" />
+    <ClCompile Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\ObjectStream\ObjectStreamTest.cpp">
+      <Filter>ObjectStream</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\doctest.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\Layers.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\LoggingBodyActivationListener.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\LoggingContactListener.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\PhysicsTestContext.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\UnitTestFramework.h" />
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\UnitTests.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\UnitTests.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeFiles\UnitTests.dir\Distribution\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\Build\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Amy_Engine\third_party\JoltPhysics-5.2.0\UnitTests\UnitTests.cmake" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{1542D412-7237-38E2-92F4-4813EABD2FEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{BA180B58-5D38-390B-BB96-C473FB4FFCA3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{3D62F9E9-A63E-3719-B004-581AA3DB5D9D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjectStream">
+      <UniqueIdentifier>{47C3C10C-3334-396B-9854-5D6F24119624}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{C1605C80-60E8-3EBE-9710-2B1C442A497D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{12DA7DB7-2031-3306-BDCB-E989F40137AB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EE3B6177-533F-3286-80E6-6A71F6FA0C0D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

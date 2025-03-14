@@ -179,4 +179,7 @@ Parser_Header.o: \
   D:\Amy_Engine\core\include\color\Color.h \
   D:\Amy_Engine\resource\include\common\Object.h \
   D:\Amy_Engine\resource\include\common\Level.h \
-  D:\Amy_Engine\resource\include\common\World.h
+  D:\Amy_Engine\resource\include\common\World.h \
+  D:\Amy_Engine\function\include\frame\compoents\Compoent.h \
+  D:\Amy_Engine\function\include\frame\compoents\transform\Transform_Component.h \
+  frame\compoents\Compoent.h frame\object\GObject.h

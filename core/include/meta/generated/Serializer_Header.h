@@ -18,3 +18,5 @@
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Global_Particle.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Global_Rendering.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/erializer/Level.Generated_Serializer.h"
+#include "D:/Amy_Engine/core/include/meta/generated/erializer/Compoent.Generated_Serializer.h"
+#include "D:/Amy_Engine/core/include/meta/generated/erializer/Transform_Component.Generated_Serializer.h"

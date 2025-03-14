@@ -18,3 +18,5 @@
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Global_Particle.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Global_Rendering.Generated_Reflection.h"
 #include "D:/Amy_Engine/core/include/meta/generated/reflection/Level.Generated_Reflection.h"
+#include "D:/Amy_Engine/core/include/meta/generated/reflection/Compoent.Generated_Reflection.h"
+#include "D:/Amy_Engine/core/include/meta/generated/reflection/Transform_Component.Generated_Reflection.h"

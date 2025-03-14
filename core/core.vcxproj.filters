@@ -210,6 +210,12 @@
     <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Compoent.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">

@@ -1,0 +1,11 @@
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/Jolt.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/UnitTests.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/HelloWorld.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/PerformanceTest.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/TestFramework.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/Samples.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/JoltViewer.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/RUN_TESTS.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/INSTALL.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/ALL_BUILD.dir
+D:/Amy_Engine/third_party/JoltPhysics-5.2.0/Build/CMakeFiles/ZERO_CHECK.dir
