@@ -1,5 +1,6 @@
 #pragma once
 
+#include<limits>
 #include<vector>
 #include<cstdint>
 #include<memory>
@@ -40,7 +41,7 @@ namespace NameSpace_Function::Namespace_Physics {
 	using NameSpace_Resource::NameSpace_Components::Rigid_Body_Shape;
 
 	struct Physics_Hit_Info final {
-		static constexpr uint32_t INVALID_ID{ UINT32_MAX };
+		static constexpr uint32_t INVALID_ID{ std::numeric_limits<uint32_t>::max() };
 
 		Vector3 Hit_Position{ Vector3::ZERO };
 		Vector3 Hit_Normal{ Vector3::ZERO };
@@ -61,7 +62,7 @@ namespace NameSpace_Function::Namespace_Physics {
 		};
 
 	public:
-		Physics_Scene(void) = default;
+		Physics_Scene(void) = delete;
 
 		Physics_Scene(const Physics_Scene&) = delete;
 		Physics_Scene(Physics_Scene&&) = delete;
@@ -73,6 +74,11 @@ namespace NameSpace_Function::Namespace_Physics {
 		Physics_Scene(const Vector3& Gravity);
 
 		virtual ~Physics_Scene(void) = default;
+
+	public:
+		const Vector3& Get_Gravity(void)const;
+
+
 	protected:
 		Physics_Config m_Config{};
 
