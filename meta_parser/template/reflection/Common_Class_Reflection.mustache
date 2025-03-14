@@ -37,7 +37,7 @@ namespace {{Class_NameSpace}}{
                 vector<Reflection_Instance<{{Class_Spelling}}>> Table;
 
                     {{#Class_Base_Spelling_List}}
-                        Table.emplace_back(string{"{{& Class_Base_Class_Spelling}}"},static_pointer_cast<{{& Class_Base_Class_Spelling}}>(Instance));
+                        Table.emplace_back(string{"{{& Class_Base_Class_Spelling}}"},static_pointer_cast<{{& Class_Spelling}}>(Instance));
                     {{/Class_Base_Spelling_List}}
 
                 return Table;

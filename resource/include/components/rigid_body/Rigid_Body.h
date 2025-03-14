@@ -1,6 +1,7 @@
 #pragma once
 
 #include<cstdint>
+#include<string>
 #include<vector>
 #include<memory>
 
@@ -13,6 +14,7 @@
 
 namespace NameSpace_Resource::NameSpace_Components {
 
+	using std::string;
 	using std::vector;
 	using std::shared_ptr;
 
@@ -49,7 +51,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		AxisAligned_Bounding_Box m_Bounding_Box{ AxisAligned_Bounding_Box::EMPTY };
 		Rigid_Body_Type m_Type{ Rigid_Body_Type::INVALID };
 
-		Reflection_Instance<Geometry_Base> m_Geometry{ "Geometry_Base" };
+		Reflection_Instance<Geometry_Base> m_Geometry{ string{"Geometry_Base"} };
 
 	};
 

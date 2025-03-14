@@ -65,7 +65,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             static const vector<Reflection_Instance<Geometry_Box>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Geometry_Box> Instance){
                 vector<Reflection_Instance<Geometry_Box>> Table;
 
-                        Table.emplace_back(string{"Geometry_Base"},static_pointer_cast<Geometry_Base>(Instance));
+                        Table.emplace_back(string{"Geometry_Base"},static_pointer_cast<Geometry_Box>(Instance));
 
                 return Table;
             }
@@ -124,7 +124,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             static const vector<Reflection_Instance<Geometry_Sphere>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Geometry_Sphere> Instance){
                 vector<Reflection_Instance<Geometry_Sphere>> Table;
 
-                        Table.emplace_back(string{"Geometry_Base"},static_pointer_cast<Geometry_Base>(Instance));
+                        Table.emplace_back(string{"Geometry_Base"},static_pointer_cast<Geometry_Sphere>(Instance));
 
                 return Table;
             }
@@ -183,7 +183,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             static const vector<Reflection_Instance<Geometry_Cylinder>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Geometry_Cylinder> Instance){
                 vector<Reflection_Instance<Geometry_Cylinder>> Table;
 
-                        Table.emplace_back(string{"Geometry_Base"},static_pointer_cast<Geometry_Base>(Instance));
+                        Table.emplace_back(string{"Geometry_Base"},static_pointer_cast<Geometry_Cylinder>(Instance));
 
                 return Table;
             }

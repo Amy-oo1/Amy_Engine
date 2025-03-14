@@ -70,6 +70,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(SolutionDir)$(ProjectName)\intermediate\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\lib\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -102,7 +106,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -150,7 +154,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="include\animation\Skeleton.h" />
-    <ClInclude Include="include\animation\Utilities.h" />
+    <ClInclude Include="include\animation\Utilities_Animation.h" />
     <ClInclude Include="include\animation\Bone.h" />
     <ClInclude Include="include\frame\compoents\Compoent.h" />
     <ClInclude Include="include\frame\compoents\transform\Transform_Component.h" />
@@ -158,7 +162,10 @@
     <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
     <ClInclude Include="include\global\Global_Systemer.h" />
     <ClInclude Include="include\physics\Physics_Config.h" />
-    <ClInclude Include="include\physics\Physics_Scene.h.h" />
+    <ClInclude Include="include\physics\Physics_Scene.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\physics\Utilities_Physics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Animation_Loader.cpp" />
@@ -168,14 +175,17 @@
     </ClCompile>
     <ClCompile Include="src\animation\Bone.cpp" />
     <ClCompile Include="src\animation\Skeleton.cpp" />
-    <ClCompile Include="src\animation\Utilities.cpp" />
+    <ClCompile Include="src\animation\Utilities_Animation.cpp" />
     <ClCompile Include="src\frame\compoents\Compoent.cpp" />
     <ClCompile Include="src\frame\compoents\transform\Transform_Component.cpp" />
     <ClCompile Include="src\frame\object\GObject.cpp" />
     <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp" />
     <ClCompile Include="src\global\Global_Systemer.cpp" />
     <ClCompile Include="src\physics\Physics_Config.cpp" />
-    <ClCompile Include="src\physics\Physics_Scene.cpp" />
+    <ClCompile Include="src\physics\Physics_Scene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\physics\Utilities_Physics.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

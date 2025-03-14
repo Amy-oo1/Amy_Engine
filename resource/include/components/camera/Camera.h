@@ -50,7 +50,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		Camera_Third_Persion(void) = default;
 
 		~Camera_Third_Persion(void) = default;
-	
+
 	private:
 
 		float m_Horizontal_Offset{ 3.f };
@@ -88,7 +88,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Camera(void) = default;
 
 	private:
-		Reflection_Instance<Camera_Base> m_Camera{};
+		Reflection_Instance<Camera_Base> m_Camera{ string{"Camera_Base"} };
 
 	};
 

@@ -32,7 +32,7 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_T
             static const vector<Reflection_Instance<Transform_Component>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Transform_Component> Instance){
                 vector<Reflection_Instance<Transform_Component>> Table;
 
-                        Table.emplace_back(string{"Component"},static_pointer_cast<Component>(Instance));
+                        Table.emplace_back(string{"Component"},static_pointer_cast<Transform_Component>(Instance));
 
                 return Table;
             }

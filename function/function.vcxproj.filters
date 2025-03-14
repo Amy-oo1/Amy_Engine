@@ -54,7 +54,7 @@
     <ClInclude Include="include\animation\Bone.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\animation\Utilities.h">
+    <ClInclude Include="include\animation\Utilities_Animation.h">
       <Filter>include\animation</Filter>
     </ClInclude>
     <ClInclude Include="include\animation\Skeleton.h">
@@ -81,10 +81,13 @@
     <ClInclude Include="include\frame\compoents\transform\Transform_Component.h">
       <Filter>include\frame\compoents\transform</Filter>
     </ClInclude>
-    <ClInclude Include="include\physics\Physics_Scene.h.h">
+    <ClInclude Include="include\physics\Physics_Scene.h">
       <Filter>include\physics</Filter>
     </ClInclude>
     <ClInclude Include="include\physics\Physics_Config.h">
+      <Filter>include\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\Utilities_Physics.h">
       <Filter>include\physics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,7 +95,7 @@
     <ClCompile Include="src\animation\Bone.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\animation\Utilities.cpp">
+    <ClCompile Include="src\animation\Utilities_Animation.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
     <ClCompile Include="src\animation\Skeleton.cpp">
@@ -123,6 +126,9 @@
       <Filter>src\physics</Filter>
     </ClCompile>
     <ClCompile Include="src\physics\Physics_Config.cpp">
+      <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\Utilities_Physics.cpp">
       <Filter>src\physics</Filter>
     </ClCompile>
   </ItemGroup>

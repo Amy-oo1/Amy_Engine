@@ -91,7 +91,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             static const vector<Reflection_Instance<Camera_First_Persion>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_First_Persion> Instance){
                 vector<Reflection_Instance<Camera_First_Persion>> Table;
 
-                        Table.emplace_back(string{"Camera_Base"},static_pointer_cast<Camera_Base>(Instance));
+                        Table.emplace_back(string{"Camera_Base"},static_pointer_cast<Camera_First_Persion>(Instance));
 
                 return Table;
             }
@@ -150,7 +150,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             static const vector<Reflection_Instance<Camera_Third_Persion>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Third_Persion> Instance){
                 vector<Reflection_Instance<Camera_Third_Persion>> Table;
 
-                        Table.emplace_back(string{"Camera_Base"},static_pointer_cast<Camera_Base>(Instance));
+                        Table.emplace_back(string{"Camera_Base"},static_pointer_cast<Camera_Third_Persion>(Instance));
 
                 return Table;
             }
@@ -290,7 +290,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             static const vector<Reflection_Instance<Camera_Free>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Free> Instance){
                 vector<Reflection_Instance<Camera_Free>> Table;
 
-                        Table.emplace_back(string{"Camera_Base"},static_pointer_cast<Camera_Base>(Instance));
+                        Table.emplace_back(string{"Camera_Base"},static_pointer_cast<Camera_Free>(Instance));
 
                 return Table;
             }
