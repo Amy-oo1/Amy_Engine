@@ -159,11 +159,11 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const Reflection_Instance<Geometry_Base>& Get_Instance_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
-                return Instance->m_Instance;
+                return Instance->m_Geometry;
             }
 
             static void Set_Field_Instance_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Reflection_Instance<Geometry_Base>& Value){
-                Instance->m_Instance=Value;
+                Instance->m_Geometry=Value;
             }
 
             static const bool Is_Filed_Instance_CPPVector(void){
