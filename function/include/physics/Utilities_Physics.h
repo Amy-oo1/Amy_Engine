@@ -9,6 +9,7 @@
 #include "Jolt/Math/Mat44.h"
 #include "Jolt/Math/Quat.h"
 #include "Jolt/Physics/Collision/Shape/Shape.h"
+#include "Jolt/Physics/Collision/ObjectLayer.h"
 #include "Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h"
 
 #include "logger/System_Logger.h"
@@ -94,9 +95,25 @@ namespace NameSpace_Function::Namespace_Physics::NameSpace_Utilites {
 
 	};
 
-	bool Objects_Can_Collide(ObjectLayer InLayer1, ObjectLayer InLayer2);
+	class My_ObjectVsBroadPhaseLayerFilter final :public JPH::ObjectVsBroadPhaseLayerFilter {
+	public:
+		My_ObjectVsBroadPhaseLayerFilter(void) = default;
 
-	bool BroadPhase_Can_Collide(ObjectLayer InLayer1, BroadPhaseLayer InLayer2);
+		~My_ObjectVsBroadPhaseLayerFilter(void) = default;
+
+		bool ShouldCollide(ObjectLayer InLayer1, BroadPhaseLayer InLayer2) const override;
+
+	};
+
+	class My_ObjectLayerPairFilter final :public JPH::ObjectLayerPairFilter {
+	public:
+		My_ObjectLayerPairFilter(void) = default;
+
+		~My_ObjectLayerPairFilter(void) = default;
+
+		bool ShouldCollide(ObjectLayer InLayer1, ObjectLayer InLayer2) const override;
+
+	};
 
 	const Vec3 Convert_Vec3(const Vector3& InVector);
 	const Vector3 Convert_Vec3(const Vec3& InVector);

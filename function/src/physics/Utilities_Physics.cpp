@@ -76,31 +76,8 @@ namespace NameSpace_Function::Namespace_Physics::NameSpace_Utilites {
 	}
 #endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
 
-	bool Objects_Can_Collide(ObjectLayer InLayer1, ObjectLayer InLayer2) {
-		switch (InLayer1)
-		{
-		case Layers::UNUSED1:
-		case Layers::UNUSED2:
-		case Layers::UNUSED3:
-		case Layers::UNUSED4:
-			return false;
-		case Layers::NON_MOVING:
-			return InLayer2 == Layers::MOVING || InLayer2 == Layers::DEBRIS;
-		case Layers::MOVING:
-			return InLayer2 == Layers::NON_MOVING || InLayer2 == Layers::MOVING || InLayer2 == Layers::SENSOR;
-		case Layers::DEBRIS:
-			return InLayer2 == Layers::NON_MOVING;
-		case Layers::SENSOR:
-			return InLayer2 == Layers::MOVING;
-		default:
-			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Invalid Case");
-			return false;
-		}
-	}
-
-	bool BroadPhase_Can_Collide(ObjectLayer InLayer1, BroadPhaseLayer InLayer2) {
-		switch (InLayer1)
-		{
+	bool My_ObjectVsBroadPhaseLayerFilter::ShouldCollide(ObjectLayer InLayer1, BroadPhaseLayer InLayer2) const {
+		switch (InLayer1) {
 		case Layers::NON_MOVING:
 			return InLayer2 == BroadPhase_Layers::MOVING;
 		case Layers::MOVING:
@@ -117,6 +94,27 @@ namespace NameSpace_Function::Namespace_Physics::NameSpace_Utilites {
 		case Layers::UNUSED3:
 		case Layers::UNUSED4:
 			return false;
+		default:
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Invalid Case");
+			return false;
+		}
+	}
+
+	bool My_ObjectLayerPairFilter::ShouldCollide(ObjectLayer InLayer1, ObjectLayer InLayer2) const {
+		switch (InLayer1) {
+		case Layers::UNUSED1:
+		case Layers::UNUSED2:
+		case Layers::UNUSED3:
+		case Layers::UNUSED4:
+			return false;
+		case Layers::NON_MOVING:
+			return InLayer2 == Layers::MOVING || InLayer2 == Layers::DEBRIS;
+		case Layers::MOVING:
+			return InLayer2 == Layers::NON_MOVING || InLayer2 == Layers::MOVING || InLayer2 == Layers::SENSOR;
+		case Layers::DEBRIS:
+			return InLayer2 == Layers::NON_MOVING;
+		case Layers::SENSOR:
+			return InLayer2 == Layers::MOVING;
 		default:
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Invalid Case");
 			return false;
