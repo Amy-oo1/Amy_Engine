@@ -48,14 +48,14 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	};
 
-	REFLECTION_HEADER(Rigid_Body);
-	REFLECTION_CLASS(Rigid_Body, All) final
+	REFLECTION_HEADER(Rigid_Body_Res);
+	REFLECTION_CLASS(Rigid_Body_Res, All) final
 	{
-		REFLECTION_BODY(Rigid_Body);
+		REFLECTION_BODY(Rigid_Body_Res);
 	public:
-		Rigid_Body(void) = default;
+		Rigid_Body_Res(void) = default;
 
-		~Rigid_Body(void) = default;
+		~Rigid_Body_Res(void) = default;
 
 	private:
 		vector<Rigid_Body_Shape> m_Shapes{};

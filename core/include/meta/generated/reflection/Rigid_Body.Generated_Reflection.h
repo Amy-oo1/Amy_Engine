@@ -186,18 +186,18 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    class Reflection_Rigid_Body_Operator {
+    class Reflection_Rigid_Body_Res_Operator {
     public:
         static const string Get_Spelling(void){
-            return string{"Rigid_Body"};
+            return string{"Rigid_Body_Res"};
         }
 
         static const string Get_Displaying_Name(void){
-            return string{"Rigid_Body"};            
+            return string{"Rigid_Body_Res"};            
         }
 
-            static const vector<Reflection_Instance<Rigid_Body>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Rigid_Body> Instance){
-                vector<Reflection_Instance<Rigid_Body>> Table;
+            static const vector<Reflection_Instance<Rigid_Body_Res>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Rigid_Body_Res> Instance){
+                vector<Reflection_Instance<Rigid_Body_Res>> Table;
 
                     
 
@@ -217,11 +217,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Shapes"};
             }
 
-            static const vector<Rigid_Body_Shape>& Get_Shapes_Attribute(shared_ptr<Rigid_Body> Instance){
+            static const vector<Rigid_Body_Shape>& Get_Shapes_Attribute(shared_ptr<Rigid_Body_Res> Instance){
                 return Instance->m_Shapes;
             }
 
-            static void Set_Field_Shapes_Attribute(shared_ptr<Rigid_Body> Instance, const vector<Rigid_Body_Shape>& Value){
+            static void Set_Field_Shapes_Attribute(shared_ptr<Rigid_Body_Res> Instance, const vector<Rigid_Body_Shape>& Value){
                 Instance->m_Shapes=Value;
             }
 
@@ -233,27 +233,27 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return string {"Rigid_Body_Shape"};
                 }
 
-                static const size_t Get_Shapes_CPPVector_Capacity(shared_ptr<Rigid_Body> Instance){
+                static const size_t Get_Shapes_CPPVector_Capacity(shared_ptr<Rigid_Body_Res> Instance){
                     return Instance->m_Shapes.capacity();
                 }
 
-                static const size_t Get_Shapes_CPPVector_Size(shared_ptr<Rigid_Body> Instance){
+                static const size_t Get_Shapes_CPPVector_Size(shared_ptr<Rigid_Body_Res> Instance){
                     return Instance->m_Shapes.size();
                 }
 
-                static const Rigid_Body_Shape& Get_Shapes_CPPVector_Element(shared_ptr<Rigid_Body> Instance, size_t Index){
+                static const Rigid_Body_Shape& Get_Shapes_CPPVector_Element(shared_ptr<Rigid_Body_Res> Instance, size_t Index){
                     return Instance->m_Shapes[Index];
                 }
 
-                static void Set_Shapes_CPPVector_Element(shared_ptr<Rigid_Body> Instance, size_t Index, const Rigid_Body_Shape& Value){
+                static void Set_Shapes_CPPVector_Element(shared_ptr<Rigid_Body_Res> Instance, size_t Index, const Rigid_Body_Shape& Value){
                     Instance->m_Shapes[Index]=Value;
                 }
 
-                static void Reserve_Shapes_CPPVector(shared_ptr<Rigid_Body> Instance, size_t Capacity){
+                static void Reserve_Shapes_CPPVector(shared_ptr<Rigid_Body_Res> Instance, size_t Capacity){
                     Instance->m_Shapes.reserve(Capacity);
                 }
 
-                static void Push_Back_Shapes_CPPVector(shared_ptr<Rigid_Body> Instance, const Rigid_Body_Shape& Value){
+                static void Push_Back_Shapes_CPPVector(shared_ptr<Rigid_Body_Res> Instance, const Rigid_Body_Shape& Value){
                     Instance->m_Shapes.push_back(Value);
                 }
 
@@ -270,11 +270,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Inverse_Mass"};
             }
 
-            static const float& Get_Inverse_Mass_Attribute(shared_ptr<Rigid_Body> Instance){
+            static const float& Get_Inverse_Mass_Attribute(shared_ptr<Rigid_Body_Res> Instance){
                 return Instance->m_Inverse_Mass;
             }
 
-            static void Set_Field_Inverse_Mass_Attribute(shared_ptr<Rigid_Body> Instance, const float& Value){
+            static void Set_Field_Inverse_Mass_Attribute(shared_ptr<Rigid_Body_Res> Instance, const float& Value){
                 Instance->m_Inverse_Mass=Value;
             }
 
@@ -297,11 +297,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Actor_Type"};
             }
 
-            static const int& Get_Actor_Type_Attribute(shared_ptr<Rigid_Body> Instance){
+            static const int& Get_Actor_Type_Attribute(shared_ptr<Rigid_Body_Res> Instance){
                 return Instance->m_Actor_Type;
             }
 
-            static void Set_Field_Actor_Type_Attribute(shared_ptr<Rigid_Body> Instance, const int& Value){
+            static void Set_Field_Actor_Type_Attribute(shared_ptr<Rigid_Body_Res> Instance, const int& Value){
                 Instance->m_Actor_Type=Value;
             }
 
