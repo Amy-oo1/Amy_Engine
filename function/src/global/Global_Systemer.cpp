@@ -1,5 +1,7 @@
 #include "global/Global_Systemer.h"
 
+#include "Jolt/RegisterTypes.h"
+
 #include "file/File_System.h"
 
 namespace NameSpace_Function::Namespace_Global {
@@ -10,11 +12,18 @@ namespace NameSpace_Function::Namespace_Global {
 		System_Logger{ System_Logger::Get_Instance() },
 		Resource_Configer{ Resource_Configer::Get_Instance(Arguments[0]) },
 		Resource_Manager{ Resource_Manager::Get_Instance(this->Resource_Configer) },
-		Animation_Loader{ Animation_Loader::Get_Instance(this->Resource_Manager) } {
+		Animation_Loader{ Animation_Loader::Get_Instance(this->Resource_Manager) },
+		Factory_Instance{ Factory::sInstance = new Factory() } {
 		if (!Global_Systemer::g_Arguments.empty())
 			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Global Systemer Already Initialized");
 
 		Global_Systemer::g_Arguments = Arguments;
+
+		JPH::RegisterTypes();
+	}
+
+	Global_Systemer::~Global_Systemer(void) {
+		delete Factory_Instance;
 	}
 
 	Global_Systemer& Global_Systemer::Get_Instance(const vector<string>& Arguments) {

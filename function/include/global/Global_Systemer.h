@@ -3,6 +3,9 @@
 #include<vector>
 #include<string>
 
+#include "Jolt/Jolt.h"
+#include "Jolt/Core/Factory.h"
+
 #include "file/File_System.h"
 
 #include "logger/System_Logger.h"
@@ -16,6 +19,8 @@ namespace NameSpace_Function::Namespace_Global {
 
 	using std::vector;
 	using std::string;
+
+	using JPH::Factory;
 
 	using NameSpace_Platform::NameSpace_File::path;
 
@@ -39,7 +44,7 @@ namespace NameSpace_Function::Namespace_Global {
 		Global_Systemer(const vector<string>& Arguments);
 
 	public:
-		~Global_Systemer(void) = default;
+		~Global_Systemer(void);
 
 	public:
 		static Global_Systemer& Get_Instance(const vector<string>& Arguments);
@@ -53,6 +58,8 @@ namespace NameSpace_Function::Namespace_Global {
 		Resource_Manager& Resource_Manager;
 
 		Animation_Loader& Animation_Loader;
+
+		Factory*& Factory_Instance;
 
 	private:
 		static inline vector<string> g_Arguments{};
