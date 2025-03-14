@@ -125,7 +125,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {\
 	using NameSpace::Sun;\
 	template<>\
 	template<>\
-	Reflection_Instance<Sun>::operator Reflection_Instance<Base>() const {\
+	inline Reflection_Instance<Sun>::operator Reflection_Instance<Base>() const {\
 		return Reflection_Instance<Base>{\
 			std::string{#Sun},\
 			std::static_pointer_cast<Base>(this->m_Instance)\

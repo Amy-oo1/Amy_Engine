@@ -38,7 +38,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const string Get_Global_Transform_Type_Spelling(void){
-                return string{"Orthogonal_Transform"};
+                return string{"Affine_Transform"};
             }
 
             static const string Get_Global_Transform_Spelling(void){
@@ -50,11 +50,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Global_Transform"};
             }
 
-            static const Orthogonal_Transform& Get_Global_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Affine_Transform& Get_Global_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Global_Transform;
             }
 
-            static void Set_Field_Global_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Orthogonal_Transform& Value){
+            static void Set_Field_Global_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Affine_Transform& Value){
                 Instance->m_Global_Transform=Value;
             }
 
@@ -65,7 +65,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             
 
             static const string Get_Local_Transform_Type_Spelling(void){
-                return string{"Orthogonal_Transform"};
+                return string{"Affine_Transform"};
             }
 
             static const string Get_Local_Transform_Spelling(void){
@@ -77,11 +77,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Local_Transform"};
             }
 
-            static const Orthogonal_Transform& Get_Local_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Affine_Transform& Get_Local_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Local_Transform;
             }
 
-            static void Set_Field_Local_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Orthogonal_Transform& Value){
+            static void Set_Field_Local_Transform_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Affine_Transform& Value){
                 Instance->m_Local_Transform=Value;
             }
 
@@ -145,28 +145,28 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Instance_Type_Spelling(void){
+            static const string Get_Geometry_Type_Spelling(void){
                 return string{"Reflection_Instance<Geometry_Base>"};
             }
 
-            static const string Get_Instance_Spelling(void){
-                return string{"m_Instance"};
+            static const string Get_Geometry_Spelling(void){
+                return string{"m_Geometry"};
             }
 
 
-            static const string Get_Instance_Display_Name(void){
-                return string{"Instance"};
+            static const string Get_Geometry_Display_Name(void){
+                return string{"Geometry"};
             }
 
-            static const Reflection_Instance<Geometry_Base>& Get_Instance_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
+            static const Reflection_Instance<Geometry_Base>& Get_Geometry_Attribute(shared_ptr<Rigid_Body_Shape> Instance){
                 return Instance->m_Geometry;
             }
 
-            static void Set_Field_Instance_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Reflection_Instance<Geometry_Base>& Value){
+            static void Set_Field_Geometry_Attribute(shared_ptr<Rigid_Body_Shape> Instance, const Reflection_Instance<Geometry_Base>& Value){
                 Instance->m_Geometry=Value;
             }
 
-            static const bool Is_Filed_Instance_CPPVector(void){
+            static const bool Is_Filed_Geometry_CPPVector(void){
                 return  false;
             }
 
@@ -205,7 +205,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
             static const string Get_Shapes_Type_Spelling(void){
-                return string{"vector<Rigid_Body_Shape>"};
+                return string{"vector<shared_ptr<Rigid_Body_Shape>>"};
             }
 
             static const string Get_Shapes_Spelling(void){
@@ -217,11 +217,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Shapes"};
             }
 
-            static const vector<Rigid_Body_Shape>& Get_Shapes_Attribute(shared_ptr<Rigid_Body_Res> Instance){
+            static const vector<shared_ptr<Rigid_Body_Shape>>& Get_Shapes_Attribute(shared_ptr<Rigid_Body_Res> Instance){
                 return Instance->m_Shapes;
             }
 
-            static void Set_Field_Shapes_Attribute(shared_ptr<Rigid_Body_Res> Instance, const vector<Rigid_Body_Shape>& Value){
+            static void Set_Field_Shapes_Attribute(shared_ptr<Rigid_Body_Res> Instance, const vector<shared_ptr<Rigid_Body_Shape>>& Value){
                 Instance->m_Shapes=Value;
             }
 
@@ -230,7 +230,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Shapes_CPPVector_Element_Type_Spelling(void){
-                    return string {"Rigid_Body_Shape"};
+                    return string {"shared_ptr<Rigid_Body_Shape>"};
                 }
 
                 static const size_t Get_Shapes_CPPVector_Capacity(shared_ptr<Rigid_Body_Res> Instance){
@@ -241,11 +241,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Shapes.size();
                 }
 
-                static const Rigid_Body_Shape& Get_Shapes_CPPVector_Element(shared_ptr<Rigid_Body_Res> Instance, size_t Index){
+                static const shared_ptr<Rigid_Body_Shape>& Get_Shapes_CPPVector_Element(shared_ptr<Rigid_Body_Res> Instance, size_t Index){
                     return Instance->m_Shapes[Index];
                 }
 
-                static void Set_Shapes_CPPVector_Element(shared_ptr<Rigid_Body_Res> Instance, size_t Index, const Rigid_Body_Shape& Value){
+                static void Set_Shapes_CPPVector_Element(shared_ptr<Rigid_Body_Res> Instance, size_t Index, const shared_ptr<Rigid_Body_Shape>& Value){
                     Instance->m_Shapes[Index]=Value;
                 }
 
@@ -253,7 +253,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                     Instance->m_Shapes.reserve(Capacity);
                 }
 
-                static void Push_Back_Shapes_CPPVector(shared_ptr<Rigid_Body_Res> Instance, const Rigid_Body_Shape& Value){
+                static void Push_Back_Shapes_CPPVector(shared_ptr<Rigid_Body_Res> Instance, const shared_ptr<Rigid_Body_Shape>& Value){
                     Instance->m_Shapes.push_back(Value);
                 }
 
