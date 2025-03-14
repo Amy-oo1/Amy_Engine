@@ -21,18 +21,18 @@ namespace NameSpace_Function::Namespace_Physics {
 		~Physics_Config(void) = default;
 
 	public:
-		uint32_t Max_Body_Count{ 1024 };
-		uint32_t Body_Mutex_Count{ 0 };
-		uint32_t Max_body_Pair{ 65536 };
-		uint32_t Max_Contact_COnstraints{ 1024 };
+		uint32_t m_Max_Body_Count{ 1024 };
+		uint32_t m_Body_Mutex_Count{ 0 };
+		uint32_t m_Max_body_Pair{ 65536 };
+		uint32_t m_Max_Contact_COnstraints{ 1024 };
 
-		uint32_t MAx_JOb_Count{ 1024 };
-		uint32_t Max_Barrier_Count{ 8 };
-		uint32_t Max_Conccurrent_Job_Count{ 4 };
+		uint32_t m_Max_Job_Count{ 1024 };
+		uint32_t m_Max_Barrier_Count{ 8 };
+		uint32_t m_Max_Conccurrent_Job_Count{ 4 };
 
-		Vector3 Gravity{ 0.0f, 0.f,-9.8f };
+		Vector3 m_Gravity{ 0.0f, 0.f,-9.8f };
 
-		float Updata_Frequency{ 60.0f };
+		float m_Updata_Frequency{ 60.0f };
 
 	};
 
