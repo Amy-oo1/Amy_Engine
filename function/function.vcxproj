@@ -163,7 +163,7 @@
     <ClInclude Include="include\global\Global_Systemer.h" />
     <ClInclude Include="include\physics\Physics_Config.h" />
     <ClInclude Include="include\physics\Physics_Scene.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="include\physics\Utilities_Physics.h" />
   </ItemGroup>
@@ -183,7 +183,7 @@
     <ClCompile Include="src\global\Global_Systemer.cpp" />
     <ClCompile Include="src\physics\Physics_Config.cpp" />
     <ClCompile Include="src\physics\Physics_Scene.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\physics\Utilities_Physics.cpp" />
   </ItemGroup>
