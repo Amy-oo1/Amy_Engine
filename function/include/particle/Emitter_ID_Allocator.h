@@ -28,7 +28,7 @@ namespace NameSpace_Function::Namespace_Particle {
 		static Emitter_ID_Allocator& Get_Instance(void);
 
 	public:
-		static constexpr Particle_Emitter_ID Invalid_ID{ std::numeric_limits<Particle_Emitter_ID>::max() };
+		static constexpr Particle_Emitter_ID INVALID_ID{ std::numeric_limits<Particle_Emitter_ID>::max() };
 
 	private:
 		std::atomic<Particle_Emitter_ID> m_Next_ID{ 0 };

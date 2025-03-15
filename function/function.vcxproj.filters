@@ -102,6 +102,9 @@
     <ClInclude Include="include\particle\Particle_Config.h">
       <Filter>include\particle</Filter>
     </ClInclude>
+    <ClInclude Include="include\particle\Particle_Desc.h">
+      <Filter>include\particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -144,6 +147,9 @@
       <Filter>src\physics</Filter>
     </ClCompile>
     <ClCompile Include="src\particle\Emitter_ID_Allocator.cpp">
+      <Filter>src\particle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\particle\Particle_Desc.cpp">
       <Filter>src\particle</Filter>
     </ClCompile>
   </ItemGroup>

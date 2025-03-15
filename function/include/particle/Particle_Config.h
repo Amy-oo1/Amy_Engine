@@ -1,5 +1,7 @@
 #pragma once
 
+#include<cstdint>
+
 #include "math/Vector2.h"
 #include "math/Vector3.h"
 #include "math/Vector4.h"
@@ -24,6 +26,13 @@ namespace NameSpace_Function::Namespace_Particle {
 		static inline const Vector4 Default_Emitter_Acceleration{ 0.f, 0.f, -2.5f, 0.f };
 		static inline const Vector3 Default_Emitter_Size{ 0.02f, 0.02f, 0.f };
 		static inline const Vector2 Default_Emitter_Life{ 1.2f, 0.f };
+	};
+
+	enum class EMITTER_TYPE :uint8_t
+	{
+		POINT = 0,
+		MESH,
+		INVALID
 	};
 
 }// namespace NameSpace_Function::Namespace_Particle
