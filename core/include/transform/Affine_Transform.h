@@ -61,6 +61,9 @@ namespace NameSpace_Core::NameSpace_Transform {
 		const Vector3 Get_Z(void)const;
 
 		const Matrix3x3 Get_Basis(void)const;
+
+		const Quaternion Get_Rotate(void)const;
+		const Vector3 Get_Scale(void)const;
 		const Vector3 Get_Translation(void)const;
 
 		void Set_X(const Vector3& X);

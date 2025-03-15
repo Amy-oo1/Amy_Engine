@@ -109,6 +109,16 @@ namespace NameSpace_Core::NameSpace_Transform {
 		return this->m_Basis;
 	}
 
+	const Quaternion Affine_Transform::Get_Rotate(void) const {
+		const auto [Q, D, U] = this->m_Basis.Calculate_QDU_Decomposition();
+		return Quaternion{ Q };
+	}
+
+	const Vector3 Affine_Transform::Get_Scale(void) const {
+		const auto [Q, D, U] = this->m_Basis.Calculate_QDU_Decomposition();
+		return Vector3{ D[0][0],D[1][1],D[2][2] };
+	}
+
 	const Vector3 Affine_Transform::Get_Translation(void) const {
 		return this->m_Translation;
 	}
