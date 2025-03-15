@@ -9,8 +9,12 @@
 #include "Jolt/Physics/Body/BodyID.h"
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/MotionType.h"
+#include "Jolt/Physics/Body/BodyLock.h"
 #include "Jolt/Physics/EActivation.h"
-
+#include "Jolt/Physics/Collision/NarrowPhaseQuery.h"
+#include "Jolt/Physics/Collision/RayCast.h"
+#include "Jolt/Physics/Collision/CollisionCollectorImpl.h"
+#include "Jolt/Physics/Collision/CastResult.h"
 
 #include "meta/generated/reflection/Basic_Shape.Generated_Reflection.h"
 #include "meta/generated/reflection/Rigid_Body.Generated_Reflection.h"
@@ -110,6 +114,86 @@ namespace NameSpace_Function::Namespace_Physics {
 		return Body_ID.GetIndexAndSequenceNumber();
 	}
 
+	void Physics_Scene::Remove_RigidBody(uint32_t Body_ID) {
+		this->m_Pending_Remove_Bodies.emplace_back(Body_ID);
+	}
+
+	void Physics_Scene::Update_RigidBody_Global_Transform(uint32_t Body_ID, const Affine_Transform& Global_Transform) {
+		this->m_Jolt_Physics.m_Physics_System->GetBodyInterface().SetPositionAndRotation(
+			JPH::BodyID{ Body_ID },
+			Convert_Vec3(Global_Transform.Get_Translation()),
+			Convert_Quat(Global_Transform.Get_Rotation()),
+			JPH::EActivation::Activate
+		);
+	}
+
+	void Physics_Scene::Tick(float Delta_Time) {
+		const float Time_Step = 1.f / this->m_Config.m_Updata_Frequency;
+
+		this->m_Jolt_Physics.m_Physics_System->Update(
+			Time_Step,
+			this->m_Jolt_Physics.m_Collision_Steps,
+			//TODO : Sub_Teps ?
+			//this->m_Jolt_Physics.m_Integration_Sub_Steps,
+			this->m_Jolt_Physics.m_Temp_Allocator.get(),
+			this->m_Jolt_Physics.m_Job_System.get()
+		);
+
+		for (const uint32_t Temp_Body_ID : this->m_Pending_Remove_Bodies) {
+			this->m_Jolt_Physics.m_Physics_System->GetBodyInterface().RemoveBody(JPH::BodyID{ Temp_Body_ID }
+			);
+
+			this->m_Bodies.erase(Temp_Body_ID);
+		}
+		this->m_Pending_Remove_Bodies.clear();
+	}
+
+	const vector<Physics_Hit_Info> Physics_Scene::Ray_Cast(const Vector3& Ray_Origin, const Vector3& Ray_Direction, float Ray_Length) {
+		const JPH::RRayCast In_Ray{
+			Convert_Vec3(Ray_Origin),
+			Convert_Vec3(Ray_Direction.Normalize() * Ray_Length)
+		};
+
+		const JPH::NarrowPhaseQuery& Scene_Query{ this->m_Jolt_Physics.m_Physics_System->GetNarrowPhaseQuery() };
+
+		//TODO : Defualt RayCast Settings
+		const JPH::RayCastSettings Ray_Cast_Settings{};
+		JPH::AllHitCollisionCollector<JPH::CastRayCollector> Collector;
+		Scene_Query.CastRay(In_Ray, Ray_Cast_Settings, Collector);
+
+		if (!Collector.HadHit())
+			return {};
+
+		Collector.Sort();
+
+		vector<JPH::RayCastResult> RayCast_Resourct{ Collector.mHits.begin(),Collector.mHits.end() };
+
+		vector<Physics_Hit_Info> Hit_Infos{};
+		Hit_Infos.reserve(RayCast_Resourct.size());
+
+		for (const auto& Temp_Hit_Resourt : RayCast_Resourct) {
+			const Vec3 Hit_Point{ In_Ray.GetPointOnRay(Temp_Hit_Resourt.mFraction) };
+
+			const JPH::BodyLockRead Body_Lock{
+				this->m_Jolt_Physics.m_Physics_System->GetBodyLockInterface(),Temp_Hit_Resourt.mBodyID
+			};
+
+			const JPH::Body& HIt_body{ Body_Lock.GetBody() };
+
+			const Vec3 Hit_Nornal{ HIt_body.GetWorldSpaceSurfaceNormal(Temp_Hit_Resourt.mSubShapeID2,Hit_Point) };
+
+			Hit_Infos.emplace_back(Physics_Hit_Info{
+				Convert_Vec3(Hit_Point),
+				Convert_Vec3(Hit_Nornal),
+				(Ray_Length * Temp_Hit_Resourt.mFraction),
+				Temp_Hit_Resourt.mBodyID.GetIndexAndSequenceNumber()
+				}
+			);
+		}
+
+		return Hit_Infos;
+	}
+
 	const vector<Physics_Scene::JPH_Shape_Data> Physics_Scene::Creata_JPH_Shapes(const Affine_Transform& Global_Tranform, const vector<shared_ptr<Rigid_Body_Shape>> My_Shapes) {
 		vector<JPH_Shape_Data> Data{};
 		Data.reserve(My_Shapes.size());
@@ -140,7 +224,7 @@ namespace NameSpace_Function::Namespace_Physics {
 		return Data;
 	}
 
-	JPH::Ref<StaticCompoundShapeSettings> Physics_Scene::Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes) {
+	const JPH::Ref<StaticCompoundShapeSettings> Physics_Scene::Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes) {
 		JPH::Ref<StaticCompoundShapeSettings> Static_Compund_shape_setting = new StaticCompoundShapeSettings{};
 
 		for (const auto& [Temp_Shape, Loacl_Transform, Global_Sccale] : Shapes)

@@ -95,13 +95,20 @@ namespace NameSpace_Function::Namespace_Physics {
 	public:
 		const Vector3& Get_Gravity(void)const;
 
-
 		uint32_t Create_RigidBody(const Affine_Transform& Global_Transform, const shared_ptr< Rigid_Body_Res>& Body_Res);
+
+		void Remove_RigidBody(uint32_t Body_ID);
+
+		void Update_RigidBody_Global_Transform(uint32_t Body_ID, const Affine_Transform& Global_Transform);
+
+		void Tick(float Delta_Time);
+
+		const vector<Physics_Hit_Info>  Ray_Cast(const Vector3& Ray_Origin, const Vector3& Ray_Direction, float Ray_Length);
 
 	private:
 		static const vector<JPH_Shape_Data> Creata_JPH_Shapes(const Affine_Transform& Global_Tranform, const vector<shared_ptr<Rigid_Body_Shape>> My_Shapes);
 
-		static JPH::Ref<JPH::StaticCompoundShapeSettings> Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes);
+		static const JPH::Ref<JPH::StaticCompoundShapeSettings> Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes);
 
 	protected:
 		Physics_Config m_Config{};
