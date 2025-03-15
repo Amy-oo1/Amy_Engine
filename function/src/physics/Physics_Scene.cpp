@@ -15,6 +15,7 @@
 #include "Jolt/Physics/Collision/RayCast.h"
 #include "Jolt/Physics/Collision/CollisionCollectorImpl.h"
 #include "Jolt/Physics/Collision/CastResult.h"
+#include "Jolt/Physics//Collision//ShapeCast.h"
 
 #include "meta/generated/reflection/Basic_Shape.Generated_Reflection.h"
 #include "meta/generated/reflection/Rigid_Body.Generated_Reflection.h"
@@ -75,8 +76,9 @@ namespace NameSpace_Function::Namespace_Physics {
 
 	uint32_t Physics_Scene::Create_RigidBody(const Affine_Transform& Global_Transform, const shared_ptr<Rigid_Body_Res>& Body_Res) {
 		const vector<Physics_Scene::JPH_Shape_Data> Shapes{ Creata_JPH_Shapes(
-			Global_Transform,
-			Reflection_Rigid_Body_Res_Operator::Get_Shapes_Attribute(Body_Res))
+				Global_Transform,
+				Reflection_Rigid_Body_Res_Operator::Get_Shapes_Attribute(Body_Res)
+			)
 		};
 
 		if (Shapes.empty())
@@ -106,8 +108,7 @@ namespace NameSpace_Function::Namespace_Physics {
 		}
 
 		const auto& Body_ID{ JPH_Body->GetID() };
-		Body_Interface.AddBody(Body_ID, JPH::EActivation::Activate
-		);
+		Body_Interface.AddBody(Body_ID, JPH::EActivation::Activate);
 
 		this->m_Bodies.emplace(Body_ID.GetIndexAndSequenceNumber(), std::move(JPH_Body));
 
@@ -140,8 +141,7 @@ namespace NameSpace_Function::Namespace_Physics {
 		);
 
 		for (const uint32_t Temp_Body_ID : this->m_Pending_Remove_Bodies) {
-			this->m_Jolt_Physics.m_Physics_System->GetBodyInterface().RemoveBody(JPH::BodyID{ Temp_Body_ID }
-			);
+			this->m_Jolt_Physics.m_Physics_System->GetBodyInterface().RemoveBody(JPH::BodyID{ Temp_Body_ID });
 
 			this->m_Bodies.erase(Temp_Body_ID);
 		}
@@ -166,32 +166,136 @@ namespace NameSpace_Function::Namespace_Physics {
 
 		Collector.Sort();
 
-		vector<JPH::RayCastResult> RayCast_Resourct{ Collector.mHits.begin(),Collector.mHits.end() };
-
 		vector<Physics_Hit_Info> Hit_Infos{};
-		Hit_Infos.reserve(RayCast_Resourct.size());
+		Hit_Infos.reserve(Collector.mHits.size());
 
-		for (const auto& Temp_Hit_Resourt : RayCast_Resourct) {
+		for (const auto& Temp_Hit_Resourt : Collector.mHits) {
 			const Vec3 Hit_Point{ In_Ray.GetPointOnRay(Temp_Hit_Resourt.mFraction) };
 
-			const JPH::BodyLockRead Body_Lock{
-				this->m_Jolt_Physics.m_Physics_System->GetBodyLockInterface(),Temp_Hit_Resourt.mBodyID
-			};
+			const JPH::BodyLockRead Body_Lock{ this->m_Jolt_Physics.m_Physics_System->GetBodyLockInterface(),Temp_Hit_Resourt.mBodyID };
 
 			const JPH::Body& HIt_body{ Body_Lock.GetBody() };
 
 			const Vec3 Hit_Nornal{ HIt_body.GetWorldSpaceSurfaceNormal(Temp_Hit_Resourt.mSubShapeID2,Hit_Point) };
 
 			Hit_Infos.emplace_back(Physics_Hit_Info{
-				Convert_Vec3(Hit_Point),
-				Convert_Vec3(Hit_Nornal),
-				(Ray_Length * Temp_Hit_Resourt.mFraction),
-				Temp_Hit_Resourt.mBodyID.GetIndexAndSequenceNumber()
+					Convert_Vec3(Hit_Point),
+					Convert_Vec3(Hit_Nornal),
+					(Ray_Length * Temp_Hit_Resourt.mFraction),
+					Temp_Hit_Resourt.mBodyID.GetIndexAndSequenceNumber()
 				}
 			);
 		}
 
 		return Hit_Infos;
+	}
+
+	const vector<Physics_Hit_Info> Physics_Scene::Swpeep(const shared_ptr<Rigid_Body_Shape>& Temp_Shape, const Affine_Transform& Shape_Transform, const Vector3& Sweep_Direction, float Sweep_Length) {
+		const Affine_Transform Global_Transform{ Shape_Transform * Reflection_Rigid_Body_Shape_Operator::Get_Global_Transform_Attribute(Temp_Shape) };
+
+		const shared_ptr<Shape> JPH_Shape{ Convert_Shape(Temp_Shape,  Global_Transform.Get_Scale()) };
+		if (nullptr == JPH_Shape) {
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Shape Is Not Initialized");
+
+			return {};
+		}
+
+		const JPH::RShapeCast Shape_Cast{
+			JPH::ShapeCast::sFromWorldTransform(
+				JPH_Shape.get(),
+				Vec3::sReplicate(1.f),
+				Convert_Mat44(Global_Transform),
+				Convert_Vec3(Sweep_Direction.Normalize() * Sweep_Length)
+			)
+		};
+
+		const JPH::NarrowPhaseQuery& Scene_Query{ this->m_Jolt_Physics.m_Physics_System->GetNarrowPhaseQuery() };
+		JPH::AllHitCollisionCollector<JPH::CastShapeCollector> Collector{};
+		Scene_Query.CastShape(
+			Shape_Cast,
+			JPH::ShapeCastSettings{},
+			Vec3::sZero(),
+			Collector
+		);
+
+		if (!Collector.HadHit())
+			return {};
+
+		Collector.Sort();
+		vector<Physics_Hit_Info> Hit_Infos{};
+		Hit_Infos.reserve(Collector.mHits.size());
+
+		for (const auto& Temp_Sweep_result : Collector.mHits)
+			Hit_Infos.emplace_back(Physics_Hit_Info{
+					Convert_Vec3(Temp_Sweep_result.mContactPointOn2),
+					Convert_Vec3(Temp_Sweep_result.mPenetrationAxis.Normalized()),
+					Sweep_Length * Temp_Sweep_result.mFraction,
+					Temp_Sweep_result.mBodyID2.GetIndexAndSequenceNumber()
+				}
+			);
+
+
+		return Hit_Infos;
+	}
+
+	bool Physics_Scene::Is_OverLapping(const shared_ptr<Rigid_Body_Shape>& Temp_Shape, const Affine_Transform& Global_Transform) const {
+		const Affine_Transform Shape_Global_Transform{ Global_Transform * Reflection_Rigid_Body_Shape_Operator::Get_Global_Transform_Attribute(Temp_Shape) };
+
+		const shared_ptr<Shape> JPH_Shape{ Convert_Shape(Temp_Shape,  Shape_Global_Transform.Get_Scale()) };
+		if (nullptr == JPH_Shape) {
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Shape Is Not Initialized");
+
+			return false;
+		}
+
+		const JPH::NarrowPhaseQuery& Scene_Query{ this->m_Jolt_Physics.m_Physics_System->GetNarrowPhaseQuery() };
+
+		JPH::AnyHitCollisionCollector<JPH::CollideShapeCollector> Collector{};
+
+		Scene_Query.CollideShape(
+			JPH_Shape.get(),
+			JPH::Vec3::sReplicate(1.f),
+			Convert_Mat44(Shape_Global_Transform),
+			JPH::CollideShapeSettings{},
+			Vec3::sZero(),
+			Collector
+		);
+
+		return Collector.HadHit();
+	}
+
+	const vector<AxisAligned_Bounding_Box> Physics_Scene::Get_Bounding_Boxes(uint32_t Body_ID) const {
+		const JPH::Body& Temp_Body{ this->Get_Locked_Body(Body_ID) };
+		JPH::TransformedShape Body_Transformed_Shape{ Temp_Body.GetTransformedShape() };
+
+		My_Transformed_Shape_Collector Collector{};
+		Body_Transformed_Shape.CollectTransformedShapes(Body_Transformed_Shape.GetWorldSpaceBounds(), Collector);
+
+		vector<AxisAligned_Bounding_Box> Bounding_Boxes{};
+		for (const auto& Temp_Transform_Shape : Collector.m_Shapes) {
+			const optional<AxisAligned_Bounding_Box> Temp_Bounding_Box{ Convert_BoundingBox(Temp_Transform_Shape) };
+
+			if (Temp_Bounding_Box.has_value())
+				Bounding_Boxes.emplace_back(Temp_Bounding_Box.value());
+		}
+		return Bounding_Boxes;
+	}
+
+	void Physics_Scene::Draw_Physics_Scene(shared_ptr<JPH::DebugRenderer> Debug_Renderer) {
+		this->m_Jolt_Physics.m_Physics_System->DrawBodies(
+			JPH::BodyManager::DrawSettings(),
+			Debug_Renderer.get()
+		);
+	}
+
+	const JPH::Body& Physics_Scene::Get_Locked_Body(uint32_t Body_ID) const {
+		JPH::BodyLockRead Lock{ this->m_Jolt_Physics.m_Physics_System->GetBodyLockInterface(),JPH::BodyID{Body_ID} };
+
+		if (!Lock.SucceededAndIsInBroadPhase()) {
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Body Is Not Initialized");
+
+		}
+		return Lock.GetBody();
 	}
 
 	const vector<Physics_Scene::JPH_Shape_Data> Physics_Scene::Creata_JPH_Shapes(const Affine_Transform& Global_Tranform, const vector<shared_ptr<Rigid_Body_Shape>> My_Shapes) {
@@ -208,6 +312,7 @@ namespace NameSpace_Function::Namespace_Physics {
 
 			if (nullptr == JPH_Shape) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Shape Is Not Initialized");
+
 				continue;
 			}
 
@@ -221,6 +326,7 @@ namespace NameSpace_Function::Namespace_Physics {
 
 		if (Data.empty())
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Shape Is Not Initialized");
+
 		return Data;
 	}
 
@@ -235,6 +341,21 @@ namespace NameSpace_Function::Namespace_Physics {
 			);
 
 		return Static_Compund_shape_setting;
+	}
+
+	const optional<AxisAligned_Bounding_Box> Physics_Scene::Convert_BoundingBox(const JPH::TransformedShape& Transformed_Shape) {
+		if (JPH::EShapeType::Convex != Transformed_Shape.mShape->GetType()) {
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Shape Is Not Convex");
+
+			return std::nullopt;
+		}
+
+		const JPH::AABox JPH_Bounding_Box{ Transformed_Shape.GetWorldSpaceBounds() };
+
+		return AxisAligned_Bounding_Box{
+			Convert_Vec3(JPH_Bounding_Box.mMin),
+			Convert_Vec3(JPH_Bounding_Box.mMax)
+		};
 	}
 
 }// namespace NameSpace_Function::Namespace_Physics

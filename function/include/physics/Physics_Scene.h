@@ -1,6 +1,7 @@
 #pragma once
 
 #include<limits>
+#include<optional>
 #include<vector>
 #include<unordered_map>
 #include<cstdint>
@@ -11,6 +12,8 @@
 #include "Jolt/Physics/Collision/Shape/Shape.h"
 #include "Jolt/Core/TempAllocator.h"
 #include "Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/Physics/Collision/CollisionCollector.h"
+#include "Jolt/Physics/Collision/TransformedShape.h"
 #include "Jolt/Physics/Collision/BroadPhase/BroadPhase.h"
 #include "Jolt/Physics/Collision/Shape/StaticCompoundShape.h"
 #include "Jolt/Renderer/DebugRenderer.h"
@@ -26,6 +29,7 @@
 
 namespace NameSpace_Function::Namespace_Physics {
 
+	using std::optional;
 	using std::vector;
 	using std::unordered_map;
 	using std::shared_ptr;
@@ -41,6 +45,7 @@ namespace NameSpace_Function::Namespace_Physics {
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
+	using NameSpace_Core::NameSpace_Bounding::AxisAligned_Bounding_Box;
 
 	using NameSpace_Resource::NameSpace_Components::Geometry_Box;
 	using NameSpace_Resource::NameSpace_Components::Geometry_Sphere;
@@ -75,6 +80,13 @@ namespace NameSpace_Function::Namespace_Physics {
 			Vector3 Global_Scale{ Vector3::ONE };
 		};
 
+		struct My_Transformed_Shape_Collector : JPH::TransformedShapeCollector
+		{
+			virtual void AddHit(const ResultType& In_Result) override { m_Shapes.push_back(In_Result); }
+
+			std::vector<JPH::TransformedShape> m_Shapes{};
+		};
+
 	public:
 		using My_Body = unique_ptr<JPH::Body, std::function<void(JPH::Body*)>>;
 
@@ -86,7 +98,6 @@ namespace NameSpace_Function::Namespace_Physics {
 
 		const Physics_Scene& operator=(const Physics_Scene&) = delete;
 		const Physics_Scene& operator=(Physics_Scene&&) = delete;
-
 
 		Physics_Scene(const Vector3& Gravity);
 
@@ -105,10 +116,22 @@ namespace NameSpace_Function::Namespace_Physics {
 
 		const vector<Physics_Hit_Info>  Ray_Cast(const Vector3& Ray_Origin, const Vector3& Ray_Direction, float Ray_Length);
 
+		const vector<Physics_Hit_Info> Swpeep(const shared_ptr<Rigid_Body_Shape>& Temp_Shape, const Affine_Transform& Shape_Transform, const Vector3& Sweep_Direction, float Sweep_Length);
+
+		bool Is_OverLapping(const shared_ptr<Rigid_Body_Shape>& Temp_Shape, const Affine_Transform& Global_Transform)const;
+
+		const vector<AxisAligned_Bounding_Box> Get_Bounding_Boxes(uint32_t Body_ID)const;
+
+		void Draw_Physics_Scene(shared_ptr<JPH::DebugRenderer> Debug_Renderer);
+
 	private:
+		const JPH::Body& Get_Locked_Body(uint32_t Body_ID)const;
+
 		static const vector<JPH_Shape_Data> Creata_JPH_Shapes(const Affine_Transform& Global_Tranform, const vector<shared_ptr<Rigid_Body_Shape>> My_Shapes);
 
 		static const JPH::Ref<JPH::StaticCompoundShapeSettings> Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes);
+
+		static const optional<AxisAligned_Bounding_Box> Convert_BoundingBox(const JPH::TransformedShape& Transformed_Shape);
 
 	protected:
 		Physics_Config m_Config{};
