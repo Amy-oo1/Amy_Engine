@@ -49,6 +49,12 @@
     <Filter Include="src\physics">
       <UniqueIdentifier>{50150104-2af3-454f-afb9-5734d4d8962c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\particle">
+      <UniqueIdentifier>{4a876592-9988-463e-951b-58437d349beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\particle">
+      <UniqueIdentifier>{cbde59be-8e5a-4f31-b89e-74d539762d4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation\Bone.h">
@@ -90,6 +96,9 @@
     <ClInclude Include="include\physics\Utilities_Physics.h">
       <Filter>include\physics</Filter>
     </ClInclude>
+    <ClInclude Include="include\particle\Emitter_ID_Allocator.h">
+      <Filter>include\particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -130,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="src\physics\Utilities_Physics.cpp">
       <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\particle\Emitter_ID_Allocator.cpp">
+      <Filter>src\particle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

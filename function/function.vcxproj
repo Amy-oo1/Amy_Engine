@@ -161,6 +161,7 @@
     <ClInclude Include="include\frame\object\GObject.h" />
     <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
     <ClInclude Include="include\global\Global_Systemer.h" />
+    <ClInclude Include="include\particle\Emitter_ID_Allocator.h" />
     <ClInclude Include="include\physics\Physics_Config.h" />
     <ClInclude Include="include\physics\Physics_Scene.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -181,6 +182,7 @@
     <ClCompile Include="src\frame\object\GObject.cpp" />
     <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp" />
     <ClCompile Include="src\global\Global_Systemer.cpp" />
+    <ClCompile Include="src\particle\Emitter_ID_Allocator.cpp" />
     <ClCompile Include="src\physics\Physics_Config.cpp" />
     <ClCompile Include="src\physics\Physics_Scene.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
