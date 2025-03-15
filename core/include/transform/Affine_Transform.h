@@ -24,7 +24,7 @@ namespace NameSpace_Core::NameSpace_Transform {
 		Affine_Transform& operator=(const Affine_Transform&) = default;
 		Affine_Transform& operator=(Affine_Transform&&) = default;
 
-		Affine_Transform( const Vector3& Scale, const Quaternion& Rotate_Quaternion, const Vector3& Translate);
+		Affine_Transform(const Vector3& Scale, const Quaternion& Rotate_Quaternion, const Vector3& Translate);
 		Affine_Transform(const Matrix3x3& Basis, const Vector3 Translate);
 
 		explicit Affine_Transform(const Matrix4x4& Mat);
@@ -62,7 +62,7 @@ namespace NameSpace_Core::NameSpace_Transform {
 
 		const Matrix3x3 Get_Basis(void)const;
 
-		const Quaternion Get_Rotate(void)const;
+		const Quaternion Get_Rotation(void)const;
 		const Vector3 Get_Scale(void)const;
 		const Vector3 Get_Translation(void)const;
 

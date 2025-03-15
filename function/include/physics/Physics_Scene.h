@@ -2,14 +2,17 @@
 
 #include<limits>
 #include<vector>
+#include<unordered_map>
 #include<cstdint>
 #include<memory>
 
 #include "Jolt/Jolt.h"
 #include "Jolt/Core/JobSystem.h"
+#include "Jolt/Physics/Collision/Shape/Shape.h"
 #include "Jolt/Core/TempAllocator.h"
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/BroadPhase/BroadPhase.h"
+#include "Jolt/Physics/Collision/Shape/StaticCompoundShape.h"
 #include "Jolt/Renderer/DebugRenderer.h"
 
 #include "math/Vector3.h"
@@ -24,13 +27,17 @@
 namespace NameSpace_Function::Namespace_Physics {
 
 	using std::vector;
+	using std::unordered_map;
 	using std::shared_ptr;
+	using std::unique_ptr;
 
 	using JPH::PhysicsSystem;
 	using JPH::JobSystem;
 	using JPH::TempAllocator;
 	using JPH::BroadPhaseLayerInterface;
 	using JPH::DebugRenderer;
+	using JPH::Shape;
+	using JPH::StaticCompoundShapeSettings;
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
@@ -39,6 +46,7 @@ namespace NameSpace_Function::Namespace_Physics {
 	using NameSpace_Resource::NameSpace_Components::Geometry_Sphere;
 	using NameSpace_Resource::NameSpace_Components::Geometry_Cylinder;
 	using NameSpace_Resource::NameSpace_Components::Rigid_Body_Shape;
+	using NameSpace_Resource::NameSpace_Components::Rigid_Body_Res;
 
 	struct Physics_Hit_Info final {
 		static constexpr uint32_t INVALID_ID{ std::numeric_limits<uint32_t>::max() };
@@ -61,6 +69,15 @@ namespace NameSpace_Function::Namespace_Physics {
 			int m_Integration_Sub_Steps{ 1 };
 		};
 
+		struct JPH_Shape_Data {
+			shared_ptr<Shape> Shape_Data;
+			Affine_Transform Loac_Transform{ Affine_Transform::IDENTITY };
+			Vector3 Global_Scale{ Vector3::ONE };
+		};
+
+	public:
+		using My_Body = unique_ptr<JPH::Body, std::function<void(JPH::Body*)>>;
+
 	public:
 		Physics_Scene(void) = delete;
 
@@ -79,10 +96,19 @@ namespace NameSpace_Function::Namespace_Physics {
 		const Vector3& Get_Gravity(void)const;
 
 
+		uint32_t Create_RigidBody(const Affine_Transform& Global_Transform, const shared_ptr< Rigid_Body_Res>& Body_Res);
+
+	private:
+		static const vector<JPH_Shape_Data> Creata_JPH_Shapes(const Affine_Transform& Global_Tranform, const vector<shared_ptr<Rigid_Body_Shape>> My_Shapes);
+
+		static JPH::Ref<JPH::StaticCompoundShapeSettings> Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes);
+
 	protected:
 		Physics_Config m_Config{};
 
 		Jolt_Physics m_Jolt_Physics{};
+
+		unordered_map<uint32_t, My_Body> m_Bodies{};
 
 		vector<uint32_t> m_Pending_Remove_Bodies{};
 

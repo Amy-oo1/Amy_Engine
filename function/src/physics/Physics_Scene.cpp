@@ -5,6 +5,12 @@
 #include "Jolt/Core/TempAllocator.h"
 #include "Jolt/Physics/PhysicsSettings.h"
 #include "Jolt/Physics/Body/BodyInterface.h"
+#include "Jolt/Physics/Body/Body.h"
+#include "Jolt/Physics/Body/BodyID.h"
+#include "Jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Body/MotionType.h"
+#include "Jolt/Physics/EActivation.h"
+
 
 #include "meta/generated/reflection/Basic_Shape.Generated_Reflection.h"
 #include "meta/generated/reflection/Rigid_Body.Generated_Reflection.h"
@@ -16,6 +22,7 @@
 namespace NameSpace_Function::Namespace_Physics {
 
 	using JPH::BodyInterface;
+	using JPH::BodyCreationSettings;
 
 	using NameSpace_Resource::NameSpace_Components::Reflection_Rigid_Body_Shape_Operator;
 	using NameSpace_Resource::NameSpace_Components::Reflection_Rigid_Body_Res_Operator;
@@ -63,10 +70,44 @@ namespace NameSpace_Function::Namespace_Physics {
 	}
 
 	uint32_t Physics_Scene::Create_RigidBody(const Affine_Transform& Global_Transform, const shared_ptr<Rigid_Body_Res>& Body_Res) {
+		const vector<Physics_Scene::JPH_Shape_Data> Shapes{ Creata_JPH_Shapes(
+			Global_Transform,
+			Reflection_Rigid_Body_Res_Operator::Get_Shapes_Attribute(Body_Res))
+		};
 
-		const BodyInterface& Body_Interface{ this->m_Jolt_Physics.m_Physics_System->GetBodyInterface() };
+		if (Shapes.empty())
+			return JPH::BodyID::cInvalidBodyID;
 
+		JPH::Ref<StaticCompoundShapeSettings> Static_Compound_Shape_Settings{ Create_Static_Static_Compound_Shape(Shapes) };
 
+		BodyCreationSettings Creation_Settings{
+			Static_Compound_Shape_Settings,
+			Convert_Vec3(Global_Transform.Get_Translation()),
+			Convert_Quat(Global_Transform.Get_Rotation()),
+			JPH::EMotionType::Static,
+			Layers::NON_MOVING
+		};
+
+		BodyInterface& Body_Interface{ this->m_Jolt_Physics.m_Physics_System->GetBodyInterface() };
+
+		My_Body JPH_Body{
+			Body_Interface.CreateBodyWithoutID(Creation_Settings),
+			[&Body_Interface](JPH::Body* InBody)->void {if (nullptr != InBody)Body_Interface.DestroyBody(InBody->GetID()); }
+		};
+
+		if (nullptr == JPH_Body) {
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Body Is Not Initialized");
+
+			return JPH::BodyID::cInvalidBodyID;
+		}
+
+		const auto& Body_ID{ JPH_Body->GetID() };
+		Body_Interface.AddBody(Body_ID, JPH::EActivation::Activate
+		);
+
+		this->m_Bodies.emplace(Body_ID.GetIndexAndSequenceNumber(), std::move(JPH_Body));
+
+		return Body_ID.GetIndexAndSequenceNumber();
 	}
 
 	const vector<Physics_Scene::JPH_Shape_Data> Physics_Scene::Creata_JPH_Shapes(const Affine_Transform& Global_Tranform, const vector<shared_ptr<Rigid_Body_Shape>> My_Shapes) {
@@ -99,18 +140,17 @@ namespace NameSpace_Function::Namespace_Physics {
 		return Data;
 	}
 
-	JPH::Ref<JPH::StaticCompoundShapeSettings> Physics_Scene::Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes){
+	JPH::Ref<StaticCompoundShapeSettings> Physics_Scene::Create_Static_Static_Compound_Shape(const vector<JPH_Shape_Data>& Shapes) {
 		JPH::Ref<StaticCompoundShapeSettings> Static_Compund_shape_setting = new StaticCompoundShapeSettings{};
 
-		for (const auto&[Temp_Shape,Loacl_Transform,Global_Sccale] : Shapes) {
+		for (const auto& [Temp_Shape, Loacl_Transform, Global_Sccale] : Shapes)
 			Static_Compund_shape_setting->AddShape(
-				Convert_Vec3(Loacl_Transform.Get_Translation()*Global_Sccale),
+				Convert_Vec3(Loacl_Transform.Get_Translation() * Global_Sccale),
 				Convert_Quat(Loacl_Transform.Get_Rotation()),
+				Temp_Shape.get()
+			);
 
-			)
-		}
+		return Static_Compund_shape_setting;
 	}
-
-
 
 }// namespace NameSpace_Function::Namespace_Physics
