@@ -117,7 +117,7 @@
     <ClInclude Include="include\components\animation\Blend_State.h">
       <Filter>include\components\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\components\emitter\particle​.h">
+    <ClInclude Include="include\components\emitter\Particle.h">
       <Filter>include\components\emitter</Filter>
     </ClInclude>
     <ClInclude Include="include\components\rigid_body\Rigid_Body.h">

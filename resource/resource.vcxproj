@@ -145,7 +145,7 @@
     <ClInclude Include="include\components\animation\Blend_State.h" />
     <ClInclude Include="include\components\camera\Camera.h" />
     <ClInclude Include="include\components\camera\Camera_Controller.h" />
-    <ClInclude Include="include\components\emitter\particle​.h" />
+    <ClInclude Include="include\components\emitter\Particle.h" />
     <ClInclude Include="include\components\material\Materia.h" />
     <ClInclude Include="include\components\mesh\Mesh.h" />
     <ClInclude Include="include\components\mesh\Mesh_Data.h" />

@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 	std::filesystem::path Parser_Header_File_Path{ "D:/Amy_Engine/core/include/meta/generated/Parser_Header.h",std::filesystem::path::generic_format };
 
 	//-----------------------------Work Path------------------------------------------------------------------
-	const std::filesystem::path Work_Directory{ Parser_Header_File_Path.parent_path()};
+	const std::filesystem::path Work_Directory{ Parser_Header_File_Path.parent_path() };
 	std::filesystem::create_directories(Parser_Header_File_Path.parent_path());
 
 #ifdef _DEBUG
@@ -29,8 +29,8 @@ int main(int argc, char* argv[]) {
 	std::cout << "Work Directory: Generacted In Here         " << Work_Directory.generic_string() << std::endl;
 #endif // DEBUG
 
-	std::ifstream Head_File_Paths{Project_Inputs_File_Paths};
-	std::ofstream Header{Parser_Header_File_Path};
+	std::ifstream Head_File_Paths{ Project_Inputs_File_Paths };
+	std::ofstream Header{ Parser_Header_File_Path };
 
 #ifdef _DEBUG
 	if (Head_File_Paths.fail())
@@ -41,14 +41,17 @@ int main(int argc, char* argv[]) {
 
 	Header << R"(#pragma once)" << std::endl;
 	std::string line{};
-	while (std::getline(Head_File_Paths, line))
+	while (std::getline(Head_File_Paths, line)) {
+		std::cout << "File Path : " << line << std::endl;
+
 		Header << R"(#include ")" << std::filesystem::path{ line,std::filesystem::path::generic_format }.generic_string() << R"(")" << std::endl;
 
+	}
 	Head_File_Paths.close();
 	Header.close();
 
 	//-----------------------------clang_Command-------------------------------------------------------
-	std::vector<const char *> clang_Command_Arguments{};
+	std::vector<const char*> clang_Command_Arguments{};
 	for (const auto& Temp_Command : clang_line_Commands)
 		clang_Command_Arguments.emplace_back(Temp_Command);
 
@@ -58,13 +61,13 @@ int main(int argc, char* argv[]) {
 	for (const auto& Temp_Include : Includes)
 		clang_Command_Arguments.emplace_back(Temp_Include);
 
-	std::cout <<"Command Line : " << std::endl;
+	std::cout << "Command Line : " << std::endl;
 	for (const auto& Temp_Command : clang_Command_Arguments) {
 		std::cout << Temp_Command << std::endl;
 	}
 
 	//-----------------------------Meta_parser_Build_AST---------------------------------------------------------------
-	NameSpace_Meta_Parser::NameSpace_Meta_Parser::Meta_Parser Parser{Parser_Header_File_Path, clang_Command_Arguments};
+	NameSpace_Meta_Parser::NameSpace_Meta_Parser::Meta_Parser Parser{ Parser_Header_File_Path, clang_Command_Arguments };
 
 	std::vector<std::string> NameSpace{};
 	Parser.Build_AST(NameSpace);
@@ -74,10 +77,10 @@ int main(int argc, char* argv[]) {
 	Parser.Generator_Files(
 		Work_Directory,
 		std::filesystem::path{ "D:/Amy_Engine/meta_parser/template/reflection/Common_Class_Reflection.mustache",std::filesystem::path::generic_format },
-		std::filesystem::path{ "",std::filesystem::path::generic_format});
-	
+		std::filesystem::path{ "",std::filesystem::path::generic_format });
+
 	////---------------------------Meta_parser_Finish_Generator---------------------------------------------------------------
-	
+
 	Parser.Finish_Generator(
 		Work_Directory / "Reflection_Header.h",
 		Work_Directory / "Serializer_Header.h"
