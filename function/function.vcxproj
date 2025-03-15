@@ -162,6 +162,7 @@
     <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
     <ClInclude Include="include\global\Global_Systemer.h" />
     <ClInclude Include="include\particle\Emitter_ID_Allocator.h" />
+    <ClInclude Include="include\particle\Particle_Config.h" />
     <ClInclude Include="include\physics\Physics_Config.h" />
     <ClInclude Include="include\physics\Physics_Scene.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

@@ -99,6 +99,9 @@
     <ClInclude Include="include\particle\Emitter_ID_Allocator.h">
       <Filter>include\particle</Filter>
     </ClInclude>
+    <ClInclude Include="include\particle\Particle_Config.h">
+      <Filter>include\particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
