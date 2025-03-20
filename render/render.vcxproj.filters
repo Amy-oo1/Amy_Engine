@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{490fd0f1-39f4-4bf5-8a4b-0080814577e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{e6cec82d-b979-46e9-9fc0-194ccd793701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\vulkan">
+      <UniqueIdentifier>{9de97dd6-d22b-4fa0-915e-e985e1b47edf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan">
+      <UniqueIdentifier>{d0632d00-479f-4b27-9e9a-e9bb79c91792}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\rhi\RHI.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\vulkan\Vulkan_RHI.cpp">
+      <Filter>src\vulkan</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
