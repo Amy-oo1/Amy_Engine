@@ -6,9 +6,10 @@
 #include<string>
 #include<array>
 #include<vector>
+#include<unordered_map>
 #include<memory>
 
-#include "vma/vk_mem_alloc.h"
+//#include "vma/vk_mem_alloc.h"
 #include "vulkan/vulkan.h"
 
 #include "window/Window_System.h"
@@ -27,6 +28,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	using std::array;
 	using std::vector;
 	using std::unique_ptr;
+	using std::unordered_map;
 
 
 	class Vulkan_RHI final : public Empty_RHI {
@@ -106,7 +108,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		void Create_Descriptor_Pool(void);
 
-		void Create_Sync_Primitives​(void);
+		void Create_Sync_Primitices(void);
 
 		void Create_SwapChain(void) override;
 
@@ -308,7 +310,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		vector<unique_ptr<VkImageView_T, decltype(m_VK_Image_View_Deleter)>> m_SwapChain_Image_Views{};
 
 		//TODO : Add Dlelter In Resource
-		VmaAllocator m_Vma_Allocator{ nullptr };
+		//VmaAllocator m_Vma_Allocator{ nullptr };
 
 
 		unique_ptr<RHI_Sampler> m_Linear_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
@@ -316,8 +318,6 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
 		// NOTE : Function Pointers
-		PFN_vkCmdBeginDebugUtilsLabelEXT	F_vkCmdBeginDebugUtilsLabelEXT;
-		PFN_vkCmdEndDebugUtilsLabelEXT		F_vkCmdEndDebugUtilsLabelEXT;
 		PFN_vkWaitForFences					F_vkWaitForFences;
 		PFN_vkResetFences					F_vkResetFences;
 		PFN_vkResetCommandPool				F_vkResetCommandPool;
@@ -355,20 +355,20 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
 
-		[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_VMA(
-			VmaAllocator Vma_Allocator,
-			const RHI_Buffer_Create_Info& Buffer_Create_Info,
-			const VmaAllocationCreateInfo* pAllocation_Create_Info,
-			VmaAllocation* pAllocation,
-			VmaAllocationInfo* pAllocationInfo) override;
+		//[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_VMA(
+		//	VmaAllocator Vma_Allocator,
+		//	const RHI_Buffer_Create_Info& Buffer_Create_Info,
+		//	const VmaAllocationCreateInfo* pAllocation_Create_Info,
+		//	VmaAllocation* pAllocation,
+		//	VmaAllocationInfo* pAllocationInfo) override;
 
-		[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_With_Alignment_VMA(
-			VmaAllocator Vma_Allocator,
-			const RHI_Buffer_Create_Info& Buffer_Create_Info,
-			const VmaAllocationCreateInfo* pAllocation_Create_Info,
-			RHI_Device_Size Min_Alignment,
-			VmaAllocation* pAllocation,
-			VmaAllocationInfo* pAllocationInfo) override;
+		//[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_With_Alignment_VMA(
+		//	VmaAllocator Vma_Allocator,
+		//	const RHI_Buffer_Create_Info& Buffer_Create_Info,
+		//	const VmaAllocationCreateInfo* pAllocation_Create_Info,
+		//	RHI_Device_Size Min_Alignment,
+		//	VmaAllocation* pAllocation,
+		//	VmaAllocationInfo* pAllocationInfo) override;
 
 
 		[[nodiscard]] unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) override;

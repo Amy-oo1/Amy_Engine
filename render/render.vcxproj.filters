@@ -64,6 +64,9 @@
     <ClInclude Include="include\rhi\empty_rhi\RHI_Macro.h">
       <Filter>include\rhi\empty_rhi</Filter>
     </ClInclude>
+    <ClInclude Include="include\rhi\vulkan\Vulkan_RHI_Macro.h">
+      <Filter>include\rhi\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rhi\vulkan\Vulkan_RHI.cpp">
@@ -73,6 +76,9 @@
       <Filter>src\window</Filter>
     </ClCompile>
     <ClCompile Include="src\rhi\vulkan\Vulkan_Utilities.cpp">
+      <Filter>src\rhi\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rhi\vulkan\Vulkan_Test.cpp">
       <Filter>src\rhi\vulkan</Filter>
     </ClCompile>
   </ItemGroup>

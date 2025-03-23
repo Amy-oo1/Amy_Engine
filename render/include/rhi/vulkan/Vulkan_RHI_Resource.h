@@ -60,7 +60,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 	private:
-		unique_ptr<VkCommandBuffer_T> m_Resource{ nullptr };
+		unique_ptr<VkCommandBuffer_T, function<void(VkCommandBuffer)>> m_Resource{ nullptr,[](auto CommandBuffer) {if (nullptr != CommandBuffer) { CommandBuffer = nullptr; }; } };
 
 	};
 
@@ -139,7 +139,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 	private:
-		unique_ptr<VkDescriptorSet_T> m_Resource{ nullptr };
+		unique_ptr<VkDescriptorSet_T, function<void(VkDescriptorSet)>> m_Resource{ nullptr,[](auto DescriptorSet) {if (nullptr != DescriptorSet) { DescriptorSet = nullptr; }; } };
 
 	};
 
@@ -547,7 +547,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 	private:
-		unique_ptr<VkQueue_T> m_Resource{ nullptr };
+		unique_ptr<VkQueue_T, function<void(VkQueue)>> m_Resource{ nullptr,[](auto Queue) {if (nullptr != Queue) { Queue = nullptr; }; } };
 
 	};
 

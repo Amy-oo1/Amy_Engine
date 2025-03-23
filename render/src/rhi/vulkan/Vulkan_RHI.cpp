@@ -46,13 +46,16 @@
 #error Unknown Compiler
 #endif
 
+//#include "vma/vk_mem_alloc.h"
 #include<iostream>
 #include<sstream>
 #include<stdexcept>
 #include<unordered_set>
 #include<unordered_map>
 #include<functional>
+#include<algorithm>
 
+#include "rhi/vulkan/Vulkan_RHI_Macro.h"
 #include "rhi/vulkan/Vulkan_Config.h"
 
 namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
@@ -86,7 +89,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		//TODO : Destroy All Vulkan Resource
 
-		vmaDestroyAllocator(this->m_Vma_Allocator);
+		//vmaDestroyAllocator(this->m_Vma_Allocator);
 
 	}
 
@@ -186,10 +189,18 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		this->Create_Command_Pool();
 		this->Create_Command_Buffers();
 		this->Create_Descriptor_Pool();
-		this->Create_Sync_Primitives​();
+		this->Create_Sync_Primitices();
 		this->Create_SwapChain();
 		this->Create_SwapChhain_Image_Views();
 		//TODO : Add SwapChain Image Depth Image View
+	}
+
+	void Vulkan_RHI::CleanUp_SwapChain(void)
+	{
+	}
+
+	void Vulkan_RHI::Re_Create_SwapChain(void)
+	{
 	}
 
 	void Vulkan_RHI::Create_Instance(void) {
@@ -427,7 +438,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Re_Set(Descriptor_Pool);
 	}
 
-	void Vulkan_RHI::Create_Sync_Primitives​(void) {
+	void Vulkan_RHI::Create_Sync_Primitices(void) {
 		VkSemaphoreCreateInfo Semaphore_Info{};
 		{
 			Semaphore_Info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -547,25 +558,25 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	}
 
 	void Vulkan_RHI::Create_Resource_Allocator(void) {
-		VmaVulkanFunctions Vulkan_Functions{};
-		{
-			Vulkan_Functions.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
-			Vulkan_Functions.vkGetDeviceProcAddr = vkGetDeviceProcAddr;
-		}
+		//VmaVulkanFunctions Vulkan_Functions{};
+		//{
+		//	Vulkan_Functions.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
+		//	Vulkan_Functions.vkGetDeviceProcAddr = vkGetDeviceProcAddr;
+		//}
 
-		VmaAllocatorCreateInfo Allocator_Create_Info{};
-		{
-			Allocator_Create_Info.vulkanApiVersion = NameSpace_Config::API_Verssion;
-			Allocator_Create_Info.instance = this->m_VK_Instance.get();
-			Allocator_Create_Info.physicalDevice = this->m_VK_Physical_Device;
-			Allocator_Create_Info.device = this->m_Logical_VK_Device.get();
+		//VmaAllocatorCreateInfo Allocator_Create_Info{};
+		//{
+		//	Allocator_Create_Info.vulkanApiVersion = NameSpace_Config::API_Verssion;
+		//	Allocator_Create_Info.instance = this->m_VK_Instance.get();
+		//	Allocator_Create_Info.physicalDevice = this->m_VK_Physical_Device;
+		//	Allocator_Create_Info.device = this->m_Logical_VK_Device.get();
 
-			//NOTE : Default 256MiB
-			Allocator_Create_Info.preferredLargeHeapBlockSize = 0;
-			Allocator_Create_Info.pVulkanFunctions = &Vulkan_Functions;
-		}
+		//	//NOTE : Default 256MiB
+		//	Allocator_Create_Info.preferredLargeHeapBlockSize = 0;
+		//	Allocator_Create_Info.pVulkanFunctions = &Vulkan_Functions;
+		//}
 
-		THROW_IF_VK_FAILED(vmaCreateAllocator(&Allocator_Create_Info, &this->m_Vma_Allocator));
+		//THROW_IF_VK_FAILED(vmaCreateAllocator(&Allocator_Create_Info, &this->m_Vma_Allocator));
 	}
 
 
@@ -988,50 +999,54 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	}
 
 	const vector<unique_ptr<RHI_Command_Buffer>> Vulkan_RHI::Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info& Allocate_Info) {
-		VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
-		{
-			Command_Buffer_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info.sType);
-			Command_Buffer_Allocate_Info.pNext = Allocate_Info.pNext;
-			Command_Buffer_Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get();
-			Command_Buffer_Allocate_Info.level = static_cast<VkCommandBufferLevel>(Allocate_Info.Level);
-			Command_Buffer_Allocate_Info.commandBufferCount = Allocate_Info.Command_Buffer_Count;
-		}
+		//VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
+		//{
+		//	Command_Buffer_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info.sType);
+		//	Command_Buffer_Allocate_Info.pNext = Allocate_Info.pNext;
+		//	Command_Buffer_Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get();
+		//	Command_Buffer_Allocate_Info.level = static_cast<VkCommandBufferLevel>(Allocate_Info.Level);
+		//	Command_Buffer_Allocate_Info.commandBufferCount = Allocate_Info.Command_Buffer_Count;
+		//}
 
-		vector<VkCommandBuffer> Command_Buffers{};
-		Command_Buffers.resize(Allocate_Info.Command_Buffer_Count, nullptr);
-		THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device.get(), &Command_Buffer_Allocate_Info, Command_Buffers.data()));
+		//vector<VkCommandBuffer> Command_Buffers{};
+		//Command_Buffers.resize(Allocate_Info.Command_Buffer_Count, nullptr);
+		//THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device.get(), &Command_Buffer_Allocate_Info, Command_Buffers.data()));
 
-		vector<unique_ptr<RHI_Command_Buffer>> RHI_Command_Buffers{ Allocate_Info.Command_Buffer_Count ,std::make_unique<Vulkan_Command_Buffer>() };
-		for (size_t Index = 0; Index < Allocate_Info.Command_Buffer_Count; ++Index)
-			static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffers[Index].get())->Re_Set(Command_Buffers[Index]);
+		//vector<unique_ptr<RHI_Command_Buffer>> RHI_Command_Buffers{ Allocate_Info.Command_Buffer_Count ,std::make_unique<Vulkan_Command_Buffer>() };
+		//for (size_t Index = 0; Index < Allocate_Info.Command_Buffer_Count; ++Index)
+		//	static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffers[Index].get())->Re_Set(Command_Buffers[Index]);
 
-		return RHI_Command_Buffers;
+		//return RHI_Command_Buffers;
+
+		return {};
 	}
 
 	const vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) {
-		vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
-		Descriptor_Set_Layouts.reserve(Allocate_Info.Descriptor_Set_Count);
-		for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
-			Descriptor_Set_Layouts.emplace_back(static_cast<Vulkan_Descriptor_Set_Layout*>(Allocate_Info.Set_Layouts[Index].get())->Get());
+		//vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
+		//Descriptor_Set_Layouts.reserve(Allocate_Info.Descriptor_Set_Count);
+		//for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
+		//	Descriptor_Set_Layouts.emplace_back(static_cast<Vulkan_Descriptor_Set_Layout*>(Allocate_Info.Set_Layouts[Index].get())->Get());
 
-		VkDescriptorSetAllocateInfo Descriptor_Set_Allocate_Info{};
-		{
-			Descriptor_Set_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info.sType);
-			Descriptor_Set_Allocate_Info.pNext = Allocate_Info.pNext;
-			Descriptor_Set_Allocate_Info.descriptorPool = static_cast<Vulkan_Descriptor_Pool*>(Allocate_Info.Descriptor_Pool)->Get();
-			Descriptor_Set_Allocate_Info.descriptorSetCount = Allocate_Info.Descriptor_Set_Count;
-			Descriptor_Set_Allocate_Info.pSetLayouts = Descriptor_Set_Layouts.data();
-		}
+		//VkDescriptorSetAllocateInfo Descriptor_Set_Allocate_Info{};
+		//{
+		//	Descriptor_Set_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info.sType);
+		//	Descriptor_Set_Allocate_Info.pNext = Allocate_Info.pNext;
+		//	Descriptor_Set_Allocate_Info.descriptorPool = static_cast<Vulkan_Descriptor_Pool*>(Allocate_Info.Descriptor_Pool)->Get();
+		//	Descriptor_Set_Allocate_Info.descriptorSetCount = Allocate_Info.Descriptor_Set_Count;
+		//	Descriptor_Set_Allocate_Info.pSetLayouts = Descriptor_Set_Layouts.data();
+		//}
 
-		vector<VkDescriptorSet> Descriptor_Sets{};
-		Descriptor_Sets.resize(Allocate_Info.Descriptor_Set_Count, nullptr);
-		THROW_IF_VK_FAILED(vkAllocateDescriptorSets(this->m_Logical_VK_Device.get(), &Descriptor_Set_Allocate_Info, Descriptor_Sets.data()));
+		//vector<VkDescriptorSet> Descriptor_Sets{};
+		//Descriptor_Sets.resize(Allocate_Info.Descriptor_Set_Count, nullptr);
+		//THROW_IF_VK_FAILED(vkAllocateDescriptorSets(this->m_Logical_VK_Device.get(), &Descriptor_Set_Allocate_Info, Descriptor_Sets.data()));
 
-		vector<unique_ptr<RHI_Descriptor_Set>> RHI_Descriptor_Sets{ Allocate_Info.Descriptor_Set_Count ,std::make_unique<Vulkan_Descriptor_Set>() };
-		for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
-			static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Re_Set(Descriptor_Sets[Index]);
+		//vector<unique_ptr<RHI_Descriptor_Set>> RHI_Descriptor_Sets{ Allocate_Info.Descriptor_Set_Count ,std::make_unique<Vulkan_Descriptor_Set>() };
+		//for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
+		//	static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Re_Set(Descriptor_Sets[Index]);
 
-		return RHI_Descriptor_Sets;
+		//return RHI_Descriptor_Sets;
+
+		return {};
 	}
 
 	const unique_ptr<RHI_Sampler>& Vulkan_RHI::Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) {
@@ -1139,7 +1154,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		return true;
 	}
 
-	unique_ptr<RHI_Buffer> Vulkan_RHI::Create_Buffer_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info& Buffer_Create_Info, const VmaAllocationCreateInfo* pAllocation_Create_Info, VmaAllocation* pAllocation, VmaAllocationInfo* pAllocationInfo) {
+	/*unique_ptr<RHI_Buffer> Vulkan_RHI::Create_Buffer_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info& Buffer_Create_Info, const VmaAllocationCreateInfo* pAllocation_Create_Info, VmaAllocation* pAllocation, VmaAllocationInfo* pAllocationInfo) {
 		VkBufferCreateInfo vk_Buffer_Create_Info{};
 		{
 			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info.sType);
@@ -1182,7 +1197,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		static_cast<Vulkan_Buffer*>(Buffer.get())->Re_Set(Temp_Buffer);
 
 		return Buffer;
-	}
+	}*/
 
 	unique_ptr<RHI_Command_Buffer> Vulkan_RHI::Begin_SingleTime_Commands(void) {
 		VkCommandBufferAllocateInfo Allocate_Info{};
@@ -1290,6 +1305,16 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		));
 
 		return Image_View;
+	}
+
+	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Global_Image()
+	{
+		return tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>>();
+	}
+
+	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Cube_Map()
+	{
+		return tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>>();
 	}
 
 

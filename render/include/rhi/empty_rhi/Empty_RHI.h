@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "vulkan/vulkan.h"
-#include "vma/vk_mem_alloc.h"
+//#include "vma/vk_mem_alloc.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
@@ -69,7 +69,7 @@ namespace NameSpace_Render::NameSpace_RHI {
 
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
 
-		[[nodiscard]] virtual unique_ptr<RHI_Buffer> Create_Buffer_VMA(
+		/*[[nodiscard]] virtual unique_ptr<RHI_Buffer> Create_Buffer_VMA(
 			VmaAllocator Vma_Allocator,
 			const RHI_Buffer_Create_Info& Buffer_Create_Info,
 			const VmaAllocationCreateInfo* pAllocation_Create_Info,
@@ -82,7 +82,7 @@ namespace NameSpace_Render::NameSpace_RHI {
 			const VmaAllocationCreateInfo* pAllocation_Create_Info,
 			RHI_Device_Size Min_Alignment,
 			VmaAllocation* pAllocation,
-			VmaAllocationInfo* pAllocationInfo) = 0;
+			VmaAllocationInfo* pAllocationInfo) = 0;*/
 
 
 

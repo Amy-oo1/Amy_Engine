@@ -2,7 +2,9 @@
 
 
 #include<exception>
-#include<vma/vk_mem_alloc.h>
+//#include<vma/vk_mem_alloc.h>
+
+#include "rhi/vulkan/Vulkan_RHI_Macro.h"
 
 namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities {
 
@@ -264,7 +266,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utili
 		VkImageLayout New_Layout,
 		uint32_t Layer_Count) {
 
-		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Commands(Logical_Device, Command_Pool) };
+		/*VkCommandBuffer Command_Buffer{ Begin_SingleTime_Commands(Logical_Device, Command_Pool) };
 
 
 		VkAccessFlags Source_Access_Mask{}, Destination_Access_Mask{};
@@ -288,11 +290,11 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utili
 				Destination_Stage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			}
 			else
-				throw std::invalid_argument("Unsupported layout transition!");
-		}
+				throw std::invalid_argument("Unsupported layout transition!");*/
+		//}
 
 
-		VkImageSubresourceRange Sub_Resource_Range{};
+		/*VkImageSubresourceRange Sub_Resource_Range{};
 		{
 			Sub_Resource_Range.aspectMask = Aspect_Flags;
 			Sub_Resource_Range.baseMipLevel = 0;
@@ -323,7 +325,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utili
 			0, nullptr,
 			1, &Barrier);
 
-		End_SingleTIme_Commands(Logical_Device, Command_Pool, Command_Buffer, Graphics_Queue);
+		End_SingleTIme_Commands(Logical_Device, Command_Pool, Command_Buffer, Graphics_Queue);*/
 	}
 
 	void Copy_Buffer_To_Image(
