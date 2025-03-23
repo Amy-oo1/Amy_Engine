@@ -39,6 +39,10 @@ namespace NameSpace_Render::NameSpace_Window {
 		}
 	}
 
+	GLFWwindow* NameSpace_Window::Window_System::Get_Window(void) {
+		return this->m_Window.get();
+	}
+
 	void Window_System::Poll_Window_Events(void) {
 		glfwPollEvents();
 	}
@@ -53,6 +57,14 @@ namespace NameSpace_Render::NameSpace_Window {
 
 	const tuple<uint32_t, uint32_t> Window_System::Get_Window_Size(void) const {
 		return { this->m_Width,this->m_Height };
+	}
+
+	const uint32_t NameSpace_Window::Window_System::Get_Window_Width(void) const {
+		return this->m_Width;
+	}
+
+	const uint32_t NameSpace_Window::Window_System::Get_Window_Height(void) const {
+		return this->m_Height;
 	}
 
 	void NameSpace_Window::Window_System::Register_On_Reset_Func(const On_Reset_Func& Func) {

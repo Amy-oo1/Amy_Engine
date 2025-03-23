@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\render\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\render\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,10 +143,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\rhi\RHI.h" />
+    <ClInclude Include="include\rhi\empty_rhi\RHI_Class.h" />
+    <ClInclude Include="include\rhi\empty_rhi\RHI_Macro.h" />
+    <ClInclude Include="include\rhi\empty_rhi\RHI_Struct.h" />
+    <ClInclude Include="include\rhi\empty_rhi\RHI_Type.h" />
+    <ClInclude Include="include\rhi\empty_rhi\Empty_RHI.h" />
+    <ClInclude Include="include\rhi\vulkan\Vulkan_Config.h" />
+    <ClInclude Include="include\rhi\vulkan\Vulkan_RHI.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\rhi\vulkan\Vulkan_RHI_Resource.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\window\Window_System.h" />
+    <ClInclude Include="macro.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\vulkan\Vulkan_RHI.cpp" />
+    <ClInclude Include="include\rhi\vulkan\Vulkan_Utilities.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClCompile Include="src\rhi\vulkan\Vulkan_RHI.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\rhi\vulkan\Vulkan_Utilities.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\window\Window_System.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

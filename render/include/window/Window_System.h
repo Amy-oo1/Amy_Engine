@@ -54,11 +54,15 @@ namespace NameSpace_Render::NameSpace_Window {
 		~Window_System() = default;
 
 	public:
+		GLFWwindow* Get_Window(void);
+
 		void Poll_Window_Events(void);
 
 		bool Is_WIndow_Shoule_Close(void);
 		void ReSet_Window_Title(const string& Title);
 		const tuple<uint32_t, uint32_t> Get_Window_Size(void) const;
+		const uint32_t Get_Window_Width(void)const;
+		const uint32_t Get_Window_Height(void)const;
 
 		void Register_On_Reset_Func(const On_Reset_Func& Func);
 		void Register_On_Key_Func(const On_Key_Func& Func);
