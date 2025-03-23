@@ -65,12 +65,14 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	using std::function;
 	using std::runtime_error;
 
+	//NOTE : Constructor
 	Vulkan_RHI::Vulkan_RHI(const RHI_Initialization_Info& init_info) :
 		Empty_RHI{},
 		m_Window{ init_info.Window_System },
 		m_Viewport{ 0.f,0.f,static_cast<float>(init_info.Window_System->Get_Window_Width()),static_cast<float>(init_info.Window_System->Get_Window_Height()),0.f,1.f },
 		m_Scissor{ {0,0},{init_info.Window_System->Get_Window_Width(),init_info.Window_System->Get_Window_Height()} } {
 
+		//NOTE : Init Info
 #ifdef _MSC_VER
 		SetEnvironmentVariableA("VK_LAYER_PATH", NameSpace_Config::Vulkan_Layer_Path);
 		SetEnvironmentVariableA("DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1", "1");
@@ -78,6 +80,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 #error Unsupported compiler
 #endif // _MSC_VER
 
+		//NOTE : Init Debug Info
 #ifdef _DEBUG
 		this->m_Validation_Layers.reserve(NameSpace_Config::Validation_Layer_Size);
 		for (int Index = 0; Index < NameSpace_Config::Validation_Layer_Size; ++Index)
@@ -86,19 +89,19 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	}
 
 	Vulkan_RHI::~Vulkan_RHI() {
-
 		//TODO : Destroy All Vulkan Resource
 
-		//vmaDestroyAllocator(this->m_Vma_Allocator);
 
+		this->m_RHI_Instance.reset();
 	}
 
+	//NOTE : Mraco Debug
 #ifdef _DEBUG
 	bool Vulkan_RHI::Check_Vaildation_Layer_Support(void) {
 		uint32_t Layer_Count;
 		THROW_IF_VK_FAILED(vkEnumerateInstanceLayerProperties(&Layer_Count, nullptr));
 
-		vector<VkLayerProperties> Available_Layers;
+		vector<VkLayerProperties> Available_Layers{};
 		Available_Layers.resize(Layer_Count);
 		THROW_IF_VK_FAILED(vkEnumerateInstanceLayerProperties(&Layer_Count, Available_Layers.data()));
 
@@ -152,24 +155,101 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	void Vulkan_RHI::Destroy_DebugUtils_Messenger_EXT(VkInstance Instance, VkDebugUtilsMessengerEXT m_Debug_Messenger, const VkAllocationCallbacks* Allocator) {
 		auto Func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(Instance, "vkDestroyDebugUtilsMessengerEXT"));
+
 		if (nullptr != Func)
 			Func(Instance, m_Debug_Messenger, Allocator);
 	}
 
 	void Vulkan_RHI::Set_Debug_Messenger() {
 		THROW_IF_VK_FAILED(Vulkan_RHI::Create_DebugUtils_Messenger_EXT(
-			this->m_VK_Instance.get(),
+			static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(),
 			&this->m_Vk_Debug_Utils_Messenger_Create_Info_EXT,
-			nullptr,
+			&this->m_Allocator,
 			&this->m_Debug_Messenger)
 		);
 
-		F_vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(vkGetInstanceProcAddr(this->m_VK_Instance.get(), "vkCmdBeginDebugUtilsLabelEXT"));
-		F_vkCmdEndDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdEndDebugUtilsLabelEXT>(vkGetInstanceProcAddr(this->m_VK_Instance.get(), "vkCmdEndDebugUtilsLabelEXT"));
+		F_vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(vkGetInstanceProcAddr(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), "vkCmdBeginDebugUtilsLabelEXT"));
+		F_vkCmdEndDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdEndDebugUtilsLabelEXT>(vkGetInstanceProcAddr(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), "vkCmdEndDebugUtilsLabelEXT"));
 	}
 #endif // _DEBUG
 
-	void Vulkan_RHI::Run(void) {
+	//Public Func
+
+
+
+
+
+
+	//Private Func
+	void Vulkan_RHI::Create_Allocator(void) {
+		{
+			this->m_Allocator.pUserData = nullptr;
+			this->m_Allocator.pfnAllocation = static_cast<PFN_vkAllocationFunction>(&Vulkan_RHI::S_Allocation);
+			this->m_Allocator.pfnReallocation = nullptr;
+			this->m_Allocator.pfnFree = static_cast<PFN_vkFreeFunction>(&Vulkan_RHI::S_Free);
+		}
+
+	}
+
+	void Vulkan_RHI::Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* Allocator) {
+		if (nullptr == Instance)
+			throw runtime_error("Vulkan instance is nullptr!");
+
+		{
+			this->m_VK_Instance_Deleter = [Allocator](VkInstance Instance) {vkDestroyInstance(Instance, Allocator); };
+			this->m_VK_Surface_Deleter = [Instance, Allocator](VkSurfaceKHR Surface) {vkDestroySurfaceKHR(Instance, Surface, Allocator); };
+			this->m_VK_Device_Deleter = [Instance, Allocator](VkDevice Device) {vkDestroyDevice(Device, Allocator); };
+		}
+
+		{
+			static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Set_Deleter(this->m_VK_Instance_Deleter);
+			this->m_VK_Surface.get_deleter() = this->m_VK_Surface_Deleter;
+			this->m_Logical_VK_Device.get_deleter() = this->m_VK_Device_Deleter;
+		}
+	}
+
+
+
+
+
+	//Static Func
+	const vector<const char*> Vulkan_RHI::S_Get_Instance_Extensions_Require(void) {
+		uint32_t GLFW_Extension_Count{};
+		const char** GLFW_Extensions{ glfwGetRequiredInstanceExtensions(&GLFW_Extension_Count) };
+
+		vector<const char*> Extensions{ GLFW_Extensions, GLFW_Extensions + GLFW_Extension_Count };
+
+#ifdef _DEBUG
+		Extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif // _DEBUG
+
+		return Extensions;
+	}
+
+	void* VKAPI_CALL Vulkan_RHI::S_Allocation(void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope) {
+#if defined(_WIN32)
+		return _aligned_malloc(size, alignment);
+#else
+		void* ptr = nullptr;
+		posix_memalign(&ptr, alignment, size);
+		return ptr;
+#endif
+	}
+
+	void VKAPI_CALL Vulkan_RHI::S_Free(void* pUserData, void* memory) {
+#if defined(_WIN32)
+		_aligned_free(memory);
+#else
+		free(memory);
+#endif
+	}
+
+
+	//NOTE : Override Func
+	void Vulkan_RHI::Create_Instance(void) {
+		if (nullptr != static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get())
+			throw runtime_error("Vulkan Instance Already Created!");
+
 #ifdef _DEBUG
 		if (false == this->Check_Vaildation_Layer_Support())
 			LOG_ERROR("Validation layers requested, but not available!");
@@ -177,33 +257,6 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		this->Build_Debug_Messenger_Create_Info();
 #endif // _DEBUG
 
-		this->Create_Instance();
-
-#ifdef _DEBUG
-		this->Set_Debug_Messenger();
-#endif // _DEBUG
-
-		this->Create_Surface();
-		this->Pick_Physical_Device();
-		this->Create_Logical_Device();
-		this->Create_Command_Pool();
-		this->Create_Command_Buffers();
-		this->Create_Descriptor_Pool();
-		this->Create_Sync_Primitices();
-		this->Create_SwapChain();
-		this->Create_SwapChhain_Image_Views();
-		//TODO : Add SwapChain Image Depth Image View
-	}
-
-	void Vulkan_RHI::CleanUp_SwapChain(void)
-	{
-	}
-
-	void Vulkan_RHI::Re_Create_SwapChain(void)
-	{
-	}
-
-	void Vulkan_RHI::Create_Instance(void) {
 		VkApplicationInfo VK_Application_Info{};
 		{
 			VK_Application_Info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -214,7 +267,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			VK_Application_Info.apiVersion = NameSpace_Config::API_Verssion;
 		}
 
-		const auto& Extensions = Vulkan_RHI::Get_Instance_Extensions_Require();
+		const auto& Extensions = Vulkan_RHI::S_Get_Instance_Extensions_Require();
 
 		VkInstanceCreateInfo Instance_Create_Info = {};
 		{
@@ -234,21 +287,56 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkInstance VK_Instance{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateInstance(&Instance_Create_Info, nullptr, &VK_Instance));
-		this->m_VK_Instance.reset(VK_Instance);
+		THROW_IF_VK_FAILED(vkCreateInstance(&Instance_Create_Info, &this->m_Allocator, &VK_Instance));
+		static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Reset(VK_Instance);
 
-		this->Reset_Instance_Deleters(this->m_VK_Instance.get(), &this->m_Allocator);
+		this->Reset_Instance_Deleters(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &this->m_Allocator);
+
+#ifdef _DEBUG
+		this->Set_Debug_Messenger();
+#endif // _DEBUG
+	}
+
+	RHI_Instance* Vulkan_RHI::Get_Instance(void) {
+		return this->m_RHI_Instance.get();
+	}
+
+
+
+
+	void Vulkan_RHI::Run(void) {
+		this->Create_Allocator();
+		this->Create_Instance();
+
+		/*this->Create_Surface();
+		this->Pick_Physical_Device();
+		this->Create_Logical_Device();
+		this->Create_Command_Pool();
+		this->Create_Command_Buffers();
+		this->Create_Descriptor_Pool();
+		this->Create_Sync_Primitices();
+		this->Create_SwapChain();
+		this->Create_SwapChhain_Image_Views();*/
+		//TODO : Add SwapChain Image Depth Image View
+	}
+
+	void Vulkan_RHI::CleanUp_SwapChain(void)
+	{
+	}
+
+	void Vulkan_RHI::Re_Create_SwapChain(void)
+	{
 	}
 
 	void Vulkan_RHI::Create_Surface(void) {
 		VkSurfaceKHR Surface{ nullptr };
-		THROW_IF_VK_FAILED(glfwCreateWindowSurface(this->m_VK_Instance.get(), this->m_Window->Get_Window(), &this->m_Allocator, &Surface));
+		THROW_IF_VK_FAILED(glfwCreateWindowSurface(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), this->m_Window->Get_Window(), &this->m_Allocator, &Surface));
 		this->m_VK_Surface.reset(Surface);
 	}
 
 	void Vulkan_RHI::Pick_Physical_Device(void) {
 		uint32_t Device_Count{ 0 };
-		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(this->m_VK_Instance.get(), &Device_Count, nullptr));
+		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &Device_Count, nullptr));
 		if (0 == Device_Count)
 			throw runtime_error("Failed to find GPUs with Vulkan support!");
 
@@ -257,7 +345,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//TODO : Choose Better Device
 		vector<VkPhysicalDevice> Devices{};
 		Devices.resize(Device_Count);
-		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(this->m_VK_Instance.get(), &Device_Count, Devices.data()));
+		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &Device_Count, Devices.data()));
 		for (const auto& Device : Devices)
 			if (Is_Device_Suitable(Device, this->m_Physical_Device_Extensions)) {
 				this->m_VK_Physical_Device = Device;
@@ -343,7 +431,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device.get(), &Command_Pool_Create_Info, &this->m_Allocator, &Command_Pool));
 			if (nullptr == this->m_RHI_Command_Pool)
 				this->m_RHI_Command_Pool = std::make_unique<Vulkan_Command_Pool>();
-			static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Re_Set(Command_Pool);
+			static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Reset(Command_Pool);
 		}
 
 		//NOTE : Other Command Pools
@@ -378,7 +466,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device.get(), &Command_Buffer_Allocate_Info, &Command_Buffer));
 			if (nullptr == this->m_RHI_Command_Buffers[Index])
 				this->m_RHI_Command_Buffers[Index] = std::make_unique<Vulkan_Command_Buffer>();
-			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Re_Set(Command_Buffer);
+			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(Command_Buffer);
 		}
 	}
 
@@ -435,7 +523,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateDescriptorPool(this->m_Logical_VK_Device.get(), &Pool_Info, &this->m_Allocator, &Descriptor_Pool));
 		if (nullptr == this->m_RHI_Descriptor_Pool)
 			this->m_RHI_Descriptor_Pool = std::make_unique<Vulkan_Descriptor_Pool>();
-		static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Re_Set(Descriptor_Pool);
+		static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Reset(Descriptor_Pool);
 	}
 
 	void Vulkan_RHI::Create_Sync_Primitices(void) {
@@ -457,28 +545,28 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &Semaphore_Info, &this->m_Allocator, &Semaphore));
 				if (nullptr == this->m_Image_available_For_Render_RHI_Semaphores[Index])
 					this->m_Image_available_For_Render_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
-				static_cast<Vulkan_Semaphore*>(this->m_Image_available_For_Render_RHI_Semaphores[Index].get())->Re_Set(Semaphore);
+				static_cast<Vulkan_Semaphore*>(this->m_Image_available_For_Render_RHI_Semaphores[Index].get())->Reset(Semaphore);
 			}
 
 			{
 				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &Semaphore_Info, &this->m_Allocator, &Semaphore));
 				if (nullptr == this->m_Image_Finished_For_Present_RHI_Semaphores[Index])
 					this->m_Image_Finished_For_Present_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
-				static_cast<Vulkan_Semaphore*>(this->m_Image_Finished_For_Present_RHI_Semaphores[Index].get())->Re_Set(Semaphore);
+				static_cast<Vulkan_Semaphore*>(this->m_Image_Finished_For_Present_RHI_Semaphores[Index].get())->Reset(Semaphore);
 			}
 
 			{
 				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &Semaphore_Info, &this->m_Allocator, &Semaphore));
 				if (nullptr == this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index])
 					this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
-				static_cast<Vulkan_Semaphore*>(this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index].get())->Re_Set(Semaphore);
+				static_cast<Vulkan_Semaphore*>(this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index].get())->Reset(Semaphore);
 			}
 
 			{
 				THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device.get(), &Fence_Info, &this->m_Allocator, &InFlight_Fence));
 				if (nullptr == this->m_InFlight_RHI_Fences[Index])
 					this->m_InFlight_RHI_Fences[Index] = std::make_unique<Vulkan_Fence>();
-				static_cast<Vulkan_Fence*>(this->m_InFlight_RHI_Fences[Index].get())->Re_Set(InFlight_Fence);
+				static_cast<Vulkan_Fence*>(this->m_InFlight_RHI_Fences[Index].get())->Reset(InFlight_Fence);
 			}
 		}
 	}
@@ -607,7 +695,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		VkSampler Sampler{ nullptr };
 		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &Sampler_Create_Info, &this->m_Allocator, &Sampler));
 
-		static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Re_Set(Sampler);
+		static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Reset(Sampler);
 	}
 
 
@@ -638,7 +726,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		VkSampler Sampler{ nullptr };
 		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &Sampler_Create_Info, &this->m_Allocator, &Sampler));
 
-		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Re_Set(Sampler);
+		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
 	}
 
 
@@ -649,22 +737,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 
-	void Vulkan_RHI::Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* pAllocator) {
-		if (nullptr == Instance)
-			throw runtime_error("Vulkan instance is nullptr!");
 
-		{
-			this->m_VK_Instance_Deleter = [pAllocator](VkInstance Instance) {vkDestroyInstance(Instance, pAllocator); };
-			this->m_VK_Surface_Deleter = [Instance, pAllocator](VkSurfaceKHR Surface) {vkDestroySurfaceKHR(Instance, Surface, pAllocator); };
-			this->m_VK_Device_Deleter = [Instance, pAllocator](VkDevice Device) {vkDestroyDevice(Device, pAllocator); };
-		}
-
-		{
-			this->m_VK_Instance.get_deleter() = this->m_VK_Instance_Deleter;
-			this->m_VK_Surface.get_deleter() = this->m_VK_Surface_Deleter;
-			this->m_Logical_VK_Device.get_deleter() = this->m_VK_Device_Deleter;
-		}
-	}
 
 	void Vulkan_RHI::Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator) {
 		if (nullptr == Device)
@@ -783,18 +856,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 
-	const vector<const char*> Vulkan_RHI::Get_Instance_Extensions_Require(void) {
-		uint32_t GLFW_Extension_Count{};
-		const char** GLFW_Extensions{ glfwGetRequiredInstanceExtensions(&GLFW_Extension_Count) };
 
-		vector<const char*> Extensions{ GLFW_Extensions, GLFW_Extensions + GLFW_Extension_Count };
-
-#ifdef _DEBUG
-		Extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-#endif // _DEBUG
-
-		return Extensions;
-	}
 
 	const vector<const char*> Vulkan_RHI::Get_Physical_Device_Extensions_Require(void) {
 		vector<const char*> Physical_Device_Extensions{};
@@ -993,7 +1055,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device.get(), &Command_Pool_Create_Info, nullptr, &VK_Command_Pool));
 		auto Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
 		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
-		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Re_Set(VK_Command_Pool);
+		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Reset(VK_Command_Pool);
 
 		return Command_Pool;
 	}
@@ -1014,7 +1076,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		//vector<unique_ptr<RHI_Command_Buffer>> RHI_Command_Buffers{ Allocate_Info.Command_Buffer_Count ,std::make_unique<Vulkan_Command_Buffer>() };
 		//for (size_t Index = 0; Index < Allocate_Info.Command_Buffer_Count; ++Index)
-		//	static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffers[Index].get())->Re_Set(Command_Buffers[Index]);
+		//	static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffers[Index].get())->Reset(Command_Buffers[Index]);
 
 		//return RHI_Command_Buffers;
 
@@ -1042,7 +1104,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		//vector<unique_ptr<RHI_Descriptor_Set>> RHI_Descriptor_Sets{ Allocate_Info.Descriptor_Set_Count ,std::make_unique<Vulkan_Descriptor_Set>() };
 		//for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
-		//	static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Re_Set(Descriptor_Sets[Index]);
+		//	static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Reset(Descriptor_Sets[Index]);
 
 		//return RHI_Descriptor_Sets;
 
@@ -1097,7 +1159,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &Sampler_Create_Info, &this->m_Allocator, &Mipmap_Sampler));
 			this->m_Mipmap_RHI_Samplers[Mip_Levels] = std::make_unique<Vulkan_Sampler>();
 			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Set_Deleter(this->m_VK_Sampler_Deleter);
-			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Re_Set(Mipmap_Sampler);
+			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Reset(Mipmap_Sampler);
 
 			return this->m_Mipmap_RHI_Samplers[Mip_Levels];
 		}
@@ -1110,7 +1172,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		unique_ptr<Vulkan_Shader_Module> Shader{ std::make_unique<Vulkan_Shader_Module>() };
 
 		static_cast<Vulkan_Shader_Module*>(Shader.get())->Set_Deleter(this->m_VK_Shader_Module_Deleter);
-		static_cast<Vulkan_Shader_Module*>(Shader.get())->Re_Set(NameSpace_Utilities::Create_Shader_Module(this->m_Logical_VK_Device.get(), Shader_Code));
+		static_cast<Vulkan_Shader_Module*>(Shader.get())->Reset(NameSpace_Utilities::Create_Shader_Module(this->m_Logical_VK_Device.get(), Shader_Code));
 		return  Shader;
 	}
 
@@ -1131,11 +1193,11 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
 		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Re_Set(Temp_Buffer);
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
 
 		unique_ptr<RHI_Device_Memory> Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
 		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
-		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Re_Set(Temp_Device_Memory);
+		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Reset(Temp_Device_Memory);
 
 		return std::make_tuple(std::move(Buffer), std::move(Device_Memory));
 	}
@@ -1171,7 +1233,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vmaCreateBuffer(Vma_Allocator, &vk_Buffer_Create_Info, pAllocation_Create_Info, &Temp_Buffer, pAllocation, pAllocationInfo));
 		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
 		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Re_Set(Temp_Buffer);
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
 
 		return Buffer;
 
@@ -1194,7 +1256,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vmaCreateBufferWithAlignment(Vma_Allocator, &vk_Buffer_Create_Info, pAllocation_Create_Info, static_cast<VkDeviceSize>(Min_Alignment), &Temp_Buffer, pAllocation, pAllocationInfo));
 		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
 		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Re_Set(Temp_Buffer);
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
 
 		return Buffer;
 	}*/
@@ -1219,7 +1281,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		THROW_IF_VK_FAILED(this->F_vkBeginCommandBuffer(Command_Buffer, &Begin_Info));
 		unique_ptr<RHI_Command_Buffer> RHI_Command_Buffer{ std::make_unique<Vulkan_Command_Buffer>() };
-		static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffer.get())->Re_Set(Command_Buffer);
+		static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffer.get())->Reset(Command_Buffer);
 
 		return RHI_Command_Buffer;
 	}
@@ -1280,11 +1342,11 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		unique_ptr<RHI_Image> Image{ std::make_unique<Vulkan_Image>() };
 		static_cast<Vulkan_Image*>(Image.get())->Set_Deleter(this->m_VK_Image_Deleter);
-		static_cast<Vulkan_Image*>(Image.get())->Re_Set(VK_Image);
+		static_cast<Vulkan_Image*>(Image.get())->Reset(VK_Image);
 
 		unique_ptr<RHI_Device_Memory> Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
 		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
-		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Re_Set(VK_Device_Memory);
+		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Reset(VK_Device_Memory);
 
 		return std::make_tuple(std::move(Image), std::move(Device_Memory));
 	}
@@ -1293,7 +1355,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		unique_ptr<RHI_Image_View> Image_View{ std::make_unique<Vulkan_Image_View>() };
 		static_cast<Vulkan_Image_View*>(Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
 
-		static_cast<Vulkan_Image_View*>(Image_View.get())->Re_Set(NameSpace_Utilities::Create_Image_View(
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
 			this->m_Logical_VK_Device.get(),
 			static_cast<Vulkan_Image*>(Image.get())->Get(),
 			static_cast<VkFormat>(Format),
@@ -1345,7 +1407,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateDescriptorPool(this->m_Logical_VK_Device.get(), &Descriptor_Pool_Create_Info, &this->m_Allocator, &VK_Descriptor_Pool));
 		auto Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 		static_cast<Vulkan_Descriptor_Pool*>(Descriptor_Pool.get())->Set_Deleter(this->m_VK_Descriptor_Pool_Deleter);
-		static_cast<Vulkan_Descriptor_Pool*>(Descriptor_Pool.get())->Re_Set(VK_Descriptor_Pool);
+		static_cast<Vulkan_Descriptor_Pool*>(Descriptor_Pool.get())->Reset(VK_Descriptor_Pool);
 
 		return Descriptor_Pool;
 	}
@@ -1384,7 +1446,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateDescriptorSetLayout(this->m_Logical_VK_Device.get(), &Descriptor_Set_Layout_Create_Info, &this->m_Allocator, &VK_Descriptor_Set_Layout));
 		auto Descriptor_Set_Layout{ std::make_unique<Vulkan_Descriptor_Set_Layout>() };
 		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Set_Deleter(this->m_VK_Descriptor_Set_Layout_Deleter);
-		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Re_Set(VK_Descriptor_Set_Layout);
+		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Reset(VK_Descriptor_Set_Layout);
 
 		return Descriptor_Set_Layout;
 	}
@@ -1401,7 +1463,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device.get(), &Fence_Create_Info, &this->m_Allocator, &VK_Fence));
 		auto Fence{ std::make_unique<Vulkan_Fence>() };
 		static_cast<Vulkan_Fence*>(Fence.get())->Set_Deleter(this->m_VK_Fence_Deleter);
-		static_cast<Vulkan_Fence*>(Fence.get())->Re_Set(VK_Fence);
+		static_cast<Vulkan_Fence*>(Fence.get())->Reset(VK_Fence);
 
 		return Fence;
 	}
@@ -1429,7 +1491,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateFramebuffer(this->m_Logical_VK_Device.get(), &Frame_Buffer_Create_Info, &this->m_Allocator, &VK_Frame_Buffer));
 		auto Frame_Buffer{ std::make_unique<Vulkan_Frame_Buffer>() };
 		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Set_Deleter(this->m_VK_Frame_Buffer_Deleter);
-		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Re_Set(VK_Frame_Buffer);
+		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Reset(VK_Frame_Buffer);
 
 		return Frame_Buffer;
 	}
@@ -2005,7 +2067,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateGraphicsPipelines(this->m_Logical_VK_Device.get(), vk_Pipeline_Cache, 1, &vk_Graphics_Pipeline_Create_Info, &this->m_Allocator, &vk_Pipeline));
 		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
-		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Re_Set(vk_Pipeline);
+		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
 
 		return Pipeline;
 	}
@@ -2034,7 +2096,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateComputePipelines(this->m_Logical_VK_Device.get(), vk_Pipeline_Cache, 1, &vk_Compute_Pipeline_Create_Info, &this->m_Allocator, &vk_Pipeline));
 		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
-		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Re_Set(vk_Pipeline);
+		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
 
 		return Pipeline;
 	}
@@ -2072,7 +2134,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreatePipelineLayout(this->m_Logical_VK_Device.get(), &vk_Pipeline_Layout_Create_Info, &this->m_Allocator, &vk_Pipeline_Layout));
 		unique_ptr<RHI_Pipeline_Layout> Pipeline_Layout{ std::make_unique<Vulkan_Pipeline_Layout>() };
 		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Set_Deleter(this->m_VK_Pipeline_Layout_Deleter);
-		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Re_Set(vk_Pipeline_Layout);
+		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Reset(vk_Pipeline_Layout);
 
 		return Pipeline_Layout;
 	}
@@ -2172,7 +2234,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateRenderPass(this->m_Logical_VK_Device.get(), &vk_Render_Pass_Create_Info, &this->m_Allocator, &vk_Render_Pass));
 		unique_ptr<RHI_Render_Pass> Render_Pass{ std::make_unique<Vulkan_Render_Pass>() };
 		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Set_Deleter(this->m_VK_Render_Pass_Deleter);
-		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Re_Set(vk_Render_Pass);
+		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Reset(vk_Render_Pass);
 
 		return Render_Pass;
 	}
@@ -2204,7 +2266,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &vk_Sampler_Create_Info, &this->m_Allocator, &vk_Sampler));
 		unique_ptr<RHI_Sampler> Sampler{ std::make_unique<Vulkan_Sampler>() };
 		static_cast<Vulkan_Sampler*>(Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
-		static_cast<Vulkan_Sampler*>(Sampler.get())->Re_Set(vk_Sampler);
+		static_cast<Vulkan_Sampler*>(Sampler.get())->Reset(vk_Sampler);
 
 		return Sampler;
 	}
@@ -2221,7 +2283,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &vk_Semaphore_Create_Info, &this->m_Allocator, &vk_Semaphore));
 		unique_ptr<RHI_Semaphore> Semaphore{ std::make_unique<Vulkan_Semaphore>() };
 		static_cast<Vulkan_Semaphore*>(Semaphore.get())->Set_Deleter(this->m_VK_Semaphore_Deleter);
-		static_cast<Vulkan_Semaphore*>(Semaphore.get())->Re_Set(vk_Semaphore);
+		static_cast<Vulkan_Semaphore*>(Semaphore.get())->Reset(vk_Semaphore);
 
 		return Semaphore;
 	}

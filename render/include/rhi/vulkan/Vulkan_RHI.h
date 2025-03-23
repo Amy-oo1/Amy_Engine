@@ -57,17 +57,13 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		Vulkan_RHI(const Vulkan_RHI&) = delete;
 		Vulkan_RHI& operator=(const Vulkan_RHI&) = delete;
 
+		//TODO : Constant Variable
 	public:
 		Vulkan_RHI(const RHI_Initialization_Info& init_info);
 
-		virtual ~Vulkan_RHI() override final;
+		~Vulkan_RHI(void);
 
-		void Run(void) override;
-
-		void CleanUp_SwapChain(void) override;
-
-		void Re_Create_SwapChain(void) override;
-
+		// TODO : Macro 
 #ifdef _DEBUG
 	private:
 		bool Check_Vaildation_Layer_Support(void);
@@ -92,10 +88,67 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 #endif // DEBUG
 
+		//TODO : Public Func
+	public:
+
+
+
+		//TODO : Private Member Func
+	private:
+		void Create_Allocator(void);
+		void Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* Allocator);
+
+
+		//TODO : Static Public Func
+	public:
+		[[nodiscard]] static const vector<const char*> S_Get_Instance_Extensions_Require(void);
+
+		static void* VKAPI_CALL
+			S_Allocation(
+				void* pUserData,
+				size_t size,
+				size_t alignment,
+				VkSystemAllocationScope /*allocationScope*/
+			);
+
+		static void VKAPI_CALL S_Free(void* pUserData, void* memory);
+
+
+
+		//TODO : Static Member Variable
+	private:
+
+
+		//TODO : Member Variable
+	private:
+		//Deleter
+		function<void(VkInstance)> m_VK_Instance_Deleter{ nullptr };
+		function<void(VkDevice)> m_VK_Device_Deleter{ nullptr };
+		function<void(VkSurfaceKHR)> m_VK_Surface_Deleter{ nullptr };
+
+
+
+		//Class Resource
+		unique_ptr<RHI_Instance> m_RHI_Instance{ std::make_unique<Vulkan_Instance>() };
+
+
+		//Other Member Variable
+		shared_ptr<Window_System> m_Window{ nullptr };
+		RHI_Viewport m_Viewport{};
+		RHI_Rect_2D m_Scissor{};
+
+		VkAllocationCallbacks m_Allocator{};
+
+		//TODO : Override Func
+	public:
+		virtual void Create_Instance(void) override;//NOTE : Instance Life Time Is The Same As The Application
+		[[nodiscard]] RHI_Instance* Get_Instance(void) override;
+
+
+		void Run(void) override;
+
 
 	private:
-		void Create_Instance(void);
-
 		void Create_Surface(void);
 
 		void Pick_Physical_Device(void);
@@ -120,11 +173,11 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		void Create_Nearest_Sampler(void);
 		void Create_Linear_Sampler(void);
+		void CleanUp_SwapChain(void) override;
 
+		void Re_Create_SwapChain(void) override;
 
 	private:
-		void Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* pAllocator);
-
 		void Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator);
 
 		void Get_Device_ProcAddrs(void);
@@ -141,7 +194,6 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 	private:
-		[[nodiscard]] static const vector<const char*> Get_Instance_Extensions_Require(void);
 
 		[[nodiscard]] static const vector<const char*> Get_Physical_Device_Extensions_Require(void);
 		[[nodiscard]] static bool Check_Physical_Device_Extension_Support(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
@@ -244,17 +296,8 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		static constexpr uint8_t s_Frames_In_Flight{ 3 };
 
 	private:
-		shared_ptr<Window_System> m_Window{ nullptr };
-
-		RHI_Viewport m_Viewport{};
-		RHI_Rect_2D m_Scissor{};
-
-		VkAllocationCallbacks m_Allocator{ nullptr };
 
 		//NOTE : Deleter
-		function<void(VkInstance)> m_VK_Instance_Deleter;
-		function<void(VkDevice)> m_VK_Device_Deleter;
-		function<void(VkSurfaceKHR)> m_VK_Surface_Deleter;
 		function<void(VkCommandPool)> m_VK_Command_Pool_Deleter;
 		function<void(VkDescriptorPool)> m_VK_Descriptor_Pool_Deleter;
 		function<void(VkSemaphore)> m_VK_Semaphore_Deleter;
@@ -274,7 +317,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		function<void(VkPipelineLayout)> m_VK_Pipeline_Layout_Deleter;
 
 		//NOTE : Resource
-		unique_ptr<VkInstance_T, decltype(m_VK_Instance_Deleter)> m_VK_Instance{ nullptr };
+		//unique_ptr<VkInstance_T, decltype(m_VK_Instance_Deleter)> m_VK_Instance{ nullptr };
 
 		unique_ptr<VkSurfaceKHR_T, decltype(m_VK_Surface_Deleter)> m_VK_Surface{ nullptr };
 
@@ -353,7 +396,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		[[nodiscard]] tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usages, RHI_Memory_Property_Flags Properties) override;
 
-		bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
+		bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) override;
 
 		//[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_VMA(
 		//	VmaAllocator Vma_Allocator,

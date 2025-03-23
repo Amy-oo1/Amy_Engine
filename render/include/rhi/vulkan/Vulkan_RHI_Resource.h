@@ -12,6 +12,35 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	using std::function;
 	using std::unique_ptr;
 
+	class Vulkan_Instance final : public RHI_Instance {
+	public:
+		/*Vulkan_Instance(void) = default;
+		*
+		Vulkan_Instance(VkInstance res) {
+			m_Resource.reset(res);
+		}*/
+
+		void Reset(VkInstance Res = nullptr) {
+			m_Resource.reset(Res);
+		}
+
+		VkInstance Get() const {
+			if (nullptr == m_Resource.get())
+				LOG_ERROR("Get A Empty Instance Resource, Make Sure You Have Not Use It");
+
+			return m_Resource.get();
+		}
+
+		void Set_Deleter(const function<void(VkInstance)>& Deleter) {
+			this->m_Resource.get_deleter() = Deleter;
+		}
+
+	private:
+		unique_ptr<VkInstance_T, function<void(VkInstance)>> m_Resource{ nullptr };
+
+	};
+
+
 	class Vulkan_Command_Pool final : public RHI_Command_Pool {
 	public:
 		/*Vulkan_Command_Pool(void) = default;
@@ -20,7 +49,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkCommandPool res) {
+		void Reset(VkCommandPool res) {
 			m_Resource.reset(res);
 		}
 
@@ -48,7 +77,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkCommandBuffer res) {
+		void Reset(VkCommandBuffer res) {
 			m_Resource.reset(res);
 		}
 
@@ -72,7 +101,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkDescriptorPool res) {
+		void Reset(VkDescriptorPool res) {
 			m_Resource.reset(res);
 		}
 
@@ -100,7 +129,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkDescriptorSetLayout res) {
+		void Reset(VkDescriptorSetLayout res) {
 			m_Resource.reset(res);
 		}
 
@@ -127,7 +156,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		Vulkan_Descriptor_Set(VkDescriptorSet res) {
 			m_Resource.reset(res);
 		}*/
-		void Re_Set(VkDescriptorSet res) {
+		void Reset(VkDescriptorSet res) {
 			if (nullptr == m_Resource.get())
 				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
 
@@ -151,7 +180,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkSemaphore res) {
+		void Reset(VkSemaphore res) {
 			m_Resource.reset(res);
 		}
 		VkSemaphore Get() const {
@@ -177,7 +206,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		Vulkan_Fence(VkFence res) {
 			m_Resource.reset(res);
 		}*/
-		void Re_Set(VkFence res) {
+		void Reset(VkFence res) {
 			m_Resource.reset(res);
 		}
 
@@ -204,7 +233,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		Vulkan_Sampler(VkSampler res) {
 			m_Resource.reset(res);
 		}*/
-		void Re_Set(VkSampler res) {
+		void Reset(VkSampler res) {
 			m_Resource.reset(res);
 		}
 
@@ -232,7 +261,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkShaderModule res) {
+		void Reset(VkShaderModule res) {
 			m_Resource.reset(res);
 		}
 
@@ -258,7 +287,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		Vulkan_Buffer(VkBuffer res) {
 			m_Resource.reset(res);
 		}*/
-		void Re_Set(VkBuffer res) {
+		void Reset(VkBuffer res) {
 			m_Resource.reset(res);
 		}
 
@@ -286,7 +315,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkBufferView res) {
+		void Reset(VkBufferView res) {
 			m_Resource.reset(res);
 		}
 
@@ -313,7 +342,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkDeviceMemory res) {
+		void Reset(VkDeviceMemory res) {
 			m_Resource.reset(res);
 		}
 
@@ -341,7 +370,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkImage res) {
+		void Reset(VkImage res) {
 			m_Resource.reset(res);
 		}
 
@@ -369,7 +398,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkImageView res) {
+		void Reset(VkImageView res) {
 			m_Resource.reset(res);
 		}
 
@@ -397,7 +426,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkFramebuffer res) {
+		void Reset(VkFramebuffer res) {
 			m_Resource.reset(res);
 		}
 
@@ -425,7 +454,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkRenderPass res) {
+		void Reset(VkRenderPass res) {
 			m_Resource.reset(res);
 		}
 
@@ -453,7 +482,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkPipeline res) {
+		void Reset(VkPipeline res) {
 			m_Resource.reset(res);
 		}
 
@@ -481,7 +510,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkPipelineCache res) {
+		void Reset(VkPipelineCache res) {
 			m_Resource.reset(res);
 		}
 
@@ -509,7 +538,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			m_Resource.reset(res);
 		}*/
 
-		void Re_Set(VkPipelineLayout res) {
+		void Reset(VkPipelineLayout res) {
 			m_Resource.reset(res);
 		}
 
@@ -536,7 +565,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		Vulkan_Queue(VkQueue res) {
 			m_Resource.reset(res);
 		}*/
-		void Re_Set(VkQueue res) {
+		void Reset(VkQueue res) {
 			m_Resource.reset(res);
 		}
 		VkQueue Get() const {

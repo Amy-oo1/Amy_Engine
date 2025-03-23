@@ -42,6 +42,13 @@ namespace NameSpace_Render::NameSpace_RHI {
 
 		virtual ~Empty_RHI() = default;
 
+
+
+		virtual void Create_Instance(void) = 0;//NOTE : Instance Life Time Is The Same As The Application
+		[[nodiscard]] virtual RHI_Instance* Get_Instance(void) = 0;
+
+
+
 		virtual void Run(void) = 0;
 
 		virtual void CleanUp_SwapChain(void) = 0;

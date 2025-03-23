@@ -2,6 +2,10 @@
 
 namespace NameSpace_Render::NameSpace_RHI {
 
+	class RHI_Instance {};
+
+
+
 	class RHI_Queue {};
 
 	class RHI_Command_Pool {};
