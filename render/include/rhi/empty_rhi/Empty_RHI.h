@@ -47,7 +47,13 @@ namespace NameSpace_Render::NameSpace_RHI {
 		virtual void Create_Instance(void) = 0;//NOTE : Instance Life Time Is The Same As The Application
 		[[nodiscard]] virtual RHI_Instance* Get_Instance(void) = 0;
 
+		virtual void Create_Physical_Device(void) = 0;// NOTE : Physical Device Life Time Is The Same As The Application
+		[[nodiscard]] virtual RHI_Physical_Device* Get_Physical_Device(void) = 0;
 
+		virtual void Create_Logical_Device(void) = 0;// NOTE : Logical Device Life Time Is The Same As The Application
+		[[nodiscard]] virtual RHI_Logical_Device* Get_Logical_Device(void) = 0;
+
+		[[nodiscard]] virtual RHI_Queue* Get_Graphics_Queue(void) = 0;//Command Queue
 
 		virtual void Run(void) = 0;
 

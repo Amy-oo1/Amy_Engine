@@ -120,9 +120,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>D:\Amy_Engine\third_party\glfw-3.4\lib\Debug;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>1024</StackReserveSize>
-      <HeapCommitSize>1024</HeapCommitSize>
-      <HeapReserveSize>1024</HeapReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
+      <HeapCommitSize>
+      </HeapCommitSize>
+      <HeapReserveSize>
+      </HeapReserveSize>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
@@ -144,9 +147,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>D:\Amy_Engine\third_party\glfw-3.4\lib\Release;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>1024</StackReserveSize>
-      <HeapCommitSize>1024</HeapCommitSize>
-      <HeapReserveSize>1024</HeapReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
+      <HeapCommitSize>
+      </HeapCommitSize>
+      <HeapReserveSize>
+      </HeapReserveSize>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>

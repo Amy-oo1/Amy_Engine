@@ -54,11 +54,14 @@
 #include<unordered_map>
 #include<functional>
 #include<algorithm>
+#include<mutex>
 
 #include "rhi/vulkan/Vulkan_RHI_Macro.h"
 #include "rhi/vulkan/Vulkan_Config.h"
 
 namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
+
+	static std::mutex g_alloc_mutex;
 
 	using std::unordered_set;
 	using std::unordered_map;
@@ -75,7 +78,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//NOTE : Init Info
 #ifdef _MSC_VER
 		SetEnvironmentVariableA("VK_LAYER_PATH", NameSpace_Config::Vulkan_Layer_Path);
-		SetEnvironmentVariableA("DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1", "1");
+		//SetEnvironmentVariableA("DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1", "1");
 #else
 #error Unsupported compiler
 #endif // _MSC_VER
@@ -92,6 +95,8 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//TODO : Destroy All Vulkan Resource
 
 
+		this->m_RHI_Logical_Device.reset();
+		this->m_VK_Surface.reset();
 		this->m_RHI_Instance.reset();
 	}
 
@@ -164,7 +169,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(Vulkan_RHI::Create_DebugUtils_Messenger_EXT(
 			static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(),
 			&this->m_Vk_Debug_Utils_Messenger_Create_Info_EXT,
-			&this->m_Allocator,
+			this->m_Allocator.get(),
 			&this->m_Debug_Messenger)
 		);
 
@@ -174,7 +179,11 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 #endif // _DEBUG
 
 	//Public Func
-
+	void Vulkan_RHI::Create_Surface(void) {
+		VkSurfaceKHR Surface{ nullptr };
+		THROW_IF_VK_FAILED(glfwCreateWindowSurface(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), this->m_Window->Get_Window(), this->m_Allocator.get(), &Surface));
+		this->m_VK_Surface.reset(Surface);
+	}
 
 
 
@@ -182,13 +191,18 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	//Private Func
 	void Vulkan_RHI::Create_Allocator(void) {
+
+		VkAllocationCallbacks Allocator{};
 		{
-			this->m_Allocator.pUserData = nullptr;
-			this->m_Allocator.pfnAllocation = static_cast<PFN_vkAllocationFunction>(&Vulkan_RHI::S_Allocation);
-			this->m_Allocator.pfnReallocation = nullptr;
-			this->m_Allocator.pfnFree = static_cast<PFN_vkFreeFunction>(&Vulkan_RHI::S_Free);
+			Allocator.pUserData = nullptr;
+			Allocator.pfnAllocation = static_cast<PFN_vkAllocationFunction>(&Vulkan_RHI::S_Allocation);
+			Allocator.pfnReallocation = static_cast<PFN_vkReallocationFunction>(&Vulkan_RHI::S_Reallocation);
+			Allocator.pfnFree = static_cast<PFN_vkFreeFunction>(&Vulkan_RHI::S_Free);
+			Allocator.pfnInternalAllocation = nullptr;
+			Allocator.pfnInternalFree = nullptr;
 		}
 
+		//this->m_Allocator = std::make_unique<VkAllocationCallbacks>(Allocator);
 	}
 
 	void Vulkan_RHI::Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* Allocator) {
@@ -196,548 +210,17 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			throw runtime_error("Vulkan instance is nullptr!");
 
 		{
-			this->m_VK_Instance_Deleter = [Allocator](VkInstance Instance) {vkDestroyInstance(Instance, Allocator); };
-			this->m_VK_Surface_Deleter = [Instance, Allocator](VkSurfaceKHR Surface) {vkDestroySurfaceKHR(Instance, Surface, Allocator); };
-			this->m_VK_Device_Deleter = [Instance, Allocator](VkDevice Device) {vkDestroyDevice(Device, Allocator); };
+			this->m_VK_Instance_Deleter = [Allocator](VkInstance Instance) {if (nullptr != Instance) vkDestroyInstance(Instance, Allocator); };
+			this->m_VK_Surface_Deleter = [Instance, Allocator](VkSurfaceKHR Surface) {if (nullptr != Surface)vkDestroySurfaceKHR(Instance, Surface, Allocator); };
+			this->m_VK_Device_Deleter = [Instance, Allocator](VkDevice Device) {if (nullptr != Device)vkDestroyDevice(Device, Allocator); };
 		}
 
 		{
 			static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Set_Deleter(this->m_VK_Instance_Deleter);
 			this->m_VK_Surface.get_deleter() = this->m_VK_Surface_Deleter;
-			this->m_Logical_VK_Device.get_deleter() = this->m_VK_Device_Deleter;
+			static_cast<Vulkan_Logical_Device*>(this->m_RHI_Logical_Device.get())->Set_Deleter(this->m_VK_Device_Deleter);
 		}
 	}
-
-
-
-
-
-	//Static Func
-	const vector<const char*> Vulkan_RHI::S_Get_Instance_Extensions_Require(void) {
-		uint32_t GLFW_Extension_Count{};
-		const char** GLFW_Extensions{ glfwGetRequiredInstanceExtensions(&GLFW_Extension_Count) };
-
-		vector<const char*> Extensions{ GLFW_Extensions, GLFW_Extensions + GLFW_Extension_Count };
-
-#ifdef _DEBUG
-		Extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-#endif // _DEBUG
-
-		return Extensions;
-	}
-
-	void* VKAPI_CALL Vulkan_RHI::S_Allocation(void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope) {
-#if defined(_WIN32)
-		return _aligned_malloc(size, alignment);
-#else
-		void* ptr = nullptr;
-		posix_memalign(&ptr, alignment, size);
-		return ptr;
-#endif
-	}
-
-	void VKAPI_CALL Vulkan_RHI::S_Free(void* pUserData, void* memory) {
-#if defined(_WIN32)
-		_aligned_free(memory);
-#else
-		free(memory);
-#endif
-	}
-
-
-	//NOTE : Override Func
-	void Vulkan_RHI::Create_Instance(void) {
-		if (nullptr != static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get())
-			throw runtime_error("Vulkan Instance Already Created!");
-
-#ifdef _DEBUG
-		if (false == this->Check_Vaildation_Layer_Support())
-			LOG_ERROR("Validation layers requested, but not available!");
-
-		this->Build_Debug_Messenger_Create_Info();
-#endif // _DEBUG
-
-		VkApplicationInfo VK_Application_Info{};
-		{
-			VK_Application_Info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-			VK_Application_Info.pApplicationName = "Amy_Engine_Render";
-			VK_Application_Info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-			VK_Application_Info.pEngineName = "Amy_Engine";
-			VK_Application_Info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-			VK_Application_Info.apiVersion = NameSpace_Config::API_Verssion;
-		}
-
-		const auto& Extensions = Vulkan_RHI::S_Get_Instance_Extensions_Require();
-
-		VkInstanceCreateInfo Instance_Create_Info = {};
-		{
-			Instance_Create_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-			Instance_Create_Info.pApplicationInfo = &VK_Application_Info;
-#ifdef _DEBUG
-			Instance_Create_Info.pNext = reinterpret_cast<const void*>(&this->m_Vk_Debug_Utils_Messenger_Create_Info_EXT);
-			Instance_Create_Info.enabledLayerCount = static_cast<uint32_t>(this->m_Validation_Layers.size());
-			Instance_Create_Info.ppEnabledLayerNames = this->m_Validation_Layers.data();
-#else
-			Instance_Create_Info.pNext = nullptr;
-			Instance_Create_Info.enabledLayerCount = 0;
-			Instance_Create_Info.ppEnabledLayerNames = nullptr;
-#endif // _DEBUG
-			Instance_Create_Info.enabledExtensionCount = static_cast<uint32_t>(Extensions.size());
-			Instance_Create_Info.ppEnabledExtensionNames = Extensions.data();
-		}
-
-		VkInstance VK_Instance{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateInstance(&Instance_Create_Info, &this->m_Allocator, &VK_Instance));
-		static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Reset(VK_Instance);
-
-		this->Reset_Instance_Deleters(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &this->m_Allocator);
-
-#ifdef _DEBUG
-		this->Set_Debug_Messenger();
-#endif // _DEBUG
-	}
-
-	RHI_Instance* Vulkan_RHI::Get_Instance(void) {
-		return this->m_RHI_Instance.get();
-	}
-
-
-
-
-	void Vulkan_RHI::Run(void) {
-		this->Create_Allocator();
-		this->Create_Instance();
-
-		/*this->Create_Surface();
-		this->Pick_Physical_Device();
-		this->Create_Logical_Device();
-		this->Create_Command_Pool();
-		this->Create_Command_Buffers();
-		this->Create_Descriptor_Pool();
-		this->Create_Sync_Primitices();
-		this->Create_SwapChain();
-		this->Create_SwapChhain_Image_Views();*/
-		//TODO : Add SwapChain Image Depth Image View
-	}
-
-	void Vulkan_RHI::CleanUp_SwapChain(void)
-	{
-	}
-
-	void Vulkan_RHI::Re_Create_SwapChain(void)
-	{
-	}
-
-	void Vulkan_RHI::Create_Surface(void) {
-		VkSurfaceKHR Surface{ nullptr };
-		THROW_IF_VK_FAILED(glfwCreateWindowSurface(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), this->m_Window->Get_Window(), &this->m_Allocator, &Surface));
-		this->m_VK_Surface.reset(Surface);
-	}
-
-	void Vulkan_RHI::Pick_Physical_Device(void) {
-		uint32_t Device_Count{ 0 };
-		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &Device_Count, nullptr));
-		if (0 == Device_Count)
-			throw runtime_error("Failed to find GPUs with Vulkan support!");
-
-		this->m_Physical_Device_Extensions = Vulkan_RHI::Get_Physical_Device_Extensions_Require();
-
-		//TODO : Choose Better Device
-		vector<VkPhysicalDevice> Devices{};
-		Devices.resize(Device_Count);
-		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &Device_Count, Devices.data()));
-		for (const auto& Device : Devices)
-			if (Is_Device_Suitable(Device, this->m_Physical_Device_Extensions)) {
-				this->m_VK_Physical_Device = Device;
-				break;
-			}
-
-		if (nullptr == this->m_VK_Physical_Device)
-			throw runtime_error("Failed to find a suitable GPU!");
-
-		//NOTE : Note Phyiscsal Device Info
-		this->m_Msaa_Samples = Get_Max_Usable_Sample_Count(this->m_VK_Physical_Device);
-	}
-
-	void Vulkan_RHI::Create_Logical_Device(void) {
-		this->m_Queue_Family_Indices = Vulkan_RHI::Get_Queue_Framies(this->m_VK_Physical_Device, this->m_VK_Surface.get());
-
-		//NOTE : Queue Family Should Be Unique,Because It Maybe Same
-		std::unordered_set<uint32_t> Unique_Queue_Families{
-			this->m_Queue_Family_Indices.Graphics_Family,
-			this->m_Queue_Family_Indices.Present_Family,
-			this->m_Queue_Family_Indices.Compute_Family
-		};
-
-		//NOTE : Refence Continue From Create_Instance
-		constexpr float Queue_Priority{ 1.0f };
-
-		vector<VkDeviceQueueCreateInfo> Queue_Create_Infos{};
-		Queue_Create_Infos.reserve(Unique_Queue_Families.size());
-		{
-			for (const auto& Queue_Family : Unique_Queue_Families) {
-				VkDeviceQueueCreateInfo Queue_Create_Info{};
-				Queue_Create_Info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-				Queue_Create_Info.queueFamilyIndex = Queue_Family;
-				Queue_Create_Info.queueCount = 1;
-				Queue_Create_Info.pQueuePriorities = &Queue_Priority;
-				Queue_Create_Infos.emplace_back(Queue_Create_Info);
-			}
-		}
-
-		VkPhysicalDeviceFeatures Physical_Device_Features{};
-		{
-			Physical_Device_Features.samplerAnisotropy = VK_TRUE;
-			Physical_Device_Features.fragmentStoresAndAtomics = VK_TRUE;
-			Physical_Device_Features.independentBlend = VK_TRUE;
-		}
-
-		VkDeviceCreateInfo Device_Create_Info{};
-		{
-			Device_Create_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-			Device_Create_Info.queueCreateInfoCount = static_cast<uint32_t>(Queue_Create_Infos.size());
-			Device_Create_Info.pQueueCreateInfos = Queue_Create_Infos.data();
-			Device_Create_Info.enabledExtensionCount = static_cast<uint32_t>(this->m_Physical_Device_Extensions.size());
-			Device_Create_Info.ppEnabledExtensionNames = this->m_Physical_Device_Extensions.data();
-			Device_Create_Info.pEnabledFeatures = &Physical_Device_Features;
-		}
-
-		VkDevice Logical_Device{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateDevice(this->m_VK_Physical_Device, &Device_Create_Info, &this->m_Allocator, &Logical_Device));
-		this->m_Logical_VK_Device.reset(Logical_Device);
-
-		{
-			vkGetDeviceQueue(this->m_Logical_VK_Device.get(), this->m_Queue_Family_Indices.Graphics_Family, 0, &this->m_Queues.Graphic_Queue);
-			vkGetDeviceQueue(this->m_Logical_VK_Device.get(), this->m_Queue_Family_Indices.Present_Family, 0, &this->m_Queues.Present_Queue);
-			vkGetDeviceQueue(this->m_Logical_VK_Device.get(), this->m_Queue_Family_Indices.Compute_Family, 0, &this->m_Queues.Compute_Queue);
-		}
-
-		this->Get_Device_ProcAddrs();
-
-		this->Reset_Device_Deleters(this->m_Logical_VK_Device.get(), &this->m_Allocator);
-	}
-
-	void Vulkan_RHI::Create_Command_Pool(void) {
-		//NOTE : Default Graphics Command Pool
-		{
-			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
-			{
-				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
-			}
-
-			VkCommandPool Command_Pool{ nullptr };
-			THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device.get(), &Command_Pool_Create_Info, &this->m_Allocator, &Command_Pool));
-			if (nullptr == this->m_RHI_Command_Pool)
-				this->m_RHI_Command_Pool = std::make_unique<Vulkan_Command_Pool>();
-			static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Reset(Command_Pool);
-		}
-
-		//NOTE : Other Command Pools
-		{
-			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
-			{
-				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
-			}
-
-			VkCommandPool Command_Pool{ nullptr };
-			for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
-				THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device.get(), &Command_Pool_Create_Info, &this->m_Allocator, &Command_Pool));
-				this->m_VK_Command_Pools[Index].reset(Command_Pool);
-			}
-
-		}
-	}
-
-	void Vulkan_RHI::Create_Command_Buffers(void) {
-		for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
-			VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
-			{
-				Command_Buffer_Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-				Command_Buffer_Allocate_Info.commandPool = this->m_VK_Command_Pools[Index].get();
-				Command_Buffer_Allocate_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-				Command_Buffer_Allocate_Info.commandBufferCount = 1;
-			}
-
-			VkCommandBuffer Command_Buffer{ nullptr };
-			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device.get(), &Command_Buffer_Allocate_Info, &Command_Buffer));
-			if (nullptr == this->m_RHI_Command_Buffers[Index])
-				this->m_RHI_Command_Buffers[Index] = std::make_unique<Vulkan_Command_Buffer>();
-			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(Command_Buffer);
-		}
-	}
-
-	void Vulkan_RHI::Create_Descriptor_Pool(void) {
-		array<VkDescriptorPoolSize, 7> Pool_Sizes{};
-		{
-			//TODO Erase Magic Number
-			{
-				Pool_Sizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-				Pool_Sizes[0].descriptorCount = 3 + 2 + 2 + 2 + 1 + 1 + 3 + 3;
-			}
-
-			{
-				Pool_Sizes[1].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-				Pool_Sizes[1].descriptorCount = 1 + 1 + 1 * NameSpace_Config::Max_Vertex_Blending_Mesh_Count;
-			}
-
-			{
-				Pool_Sizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-				Pool_Sizes[2].descriptorCount = 1 * NameSpace_Config::Max_Material_Count;
-			}
-
-			{
-				Pool_Sizes[3].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-				Pool_Sizes[3].descriptorCount = 3 + 5 * NameSpace_Config::Max_Material_Count + 1 + 1;
-			}
-
-			{
-				Pool_Sizes[4].type = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-				Pool_Sizes[4].descriptorCount = 4 + 1 + 1 + 2;
-			}
-
-			{
-				Pool_Sizes[5].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-				Pool_Sizes[5].descriptorCount = 3;
-			}
-
-			{
-				Pool_Sizes[6].type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
-				Pool_Sizes[6].descriptorCount = 1;
-			}
-		}
-
-		//NOTE :  // +SkyBox + Axis Descriptor Set
-		VkDescriptorPoolCreateInfo Pool_Info{};
-		{
-			Pool_Info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-			Pool_Info.poolSizeCount = static_cast<uint32_t>(Pool_Sizes.size());
-			Pool_Info.pPoolSizes = Pool_Sizes.data();
-			Pool_Info.maxSets = 1 + 1 + 1 + NameSpace_Config::Max_Vertex_Blending_Mesh_Count + NameSpace_Config::Max_Material_Count + 1 + 1;
-		}
-
-		VkDescriptorPool Descriptor_Pool{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateDescriptorPool(this->m_Logical_VK_Device.get(), &Pool_Info, &this->m_Allocator, &Descriptor_Pool));
-		if (nullptr == this->m_RHI_Descriptor_Pool)
-			this->m_RHI_Descriptor_Pool = std::make_unique<Vulkan_Descriptor_Pool>();
-		static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Reset(Descriptor_Pool);
-	}
-
-	void Vulkan_RHI::Create_Sync_Primitices(void) {
-		VkSemaphoreCreateInfo Semaphore_Info{};
-		{
-			Semaphore_Info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-		}
-
-		VkFenceCreateInfo Fence_Info{};
-		{
-			Fence_Info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-			Fence_Info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-		}
-
-		VkSemaphore Semaphore{ nullptr };
-		VkFence InFlight_Fence{ nullptr };
-		for (uint8_t Index = 0; Index < Vulkan_RHI::s_Frames_In_Flight; ++Index) {
-			{
-				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &Semaphore_Info, &this->m_Allocator, &Semaphore));
-				if (nullptr == this->m_Image_available_For_Render_RHI_Semaphores[Index])
-					this->m_Image_available_For_Render_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
-				static_cast<Vulkan_Semaphore*>(this->m_Image_available_For_Render_RHI_Semaphores[Index].get())->Reset(Semaphore);
-			}
-
-			{
-				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &Semaphore_Info, &this->m_Allocator, &Semaphore));
-				if (nullptr == this->m_Image_Finished_For_Present_RHI_Semaphores[Index])
-					this->m_Image_Finished_For_Present_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
-				static_cast<Vulkan_Semaphore*>(this->m_Image_Finished_For_Present_RHI_Semaphores[Index].get())->Reset(Semaphore);
-			}
-
-			{
-				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &Semaphore_Info, &this->m_Allocator, &Semaphore));
-				if (nullptr == this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index])
-					this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
-				static_cast<Vulkan_Semaphore*>(this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index].get())->Reset(Semaphore);
-			}
-
-			{
-				THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device.get(), &Fence_Info, &this->m_Allocator, &InFlight_Fence));
-				if (nullptr == this->m_InFlight_RHI_Fences[Index])
-					this->m_InFlight_RHI_Fences[Index] = std::make_unique<Vulkan_Fence>();
-				static_cast<Vulkan_Fence*>(this->m_InFlight_RHI_Fences[Index].get())->Reset(InFlight_Fence);
-			}
-		}
-	}
-
-	void Vulkan_RHI::Create_SwapChain(void) {
-		this->m_Swap_Chain_Support_Details = Vulkan_RHI::Query_Swap_Chain_Support_Details(this->m_VK_Physical_Device, this->m_VK_Surface.get());
-
-		const VkSurfaceFormatKHR Surface_Format{ Vulkan_RHI::Choose_SwapChain_Surface_Format(this->m_Swap_Chain_Support_Details.Formats) };
-		const VkPresentModeKHR Present_Mode{ Vulkan_RHI::Choose_SwapChain_Present_Mode(this->m_Swap_Chain_Support_Details.Present_Modes) };
-		const VkExtent2D Swap_Chain_Extent{ Vulkan_RHI::Choose_SwapChain_Extent(this->m_Window,this->m_Swap_Chain_Support_Details.Capabilities) };
-
-		//NOTE : Choose Image Count ,We Want One More Image Than Min Image Count
-		uint32_t Image_Count{ this->m_Swap_Chain_Support_Details.Capabilities.minImageCount + 1 };
-		Image_Count = std::clamp(Image_Count, this->m_Swap_Chain_Support_Details.Capabilities.minImageCount, this->m_Swap_Chain_Support_Details.Capabilities.maxImageCount);
-
-		//TODO : Why We Need Graphics And Present Family
-		vector<uint32_t> Queue_Family_Indices{ this->m_Queue_Family_Indices.Graphics_Family,this->m_Queue_Family_Indices.Present_Family };
-		VkSharingMode Sharing_Mode{ VK_SHARING_MODE_EXCLUSIVE };
-
-		if (this->m_Queue_Family_Indices.Graphics_Family != this->m_Queue_Family_Indices.Present_Family)
-			Sharing_Mode = VK_SHARING_MODE_CONCURRENT;
-
-		VkSwapchainCreateInfoKHR Swap_Chain_Create_Info{};
-		{
-			Swap_Chain_Create_Info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-			Swap_Chain_Create_Info.surface = this->m_VK_Surface.get();
-			Swap_Chain_Create_Info.minImageCount = Image_Count;
-			Swap_Chain_Create_Info.imageFormat = Surface_Format.format;
-			Swap_Chain_Create_Info.imageColorSpace = Surface_Format.colorSpace;
-			Swap_Chain_Create_Info.imageExtent = Swap_Chain_Extent;
-			Swap_Chain_Create_Info.imageArrayLayers = 1;
-			Swap_Chain_Create_Info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			Swap_Chain_Create_Info.imageSharingMode = Sharing_Mode;
-			Swap_Chain_Create_Info.queueFamilyIndexCount = static_cast<uint32_t>(Queue_Family_Indices.size());
-			Swap_Chain_Create_Info.pQueueFamilyIndices = Queue_Family_Indices.data();
-			Swap_Chain_Create_Info.preTransform = this->m_Swap_Chain_Support_Details.Capabilities.currentTransform;
-			Swap_Chain_Create_Info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-			Swap_Chain_Create_Info.presentMode = Present_Mode;
-			//NOTE : Should Not Read Back Buffer
-			Swap_Chain_Create_Info.clipped = VK_TRUE;
-			Swap_Chain_Create_Info.oldSwapchain = VK_NULL_HANDLE;
-		}
-
-		VkSwapchainKHR SwapChain{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateSwapchainKHR(this->m_Logical_VK_Device.get(), &Swap_Chain_Create_Info, nullptr, &SwapChain));
-		this->m_Vk_SwapChain.reset(SwapChain);
-
-		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device.get(), this->m_Vk_SwapChain.get(), &Image_Count, nullptr));
-		this->m_SwapChain_VK_Images.resize(Image_Count);
-		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device.get(), this->m_Vk_SwapChain.get(), &Image_Count, this->m_SwapChain_VK_Images.data()));
-
-		//NOTE : Refence SwapChain Info
-		{
-			this->m_SwapChain_Image_Format = Surface_Format.format;
-			this->m_SwapChain_Extent = Swap_Chain_Extent;
-			this->m_Scissor = { {0,0},{Swap_Chain_Extent.width,Swap_Chain_Extent.height} };
-		}
-	}
-
-	void Vulkan_RHI::Create_SwapChhain_Image_Views(void) {
-		this->m_SwapChain_Image_Views.resize(this->m_SwapChain_VK_Images.size());
-		for (size_t Index = 0; Index < this->m_SwapChain_VK_Images.size(); ++Index) {
-
-			VkImageView Image_View{ NameSpace_Utilities::Create_Image_View(
-				this->m_Logical_VK_Device.get(),
-				this->m_SwapChain_VK_Images[Index],
-				this->m_SwapChain_Image_Format,
-				1,
-					VK_IMAGE_ASPECT_COLOR_BIT,
-				VK_IMAGE_VIEW_TYPE_2D,
-				1,
-				&this->m_Allocator)
-			};
-
-			this->m_SwapChain_Image_Views[Index].reset(Image_View);
-		}
-	}
-
-	void Vulkan_RHI::Create_Resource_Allocator(void) {
-		//VmaVulkanFunctions Vulkan_Functions{};
-		//{
-		//	Vulkan_Functions.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
-		//	Vulkan_Functions.vkGetDeviceProcAddr = vkGetDeviceProcAddr;
-		//}
-
-		//VmaAllocatorCreateInfo Allocator_Create_Info{};
-		//{
-		//	Allocator_Create_Info.vulkanApiVersion = NameSpace_Config::API_Verssion;
-		//	Allocator_Create_Info.instance = this->m_VK_Instance.get();
-		//	Allocator_Create_Info.physicalDevice = this->m_VK_Physical_Device;
-		//	Allocator_Create_Info.device = this->m_Logical_VK_Device.get();
-
-		//	//NOTE : Default 256MiB
-		//	Allocator_Create_Info.preferredLargeHeapBlockSize = 0;
-		//	Allocator_Create_Info.pVulkanFunctions = &Vulkan_Functions;
-		//}
-
-		//THROW_IF_VK_FAILED(vmaCreateAllocator(&Allocator_Create_Info, &this->m_Vma_Allocator));
-	}
-
-
-	void Vulkan_RHI::Create_Nearest_Sampler(void) {
-		VkPhysicalDeviceProperties Properties{};
-		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
-
-		VkSamplerCreateInfo Sampler_Create_Info{};
-		{
-			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-			Sampler_Create_Info.magFilter = VK_FILTER_NEAREST;
-			Sampler_Create_Info.minFilter = VK_FILTER_NEAREST;
-			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
-			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
-			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
-			Sampler_Create_Info.compareEnable = VK_FALSE;
-			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
-			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-			Sampler_Create_Info.mipLodBias = 0.0f;
-			Sampler_Create_Info.minLod = 0.0f;
-			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
-		}
-
-		VkSampler Sampler{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &Sampler_Create_Info, &this->m_Allocator, &Sampler));
-
-		static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Reset(Sampler);
-	}
-
-
-	void Vulkan_RHI::Create_Linear_Sampler(void) {
-		VkPhysicalDeviceProperties Properties{};
-		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
-
-		VkSamplerCreateInfo Sampler_Create_Info{};
-		{
-			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-			Sampler_Create_Info.magFilter = VK_FILTER_LINEAR;
-			Sampler_Create_Info.minFilter = VK_FILTER_LINEAR;
-			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
-			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
-			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
-			Sampler_Create_Info.compareEnable = VK_FALSE;
-			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
-			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-			Sampler_Create_Info.mipLodBias = 0.0f;
-			Sampler_Create_Info.minLod = 0.0f;
-			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
-		}
-
-		VkSampler Sampler{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &Sampler_Create_Info, &this->m_Allocator, &Sampler));
-
-		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
-	}
-
-
-
-
-
-
-
-
-
-
 
 	void Vulkan_RHI::Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator) {
 		if (nullptr == Device)
@@ -802,28 +285,705 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	}
 
 	void Vulkan_RHI::Get_Device_ProcAddrs(void) {
-		F_vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdBeginDebugUtilsLabelEXT"));
-		F_vkCmdEndDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdEndDebugUtilsLabelEXT>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdEndDebugUtilsLabelEXT"));
-		F_vkWaitForFences = reinterpret_cast<PFN_vkWaitForFences>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkWaitForFences"));
-		F_vkResetFences = reinterpret_cast<PFN_vkResetFences>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkResetFences"));
-		F_vkResetCommandPool = reinterpret_cast<PFN_vkResetCommandPool>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkResetCommandPool"));
-		F_vkBeginCommandBuffer = reinterpret_cast<PFN_vkBeginCommandBuffer>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkBeginCommandBuffer"));
-		F_vkEndCommandBuffer = reinterpret_cast<PFN_vkEndCommandBuffer>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkEndCommandBuffer"));
-		F_vkCmdBeginRenderPass = reinterpret_cast<PFN_vkCmdBeginRenderPass>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdBeginRenderPass"));
-		F_vkCmdNextSubpass = reinterpret_cast<PFN_vkCmdNextSubpass>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdNextSubpass"));
-		F_vkCmdEndRenderPass = reinterpret_cast<PFN_vkCmdEndRenderPass>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdEndRenderPass"));
-		F_vkCmdBindPipeline = reinterpret_cast<PFN_vkCmdBindPipeline>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdBindPipeline"));
-		F_vkCmdSetViewport = reinterpret_cast<PFN_vkCmdSetViewport>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdSetViewport"));
-		F_vkCmdSetScissor = reinterpret_cast<PFN_vkCmdSetScissor>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdSetScissor"));
-		F_vkCmdBindVertexBuffers = reinterpret_cast<PFN_vkCmdBindVertexBuffers>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdBindVertexBuffers"));
-		F_vkCmdBindIndexBuffer = reinterpret_cast<PFN_vkCmdBindIndexBuffer>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdBindIndexBuffer"));
-		F_vkCmdBindDescriptorSets = reinterpret_cast<PFN_vkCmdBindDescriptorSets>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdBindDescriptorSets"));
-		F_vkCmdDrawIndexed = reinterpret_cast<PFN_vkCmdDrawIndexed>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdDrawIndexed"));
-		F_vkCmdClearAttachments = reinterpret_cast<PFN_vkCmdClearAttachments>(vkGetDeviceProcAddr(this->m_Logical_VK_Device.get(), "vkCmdClearAttachments"));
+		F_vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdBeginDebugUtilsLabelEXT"));
+		F_vkCmdEndDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdEndDebugUtilsLabelEXT>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdEndDebugUtilsLabelEXT"));
+		F_vkWaitForFences = reinterpret_cast<PFN_vkWaitForFences>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkWaitForFences"));
+		F_vkResetFences = reinterpret_cast<PFN_vkResetFences>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkResetFences"));
+		F_vkResetCommandPool = reinterpret_cast<PFN_vkResetCommandPool>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkResetCommandPool"));
+		F_vkBeginCommandBuffer = reinterpret_cast<PFN_vkBeginCommandBuffer>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkBeginCommandBuffer"));
+		F_vkEndCommandBuffer = reinterpret_cast<PFN_vkEndCommandBuffer>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkEndCommandBuffer"));
+		F_vkCmdBeginRenderPass = reinterpret_cast<PFN_vkCmdBeginRenderPass>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdBeginRenderPass"));
+		F_vkCmdNextSubpass = reinterpret_cast<PFN_vkCmdNextSubpass>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdNextSubpass"));
+		F_vkCmdEndRenderPass = reinterpret_cast<PFN_vkCmdEndRenderPass>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdEndRenderPass"));
+		F_vkCmdBindPipeline = reinterpret_cast<PFN_vkCmdBindPipeline>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdBindPipeline"));
+		F_vkCmdSetViewport = reinterpret_cast<PFN_vkCmdSetViewport>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdSetViewport"));
+		F_vkCmdSetScissor = reinterpret_cast<PFN_vkCmdSetScissor>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdSetScissor"));
+		F_vkCmdBindVertexBuffers = reinterpret_cast<PFN_vkCmdBindVertexBuffers>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdBindVertexBuffers"));
+		F_vkCmdBindIndexBuffer = reinterpret_cast<PFN_vkCmdBindIndexBuffer>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdBindIndexBuffer"));
+		F_vkCmdBindDescriptorSets = reinterpret_cast<PFN_vkCmdBindDescriptorSets>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdBindDescriptorSets"));
+		F_vkCmdDrawIndexed = reinterpret_cast<PFN_vkCmdDrawIndexed>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdDrawIndexed"));
+		F_vkCmdClearAttachments = reinterpret_cast<PFN_vkCmdClearAttachments>(vkGetDeviceProcAddr(this->m_Logical_VK_Device, "vkCmdClearAttachments"));
 	}
 
 
 
+	//Static Func
+	const vector<const char*> Vulkan_RHI::S_Get_Instance_Extensions_Require(void) {
+		uint32_t GLFW_Extension_Count{};
+		const char** GLFW_Extensions{ glfwGetRequiredInstanceExtensions(&GLFW_Extension_Count) };
+
+		vector<const char*> Extensions{ GLFW_Extensions, GLFW_Extensions + GLFW_Extension_Count };
+
+#ifdef _DEBUG
+		Extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif // _DEBUG
+
+		return Extensions;
+	}
+
+	void* VKAPI_CALL Vulkan_RHI::S_Allocation(void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope) {
+#if defined(_WIN32)
+		std::lock_guard<std::mutex> lock(g_alloc_mutex);
+		return _aligned_malloc(size, alignment);
+#else
+		void* ptr = nullptr;
+		posix_memalign(&ptr, alignment, size);
+		return ptr;
+#endif
+	}
+
+	void* VKAPI_CALL Vulkan_RHI::S_Reallocation(
+		void* pUserData,
+		void* original,
+		size_t size,
+		size_t alignment,
+		VkSystemAllocationScope allocationScope) {
+		std::lock_guard<std::mutex> lock(g_alloc_mutex);
+		if (size == 0) {
+			_aligned_free(original);
+			return nullptr;
+		}
+
+		void* new_mem = _aligned_malloc(size, alignment);
+		if (!new_mem) return nullptr;
+
+		_aligned_free(original);
+		return new_mem;
+	}
+
+	void VKAPI_CALL Vulkan_RHI::S_Free(void* pUserData, void* memory) {
+#if defined(_WIN32)
+		std::lock_guard<std::mutex> lock(g_alloc_mutex);
+		_aligned_free(memory);
+#else
+		free(memory);
+#endif
+	}
+
+	const vector<const char*> Vulkan_RHI::S_Get_Physical_Device_Extensions_Require(void) {
+		vector<const char*> Physical_Device_Extensions{};
+		Physical_Device_Extensions.reserve(NameSpace_Config::Device_EXT_Size);
+
+		for (int Index = 0; Index < NameSpace_Config::Device_EXT_Size; ++Index)
+			Physical_Device_Extensions.emplace_back(NameSpace_Config::Device_EXTs);
+
+		return Physical_Device_Extensions;
+	}
+
+	bool Vulkan_RHI::S_Check_Physical_Device_Extension_Support(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions) {
+		uint32_t Extension_Size{};
+		THROW_IF_VK_FAILED(vkEnumerateDeviceExtensionProperties(Device, nullptr, &Extension_Size, nullptr));
+		vector<VkExtensionProperties> Available_Extensions{};
+		Available_Extensions.resize(Extension_Size);
+		THROW_IF_VK_FAILED(vkEnumerateDeviceExtensionProperties(Device, nullptr, &Extension_Size, Available_Extensions.data()));
+
+		std::unordered_set<string> Required_Extensions{};
+		for (const auto& Extension : Require_Extensions)
+			Required_Extensions.emplace(Extension);
+
+		for (const auto& Available_Extension : Available_Extensions)
+			Required_Extensions.erase(string{ Available_Extension.extensionName });//NOTE : extensionName Is const char*
+
+		return Required_Extensions.empty();
+	}
+
+	bool Vulkan_RHI::S_Is_Device_Suitable(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions) {
+		if (false == S_Check_Physical_Device_Extension_Support(Device, Require_Extensions))
+			return false;
+
+		VkPhysicalDeviceProperties Device_Properties{};
+		vkGetPhysicalDeviceProperties(Device, &Device_Properties);
+
+		VkPhysicalDeviceFeatures Device_Features{};
+		vkGetPhysicalDeviceFeatures(Device, &Device_Features);
+
+		//TODO : Set More Condition
+		return
+			Device_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+			Device_Features.geometryShader &&
+			Device_Features.samplerAnisotropy;
+	}
+
+	VkSampleCountFlagBits Vulkan_RHI::S_Get_Max_Usable_Sample_Count(VkPhysicalDevice Physical_Device) {
+		VkPhysicalDeviceProperties Physical_Device_Properties{};
+		vkGetPhysicalDeviceProperties(Physical_Device, &Physical_Device_Properties);
+		VkSampleCountFlags Counts{ Physical_Device_Properties.limits.framebufferColorSampleCounts & Physical_Device_Properties.limits.framebufferDepthSampleCounts };
+
+		if (0 != (Counts & VK_SAMPLE_COUNT_64_BIT)) return VK_SAMPLE_COUNT_64_BIT;
+		if (0 != (Counts & VK_SAMPLE_COUNT_32_BIT)) return VK_SAMPLE_COUNT_32_BIT;
+		if (0 != (Counts & VK_SAMPLE_COUNT_16_BIT)) return VK_SAMPLE_COUNT_16_BIT;
+		if (0 != (Counts & VK_SAMPLE_COUNT_8_BIT)) return VK_SAMPLE_COUNT_8_BIT;
+		if (0 != (Counts & VK_SAMPLE_COUNT_4_BIT)) return VK_SAMPLE_COUNT_4_BIT;
+		if (0 != (Counts & VK_SAMPLE_COUNT_2_BIT)) return VK_SAMPLE_COUNT_2_BIT;
+		return VK_SAMPLE_COUNT_1_BIT;
+	}
+
+	uint32_t Vulkan_RHI::S_Find_Queue_Families(VkPhysicalDevice Physical_Device, VkQueueFlagBits Vk_Queue_FlagBit) {
+		uint32_t Queue_Family_Count;
+		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, nullptr);
+
+		vector<VkQueueFamilyProperties> Queue_Families;
+		Queue_Families.resize(Queue_Family_Count);
+		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, Queue_Families.data());
+
+		for (auto CIt = Queue_Families.cbegin(); CIt != Queue_Families.cend(); ++CIt)
+			if (CIt->queueFlags & Vk_Queue_FlagBit)
+				return  static_cast<uint32_t>(CIt - Queue_Families.cbegin());
+
+		throw runtime_error("Failed to find a suitable GPU!");
+
+		return std::numeric_limits<uint32_t>::max();
+	}
+
+	uint32_t Vulkan_RHI::S_Get_Physical_Device_Queue_Present_Family(VkPhysicalDevice Physical_Device, VkSurfaceKHR Surface, uint32_t Graphics_Family_Index) {
+		uint32_t Queue_Family_Count{};
+		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, nullptr);
+
+		vector<VkQueueFamilyProperties> Queue_Families{};
+		Queue_Families.resize(Queue_Family_Count);
+		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, Queue_Families.data());
+
+		uint32_t Queue_Family_Index{ numeric_limits<uint32_t>::max() };
+		for (auto CIt = Queue_Families.cbegin(); CIt != Queue_Families.cend(); ++CIt) {
+			VkBool32 Present_Support{ false };
+			THROW_IF_VK_FAILED(vkGetPhysicalDeviceSurfaceSupportKHR(Physical_Device, static_cast<uint32_t>(CIt - Queue_Families.cbegin()), Surface, &Present_Support));
+
+			if (Present_Support) {
+				Queue_Family_Index = static_cast<uint32_t>(CIt - Queue_Families.cbegin());
+
+				//NOTE : First Chose Queue Family With Graphics Bit
+				if (Queue_Family_Index == Graphics_Family_Index)
+					return Queue_Family_Index;
+			}
+		}
+
+		return Queue_Family_Index;
+	}
+
+	const Vulkan_RHI::Queue_Family_Indices Vulkan_RHI::S_Get_Queue_Framies(VkPhysicalDevice Physical_Device, VkSurfaceKHR Suraface) {
+		Queue_Family_Indices Queue_Family_Indices{};
+
+		Queue_Family_Indices.Graphics_Family = Vulkan_RHI::S_Find_Queue_Families(Physical_Device, VK_QUEUE_GRAPHICS_BIT);
+		if (numeric_limits<uint32_t>::max() == Queue_Family_Indices.Graphics_Family)
+			throw runtime_error("Failed to find a queue family with graphics bit!");
+
+		//NOTE : Queue Family Should Be Unique,Because It Maybe Same
+		Queue_Family_Indices.Present_Family = Vulkan_RHI::S_Get_Physical_Device_Queue_Present_Family(Physical_Device, Suraface, Queue_Family_Indices.Graphics_Family);
+		if (numeric_limits<uint32_t>::max() == Queue_Family_Indices.Present_Family)
+			throw runtime_error("Failed to find a queue family with present bit!");
+
+		Queue_Family_Indices.Compute_Family = Vulkan_RHI::S_Find_Queue_Families(Physical_Device, VK_QUEUE_COMPUTE_BIT);
+		if (numeric_limits<uint32_t>::max() == Queue_Family_Indices.Compute_Family)
+			throw runtime_error("Failed to find a queue family with compute bit!");
+
+		return Queue_Family_Indices;
+	}
+
+
+
+
+
+
+	//NOTE : Override Func
+	void Vulkan_RHI::Create_Instance(void) {
+		if (nullptr != static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get())
+			throw runtime_error("Vulkan Instance Already Created!");
+
+#ifdef _DEBUG
+		if (false == this->Check_Vaildation_Layer_Support())
+			LOG_ERROR("Validation layers requested, but not available!");
+
+		this->Build_Debug_Messenger_Create_Info();
+#endif // _DEBUG
+
+		VkApplicationInfo VK_Application_Info{};
+		{
+			VK_Application_Info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+			VK_Application_Info.pApplicationName = "Amy_Engine_Render";
+			VK_Application_Info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+			VK_Application_Info.pEngineName = "Amy_Engine";
+			VK_Application_Info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+			VK_Application_Info.apiVersion = NameSpace_Config::API_Verssion;
+		}
+
+		const auto& Extensions = Vulkan_RHI::S_Get_Instance_Extensions_Require();
+
+		VkInstanceCreateInfo Instance_Create_Info = {};
+		{
+			Instance_Create_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+			Instance_Create_Info.pApplicationInfo = &VK_Application_Info;
+#ifdef _DEBUG
+			Instance_Create_Info.pNext = reinterpret_cast<const void*>(&this->m_Vk_Debug_Utils_Messenger_Create_Info_EXT);
+			Instance_Create_Info.enabledLayerCount = static_cast<uint32_t>(this->m_Validation_Layers.size());
+			Instance_Create_Info.ppEnabledLayerNames = this->m_Validation_Layers.data();
+#else
+			Instance_Create_Info.pNext = nullptr;
+			Instance_Create_Info.enabledLayerCount = 0;
+			Instance_Create_Info.ppEnabledLayerNames = nullptr;
+#endif // _DEBUG
+			Instance_Create_Info.enabledExtensionCount = static_cast<uint32_t>(Extensions.size());
+			Instance_Create_Info.ppEnabledExtensionNames = Extensions.data();
+		}
+
+		VkInstance VK_Instance{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateInstance(&Instance_Create_Info, this->m_Allocator.get(), &VK_Instance));
+		static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Reset(VK_Instance);
+
+		this->Reset_Instance_Deleters(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), this->m_Allocator.get());
+
+#ifdef _DEBUG
+		this->Set_Debug_Messenger();
+#endif // _DEBUG
+	}
+
+	RHI_Instance* Vulkan_RHI::Get_Instance(void) {
+		return this->m_RHI_Instance.get();
+	}
+
+	void Vulkan_RHI::Create_Physical_Device(void) {
+		uint32_t Device_Count{ 0 };
+		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &Device_Count, nullptr));
+		if (0 == Device_Count)
+			throw runtime_error("Failed to find GPUs with Vulkan support!");
+
+		this->m_Physical_Device_Extensions = Vulkan_RHI::S_Get_Physical_Device_Extensions_Require();
+
+		//TODO : Choose Better Device
+		vector<VkPhysicalDevice> Devices{};
+		Devices.resize(Device_Count);
+		THROW_IF_VK_FAILED(vkEnumeratePhysicalDevices(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), &Device_Count, Devices.data()));
+		for (const auto& Device : Devices)
+			if (S_Is_Device_Suitable(Device, this->m_Physical_Device_Extensions)) {
+				this->m_VK_Physical_Device = Device;
+				break;
+			}
+
+		static_cast<Vulkan_Physical_Device*>(this->m_RHI_Physical_Device.get())->Reset(this->m_VK_Physical_Device);
+
+		if (nullptr == this->m_VK_Physical_Device)
+			throw runtime_error("Failed to find a suitable GPU!");
+
+		//NOTE : Note Phyiscsal Device Info
+		this->m_Msaa_Samples = S_Get_Max_Usable_Sample_Count(this->m_VK_Physical_Device);
+	}
+
+	RHI_Physical_Device* Vulkan_RHI::Get_Physical_Device(void) {
+		return this->m_RHI_Physical_Device.get();
+	}
+
+	void Vulkan_RHI::Create_Logical_Device(void) {
+		if (nullptr != this->m_Logical_VK_Device)
+			throw runtime_error("Vulkan Logical Device Already Created!");
+
+		this->m_Queue_Family_Indices = Vulkan_RHI::S_Get_Queue_Framies(this->m_VK_Physical_Device, this->m_VK_Surface.get());
+
+		//NOTE : Queue Family Should Be Unique,Because It Maybe Same
+		std::unordered_set<uint32_t> Unique_Queue_Families{
+			this->m_Queue_Family_Indices.Graphics_Family,
+			this->m_Queue_Family_Indices.Present_Family,
+			this->m_Queue_Family_Indices.Compute_Family
+		};
+
+		//NOTE : Refence Continue From Create_Instance
+		constexpr float Queue_Priority{ 1.0f };
+
+		vector<VkDeviceQueueCreateInfo> Queue_Create_Infos{};
+		Queue_Create_Infos.reserve(Unique_Queue_Families.size());
+		{
+			for (const auto& Queue_Family : Unique_Queue_Families) {
+				VkDeviceQueueCreateInfo Queue_Create_Info{};
+				Queue_Create_Info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+				Queue_Create_Info.queueFamilyIndex = Queue_Family;
+				Queue_Create_Info.queueCount = 1;
+				Queue_Create_Info.pQueuePriorities = &Queue_Priority;
+				Queue_Create_Infos.emplace_back(Queue_Create_Info);
+			}
+		}
+
+		VkPhysicalDeviceFeatures Physical_Device_Features{};
+		{
+			Physical_Device_Features.samplerAnisotropy = VK_TRUE;
+			Physical_Device_Features.fragmentStoresAndAtomics = VK_TRUE;
+			Physical_Device_Features.independentBlend = VK_TRUE;
+		}
+
+		VkDeviceCreateInfo Device_Create_Info{};
+		{
+			Device_Create_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+			Device_Create_Info.queueCreateInfoCount = static_cast<uint32_t>(Queue_Create_Infos.size());
+			Device_Create_Info.pQueueCreateInfos = Queue_Create_Infos.data();
+			Device_Create_Info.enabledExtensionCount = static_cast<uint32_t>(this->m_Physical_Device_Extensions.size());
+			Device_Create_Info.ppEnabledExtensionNames = this->m_Physical_Device_Extensions.data();
+			Device_Create_Info.pEnabledFeatures = &Physical_Device_Features;
+		}
+
+
+		THROW_IF_VK_FAILED(vkCreateDevice(this->m_VK_Physical_Device, &Device_Create_Info, this->m_Allocator.get(), &this->m_Logical_VK_Device));
+		static_cast<Vulkan_Logical_Device*>(this->m_RHI_Logical_Device.get())->Reset(this->m_Logical_VK_Device);
+
+		{
+			vkGetDeviceQueue(this->m_Logical_VK_Device, this->m_Queue_Family_Indices.Graphics_Family, 0, &this->m_Queues.Graphic_Queue);
+			vkGetDeviceQueue(this->m_Logical_VK_Device, this->m_Queue_Family_Indices.Present_Family, 0, &this->m_Queues.Present_Queue);
+			vkGetDeviceQueue(this->m_Logical_VK_Device, this->m_Queue_Family_Indices.Compute_Family, 0, &this->m_Queues.Compute_Queue);
+
+			static_cast<Vulkan_Queue*>(this->m_Queues.Graphic_RHI_Queue.get())->Reset(this->m_Queues.Graphic_Queue);
+			static_cast<Vulkan_Queue*>(this->m_Queues.Present_RHI_Queue.get())->Reset(this->m_Queues.Present_Queue);
+			static_cast<Vulkan_Queue*>(this->m_Queues.Compute_RHI_Queue.get())->Reset(this->m_Queues.Compute_Queue);
+		}
+
+		this->Get_Device_ProcAddrs();
+
+		this->Reset_Device_Deleters(this->m_Logical_VK_Device, this->m_Allocator.get());
+	}
+
+	RHI_Logical_Device* Vulkan_RHI::Get_Logical_Device(void) {
+		return this->m_RHI_Logical_Device.get();
+	}
+
+	RHI_Queue* Vulkan_RHI::Get_Graphics_Queue(void) {
+		return this->m_Queues.Graphic_RHI_Queue.get();
+	}
+
+	void Vulkan_RHI::Run(void) {
+		this->Create_Allocator();
+		this->Create_Instance();
+		this->Create_Surface();
+		this->Create_Physical_Device();
+		this->Create_Logical_Device();
+
+		//this->Create_Command_Pool();
+		//this->Create_Command_Buffers();
+		//this->Create_Descriptor_Pool();
+		//this->Create_Sync_Primitices();
+		//this->Create_SwapChain();
+		//this->Create_SwapChhain_Image_Views();
+		//TODO : Add SwapChain Image Depth Image View
+	}
+
+	void Vulkan_RHI::CleanUp_SwapChain(void)
+	{
+	}
+
+	void Vulkan_RHI::Re_Create_SwapChain(void)
+	{
+	}
+
+
+
+
+
+
+	void Vulkan_RHI::Create_Command_Pool(void) {
+		//NOTE : Default Graphics Command Pool
+		{
+			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
+			{
+				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
+			}
+
+			VkCommandPool Command_Pool{ nullptr };
+			THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &Command_Pool));
+			if (nullptr == this->m_RHI_Command_Pool)
+				this->m_RHI_Command_Pool = std::make_unique<Vulkan_Command_Pool>();
+			static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Reset(Command_Pool);
+		}
+
+		//NOTE : Other Command Pools
+		{
+			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
+			{
+				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
+			}
+
+			VkCommandPool Command_Pool{ nullptr };
+			for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+				THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &Command_Pool));
+				this->m_VK_Command_Pools[Index].reset(Command_Pool);
+			}
+
+		}
+	}
+
+	void Vulkan_RHI::Create_Command_Buffers(void) {
+		for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+			VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
+			{
+				Command_Buffer_Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+				Command_Buffer_Allocate_Info.commandPool = this->m_VK_Command_Pools[Index].get();
+				Command_Buffer_Allocate_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+				Command_Buffer_Allocate_Info.commandBufferCount = 1;
+			}
+
+			VkCommandBuffer Command_Buffer{ nullptr };
+			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Command_Buffer_Allocate_Info, &Command_Buffer));
+			if (nullptr == this->m_RHI_Command_Buffers[Index])
+				this->m_RHI_Command_Buffers[Index] = std::make_unique<Vulkan_Command_Buffer>();
+			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(Command_Buffer);
+		}
+	}
+
+	void Vulkan_RHI::Create_Descriptor_Pool(void) {
+		array<VkDescriptorPoolSize, 7> Pool_Sizes{};
+		{
+			//TODO Erase Magic Number
+			{
+				Pool_Sizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				Pool_Sizes[0].descriptorCount = 3 + 2 + 2 + 2 + 1 + 1 + 3 + 3;
+			}
+
+			{
+				Pool_Sizes[1].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				Pool_Sizes[1].descriptorCount = 1 + 1 + 1 * NameSpace_Config::Max_Vertex_Blending_Mesh_Count;
+			}
+
+			{
+				Pool_Sizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				Pool_Sizes[2].descriptorCount = 1 * NameSpace_Config::Max_Material_Count;
+			}
+
+			{
+				Pool_Sizes[3].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Pool_Sizes[3].descriptorCount = 3 + 5 * NameSpace_Config::Max_Material_Count + 1 + 1;
+			}
+
+			{
+				Pool_Sizes[4].type = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+				Pool_Sizes[4].descriptorCount = 4 + 1 + 1 + 2;
+			}
+
+			{
+				Pool_Sizes[5].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+				Pool_Sizes[5].descriptorCount = 3;
+			}
+
+			{
+				Pool_Sizes[6].type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+				Pool_Sizes[6].descriptorCount = 1;
+			}
+		}
+
+		//NOTE :  // +SkyBox + Axis Descriptor Set
+		VkDescriptorPoolCreateInfo Pool_Info{};
+		{
+			Pool_Info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			Pool_Info.poolSizeCount = static_cast<uint32_t>(Pool_Sizes.size());
+			Pool_Info.pPoolSizes = Pool_Sizes.data();
+			Pool_Info.maxSets = 1 + 1 + 1 + NameSpace_Config::Max_Vertex_Blending_Mesh_Count + NameSpace_Config::Max_Material_Count + 1 + 1;
+		}
+
+		VkDescriptorPool Descriptor_Pool{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateDescriptorPool(this->m_Logical_VK_Device, &Pool_Info, this->m_Allocator.get(), &Descriptor_Pool));
+		if (nullptr == this->m_RHI_Descriptor_Pool)
+			this->m_RHI_Descriptor_Pool = std::make_unique<Vulkan_Descriptor_Pool>();
+		static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Reset(Descriptor_Pool);
+	}
+
+	void Vulkan_RHI::Create_Sync_Primitices(void) {
+		VkSemaphoreCreateInfo Semaphore_Info{};
+		{
+			Semaphore_Info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+		}
+
+		VkFenceCreateInfo Fence_Info{};
+		{
+			Fence_Info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+			Fence_Info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+		}
+
+		VkSemaphore Semaphore{ nullptr };
+		VkFence InFlight_Fence{ nullptr };
+		for (uint8_t Index = 0; Index < Vulkan_RHI::s_Frames_In_Flight; ++Index) {
+			{
+				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device, &Semaphore_Info, this->m_Allocator.get(), &Semaphore));
+				if (nullptr == this->m_Image_available_For_Render_RHI_Semaphores[Index])
+					this->m_Image_available_For_Render_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
+				static_cast<Vulkan_Semaphore*>(this->m_Image_available_For_Render_RHI_Semaphores[Index].get())->Reset(Semaphore);
+			}
+
+			{
+				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device, &Semaphore_Info, this->m_Allocator.get(), &Semaphore));
+				if (nullptr == this->m_Image_Finished_For_Present_RHI_Semaphores[Index])
+					this->m_Image_Finished_For_Present_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
+				static_cast<Vulkan_Semaphore*>(this->m_Image_Finished_For_Present_RHI_Semaphores[Index].get())->Reset(Semaphore);
+			}
+
+			{
+				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device, &Semaphore_Info, this->m_Allocator.get(), &Semaphore));
+				if (nullptr == this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index])
+					this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index] = std::make_unique<Vulkan_Semaphore>();
+				static_cast<Vulkan_Semaphore*>(this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index].get())->Reset(Semaphore);
+			}
+
+			{
+				THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device, &Fence_Info, this->m_Allocator.get(), &InFlight_Fence));
+				if (nullptr == this->m_InFlight_RHI_Fences[Index])
+					this->m_InFlight_RHI_Fences[Index] = std::make_unique<Vulkan_Fence>();
+				static_cast<Vulkan_Fence*>(this->m_InFlight_RHI_Fences[Index].get())->Reset(InFlight_Fence);
+			}
+		}
+	}
+
+	void Vulkan_RHI::Create_SwapChain(void) {
+		this->m_Swap_Chain_Support_Details = Vulkan_RHI::Query_Swap_Chain_Support_Details(this->m_VK_Physical_Device, this->m_VK_Surface.get());
+
+		const VkSurfaceFormatKHR Surface_Format{ Vulkan_RHI::Choose_SwapChain_Surface_Format(this->m_Swap_Chain_Support_Details.Formats) };
+		const VkPresentModeKHR Present_Mode{ Vulkan_RHI::Choose_SwapChain_Present_Mode(this->m_Swap_Chain_Support_Details.Present_Modes) };
+		const VkExtent2D Swap_Chain_Extent{ Vulkan_RHI::Choose_SwapChain_Extent(this->m_Window,this->m_Swap_Chain_Support_Details.Capabilities) };
+
+		//NOTE : Choose Image Count ,We Want One More Image Than Min Image Count
+		uint32_t Image_Count{ this->m_Swap_Chain_Support_Details.Capabilities.minImageCount + 1 };
+		Image_Count = std::clamp(Image_Count, this->m_Swap_Chain_Support_Details.Capabilities.minImageCount, this->m_Swap_Chain_Support_Details.Capabilities.maxImageCount);
+
+		//TODO : Why We Need Graphics And Present Family
+		vector<uint32_t> Queue_Family_Indices{ this->m_Queue_Family_Indices.Graphics_Family,this->m_Queue_Family_Indices.Present_Family };
+		VkSharingMode Sharing_Mode{ VK_SHARING_MODE_EXCLUSIVE };
+
+		if (this->m_Queue_Family_Indices.Graphics_Family != this->m_Queue_Family_Indices.Present_Family)
+			Sharing_Mode = VK_SHARING_MODE_CONCURRENT;
+
+		VkSwapchainCreateInfoKHR Swap_Chain_Create_Info{};
+		{
+			Swap_Chain_Create_Info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+			Swap_Chain_Create_Info.surface = this->m_VK_Surface.get();
+			Swap_Chain_Create_Info.minImageCount = Image_Count;
+			Swap_Chain_Create_Info.imageFormat = Surface_Format.format;
+			Swap_Chain_Create_Info.imageColorSpace = Surface_Format.colorSpace;
+			Swap_Chain_Create_Info.imageExtent = Swap_Chain_Extent;
+			Swap_Chain_Create_Info.imageArrayLayers = 1;
+			Swap_Chain_Create_Info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			Swap_Chain_Create_Info.imageSharingMode = Sharing_Mode;
+			Swap_Chain_Create_Info.queueFamilyIndexCount = static_cast<uint32_t>(Queue_Family_Indices.size());
+			Swap_Chain_Create_Info.pQueueFamilyIndices = Queue_Family_Indices.data();
+			Swap_Chain_Create_Info.preTransform = this->m_Swap_Chain_Support_Details.Capabilities.currentTransform;
+			Swap_Chain_Create_Info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+			Swap_Chain_Create_Info.presentMode = Present_Mode;
+			//NOTE : Should Not Read Back Buffer
+			Swap_Chain_Create_Info.clipped = VK_TRUE;
+			Swap_Chain_Create_Info.oldSwapchain = VK_NULL_HANDLE;
+		}
+
+		VkSwapchainKHR SwapChain{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateSwapchainKHR(this->m_Logical_VK_Device, &Swap_Chain_Create_Info, nullptr, &SwapChain));
+		this->m_Vk_SwapChain.reset(SwapChain);
+
+		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device, this->m_Vk_SwapChain.get(), &Image_Count, nullptr));
+		this->m_SwapChain_VK_Images.resize(Image_Count);
+		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device, this->m_Vk_SwapChain.get(), &Image_Count, this->m_SwapChain_VK_Images.data()));
+
+		//NOTE : Refence SwapChain Info
+		{
+			this->m_SwapChain_Image_Format = Surface_Format.format;
+			this->m_SwapChain_Extent = Swap_Chain_Extent;
+			this->m_Scissor = { {0,0},{Swap_Chain_Extent.width,Swap_Chain_Extent.height} };
+		}
+	}
+
+	void Vulkan_RHI::Create_SwapChhain_Image_Views(void) {
+		this->m_SwapChain_Image_Views.resize(this->m_SwapChain_VK_Images.size());
+		for (size_t Index = 0; Index < this->m_SwapChain_VK_Images.size(); ++Index) {
+
+			VkImageView Image_View{ NameSpace_Utilities::Create_Image_View(
+				this->m_Logical_VK_Device,
+				this->m_SwapChain_VK_Images[Index],
+				this->m_SwapChain_Image_Format,
+				1,
+					VK_IMAGE_ASPECT_COLOR_BIT,
+				VK_IMAGE_VIEW_TYPE_2D,
+				1,
+				this->m_Allocator.get())
+			};
+
+			this->m_SwapChain_Image_Views[Index].reset(Image_View);
+		}
+	}
+
+	void Vulkan_RHI::Create_Resource_Allocator(void) {
+		//VmaVulkanFunctions Vulkan_Functions{};
+		//{
+		//	Vulkan_Functions.vkGetInstanceProcAddr = vkGetInstanceProcAddr;
+		//	Vulkan_Functions.vkGetDeviceProcAddr = vkGetDeviceProcAddr;
+		//}
+
+		//VmaAllocatorCreateInfo Allocator_Create_Info{};
+		//{
+		//	Allocator_Create_Info.vulkanApiVersion = NameSpace_Config::API_Verssion;
+		//	Allocator_Create_Info.instance = this->m_VK_Instance.get();
+		//	Allocator_Create_Info.physicalDevice = this->m_VK_Physical_Device;
+		//	Allocator_Create_Info.device = this->m_Logical_VK_Device.get();
+
+		//	//NOTE : Default 256MiB
+		//	Allocator_Create_Info.preferredLargeHeapBlockSize = 0;
+		//	Allocator_Create_Info.pVulkanFunctions = &Vulkan_Functions;
+		//}
+
+		//THROW_IF_VK_FAILED(vmaCreateAllocator(&Allocator_Create_Info, &this->m_Vma_Allocator));
+	}
+
+
+	void Vulkan_RHI::Create_Nearest_Sampler(void) {
+		VkPhysicalDeviceProperties Properties{};
+		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
+
+		VkSamplerCreateInfo Sampler_Create_Info{};
+		{
+			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			Sampler_Create_Info.magFilter = VK_FILTER_NEAREST;
+			Sampler_Create_Info.minFilter = VK_FILTER_NEAREST;
+			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
+			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
+			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
+			Sampler_Create_Info.compareEnable = VK_FALSE;
+			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
+			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+			Sampler_Create_Info.mipLodBias = 0.0f;
+			Sampler_Create_Info.minLod = 0.0f;
+			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
+		}
+
+		VkSampler Sampler{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
+
+		static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Reset(Sampler);
+	}
+
+
+	void Vulkan_RHI::Create_Linear_Sampler(void) {
+		VkPhysicalDeviceProperties Properties{};
+		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
+
+		VkSamplerCreateInfo Sampler_Create_Info{};
+		{
+			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			Sampler_Create_Info.magFilter = VK_FILTER_LINEAR;
+			Sampler_Create_Info.minFilter = VK_FILTER_LINEAR;
+			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
+			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
+			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
+			Sampler_Create_Info.compareEnable = VK_FALSE;
+			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
+			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			Sampler_Create_Info.mipLodBias = 0.0f;
+			Sampler_Create_Info.minLod = 0.0f;
+			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
+		}
+
+		VkSampler Sampler{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
+
+		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
+	}
 
 
 
@@ -858,125 +1018,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 
-	const vector<const char*> Vulkan_RHI::Get_Physical_Device_Extensions_Require(void) {
-		vector<const char*> Physical_Device_Extensions{};
-		Physical_Device_Extensions.reserve(NameSpace_Config::Device_EXT_Size);
 
-		for (int Index = 0; Index < NameSpace_Config::Device_EXT_Size; ++Index)
-			Physical_Device_Extensions.emplace_back(NameSpace_Config::Device_EXTs);
 
-		return Physical_Device_Extensions;
-	}
 
-	bool Vulkan_RHI::Check_Physical_Device_Extension_Support(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions) {
-		uint32_t Extension_Size{};
-		THROW_IF_VK_FAILED(vkEnumerateDeviceExtensionProperties(Device, nullptr, &Extension_Size, nullptr));
-		vector<VkExtensionProperties> Available_Extensions{};
-		Available_Extensions.resize(Extension_Size);
-		THROW_IF_VK_FAILED(vkEnumerateDeviceExtensionProperties(Device, nullptr, &Extension_Size, Available_Extensions.data()));
-
-		std::unordered_set<const char*> Required_Extensions{};
-		for (const auto& Extension : Require_Extensions)
-			Required_Extensions.emplace(Extension);
-
-		for (const auto& Available_Extension : Available_Extensions)
-			if (Required_Extensions.find(Available_Extension.extensionName) != Required_Extensions.cend())
-				Required_Extensions.erase(Available_Extension.extensionName);
-
-		return Required_Extensions.empty();
-	}
-
-	bool Vulkan_RHI::Is_Device_Suitable(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions) {
-		if (false == Check_Physical_Device_Extension_Support(Device, Require_Extensions))
-			return false;
-
-		VkPhysicalDeviceProperties Device_Properties{};
-		vkGetPhysicalDeviceProperties(Device, &Device_Properties);
-
-		VkPhysicalDeviceFeatures Device_Features{};
-		vkGetPhysicalDeviceFeatures(Device, &Device_Features);
-
-		//TODO : Set More Condition
-		return
-			Device_Properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-			Device_Features.geometryShader &&
-			Device_Features.samplerAnisotropy;
-	}
-
-	VkSampleCountFlagBits Vulkan_RHI::Get_Max_Usable_Sample_Count(const VkPhysicalDevice& Physical_Device) {
-		VkPhysicalDeviceProperties Physical_Device_Properties{};
-		vkGetPhysicalDeviceProperties(Physical_Device, &Physical_Device_Properties);
-		VkSampleCountFlags Counts{ Physical_Device_Properties.limits.framebufferColorSampleCounts & Physical_Device_Properties.limits.framebufferDepthSampleCounts };
-
-		if (0 != (Counts & VK_SAMPLE_COUNT_64_BIT)) return VK_SAMPLE_COUNT_64_BIT;
-		if (0 != (Counts & VK_SAMPLE_COUNT_32_BIT)) return VK_SAMPLE_COUNT_32_BIT;
-		if (0 != (Counts & VK_SAMPLE_COUNT_16_BIT)) return VK_SAMPLE_COUNT_16_BIT;
-		if (0 != (Counts & VK_SAMPLE_COUNT_8_BIT)) return VK_SAMPLE_COUNT_8_BIT;
-		if (0 != (Counts & VK_SAMPLE_COUNT_4_BIT)) return VK_SAMPLE_COUNT_4_BIT;
-		if (0 != (Counts & VK_SAMPLE_COUNT_2_BIT)) return VK_SAMPLE_COUNT_2_BIT;
-		return VK_SAMPLE_COUNT_1_BIT;
-	}
-
-	uint32_t Vulkan_RHI::Find_Queue_Families(const VkPhysicalDevice& Physical_Device, VkQueueFlagBits Vk_Queue_FlagBit) {
-		uint32_t Queue_Family_Count;
-		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, nullptr);
-
-		vector<VkQueueFamilyProperties> Queue_Families;
-		Queue_Families.resize(Queue_Family_Count);
-		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, Queue_Families.data());
-
-		for (auto CIt = Queue_Families.cbegin(); CIt != Queue_Families.cend(); ++CIt)
-			if (CIt->queueFlags & Vk_Queue_FlagBit)
-				return  static_cast<uint32_t>(CIt - Queue_Families.cbegin());
-
-		throw runtime_error("Failed to find a suitable GPU!");
-
-		return std::numeric_limits<uint32_t>::max();
-	}
-
-	uint32_t Vulkan_RHI::Get_Physical_Device_Queue_Present_Family(const VkPhysicalDevice& Physical_Device, const VkSurfaceKHR& Surface, uint32_t Graphics_Family_Index) {
-		uint32_t Queue_Family_Count{};
-		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, nullptr);
-
-		vector<VkQueueFamilyProperties> Queue_Families{};
-		Queue_Families.resize(Queue_Family_Count);
-		vkGetPhysicalDeviceQueueFamilyProperties(Physical_Device, &Queue_Family_Count, Queue_Families.data());
-
-		uint32_t Queue_Family_Index{ numeric_limits<uint32_t>::max() };
-		for (auto CIt = Queue_Families.cbegin(); CIt != Queue_Families.cend(); ++CIt) {
-			VkBool32 Present_Support{ false };
-			THROW_IF_VK_FAILED(vkGetPhysicalDeviceSurfaceSupportKHR(Physical_Device, static_cast<uint32_t>(CIt - Queue_Families.cbegin()), Surface, &Present_Support));
-
-			if (Present_Support) {
-				Queue_Family_Index = static_cast<uint32_t>(CIt - Queue_Families.cbegin());
-
-				//NOTE : First Chose Queue Family With Graphics Bit
-				if (Queue_Family_Index == Graphics_Family_Index)
-					return Queue_Family_Index;
-			}
-		}
-
-		return Queue_Family_Index;
-	}
-
-	const Vulkan_RHI::Queue_Family_Indices Vulkan_RHI::Get_Queue_Framies(const VkPhysicalDevice& Physical_Device, VkSurfaceKHR Suraface) {
-		Queue_Family_Indices Queue_Family_Indices{};
-
-		Queue_Family_Indices.Graphics_Family = Vulkan_RHI::Find_Queue_Families(Physical_Device, VK_QUEUE_GRAPHICS_BIT);
-		if (numeric_limits<uint32_t>::max() == Queue_Family_Indices.Graphics_Family)
-			throw runtime_error("Failed to find a queue family with graphics bit!");
-
-		//NOTE : Queue Family Should Be Unique,Because It Maybe Same
-		Queue_Family_Indices.Present_Family = Vulkan_RHI::Get_Physical_Device_Queue_Present_Family(Physical_Device, Suraface, Queue_Family_Indices.Graphics_Family);
-		if (numeric_limits<uint32_t>::max() == Queue_Family_Indices.Present_Family)
-			throw runtime_error("Failed to find a queue family with present bit!");
-
-		Queue_Family_Indices.Compute_Family = Vulkan_RHI::Find_Queue_Families(Physical_Device, VK_QUEUE_COMPUTE_BIT);
-		if (numeric_limits<uint32_t>::max() == Queue_Family_Indices.Compute_Family)
-			throw runtime_error("Failed to find a queue family with compute bit!");
-
-		return Queue_Family_Indices;
-	}
 
 	const Vulkan_RHI::Swap_Chain_Support_Details Vulkan_RHI::Query_Swap_Chain_Support_Details(const VkPhysicalDevice& Physical_Device, VkSurfaceKHR Surface) {
 		Swap_Chain_Support_Details SwapChain_Details{};
@@ -1052,7 +1096,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkCommandPool VK_Command_Pool{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device.get(), &Command_Pool_Create_Info, nullptr, &VK_Command_Pool));
+		THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, nullptr, &VK_Command_Pool));
 		auto Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
 		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
 		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Reset(VK_Command_Pool);
@@ -1156,7 +1200,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			}
 
 			VkSampler Mipmap_Sampler{ nullptr };
-			THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &Sampler_Create_Info, &this->m_Allocator, &Mipmap_Sampler));
+			THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Mipmap_Sampler));
 			this->m_Mipmap_RHI_Samplers[Mip_Levels] = std::make_unique<Vulkan_Sampler>();
 			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Set_Deleter(this->m_VK_Sampler_Deleter);
 			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Reset(Mipmap_Sampler);
@@ -1172,7 +1216,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		unique_ptr<Vulkan_Shader_Module> Shader{ std::make_unique<Vulkan_Shader_Module>() };
 
 		static_cast<Vulkan_Shader_Module*>(Shader.get())->Set_Deleter(this->m_VK_Shader_Module_Deleter);
-		static_cast<Vulkan_Shader_Module*>(Shader.get())->Reset(NameSpace_Utilities::Create_Shader_Module(this->m_Logical_VK_Device.get(), Shader_Code));
+		static_cast<Vulkan_Shader_Module*>(Shader.get())->Reset(NameSpace_Utilities::Create_Shader_Module(this->m_Logical_VK_Device, Shader_Code));
 		return  Shader;
 	}
 
@@ -1182,11 +1226,11 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		NameSpace_Utilities::Create_Buffer(
 			this->m_VK_Physical_Device,
-			this->m_Logical_VK_Device.get(),
+			this->m_Logical_VK_Device,
 			Size,
 			static_cast<VkBufferUsageFlags>(Usages),
 			static_cast<VkMemoryPropertyFlags>(Properties),
-			&this->m_Allocator,
+			this->m_Allocator.get(),
 			Temp_Buffer,
 			Temp_Device_Memory
 		);
@@ -1209,9 +1253,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		void* Dst_Data{ nullptr };
 		//NOTE : No Sue Place Memory EXT
-		THROW_IF_VK_FAILED(vkMapMemory(this->m_Logical_VK_Device.get(), static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Get(), Offset, Size, 0, &Dst_Data));
+		THROW_IF_VK_FAILED(vkMapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Get(), Offset, Size, 0, &Dst_Data));
 		std::memcpy(Dst_Data, Data, static_cast<size_t>(Size));
-		vkUnmapMemory(this->m_Logical_VK_Device.get(), static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Get());
+		vkUnmapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Get());
 
 		return true;
 	}
@@ -1271,7 +1315,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkCommandBuffer Command_Buffer{ nullptr };
-		THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device.get(), &Allocate_Info, &Command_Buffer));
+		THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Allocate_Info, &Command_Buffer));
 
 		VkCommandBufferBeginInfo Begin_Info{};
 		{
@@ -1301,7 +1345,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkQueueSubmit(this->m_Queues.Graphic_Queue, 1, &Submit_Info, VK_NULL_HANDLE));
 		THROW_IF_VK_FAILED(vkQueueWaitIdle(this->m_Queues.Graphic_Queue));
 
-		vkFreeCommandBuffers(this->m_Logical_VK_Device.get(), static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
+		vkFreeCommandBuffers(this->m_Logical_VK_Device, static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
 	}
 
 	void Vulkan_RHI::Copy_Buffer(unique_ptr<RHI_Buffer> Src_Buffer, unique_ptr<RHI_Buffer> Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) {
@@ -1325,7 +1369,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		VkDeviceMemory VK_Device_Memory{ nullptr };
 		NameSpace_Utilities::Create_Image(
 			this->m_VK_Physical_Device,
-			this->m_Logical_VK_Device.get(),
+			this->m_Logical_VK_Device,
 			static_cast<VkExtent2D>(Image_Extent),
 			static_cast<VkFormat>(Image_Format),
 			Mip_levels,
@@ -1337,7 +1381,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			VK_Device_Memory,
 			static_cast<VkImageCreateFlags>(Image_Create_Flags),
 			Array_Layers,
-			&this->m_Allocator
+			this->m_Allocator.get()
 		);
 
 		unique_ptr<RHI_Image> Image{ std::make_unique<Vulkan_Image>() };
@@ -1356,14 +1400,14 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		static_cast<Vulkan_Image_View*>(Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
 
 		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
-			this->m_Logical_VK_Device.get(),
+			this->m_Logical_VK_Device,
 			static_cast<Vulkan_Image*>(Image.get())->Get(),
 			static_cast<VkFormat>(Format),
 			Mip_levels,
 			static_cast<VkImageAspectFlags>(Image_Aspect_Flags),
 			static_cast<VkImageViewType>(View_Type),
 			Layout_Count,
-			&this->m_Allocator
+			this->m_Allocator.get()
 		));
 
 		return Image_View;
@@ -1404,7 +1448,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkDescriptorPool VK_Descriptor_Pool{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateDescriptorPool(this->m_Logical_VK_Device.get(), &Descriptor_Pool_Create_Info, &this->m_Allocator, &VK_Descriptor_Pool));
+		THROW_IF_VK_FAILED(vkCreateDescriptorPool(this->m_Logical_VK_Device, &Descriptor_Pool_Create_Info, this->m_Allocator.get(), &VK_Descriptor_Pool));
 		auto Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 		static_cast<Vulkan_Descriptor_Pool*>(Descriptor_Pool.get())->Set_Deleter(this->m_VK_Descriptor_Pool_Deleter);
 		static_cast<Vulkan_Descriptor_Pool*>(Descriptor_Pool.get())->Reset(VK_Descriptor_Pool);
@@ -1443,7 +1487,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkDescriptorSetLayout VK_Descriptor_Set_Layout{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateDescriptorSetLayout(this->m_Logical_VK_Device.get(), &Descriptor_Set_Layout_Create_Info, &this->m_Allocator, &VK_Descriptor_Set_Layout));
+		THROW_IF_VK_FAILED(vkCreateDescriptorSetLayout(this->m_Logical_VK_Device, &Descriptor_Set_Layout_Create_Info, this->m_Allocator.get(), &VK_Descriptor_Set_Layout));
 		auto Descriptor_Set_Layout{ std::make_unique<Vulkan_Descriptor_Set_Layout>() };
 		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Set_Deleter(this->m_VK_Descriptor_Set_Layout_Deleter);
 		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Reset(VK_Descriptor_Set_Layout);
@@ -1460,7 +1504,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkFence VK_Fence{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device.get(), &Fence_Create_Info, &this->m_Allocator, &VK_Fence));
+		THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device, &Fence_Create_Info, this->m_Allocator.get(), &VK_Fence));
 		auto Fence{ std::make_unique<Vulkan_Fence>() };
 		static_cast<Vulkan_Fence*>(Fence.get())->Set_Deleter(this->m_VK_Fence_Deleter);
 		static_cast<Vulkan_Fence*>(Fence.get())->Reset(VK_Fence);
@@ -1488,7 +1532,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkFramebuffer VK_Frame_Buffer{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateFramebuffer(this->m_Logical_VK_Device.get(), &Frame_Buffer_Create_Info, &this->m_Allocator, &VK_Frame_Buffer));
+		THROW_IF_VK_FAILED(vkCreateFramebuffer(this->m_Logical_VK_Device, &Frame_Buffer_Create_Info, this->m_Allocator.get(), &VK_Frame_Buffer));
 		auto Frame_Buffer{ std::make_unique<Vulkan_Frame_Buffer>() };
 		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Set_Deleter(this->m_VK_Frame_Buffer_Deleter);
 		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Reset(VK_Frame_Buffer);
@@ -2064,7 +2108,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		VkPipelineCache vk_Pipeline_Cache{ Pipeline_Cache.has_value() ? static_cast<Vulkan_Pieline_Cache*>(Pipeline_Cache.value())->Get() : nullptr };
 
 		VkPipeline vk_Pipeline{};
-		THROW_IF_VK_FAILED(vkCreateGraphicsPipelines(this->m_Logical_VK_Device.get(), vk_Pipeline_Cache, 1, &vk_Graphics_Pipeline_Create_Info, &this->m_Allocator, &vk_Pipeline));
+		THROW_IF_VK_FAILED(vkCreateGraphicsPipelines(this->m_Logical_VK_Device, vk_Pipeline_Cache, 1, &vk_Graphics_Pipeline_Create_Info, this->m_Allocator.get(), &vk_Pipeline));
 		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
@@ -2093,7 +2137,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkPipelineCache vk_Pipeline_Cache{ Pipeline_Cache.has_value() ? static_cast<Vulkan_Pieline_Cache*>(Pipeline_Cache.value())->Get() : nullptr };
 		VkPipeline vk_Pipeline{};
-		THROW_IF_VK_FAILED(vkCreateComputePipelines(this->m_Logical_VK_Device.get(), vk_Pipeline_Cache, 1, &vk_Compute_Pipeline_Create_Info, &this->m_Allocator, &vk_Pipeline));
+		THROW_IF_VK_FAILED(vkCreateComputePipelines(this->m_Logical_VK_Device, vk_Pipeline_Cache, 1, &vk_Compute_Pipeline_Create_Info, this->m_Allocator.get(), &vk_Pipeline));
 		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
@@ -2131,7 +2175,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkPipelineLayout vk_Pipeline_Layout{};
-		THROW_IF_VK_FAILED(vkCreatePipelineLayout(this->m_Logical_VK_Device.get(), &vk_Pipeline_Layout_Create_Info, &this->m_Allocator, &vk_Pipeline_Layout));
+		THROW_IF_VK_FAILED(vkCreatePipelineLayout(this->m_Logical_VK_Device, &vk_Pipeline_Layout_Create_Info, this->m_Allocator.get(), &vk_Pipeline_Layout));
 		unique_ptr<RHI_Pipeline_Layout> Pipeline_Layout{ std::make_unique<Vulkan_Pipeline_Layout>() };
 		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Set_Deleter(this->m_VK_Pipeline_Layout_Deleter);
 		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Reset(vk_Pipeline_Layout);
@@ -2231,7 +2275,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkRenderPass vk_Render_Pass{};
-		THROW_IF_VK_FAILED(vkCreateRenderPass(this->m_Logical_VK_Device.get(), &vk_Render_Pass_Create_Info, &this->m_Allocator, &vk_Render_Pass));
+		THROW_IF_VK_FAILED(vkCreateRenderPass(this->m_Logical_VK_Device, &vk_Render_Pass_Create_Info, this->m_Allocator.get(), &vk_Render_Pass));
 		unique_ptr<RHI_Render_Pass> Render_Pass{ std::make_unique<Vulkan_Render_Pass>() };
 		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Set_Deleter(this->m_VK_Render_Pass_Deleter);
 		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Reset(vk_Render_Pass);
@@ -2263,7 +2307,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkSampler vk_Sampler{};
-		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device.get(), &vk_Sampler_Create_Info, &this->m_Allocator, &vk_Sampler));
+		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &vk_Sampler_Create_Info, this->m_Allocator.get(), &vk_Sampler));
 		unique_ptr<RHI_Sampler> Sampler{ std::make_unique<Vulkan_Sampler>() };
 		static_cast<Vulkan_Sampler*>(Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
 		static_cast<Vulkan_Sampler*>(Sampler.get())->Reset(vk_Sampler);
@@ -2280,7 +2324,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkSemaphore vk_Semaphore{};
-		THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device.get(), &vk_Semaphore_Create_Info, &this->m_Allocator, &vk_Semaphore));
+		THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device, &vk_Semaphore_Create_Info, this->m_Allocator.get(), &vk_Semaphore));
 		unique_ptr<RHI_Semaphore> Semaphore{ std::make_unique<Vulkan_Semaphore>() };
 		static_cast<Vulkan_Semaphore*>(Semaphore.get())->Set_Deleter(this->m_VK_Semaphore_Deleter);
 		static_cast<Vulkan_Semaphore*>(Semaphore.get())->Reset(vk_Semaphore);
@@ -2296,7 +2340,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkBool32 vk_Wait_All{ static_cast<VkBool32>(Wait_All) };
 
-		VkResult vk_Result{ vkWaitForFences(this->m_Logical_VK_Device.get(), vk_Fences.size(), vk_Fences.data(), vk_Wait_All, Time_Out) };
+		VkResult vk_Result{ vkWaitForFences(this->m_Logical_VK_Device, vk_Fences.size(), vk_Fences.data(), vk_Wait_All, Time_Out) };
 		if (VK_SUCCESS != vk_Result) {
 			if (VK_TIMEOUT == vk_Result)
 				return false;
@@ -2309,7 +2353,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	bool Vulkan_RHI::Wait_For_Fence_PFN(RHI_Fence* Fences, uint64_t Time_Out) {
 		VkFence vk_Fence{ static_cast<Vulkan_Fence*>(Fences)->Get() };
 
-		VkResult vk_Result{ vkWaitForFences(this->m_Logical_VK_Device.get(), 1, &vk_Fence, VK_TRUE, Time_Out) };
+		VkResult vk_Result{ vkWaitForFences(this->m_Logical_VK_Device, 1, &vk_Fence, VK_TRUE, Time_Out) };
 
 		if (VK_SUCCESS != vk_Result) {
 			if (VK_TIMEOUT == vk_Result)
@@ -2326,7 +2370,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		for (const auto& Fence : Fences)
 			vk_Fences.push_back(static_cast<Vulkan_Fence*>(Fence)->Get());
 
-		THROW_IF_VK_FAILED(vkResetFences(this->m_Logical_VK_Device.get(), vk_Fences.size(), vk_Fences.data()));
+		THROW_IF_VK_FAILED(vkResetFences(this->m_Logical_VK_Device, vk_Fences.size(), vk_Fences.data()));
 
 		return true;
 	}
@@ -2334,7 +2378,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	bool Vulkan_RHI::Reset_Fence_PFN(RHI_Fence* Fence) {
 		VkFence vk_Fence{ static_cast<Vulkan_Fence*>(Fence)->Get() };
 
-		THROW_IF_VK_FAILED(vkResetFences(this->m_Logical_VK_Device.get(), 1, &vk_Fence));
+		THROW_IF_VK_FAILED(vkResetFences(this->m_Logical_VK_Device, 1, &vk_Fence));
 
 		return true;
 	}
@@ -2342,7 +2386,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	bool Vulkan_RHI::Reset_Command_Pool_PFN(RHI_Command_Pool* Command_Pool, RHI_Command_Pool_Reset_Flags Flags) {
 		VkCommandPool vk_Command_Pool{ static_cast<Vulkan_Command_Pool*>(Command_Pool)->Get() };
 
-		THROW_IF_VK_FAILED(vkResetCommandPool(this->m_Logical_VK_Device.get(), vk_Command_Pool, static_cast<VkCommandPoolResetFlags>(Flags)));
+		THROW_IF_VK_FAILED(vkResetCommandPool(this->m_Logical_VK_Device, vk_Command_Pool, static_cast<VkCommandPoolResetFlags>(Flags)));
 
 		return true;
 	}
@@ -2919,7 +2963,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 				}
 			}
 
-			vkUpdateDescriptorSets(this->m_Logical_VK_Device.get(), vk_Write_Descriptor_Sets.size(), vk_Write_Descriptor_Sets.data(), vk_Copy_Descriptor_Sets.size(), vk_Copy_Descriptor_Sets.data());
+			vkUpdateDescriptorSets(this->m_Logical_VK_Device, vk_Write_Descriptor_Sets.size(), vk_Write_Descriptor_Sets.data(), vk_Copy_Descriptor_Sets.size(), vk_Copy_Descriptor_Sets.data());
 		}
 
 

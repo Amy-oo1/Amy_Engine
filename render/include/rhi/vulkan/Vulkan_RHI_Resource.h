@@ -40,6 +40,79 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	};
 
+	class Vulkan_Physical_Device final : public RHI_Physical_Device {
+	public:
+		/*Vulkan_Physical_Device(void) = default;
+		*
+		Vulkan_Physical_Device(VkPhysicalDevice res) {
+			m_Resource.reset(res);
+		}*/
+
+		void Reset(VkPhysicalDevice res) {
+			m_Resource.reset(res);
+		}
+
+		VkPhysicalDevice Get() const {
+			if (nullptr == m_Resource.get())
+				LOG_ERROR("Vulkan_Physical_Device::Get() : m_Resource is nullptr");
+
+			return m_Resource.get();
+		}
+
+	private:
+		unique_ptr<VkPhysicalDevice_T, function<void(VkPhysicalDevice)>> m_Resource{ nullptr ,[](auto PhysicalDevice) {if (nullptr != PhysicalDevice) { PhysicalDevice = nullptr; }; } };
+
+	};
+
+	class Vulkan_Logical_Device final : public RHI_Logical_Device {
+	public:
+		/*Vulkan_Logical_Device(void) = default;
+		*
+		Vulkan_Logical_Device(VkDevice res) {
+			m_Resource.reset(res);
+		}*/
+
+		void Reset(VkDevice res) {
+			m_Resource.reset(res);
+		}
+
+		VkDevice Get() const {
+			if (nullptr == m_Resource.get())
+				LOG_ERROR("Vulkan_Logical_Device::Get() : m_Resource is nullptr");
+
+			return m_Resource.get();
+		}
+
+		void Set_Deleter(const function<void(VkDevice)>& Deleter) {
+			this->m_Resource.get_deleter() = Deleter;
+		}
+
+	private:
+		unique_ptr<VkDevice_T, function<void(VkDevice)>> m_Resource{ nullptr };
+
+	};
+
+	class Vulkan_Queue final : public RHI_Queue {
+	public:
+		/*Vulkan_Queue(void) = default;
+		*
+		Vulkan_Queue(VkQueue res) {
+			m_Resource.reset(res);
+		}*/
+		void Reset(VkQueue res) {
+			m_Resource.reset(res);
+		}
+		VkQueue Get() const {
+			if (nullptr == m_Resource.get())
+				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+
+			return m_Resource.get();
+		}
+
+	private:
+		unique_ptr<VkQueue_T, function<void(VkQueue)>> m_Resource{ nullptr,[](auto Queue) {if (nullptr != Queue) { Queue = nullptr; }; } };
+
+	};
 
 	class Vulkan_Command_Pool final : public RHI_Command_Pool {
 	public:
@@ -558,26 +631,6 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	};
 
-	class Vulkan_Queue final : public RHI_Queue {
-	public:
-		/*Vulkan_Queue(void) = default;
-		*
-		Vulkan_Queue(VkQueue res) {
-			m_Resource.reset(res);
-		}*/
-		void Reset(VkQueue res) {
-			m_Resource.reset(res);
-		}
-		VkQueue Get() const {
-			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
 
-			return m_Resource.get();
-		}
-
-	private:
-		unique_ptr<VkQueue_T, function<void(VkQueue)>> m_Resource{ nullptr,[](auto Queue) {if (nullptr != Queue) { Queue = nullptr; }; } };
-
-	};
 
 }// namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI

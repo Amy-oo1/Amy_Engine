@@ -43,6 +43,10 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			VkQueue Graphic_Queue{ nullptr };
 			VkQueue Present_Queue{ nullptr };
 			VkQueue Compute_Queue{ nullptr };
+
+			unique_ptr<RHI_Queue> Graphic_RHI_Queue{ std::make_unique<Vulkan_Queue>() };
+			unique_ptr<RHI_Queue> Present_RHI_Queue{ std::make_unique<Vulkan_Queue>() };
+			unique_ptr<RHI_Queue> Compute_RHI_Queue{ std::make_unique<Vulkan_Queue>() };
 		};
 
 		struct Swap_Chain_Support_Details final {
@@ -90,6 +94,8 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		//TODO : Public Func
 	public:
+		void Create_Surface(void);
+
 
 
 
@@ -97,22 +103,41 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	private:
 		void Create_Allocator(void);
 		void Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* Allocator);
+		void Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator);
 
+		void Get_Device_ProcAddrs(void);
 
 		//TODO : Static Public Func
 	public:
 		[[nodiscard]] static const vector<const char*> S_Get_Instance_Extensions_Require(void);
 
-		static void* VKAPI_CALL
+		[[nodiscard]] static void* VKAPI_CALL
 			S_Allocation(
 				void* pUserData,
 				size_t size,
 				size_t alignment,
 				VkSystemAllocationScope /*allocationScope*/
 			);
+		[[nodiscard]] static void* VKAPI_CALL
+			S_Reallocation(
+				void* pUserData,
+				void* original,
+				size_t size,
+				size_t alignment,
+				VkSystemAllocationScope allocationScope
+			);
 
-		static void VKAPI_CALL S_Free(void* pUserData, void* memory);
+		[[nodiscard]] static void VKAPI_CALL S_Free(void* pUserData, void* memory);
 
+		[[nodiscard]] static const vector<const char*> S_Get_Physical_Device_Extensions_Require(void);
+		[[nodiscard]] static bool S_Check_Physical_Device_Extension_Support(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
+		[[nodiscard]] static bool S_Is_Device_Suitable(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
+
+		[[nodiscard]] static  VkSampleCountFlagBits S_Get_Max_Usable_Sample_Count(VkPhysicalDevice Physical_Device);
+
+		[[nodiscard]] static uint32_t S_Get_Physical_Device_Queue_Present_Family(VkPhysicalDevice Physical_Device, VkSurfaceKHR Surface, uint32_t Graphics_Family_Index = numeric_limits<uint32_t>::max());
+		[[nodiscard]] static uint32_t S_Find_Queue_Families(VkPhysicalDevice Physical_Device, VkQueueFlagBits Vk_Queue_FlagBit);
+		[[nodiscard]] static const Queue_Family_Indices S_Get_Queue_Framies(VkPhysicalDevice Physical_Device, VkSurfaceKHR Suraface);
 
 
 		//TODO : Static Member Variable
@@ -121,39 +146,80 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		//TODO : Member Variable
 	private:
+		//NOTE : Other Member Variable
+
+		// NOTE : Function Pointers
+		PFN_vkWaitForFences					F_vkWaitForFences{ nullptr };
+		PFN_vkResetFences					F_vkResetFences{ nullptr };
+		PFN_vkResetCommandPool				F_vkResetCommandPool{ nullptr };
+		PFN_vkBeginCommandBuffer			F_vkBeginCommandBuffer{ nullptr };
+		PFN_vkEndCommandBuffer				F_vkEndCommandBuffer{ nullptr };
+		PFN_vkCmdBeginRenderPass			F_vkCmdBeginRenderPass{ nullptr };
+		PFN_vkCmdNextSubpass				F_vkCmdNextSubpass{ nullptr };
+		PFN_vkCmdEndRenderPass				F_vkCmdEndRenderPass{ nullptr };
+		PFN_vkCmdBindPipeline				F_vkCmdBindPipeline{ nullptr };
+		PFN_vkCmdSetViewport				F_vkCmdSetViewport{ nullptr };
+		PFN_vkCmdSetScissor					F_vkCmdSetScissor{ nullptr };
+		PFN_vkCmdBindVertexBuffers			F_vkCmdBindVertexBuffers{ nullptr };
+		PFN_vkCmdBindIndexBuffer			F_vkCmdBindIndexBuffer{ nullptr };
+		PFN_vkCmdBindDescriptorSets			F_vkCmdBindDescriptorSets{ nullptr };
+		PFN_vkCmdDrawIndexed				F_vkCmdDrawIndexed{ nullptr };
+		PFN_vkCmdClearAttachments			F_vkCmdClearAttachments{ nullptr };
+
+		//NOTE : Window System Variable
+		shared_ptr<Window_System> m_Window{ nullptr };
+		RHI_Viewport m_Viewport{};
+		RHI_Rect_2D m_Scissor{};
+
+		//Vulkan Variable
+		unique_ptr<VkAllocationCallbacks> m_Allocator{ nullptr };
+		vector<const char*> m_Physical_Device_Extensions{};
+		VkSampleCountFlagBits m_Msaa_Samples{ VK_SAMPLE_COUNT_1_BIT };
+
+
+
 		//Deleter
 		function<void(VkInstance)> m_VK_Instance_Deleter{ nullptr };
-		function<void(VkDevice)> m_VK_Device_Deleter{ nullptr };
 		function<void(VkSurfaceKHR)> m_VK_Surface_Deleter{ nullptr };
+		function<void(VkDevice)> m_VK_Device_Deleter{ nullptr };
 
 
 
 		//Class Resource
 		unique_ptr<RHI_Instance> m_RHI_Instance{ std::make_unique<Vulkan_Instance>() };
+		unique_ptr<VkSurfaceKHR_T, decltype(m_VK_Surface_Deleter)> m_VK_Surface{ nullptr };
+		unique_ptr<RHI_Physical_Device> m_RHI_Physical_Device{ std::make_unique<Vulkan_Physical_Device>() };
+		VkPhysicalDevice m_VK_Physical_Device{ nullptr };
+		unique_ptr<RHI_Logical_Device> m_RHI_Logical_Device{ std::make_unique<Vulkan_Logical_Device>() };
+		VkDevice m_Logical_VK_Device{ nullptr };
+		Queue_Family_Indices m_Queue_Family_Indices{};
+		Queues m_Queues{};
 
 
-		//Other Member Variable
-		shared_ptr<Window_System> m_Window{ nullptr };
-		RHI_Viewport m_Viewport{};
-		RHI_Rect_2D m_Scissor{};
-
-		VkAllocationCallbacks m_Allocator{};
 
 		//TODO : Override Func
 	public:
-		virtual void Create_Instance(void) override;//NOTE : Instance Life Time Is The Same As The Application
+		void Create_Instance(void) override;//NOTE : Instance Life Time Is The Same As The Application
 		[[nodiscard]] RHI_Instance* Get_Instance(void) override;
+
+		void Create_Physical_Device(void) override;// NOTE : Physical Device Life Time Is The Same As The Application
+		[[nodiscard]] RHI_Physical_Device* Get_Physical_Device(void) override;
+
+		void Create_Logical_Device(void) override;
+		[[nodiscard]] RHI_Logical_Device* Get_Logical_Device(void) override;
+
+		[[nodiscard]] virtual RHI_Queue* Get_Graphics_Queue(void) override;//Command Queue
 
 
 		void Run(void) override;
 
 
 	private:
-		void Create_Surface(void);
 
-		void Pick_Physical_Device(void);
 
-		void Create_Logical_Device(void);
+
+
+
 
 		void Create_Command_Pool(void);
 
@@ -178,9 +244,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		void Re_Create_SwapChain(void) override;
 
 	private:
-		void Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator);
-
-		void Get_Device_ProcAddrs(void);
+	
 
 		bool Re_Set_Command_Pool_PFN(void);
 
@@ -195,15 +259,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	private:
 
-		[[nodiscard]] static const vector<const char*> Get_Physical_Device_Extensions_Require(void);
-		[[nodiscard]] static bool Check_Physical_Device_Extension_Support(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
-		[[nodiscard]] static bool Is_Device_Suitable(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
 
-		[[nodiscard]] static  VkSampleCountFlagBits Get_Max_Usable_Sample_Count(const VkPhysicalDevice& Physical_Device);
 
-		[[nodiscard]] static const Queue_Family_Indices Get_Queue_Framies(const VkPhysicalDevice& Physical_Device, VkSurfaceKHR Suraface);
-		[[nodiscard]] static uint32_t Get_Physical_Device_Queue_Present_Family(const VkPhysicalDevice& Physical_Device, const VkSurfaceKHR& Surface, uint32_t Graphics_Family_Index = numeric_limits<uint32_t>::max());
-		[[nodiscard]] static uint32_t Find_Queue_Families(const VkPhysicalDevice& Physical_Device, VkQueueFlagBits Vk_Queue_FlagBit);
+
 
 		[[nodiscard]] static const Swap_Chain_Support_Details Query_Swap_Chain_Support_Details(const VkPhysicalDevice& Physical_Device, VkSurfaceKHR Suraface);
 
@@ -319,16 +377,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//NOTE : Resource
 		//unique_ptr<VkInstance_T, decltype(m_VK_Instance_Deleter)> m_VK_Instance{ nullptr };
 
-		unique_ptr<VkSurfaceKHR_T, decltype(m_VK_Surface_Deleter)> m_VK_Surface{ nullptr };
 
-		vector<const char*> m_Physical_Device_Extensions{};
-		VkPhysicalDevice m_VK_Physical_Device{ nullptr };
-		VkSampleCountFlagBits m_Msaa_Samples{ VK_SAMPLE_COUNT_1_BIT };
-
-
-		unique_ptr<VkDevice_T, decltype(m_VK_Device_Deleter)> m_Logical_VK_Device{ nullptr };
-		Queue_Family_Indices m_Queue_Family_Indices{};
-		Queues m_Queues{};
 
 		unique_ptr<RHI_Command_Pool> m_RHI_Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
 		array<unique_ptr<VkCommandPool_T, decltype(m_VK_Command_Pool_Deleter)>, s_Frames_In_Flight> m_VK_Command_Pools{ nullptr,nullptr,nullptr };//TODO : Erase Repeat Code
@@ -360,23 +409,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		unique_ptr<RHI_Sampler> m_Nearest_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
 		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
-		// NOTE : Function Pointers
-		PFN_vkWaitForFences					F_vkWaitForFences;
-		PFN_vkResetFences					F_vkResetFences;
-		PFN_vkResetCommandPool				F_vkResetCommandPool;
-		PFN_vkBeginCommandBuffer			F_vkBeginCommandBuffer;
-		PFN_vkEndCommandBuffer				F_vkEndCommandBuffer;
-		PFN_vkCmdBeginRenderPass			F_vkCmdBeginRenderPass;
-		PFN_vkCmdNextSubpass				F_vkCmdNextSubpass;
-		PFN_vkCmdEndRenderPass				F_vkCmdEndRenderPass;
-		PFN_vkCmdBindPipeline				F_vkCmdBindPipeline;
-		PFN_vkCmdSetViewport				F_vkCmdSetViewport;
-		PFN_vkCmdSetScissor					F_vkCmdSetScissor;
-		PFN_vkCmdBindVertexBuffers			F_vkCmdBindVertexBuffers;
-		PFN_vkCmdBindIndexBuffer			F_vkCmdBindIndexBuffer;
-		PFN_vkCmdBindDescriptorSets			F_vkCmdBindDescriptorSets;
-		PFN_vkCmdDrawIndexed				F_vkCmdDrawIndexed;
-		PFN_vkCmdClearAttachments			F_vkCmdClearAttachments;
+
 
 
 		//virtual void prepareContext() override final;

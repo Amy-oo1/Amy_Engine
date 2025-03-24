@@ -3,7 +3,8 @@
 namespace NameSpace_Render::NameSpace_RHI {
 
 	class RHI_Instance {};
-
+	class RHI_Physical_Device {};
+	class RHI_Logical_Device{};
 
 
 	class RHI_Queue {};
