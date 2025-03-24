@@ -1,8 +1,8 @@
-#include "window/Window_System.h"
+#include "render/window/Window_System.h"
 
 #include<mutex>
 
-namespace NameSpace_Render::NameSpace_Window {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 
 	Window_System::Window_System(const Window_System_Initialization_Info& init_info) {
 		static std::once_flag Initialized_GLWF_Flag{};
@@ -11,7 +11,7 @@ namespace NameSpace_Render::NameSpace_Window {
 
 		this->m_Window.reset(glfwCreateWindow(init_info.Width, init_info.Height, init_info.Titile, nullptr, nullptr));
 		if (nullptr == this->m_Window)
-			LOG_ERROR("Failed to create window");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failed to create GLFW window");
 
 		++Window_System::s_Window_Count;
 
@@ -150,7 +150,7 @@ namespace NameSpace_Render::NameSpace_Window {
 
 	void Window_System::Initialize_GLWF(void) {
 		if (GLFW_FALSE == glfwInit())
-			LOG_ERROR("Failed to initialize GLFW");
+			throw std::runtime_error("Failed to initialize GLFW");
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -159,7 +159,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void NameSpace_Window::Window_System::Reset_Call_Back(GLFWwindow* Window) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Reset();
 	}
@@ -167,7 +167,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::Key_Call_Back(GLFWwindow* Window, int Key, int Scancode, int Action, int Mods) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Key(Key, Scancode, Action, Mods);
 	}
@@ -175,7 +175,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::Char_Call_Back(GLFWwindow* Window, unsigned int CodePoint) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Char(CodePoint);
 	}
@@ -183,7 +183,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::CharMods_Call_Back(GLFWwindow* Window, unsigned int CodePoint, int Mods) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_CharMods(CodePoint, Mods);
 	}
@@ -191,7 +191,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::MouseButton_Call_Back(GLFWwindow* Window, int Button, int Action, int Mods) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Mouse_Button(Button, Action, Mods);
 	}
@@ -199,7 +199,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::CursorPos_Call_Back(GLFWwindow* Window, double X_Pos, double Y_Pos) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Cursor_Pos(X_Pos, Y_Pos);
 	}
@@ -207,7 +207,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::CursorEnter_Call_Back(GLFWwindow* Window, int Entered) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Cursor_Enter(Entered);
 	}
@@ -215,7 +215,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::Scroll_Call_Back(GLFWwindow* Window, double X_Offset, double Y_Offset) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Scroll(X_Offset, Y_Offset);
 	}
@@ -223,7 +223,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::Drop_Call_Back(GLFWwindow* Window, int Count, const char** Paths) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 
 		App->On_Drop(Count, Paths);
 	}
@@ -231,7 +231,7 @@ namespace NameSpace_Render::NameSpace_Window {
 	void Window_System::Window_Resize_Call_Back(GLFWwindow* Window, int Width, int Height) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App) {
-			LOG_ERROR("App is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");
 			throw std::runtime_error("App is nullptr");
 		}
 
@@ -244,4 +244,4 @@ namespace NameSpace_Render::NameSpace_Window {
 		glfwSetWindowShouldClose(Window, GLFW_TRUE);
 	}
 
-} // namespace NameSpace_Window
+} // namespace NameSpace_Function::NameSpace_Render::NameSpace_Window

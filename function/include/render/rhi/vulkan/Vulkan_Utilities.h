@@ -6,13 +6,11 @@
 #include<limits>
 #include<tuple>
 
-//#include "vulkan/vulkan.h"
-
-#include "rhi/empty_rhi/Empty_RHI.h"
+#include "render/rhi/empty_rhi/Empty_RHI.h"
 
 #include<vector>
 
-namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities {
 
 	using std::tuple;
 	using std::array;
@@ -151,4 +149,4 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utili
 
 
 
-}// namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities

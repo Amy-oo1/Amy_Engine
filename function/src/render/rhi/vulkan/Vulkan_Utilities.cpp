@@ -1,12 +1,10 @@
-#include "rhi/vulkan/Vulkan_Utilities.h"
-
+#include "render/rhi/vulkan/Vulkan_Utilities.h"
 
 #include<exception>
-//#include<vma/vk_mem_alloc.h>
 
-#include "rhi/vulkan/Vulkan_RHI_Macro.h"
+#include "render/rhi/vulkan/Vulkan_RHI_Macro.h"
 
-namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities {
 
 	using std::runtime_error;
 
@@ -291,41 +289,41 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utili
 			}
 			else
 				throw std::invalid_argument("Unsupported layout transition!");*/
-		//}
+				//}
 
 
-		/*VkImageSubresourceRange Sub_Resource_Range{};
-		{
-			Sub_Resource_Range.aspectMask = Aspect_Flags;
-			Sub_Resource_Range.baseMipLevel = 0;
-			Sub_Resource_Range.levelCount = Mip_Levels;
-			Sub_Resource_Range.baseArrayLayer = 0;
-			Sub_Resource_Range.layerCount = Layer_Count;
-		}
+				/*VkImageSubresourceRange Sub_Resource_Range{};
+				{
+					Sub_Resource_Range.aspectMask = Aspect_Flags;
+					Sub_Resource_Range.baseMipLevel = 0;
+					Sub_Resource_Range.levelCount = Mip_Levels;
+					Sub_Resource_Range.baseArrayLayer = 0;
+					Sub_Resource_Range.layerCount = Layer_Count;
+				}
 
-		VkImageMemoryBarrier Barrier{};
-		{
-			Barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-			Barrier.oldLayout = Old_Layout;
-			Barrier.newLayout = New_Layout;
-			Barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			Barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			Barrier.image = Image;
-			Barrier.subresourceRange = Sub_Resource_Range;
-			Barrier.srcAccessMask = Source_Access_Mask;
-			Barrier.dstAccessMask = Destination_Access_Mask;
-		}
+				VkImageMemoryBarrier Barrier{};
+				{
+					Barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+					Barrier.oldLayout = Old_Layout;
+					Barrier.newLayout = New_Layout;
+					Barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+					Barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+					Barrier.image = Image;
+					Barrier.subresourceRange = Sub_Resource_Range;
+					Barrier.srcAccessMask = Source_Access_Mask;
+					Barrier.dstAccessMask = Destination_Access_Mask;
+				}
 
 
 
-		vkCmdPipelineBarrier(
-			Command_Buffer,
-			Source_Stage, Destination_Stage,
-			0, 0, nullptr,
-			0, nullptr,
-			1, &Barrier);
+				vkCmdPipelineBarrier(
+					Command_Buffer,
+					Source_Stage, Destination_Stage,
+					0, 0, nullptr,
+					0, nullptr,
+					1, &Barrier);
 
-		End_SingleTIme_Commands(Logical_Device, Command_Pool, Command_Buffer, Graphics_Queue);*/
+				End_SingleTIme_Commands(Logical_Device, Command_Pool, Command_Buffer, Graphics_Queue);*/
 	}
 
 	void Copy_Buffer_To_Image(
@@ -768,4 +766,4 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utili
 	}*/
 
 
-}// namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities

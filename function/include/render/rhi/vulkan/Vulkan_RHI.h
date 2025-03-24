@@ -9,17 +9,15 @@
 #include<unordered_map>
 #include<memory>
 
-//#include "vma/vk_mem_alloc.h"
 #include "vulkan/vulkan.h"
 
-#include "window/Window_System.h"
+#include "render/window/Window_System.h"
 
-#include "rhi/empty_rhi/RHI_Class.h"
-#include "rhi/vulkan/Vulkan_RHI_Resource.h"
-#include "rhi/empty_rhi/Empty_RHI.h"
-#include "rhi/vulkan/Vulkan_Utilities.h"
+#include "render/rhi/empty_rhi/RHI_Class.h"
+#include "render/rhi/empty_rhi/Empty_RHI.h"
+#include "render/rhi/vulkan/Vulkan_RHI_Resource.h"
 
-namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	using std::numeric_limits;
 	using std::tuple;
@@ -393,7 +391,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//NOTE : Resource
 		//unique_ptr<VkInstance_T, decltype(m_VK_Instance_Deleter)> m_VK_Instance{ nullptr };
 
-		
+
 
 		unique_ptr<RHI_Descriptor_Pool> m_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 
@@ -769,4 +767,4 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	};
 
-} // namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI
+} // namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI

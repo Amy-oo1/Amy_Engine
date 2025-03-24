@@ -6,18 +6,14 @@
 #include <memory>
 
 #include "vulkan/vulkan.h"
-//#include "vma/vk_mem_alloc.h"
 
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
+#include "render/window/Window_System.h"
 
-#include "rhi/empty_rhi/RHI_Type.h"
-#include "rhi/empty_rhi/RHI_Struct.h"
-#include "rhi/empty_rhi/RHI_Class.h"
+#include "render/rhi/empty_rhi/RHI_Type.h"
+#include "render/rhi/empty_rhi/RHI_Class.h"
+#include "render/rhi/empty_rhi/RHI_Struct.h"
 
-#include "window/Window_System.h"
-
-namespace NameSpace_Render::NameSpace_RHI {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 	using std::tuple;
 	using std::array;
@@ -438,4 +434,4 @@ namespace NameSpace_Render::NameSpace_RHI {
 			) = 0;
 
 	};
-} // namespace NameSpace_Render::NameSpace_RHI
+} // namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI

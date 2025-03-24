@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NameSpace_Render::NameSpace_RHI {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 	class RHI_Instance {};
 	class RHI_Physical_Device {};
@@ -38,4 +38,4 @@ namespace NameSpace_Render::NameSpace_RHI {
 	class RHI_Semaphore {};
 	class RHI_Fence {};
 
-}// namespace NameSpace_Render::NameSpace_RHI
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI

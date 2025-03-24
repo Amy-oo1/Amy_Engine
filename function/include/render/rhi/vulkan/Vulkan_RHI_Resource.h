@@ -3,14 +3,18 @@
 #include<functional>
 #include<memory>
 
-#include <vulkan/vulkan.h>
+#include "vulkan/vulkan.h"
 
-#include "rhi/empty_rhi/RHI_Class.h"
+#include "logger/System_Logger.h"
 
-namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
+#include "render/rhi/empty_rhi/RHI_Class.h"
+
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	using std::function;
 	using std::unique_ptr;
+
+	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	class Vulkan_Instance final : public RHI_Instance {
 	public:
@@ -26,7 +30,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkInstance Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Get A Empty Instance Resource, Make Sure You Have Not Use It");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource : VkInstance");
 
 			return m_Resource.get();
 		}
@@ -53,8 +57,8 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		VkPhysicalDevice Get() const {
-			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Physical_Device::Get() : m_Resource is nullptr");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
+
 
 			return m_Resource.get();
 		}
@@ -78,7 +82,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkDevice Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Logical_Device::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -104,7 +108,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 		VkQueue Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -128,7 +132,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkCommandPool Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -156,7 +160,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkCommandBuffer Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -180,7 +184,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkDescriptorPool Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -208,7 +212,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkDescriptorSetLayout Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -231,7 +235,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}*/
 		void Reset(VkDescriptorSet res) {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			m_Resource.reset(res);
 		}
@@ -258,7 +262,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 		VkSemaphore Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -285,7 +289,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkFence Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -312,7 +316,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkSampler Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -340,7 +344,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkShaderModule Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -366,7 +370,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkBuffer Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -394,7 +398,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkBufferView Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 			return m_Resource.get();
 		}
 
@@ -421,7 +425,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkDeviceMemory Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -449,7 +453,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkImage Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -477,7 +481,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkImageView Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -505,7 +509,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkFramebuffer Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -533,7 +537,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkRenderPass Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -561,7 +565,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkPipeline Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -589,7 +593,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkPipelineCache Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -617,7 +621,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		VkPipelineLayout Get() const {
 			if (nullptr == m_Resource.get())
-				LOG_ERROR("Vulkan_Command_Buffer::Get() : m_Resource is nullptr");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
 
 			return m_Resource.get();
 		}
@@ -631,6 +635,4 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	};
 
-
-
-}// namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI

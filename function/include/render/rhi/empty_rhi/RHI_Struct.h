@@ -7,11 +7,13 @@
 #include<array>
 #include<memory>
 
-#include "rhi/empty_rhi/RHI_Macro.h"
-#include "rhi/empty_rhi/RHI_Type.h"
-#include "rhi/empty_rhi/RHI_Class.h"
+#include "vulkan/vulkan.h"
 
-namespace NameSpace_Render::NameSpace_RHI {
+#include "render/rhi/empty_rhi/RHI_Macro.h"
+#include "render/rhi/empty_rhi/RHI_Type.h"
+#include "render/rhi/empty_rhi/RHI_Class.h"
+
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 	using std::array;
 	using std::vector;
@@ -704,4 +706,4 @@ namespace NameSpace_Render::NameSpace_RHI {
 		RHI_Physical_DeviceSparse_Properties Sparse_Properties;
 	};;
 
-}// namespace NameSpace_Render::NameSpace_RHI
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI

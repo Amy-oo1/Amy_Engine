@@ -1,4 +1,4 @@
-#include "rhi/vulkan/Vulkan_RHI.h"
+#include "render/rhi/vulkan/Vulkan_RHI.h"
 
 #if defined(_MSC_VER)
 #include <sdkddkver.h>
@@ -46,7 +46,6 @@
 #error Unknown Compiler
 #endif
 
-//#include "vma/vk_mem_alloc.h"
 #include<iostream>
 #include<sstream>
 #include<stdexcept>
@@ -56,10 +55,13 @@
 #include<algorithm>
 #include<mutex>
 
-#include "rhi/vulkan/Vulkan_RHI_Macro.h"
-#include "rhi/vulkan/Vulkan_Config.h"
+#include "logger/System_Logger.h"
 
-namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
+#include "render/rhi/vulkan/Vulkan_RHI_Macro.h"
+#include "render/rhi/vulkan/Vulkan_Config.h"
+#include "render/rhi/vulkan/Vulkan_Utilities.h"
+
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 	static std::mutex g_alloc_mutex;
 
@@ -67,6 +69,8 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	using std::unordered_map;
 	using std::function;
 	using std::runtime_error;
+
+	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	//NOTE : Constructor
 	Vulkan_RHI::Vulkan_RHI(const RHI_Initialization_Info& init_info) :
@@ -538,7 +542,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 #ifdef _DEBUG
 		if (false == this->Check_Vaildation_Layer_Support())
-			LOG_ERROR("Validation layers requested, but not available!");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Validation layers requested, but not available!");
 
 		this->Build_Debug_Messenger_Create_Info();
 #endif // _DEBUG
@@ -1976,7 +1980,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 				vk_Clear_Value.color.uint32[3] = Clear_Value->Color->Uint32->at(3);
 			}
 			else
-				LOG_ERROR("Union ");
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
 
 		}
 		else if (Clear_Value->Depth_Stencil.has_value() && (!Clear_Value->Color.has_value())) {
@@ -1984,7 +1988,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 			vk_Clear_Value.depthStencil.stencil = Clear_Value->Depth_Stencil->Stencil;
 		}
 		else
-			LOG_ERROR("Union ");
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
 
 		return std::make_optional(vk_Clear_Value);
 	}
@@ -2970,6 +2974,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 	}
+	
 	bool Vulkan_RHI::Queue_Submit(RHI_Queue* Queue, const vector<const RHI_Submit_Info*>* Submits, RHI_Fence* Fence) {
 		if (nullptr == Submits || Submits->empty())
 			throw runtime_error("Submits is nullptr or empty!");
@@ -3063,6 +3068,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		VkResult vk_Result{ vkQueueSubmit(vk_Queue, vk_Submit_Infos.size(), vk_Submit_Infos.data(), vk_Fence) };
 
 	}
+	
 	bool Vulkan_RHI::Queue_Wait_Idle(RHI_Queue* Queue) {
 		VkQueue vk_Queue{ static_cast<Vulkan_Queue*>(Queue)->Get() };
 
@@ -3070,4 +3076,5 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		return vk_Result == VK_SUCCESS;
 	}
-}// namespace NameSpace_RHI::NameSpace_Vulkan_RHI
+
+}// namespace NameSpace_Function::NameSpace_RHI::NameSpace_Vulkan_RHI

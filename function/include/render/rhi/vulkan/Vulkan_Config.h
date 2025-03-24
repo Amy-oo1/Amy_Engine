@@ -1,6 +1,8 @@
 #pragma once
 
-namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Config {
+#include<cstdint>
+
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Config {
 
 	constexpr const char* Vulkan_Layer_Path{ "D:/Amy_Engine/third_party/VulkanSDK/1.4.309.0/Bin" };
 
@@ -17,4 +19,4 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Confi
 	constexpr uint32_t Max_Vertex_Blending_Mesh_Count{ 256 };
 	constexpr uint32_t Max_Material_Count{ 256 };
 
-} // namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Config
+} // namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Config

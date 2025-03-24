@@ -1,6 +1,8 @@
 #pragma once
 
-namespace NameSpace_Render::NameSpace_RHI {
+#include<cstdint>
+
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 	//NOTE : Refence_Vulkan : https://www.khronos.org/registry/vulkan/specs/1.2-extensions
 	using RHI_Device_Size = uint64_t;
@@ -1480,4 +1482,4 @@ namespace NameSpace_Render::NameSpace_RHI {
 		RHI_PHYSICAL_DEVICE_TYPE_MAX_ENUM = 0x7FFFFFFF
 	};
 
-}// namespace NameSpace_Render::NameSpace_RHI
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI

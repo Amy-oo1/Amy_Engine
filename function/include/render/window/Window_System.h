@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../macro.h"
-
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
@@ -14,7 +12,11 @@
 #include<memory>
 #include<exception>
 
-namespace NameSpace_Render::NameSpace_Window {
+#include "logger/System_Logger.h"
+
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
+
+	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	using std::tuple;
 	using std::vector;
@@ -115,7 +117,7 @@ namespace NameSpace_Render::NameSpace_Window {
 						glfwTerminate();
 				}
 				else
-					LOG_ERROR("Window is nullptr");
+					System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failed to create GLFW window");
 			};
 
 	private:
@@ -136,4 +138,4 @@ namespace NameSpace_Render::NameSpace_Window {
 
 	};
 
-} // namespace NameSpace_Render::NameSpace_Window
+} // namespace NameSpace_Function::NameSpace_Render::NameSpace_Window
