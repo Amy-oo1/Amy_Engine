@@ -95,7 +95,8 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//TODO : Public Func
 	public:
 		void Create_Surface(void);
-
+		void Create_Default_Command_Pool(void);
+		void Allocate_Default_Command_Buffers(void);
 
 
 
@@ -140,9 +141,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		[[nodiscard]] static const Queue_Family_Indices S_Get_Queue_Framies(VkPhysicalDevice Physical_Device, VkSurfaceKHR Suraface);
 
 
-		//TODO : Static Member Variable
+		//NOTE : Static Member Variable
 	private:
-
+		static constexpr uint8_t s_Frames_In_Flight{ 3 };
 
 		//TODO : Member Variable
 	private:
@@ -182,19 +183,31 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		function<void(VkInstance)> m_VK_Instance_Deleter{ nullptr };
 		function<void(VkSurfaceKHR)> m_VK_Surface_Deleter{ nullptr };
 		function<void(VkDevice)> m_VK_Device_Deleter{ nullptr };
-
+		function<void(VkCommandPool)> m_VK_Command_Pool_Deleter{ nullptr };
 
 
 		//Class Resource
 		unique_ptr<RHI_Instance> m_RHI_Instance{ std::make_unique<Vulkan_Instance>() };
+
 		unique_ptr<VkSurfaceKHR_T, decltype(m_VK_Surface_Deleter)> m_VK_Surface{ nullptr };
+
 		unique_ptr<RHI_Physical_Device> m_RHI_Physical_Device{ std::make_unique<Vulkan_Physical_Device>() };
 		VkPhysicalDevice m_VK_Physical_Device{ nullptr };
+
 		unique_ptr<RHI_Logical_Device> m_RHI_Logical_Device{ std::make_unique<Vulkan_Logical_Device>() };
 		VkDevice m_Logical_VK_Device{ nullptr };
+
 		Queue_Family_Indices m_Queue_Family_Indices{};
 		Queues m_Queues{};
 
+		unique_ptr<RHI_Command_Pool> m_Default_RHI_Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
+		VkCommandPool m_Default_VK_Command_Pool{ nullptr };
+		array<unique_ptr<RHI_Command_Pool>, s_Frames_In_Flight> m_RHI_Command_Pools{ std::make_unique<Vulkan_Command_Pool>(),std::make_unique<Vulkan_Command_Pool>(),std::make_unique<Vulkan_Command_Pool>() };//TODO : Erase Repeat Code
+		array<VkCommandPool, s_Frames_In_Flight> m_VK_Command_Pools{ nullptr,nullptr,nullptr };
+
+		array<unique_ptr<RHI_Command_Buffer>, s_Frames_In_Flight> m_RHI_Command_Buffers{ std::make_unique<Vulkan_Command_Buffer>(),std::make_unique<Vulkan_Command_Buffer>() ,std::make_unique<Vulkan_Command_Buffer>() };
+		array<VkCommandBuffer, s_Frames_In_Flight> m_VK_Command_Buffers{ nullptr,nullptr,nullptr };
+		uint8_t m_Current_Frame{ 0 };
 
 
 		//TODO : Override Func
@@ -208,7 +221,16 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		void Create_Logical_Device(void) override;
 		[[nodiscard]] RHI_Logical_Device* Get_Logical_Device(void) override;
 
-		[[nodiscard]] virtual RHI_Queue* Get_Graphics_Queue(void) override;//Command Queue
+		[[nodiscard]] RHI_Queue* Get_Graphics_Queue(void) override;//Command Queue
+
+		[[nodiscard]] unique_ptr<RHI_Command_Pool>
+			Create_Command_Pool(
+				const RHI_Command_Pool_Create_Info* Create_Info) override;
+
+		[[nodiscard]] const vector<unique_ptr<RHI_Command_Buffer>>
+			Allocate_Command_Buffers(
+				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
+			) override;
 
 
 		void Run(void) override;
@@ -218,12 +240,6 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 
-
-
-
-		void Create_Command_Pool(void);
-
-		void Create_Command_Buffers(void);
 
 		void Create_Descriptor_Pool(void);
 
@@ -244,7 +260,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		void Re_Create_SwapChain(void) override;
 
 	private:
-	
+
 
 		bool Re_Set_Command_Pool_PFN(void);
 
@@ -351,12 +367,12 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 	private:
-		static constexpr uint8_t s_Frames_In_Flight{ 3 };
+
 
 	private:
 
 		//NOTE : Deleter
-		function<void(VkCommandPool)> m_VK_Command_Pool_Deleter;
+
 		function<void(VkDescriptorPool)> m_VK_Descriptor_Pool_Deleter;
 		function<void(VkSemaphore)> m_VK_Semaphore_Deleter;
 		function<void(VkFence)> m_VK_Fence_Deleter;
@@ -377,13 +393,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		//NOTE : Resource
 		//unique_ptr<VkInstance_T, decltype(m_VK_Instance_Deleter)> m_VK_Instance{ nullptr };
 
-
-
-		unique_ptr<RHI_Command_Pool> m_RHI_Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
-		array<unique_ptr<VkCommandPool_T, decltype(m_VK_Command_Pool_Deleter)>, s_Frames_In_Flight> m_VK_Command_Pools{ nullptr,nullptr,nullptr };//TODO : Erase Repeat Code
-
-		array<unique_ptr<RHI_Command_Buffer>, s_Frames_In_Flight> m_RHI_Command_Buffers{ std::make_unique<Vulkan_Command_Buffer>(),std::make_unique<Vulkan_Command_Buffer>() ,std::make_unique<Vulkan_Command_Buffer>() };
-		uint8_t m_Current_Frame{ 0 };
+		
 
 		unique_ptr<RHI_Descriptor_Pool> m_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 
@@ -414,11 +424,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 		//virtual void prepareContext() override final;
 
-		[[nodiscard]] unique_ptr<RHI_Command_Pool>
-			Create_Command_Pool(
-				RHI_Command_Pool_Create_Info Create_Info) override;
 
-		[[nodiscard]] const vector<unique_ptr<RHI_Command_Buffer>> Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info& Allocate_Info) override;
+
+
 		[[nodiscard]] const vector < unique_ptr<RHI_Descriptor_Set>> Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) override;
 
 

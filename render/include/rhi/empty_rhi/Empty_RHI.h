@@ -55,6 +55,15 @@ namespace NameSpace_Render::NameSpace_RHI {
 
 		[[nodiscard]] virtual RHI_Queue* Get_Graphics_Queue(void) = 0;//Command Queue
 
+		[[nodiscard]] virtual unique_ptr<RHI_Command_Pool>
+			Create_Command_Pool(
+				const RHI_Command_Pool_Create_Info* Create_Info) = 0;
+
+		[[nodiscard]] virtual const vector<unique_ptr<RHI_Command_Buffer>>
+			Allocate_Command_Buffers(
+				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
+			) = 0;
+
 		virtual void Run(void) = 0;
 
 		virtual void CleanUp_SwapChain(void) = 0;
@@ -70,7 +79,7 @@ namespace NameSpace_Render::NameSpace_RHI {
 		//TODO : Add SwapChain Image Depth Image View
 
 
-		[[nodiscard]] virtual const vector<unique_ptr<RHI_Command_Buffer>> Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info& Allocate_Info) = 0;
+
 		[[nodiscard]] virtual const vector<unique_ptr<RHI_Descriptor_Set>> Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) = 0;
 
 		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
@@ -133,9 +142,7 @@ namespace NameSpace_Render::NameSpace_RHI {
 			unique_ptr<RHI_Device_Memory>>
 			Create_Cube_Map() = 0;
 
-		[[nodiscard]] virtual unique_ptr<RHI_Command_Pool>
-			Create_Command_Pool(
-				RHI_Command_Pool_Create_Info Create_Info) = 0;
+
 
 
 		[[nodiscard]] virtual unique_ptr<RHI_Descriptor_Pool>

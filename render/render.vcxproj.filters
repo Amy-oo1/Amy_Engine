@@ -31,6 +31,18 @@
     <Filter Include="src\window">
       <UniqueIdentifier>{d1c571d3-de9d-4c38-9065-6de7e262df58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\render_system">
+      <UniqueIdentifier>{7c3a4e5c-a47a-4c3a-b83c-1ddc734f7a5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render_system">
+      <UniqueIdentifier>{a5a36524-b8fd-42cb-af65-698a113ce947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\debug_draw">
+      <UniqueIdentifier>{8bac7fbb-e889-47a2-bd2a-8e41196f5a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug_draw">
+      <UniqueIdentifier>{06cbce22-ba3e-4df5-91e5-07fdfcb9e8e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\rhi\empty_rhi\Empty_RHI.h">
@@ -67,6 +79,18 @@
     <ClInclude Include="include\rhi\vulkan\Vulkan_RHI_Macro.h">
       <Filter>include\rhi\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="include\render_system\Render_System.h">
+      <Filter>include\render_system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\debug_draw\Debug_Draw_Primitive.h">
+      <Filter>include\debug_draw</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render_system\Render_Camera.h">
+      <Filter>include\render_system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render_system\Render_Obejct.h">
+      <Filter>include\render_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rhi\vulkan\Vulkan_RHI.cpp">
@@ -80,6 +104,15 @@
     </ClCompile>
     <ClCompile Include="src\rhi\vulkan\Vulkan_Test.cpp">
       <Filter>src\rhi\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render_system\Render_System.cpp">
+      <Filter>src\render_system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\debug_draw\Debug_Draw_Primitive.cpp">
+      <Filter>src\debug_draw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render_system\Render_Camera.cpp">
+      <Filter>src\render_system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

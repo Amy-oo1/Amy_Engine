@@ -113,7 +113,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\render\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\render\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,6 +158,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\debug_draw\Debug_Draw_Primitive.h" />
+    <ClInclude Include="include\render_system\Render_Camera.h" />
+    <ClInclude Include="include\render_system\Render_Obejct.h" />
+    <ClInclude Include="include\render_system\Render_System.h" />
     <ClInclude Include="include\rhi\empty_rhi\RHI_Class.h" />
     <ClInclude Include="include\rhi\empty_rhi\RHI_Macro.h" />
     <ClInclude Include="include\rhi\empty_rhi\RHI_Struct.h" />
@@ -180,6 +185,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClCompile Include="src\debug_draw\Debug_Draw_Primitive.cpp" />
+    <ClCompile Include="src\render_system\Render_Camera.cpp" />
+    <ClCompile Include="src\render_system\Render_System.cpp" />
     <ClCompile Include="src\rhi\vulkan\Vulkan_RHI.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -190,6 +198,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\window\Window_System.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core\core.vcxproj">
+      <Project>{be06579d-e236-4a4a-b072-2d2a8feaf0d2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\function\function.vcxproj">
+      <Project>{1b1acc18-9bf2-4fce-93f1-6509e51ce864}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\platform\platform.vcxproj">
+      <Project>{9466d5fb-0dc5-4c4a-b88a-7db410166c13}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

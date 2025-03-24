@@ -94,9 +94,14 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 	Vulkan_RHI::~Vulkan_RHI() {
 		//TODO : Destroy All Vulkan Resource
 
+		for (auto& Command_Pool : this->m_RHI_Command_Pools)
+			Command_Pool.reset();
+		this->m_Default_RHI_Command_Pool.reset();
 
 		this->m_RHI_Logical_Device.reset();
+
 		this->m_VK_Surface.reset();
+
 		this->m_RHI_Instance.reset();
 	}
 
@@ -185,9 +190,51 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		this->m_VK_Surface.reset(Surface);
 	}
 
+	void Vulkan_RHI::Create_Default_Command_Pool(void) {
+		//NOTE : Default Graphics Command Pool
+		{
+			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
+			{
+				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
+			}
 
+			THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &this->m_Default_VK_Command_Pool));
+			static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Reset(m_Default_VK_Command_Pool);
+		}
 
+		//NOTE : Other Command Pools
+		{
+			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
+			{
+				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
+			}
 
+			for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+				THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &this->m_VK_Command_Pools[Index]));
+				static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pools[Index].get())->Reset(this->m_VK_Command_Pools[Index]);
+			}
+
+		}
+	}
+
+	void Vulkan_RHI::Allocate_Default_Command_Buffers(void) {
+		for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+			VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
+			{
+				Command_Buffer_Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+				Command_Buffer_Allocate_Info.commandPool = this->m_VK_Command_Pools[Index];
+				Command_Buffer_Allocate_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+				Command_Buffer_Allocate_Info.commandBufferCount = 1;
+			}
+
+			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Command_Buffer_Allocate_Info, &this->m_VK_Command_Buffers[Index]));
+			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(this->m_VK_Command_Buffers[Index]);
+		}
+	}
 
 	//Private Func
 	void Vulkan_RHI::Create_Allocator(void) {
@@ -258,9 +305,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		}
 
 		{
-			static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
-			for (auto& Command_Pool : this->m_VK_Command_Pools)
-				Command_Pool.get_deleter() = this->m_VK_Command_Pool_Deleter;
+			static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
+			for (auto& Command_Pool : this->m_RHI_Command_Pools)
+				static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
 
 			static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Set_Deleter(this->m_VK_Descriptor_Pool_Deleter);
 
@@ -644,15 +691,58 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		return this->m_Queues.Graphic_RHI_Queue.get();
 	}
 
+	unique_ptr<RHI_Command_Pool> Vulkan_RHI::Create_Command_Pool(const RHI_Command_Pool_Create_Info* Create_Info) {
+
+		VkCommandPoolCreateInfo Command_Pool_Create_Info{};
+		{
+			Command_Pool_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			Command_Pool_Create_Info.pNext = Create_Info->pNext;
+			Command_Pool_Create_Info.flags = static_cast<VkCommandPoolCreateFlags>(Create_Info->Flags);
+			Command_Pool_Create_Info.queueFamilyIndex = Create_Info->Queue_Family_Index;
+		}
+
+		VkCommandPool VK_Command_Pool{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &VK_Command_Pool));
+		auto Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
+		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
+		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Reset(VK_Command_Pool);
+
+		return Command_Pool;
+	}
+
+	const vector<unique_ptr<RHI_Command_Buffer>> Vulkan_RHI::Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info* Allocate_Info) {
+		VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
+		{
+			Command_Buffer_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info->sType);
+			Command_Buffer_Allocate_Info.pNext = Allocate_Info->pNext;
+			Command_Buffer_Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(Allocate_Info->Command_Pool)->Get();
+			Command_Buffer_Allocate_Info.level = static_cast<VkCommandBufferLevel>(Allocate_Info->Level);
+			Command_Buffer_Allocate_Info.commandBufferCount = Allocate_Info->Command_Buffer_Count;
+		}
+
+		vector<VkCommandBuffer> Command_Buffers{};
+		Command_Buffers.resize(Allocate_Info->Command_Buffer_Count, nullptr);
+		THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Command_Buffer_Allocate_Info, Command_Buffers.data()));
+
+		vector<unique_ptr<RHI_Command_Buffer>> RHI_Command_Buffers{};
+		RHI_Command_Buffers.reserve(Allocate_Info->Command_Buffer_Count);
+		for (size_t Index = 0; Index < Allocate_Info->Command_Buffer_Count; ++Index) {
+			RHI_Command_Buffers.emplace_back(std::make_unique<Vulkan_Command_Buffer>());
+			static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffers[Index].get())->Reset(Command_Buffers[Index]);
+		}
+
+		return RHI_Command_Buffers;
+	}
+
+
 	void Vulkan_RHI::Run(void) {
 		this->Create_Allocator();
 		this->Create_Instance();
 		this->Create_Surface();
 		this->Create_Physical_Device();
 		this->Create_Logical_Device();
-
-		//this->Create_Command_Pool();
-		//this->Create_Command_Buffers();
+		this->Create_Default_Command_Pool();
+		this->Allocate_Default_Command_Buffers();
 		//this->Create_Descriptor_Pool();
 		//this->Create_Sync_Primitices();
 		//this->Create_SwapChain();
@@ -672,59 +762,6 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 
-
-	void Vulkan_RHI::Create_Command_Pool(void) {
-		//NOTE : Default Graphics Command Pool
-		{
-			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
-			{
-				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
-			}
-
-			VkCommandPool Command_Pool{ nullptr };
-			THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &Command_Pool));
-			if (nullptr == this->m_RHI_Command_Pool)
-				this->m_RHI_Command_Pool = std::make_unique<Vulkan_Command_Pool>();
-			static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Reset(Command_Pool);
-		}
-
-		//NOTE : Other Command Pools
-		{
-			VkCommandPoolCreateInfo Command_Pool_Create_Info{};
-			{
-				Command_Pool_Create_Info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-				Command_Pool_Create_Info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
-			}
-
-			VkCommandPool Command_Pool{ nullptr };
-			for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
-				THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &Command_Pool));
-				this->m_VK_Command_Pools[Index].reset(Command_Pool);
-			}
-
-		}
-	}
-
-	void Vulkan_RHI::Create_Command_Buffers(void) {
-		for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
-			VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
-			{
-				Command_Buffer_Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-				Command_Buffer_Allocate_Info.commandPool = this->m_VK_Command_Pools[Index].get();
-				Command_Buffer_Allocate_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-				Command_Buffer_Allocate_Info.commandBufferCount = 1;
-			}
-
-			VkCommandBuffer Command_Buffer{ nullptr };
-			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Command_Buffer_Allocate_Info, &Command_Buffer));
-			if (nullptr == this->m_RHI_Command_Buffers[Index])
-				this->m_RHI_Command_Buffers[Index] = std::make_unique<Vulkan_Command_Buffer>();
-			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(Command_Buffer);
-		}
-	}
 
 	void Vulkan_RHI::Create_Descriptor_Pool(void) {
 		array<VkDescriptorPoolSize, 7> Pool_Sizes{};
@@ -1085,47 +1122,9 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 
 
 
-	unique_ptr<RHI_Command_Pool> Vulkan_RHI::Create_Command_Pool(RHI_Command_Pool_Create_Info Create_Info) {
 
-		VkCommandPoolCreateInfo Command_Pool_Create_Info{};
-		{
-			Command_Pool_Create_Info.sType = static_cast<VkStructureType>(Create_Info.sType);
-			Command_Pool_Create_Info.pNext = Create_Info.pNext;
-			Command_Pool_Create_Info.flags = static_cast<VkCommandPoolCreateFlags>(Create_Info.Flags);
-			Command_Pool_Create_Info.queueFamilyIndex = Create_Info.Queue_Family_Index;
-		}
 
-		VkCommandPool VK_Command_Pool{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, nullptr, &VK_Command_Pool));
-		auto Command_Pool{ std::make_unique<Vulkan_Command_Pool>() };
-		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Set_Deleter(this->m_VK_Command_Pool_Deleter);
-		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Reset(VK_Command_Pool);
 
-		return Command_Pool;
-	}
-
-	const vector<unique_ptr<RHI_Command_Buffer>> Vulkan_RHI::Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info& Allocate_Info) {
-		//VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
-		//{
-		//	Command_Buffer_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info.sType);
-		//	Command_Buffer_Allocate_Info.pNext = Allocate_Info.pNext;
-		//	Command_Buffer_Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get();
-		//	Command_Buffer_Allocate_Info.level = static_cast<VkCommandBufferLevel>(Allocate_Info.Level);
-		//	Command_Buffer_Allocate_Info.commandBufferCount = Allocate_Info.Command_Buffer_Count;
-		//}
-
-		//vector<VkCommandBuffer> Command_Buffers{};
-		//Command_Buffers.resize(Allocate_Info.Command_Buffer_Count, nullptr);
-		//THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device.get(), &Command_Buffer_Allocate_Info, Command_Buffers.data()));
-
-		//vector<unique_ptr<RHI_Command_Buffer>> RHI_Command_Buffers{ Allocate_Info.Command_Buffer_Count ,std::make_unique<Vulkan_Command_Buffer>() };
-		//for (size_t Index = 0; Index < Allocate_Info.Command_Buffer_Count; ++Index)
-		//	static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffers[Index].get())->Reset(Command_Buffers[Index]);
-
-		//return RHI_Command_Buffers;
-
-		return {};
-	}
 
 	const vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) {
 		//vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
@@ -1310,7 +1309,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		{
 			Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 			Allocate_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get();
+			Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Get();
 			Allocate_Info.commandBufferCount = 1;
 		}
 
@@ -1345,7 +1344,7 @@ namespace NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI {
 		THROW_IF_VK_FAILED(vkQueueSubmit(this->m_Queues.Graphic_Queue, 1, &Submit_Info, VK_NULL_HANDLE));
 		THROW_IF_VK_FAILED(vkQueueWaitIdle(this->m_Queues.Graphic_Queue));
 
-		vkFreeCommandBuffers(this->m_Logical_VK_Device, static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
+		vkFreeCommandBuffers(this->m_Logical_VK_Device, static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
 	}
 
 	void Vulkan_RHI::Copy_Buffer(unique_ptr<RHI_Buffer> Src_Buffer, unique_ptr<RHI_Buffer> Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) {
