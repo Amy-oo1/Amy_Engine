@@ -214,6 +214,7 @@
     <ClCompile Include="src\render\debug_draw\Debug_Draw_Primitive.cpp" />
     <ClCompile Include="src\render\render_system\Render_Camera.cpp" />
     <ClCompile Include="src\render\render_system\Render_Mesh.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Object.cpp" />
     <ClCompile Include="src\render\render_system\Render_System.cpp" />
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_RHI.cpp" />
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_Test.cpp">

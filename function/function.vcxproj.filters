@@ -266,5 +266,8 @@
     <ClCompile Include="src\render\render_system\Render_Mesh.cpp">
       <Filter>src\render\render_sysytem</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_Object.cpp">
+      <Filter>src\render\render_sysytem</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
