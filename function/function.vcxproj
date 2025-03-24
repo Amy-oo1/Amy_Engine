@@ -175,6 +175,7 @@
     <ClInclude Include="include\physics\Utilities_Physics.h" />
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
+    <ClInclude Include="include\render\render_system\Render_Mesh.h" />
     <ClInclude Include="include\render\render_system\Render_Obejct.h" />
     <ClInclude Include="include\render\render_system\Render_System.h" />
     <ClInclude Include="include\render\rhi\empty_rhi\Empty_RHI.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="src\physics\Utilities_Physics.cpp" />
     <ClCompile Include="src\render\debug_draw\Debug_Draw_Primitive.cpp" />
     <ClCompile Include="src\render\render_system\Render_Camera.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Mesh.cpp" />
     <ClCompile Include="src\render\render_system\Render_System.cpp" />
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_RHI.cpp" />
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_Test.cpp">

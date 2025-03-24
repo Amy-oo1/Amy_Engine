@@ -192,6 +192,9 @@
     <ClInclude Include="include\render\render_system\Render_System.h">
       <Filter>include\render\render_sysytem</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_Mesh.h">
+      <Filter>include\render\render_sysytem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -258,6 +261,9 @@
       <Filter>src\render\render_sysytem</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_System.cpp">
+      <Filter>src\render\render_sysytem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_Mesh.cpp">
       <Filter>src\render\render_sysytem</Filter>
     </ClCompile>
   </ItemGroup>
