@@ -176,6 +176,7 @@
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
     <ClInclude Include="include\render\render_system\Render_Entity.h" />
+    <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h" />
     <ClInclude Include="include\render\render_system\Render_Mesh.h" />
     <ClInclude Include="include\render\render_system\Render_Obejct.h" />
     <ClInclude Include="include\render\render_system\Render_System.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="include\render\window\Window_System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\src\render_system\Render_GUID_Allocator.cpp" />
     <ClCompile Include="src\animation\Animation_Loader.cpp" />
     <ClCompile Include="src\animation\Animation_Manager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
