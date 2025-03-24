@@ -9,7 +9,7 @@
 #include "math/Quaternion.h"
 #include "math/Matrix4x4.h"
 
-namespace NameSpace_Render::NameSpace_Render_System {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::vector;
 
@@ -76,4 +76,4 @@ namespace NameSpace_Render::NameSpace_Render_System {
 		std::mutex m_View_Matrix_Mutex;
 	};
 
-}// namespace NameSpace_Render::NameSpace_Render_System
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

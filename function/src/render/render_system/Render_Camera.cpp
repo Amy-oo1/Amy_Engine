@@ -1,8 +1,8 @@
-#include "render_system/Render_Camera.h"
+#include "render/render_system/Render_Camera.h"
 
 #include <algorithm>
 
-namespace NameSpace_Render::NameSpace_Render_System {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	void Render_Camera::Set_Current_Camera_Type(RENDER_CAMERA_TYPE Camera_Type) {
 		std::lock_guard<std::mutex> Lock{ this->m_View_Matrix_Mutex };
@@ -75,17 +75,17 @@ namespace NameSpace_Render::NameSpace_Render_System {
 	}
 
 	const Matrix4x4 Render_Camera::Get_Projection_Matrix(void) const {
+		return Matrix4x4::IDENTITY;
 		//TODO
 	}
 
 	const Matrix4x4 Render_Camera::Get_Look_At_Matrix(void) const {
+		return Matrix4x4::IDENTITY;//TODO
 		//TODO
 	}
 
 	float Render_Camera::Get_FOV_Deprecated(void) const {
-		//TODO
+		return 0.f;// TODO
 	}
 
-
-}// namespace NameSpace_Render::NameSpace_Render_System
-
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System
