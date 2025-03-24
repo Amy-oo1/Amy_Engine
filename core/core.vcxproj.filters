@@ -219,6 +219,15 @@
     <ClInclude Include="include\meta\generated\reflection\Particle.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Render_Obejct.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\Reflection_Header.h">
+      <Filter>include\meta\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\Serializer_Header.h">
+      <Filter>include\meta\generated</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\math\Degree.cpp">

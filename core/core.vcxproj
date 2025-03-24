@@ -178,12 +178,17 @@
     <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Object.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Particle.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Render_Obejct.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Rigid_Body.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Data.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\Reflection_Header.h" />
+    <ClInclude Include="include\meta\generated\Serializer_Header.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />
     <ClInclude Include="include\meta\serializer\Serializer.h" />

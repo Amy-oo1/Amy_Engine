@@ -175,6 +175,7 @@
     <ClInclude Include="include\physics\Utilities_Physics.h" />
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
+    <ClInclude Include="include\render\render_system\Render_Entity.h" />
     <ClInclude Include="include\render\render_system\Render_Mesh.h" />
     <ClInclude Include="include\render\render_system\Render_Obejct.h" />
     <ClInclude Include="include\render\render_system\Render_System.h" />

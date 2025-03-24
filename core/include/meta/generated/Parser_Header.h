@@ -1,7 +1,7 @@
 #pragma once
 #include "D:/Amy_Engine/resource/include/components/camera/Camera.h"
 #include "D:/Amy_Engine/resource/include/components/camera/Camera_Controller.h"
-#include "D:/Amy_Engine/resource/include/components/animation/Skeleton_Node.h"
+#include "D:/Amy_Engine/resource/include/components/skeleton/Skeleton_Node.h"
 #include "D:/Amy_Engine/resource/include/components/animation/Blend_State.h"
 #include "D:/Amy_Engine/resource/include/components/animation/Animation_Clip.h"
 #include "D:/Amy_Engine/resource/include/components/animation/Animation.h"
@@ -21,3 +21,4 @@
 #include "D:/Amy_Engine/resource/include/common/World.h"
 #include "D:/Amy_Engine/function/include/frame/compoents/Compoent.h"
 #include "D:/Amy_Engine/function/include/frame/compoents/transform/Transform_Component.h"
+#include "D:/Amy_Engine/function/include/render/render_system/Render_Obejct.h"

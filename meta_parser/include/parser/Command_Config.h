@@ -31,6 +31,8 @@ namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config {
 
 	constexpr const char* Include_Resource{ "-ID:/Amy_Engine/resource/include" };
 
+	constexpr const char* Include_Function{ "-ID:/Amy_Engine/function/include" };
+
 	constexpr const char* Include_third_part_clang{ "-ID:/Amy_Engine/third_party/clang+llvm-18.1.8-x86_64-pc-windows-msvc/include" };
 
 	constexpr const char* Include_Third_Part_SpdLog{ "-ID:/Amy_Engine/third_party/spdlog-1.15.0/include" };
@@ -45,6 +47,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config {
 		Include_Platform,
 		Include_Core,
 		Include_Resource,
+		Include_Function,
 		Include_third_part_clang,
 		Include_Third_Part_SpdLog,
 		Include_Third_Part_Mustance,
