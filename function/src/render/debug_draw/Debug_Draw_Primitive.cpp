@@ -1,11 +1,11 @@
-#include "debug_draw/Debug_Draw_Primitive.h"
+#include "render/debug_draw/Debug_Draw_Primitive.h"
 
 #include<cmath>
 #include<algorithm>
 
-#include "rhi/empty_rhi/RHI_Type.h"
+#include "render/rhi/empty_rhi/RHI_Type.h"
 
-namespace NameSpace_Render::NameSpace_Debug_Draw {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Debug_Draw {
 
 	using NameSpace_RHI::RHI_FORMAT;
 	using NameSpace_RHI::RHI_VERTEX_INPUT_RATE;
@@ -40,8 +40,6 @@ namespace NameSpace_Render::NameSpace_Debug_Draw {
 		return Attribute;
 	}
 
-
-
 	bool Debug_Draw_Primitive::Is_Time_Out(float Delta_Time) {
 		if (this->m_Time_Type == DEBUG_DRAW_TIME_TYPE::DEBUG_DRAW_TIME_TYPE_INFINTY) {
 			return false;
@@ -75,5 +73,4 @@ namespace NameSpace_Render::NameSpace_Debug_Draw {
 		}
 	}
 
-
-}// namespace NameSpace_Render::NameSpace_Debug_Draw
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_Debug_Draw

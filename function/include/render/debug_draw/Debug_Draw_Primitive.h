@@ -9,9 +9,9 @@
 #include "math/Vector4.h"
 #include "color/Color.h"
 
-#include "rhi/empty_rhi/RHI_Struct.h"
+#include "render/rhi/empty_rhi/RHI_Struct.h"
 
-namespace NameSpace_Render::NameSpace_Debug_Draw {
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Debug_Draw {
 
 	using std::array;
 
@@ -19,11 +19,9 @@ namespace NameSpace_Render::NameSpace_Debug_Draw {
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Math::Vector4;
 	using NameSpace_Core::NameSpace_Color::Color;
-
 	
 	using NameSpace_RHI::RHI_Vertex_Input_Binding_Description;
 	using NameSpace_RHI::RHI_Vertex_Input_Attribute_Description;
-
 
 	static constexpr float g_Debug_Draw_Infinity_Time{ -2.f };
 	static constexpr float g_Debug_Draw_One_Frame{ 0.f };
@@ -42,10 +40,9 @@ namespace NameSpace_Render::NameSpace_Debug_Draw {
 		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_BOX = 4,
 		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_CYLINDER = 5,
 		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_SPHERE = 6,
-		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_SPHERE = 7,
-		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_CAPSULE = 8,
-		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_TEXT = 9,
-		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_CONE = 10,
+		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_CAPSULE = 7,
+		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_TEXT = 8,
+		DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_CONE = 9,
 	};
 
 	enum class FILL_MODE :uint32_t {
@@ -73,7 +70,7 @@ namespace NameSpace_Render::NameSpace_Debug_Draw {
 	public:
 		DEBUG_DRAW_TIME_TYPE m_Time_Type = DEBUG_DRAW_TIME_TYPE::DEBUG_DRAW_TIME_TYPE_INFINTY;
 
-		float m_Life_Time = g_Debug_Draw_Life_Time;
+		float m_Life_Time = g_Debug_Draw_Infinity_Time;
 
 		FILL_MODE m_Fill_Mode = FILL_MODE::FILL_MODE_WIREFRAME;
 
@@ -163,5 +160,4 @@ namespace NameSpace_Render::NameSpace_Debug_Draw {
 		static constexpr DEBUG_DRAW_PRIMITIVE_TYPE m_Type = DEBUG_DRAW_PRIMITIVE_TYPE::DEBUG_DRAW_PRIMITIVE_TYPE_DRAW_TEXT;
 	};
 
-
-}// namespace NameSpace_Render::NameSpace_Debug_Draw
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_Debug_Draw
