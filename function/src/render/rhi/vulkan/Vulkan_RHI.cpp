@@ -217,7 +217,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				Command_Pool_Create_Info.queueFamilyIndex = this->m_Queue_Family_Indices.Graphics_Family;
 			}
 
-			for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+			for (uint32_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
 				THROW_IF_VK_FAILED(vkCreateCommandPool(this->m_Logical_VK_Device, &Command_Pool_Create_Info, this->m_Allocator.get(), &this->m_VK_Command_Pools[Index]));
 				static_cast<Vulkan_Command_Pool*>(this->m_RHI_Command_Pools[Index].get())->Reset(this->m_VK_Command_Pools[Index]);
 			}
@@ -226,7 +226,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	void Vulkan_RHI::Allocate_Default_Command_Buffers(void) {
-		for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+		for (uint32_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
 			VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
 			{
 				Command_Buffer_Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -315,7 +315,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 			static_cast<Vulkan_Descriptor_Pool*>(this->m_RHI_Descriptor_Pool.get())->Set_Deleter(this->m_VK_Descriptor_Pool_Deleter);
 
-			for (uint8_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
+			for (uint32_t Index = 0; Index < s_Frames_In_Flight; ++Index) {
 				static_cast<Vulkan_Semaphore*>(this->m_Image_available_For_Render_RHI_Semaphores[Index].get())->Set_Deleter(this->m_VK_Semaphore_Deleter);
 				static_cast<Vulkan_Semaphore*>(this->m_Image_Finished_For_Present_RHI_Semaphores[Index].get())->Set_Deleter(this->m_VK_Semaphore_Deleter);
 				static_cast<Vulkan_Semaphore*>(this->m_Image_Available_For_TeCopy_RHI_Semaphores[Index].get())->Set_Deleter(this->m_VK_Semaphore_Deleter);
@@ -618,6 +618,144 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->m_Msaa_Samples = S_Get_Max_Usable_Sample_Count(this->m_VK_Physical_Device);
 	}
 
+	const RHI_Physical_Device_Properties Vulkan_RHI::Get_Physical_Device_Properties(void) {
+		VkPhysicalDeviceProperties VK_Physical_Device_Properties;
+		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &VK_Physical_Device_Properties);
+
+		RHI_Physical_Device_Properties Properties{};
+		{
+			Properties.Api_Version = VK_Physical_Device_Properties.apiVersion;
+			Properties.Driver_Version = VK_Physical_Device_Properties.driverVersion;
+			Properties.Vendor_ID = VK_Physical_Device_Properties.vendorID;
+			Properties.Device_ID = VK_Physical_Device_Properties.deviceID;
+			Properties.Device_Type = static_cast<RHI_PHYSICAL_DEVICE_TYPE>(VK_Physical_Device_Properties.deviceType);
+			for (uint32_t Index = 0; Index < RHI_MAX_PHYSICAL_DEVICE_NAME_SIZE; ++Index)
+				Properties.Device_Name[Index] = VK_Physical_Device_Properties.deviceName[Index];
+			for (uint32_t Index = 0; Index < RHI_UUID_SIZE; ++Index)
+				Properties.Pipeline_Cache_UUID[Index] = VK_Physical_Device_Properties.pipelineCacheUUID[Index];
+			Properties.Sparse_Properties.Residency_Standard_2D_Block_Shapes = static_cast<VkBool32>(VK_Physical_Device_Properties.sparseProperties.residencyStandard2DBlockShape);
+			Properties.Sparse_Properties.Residency_Standard_2D_Multisample_Block_Shapes = static_cast<VkBool32>(VK_Physical_Device_Properties.sparseProperties.residencyStandard2DMultisampleBlockShape);
+			Properties.Sparse_Properties.Residency_Standard_3D_Block_Shapes = static_cast<VkBool32>(VK_Physical_Device_Properties.sparseProperties.residencyStandard3DBlockShape);
+			Properties.Sparse_Properties.Residency_Aligned_Mip_Size = static_cast<VkBool32>(VK_Physical_Device_Properties.sparseProperties.residencyAlignedMipSize);
+			Properties.Sparse_Properties.Residency_Non_Resident_Strict = static_cast<VkBool32>(VK_Physical_Device_Properties.sparseProperties.residencyNonResidentStrict);
+
+			Properties.Limits.maxImageDimension1D = VK_Physical_Device_Properties.limits.maxImageDimension1D;
+			Properties.Limits.maxImageDimension2D = VK_Physical_Device_Properties.limits.maxImageDimension2D;
+			Properties.Limits.maxImageDimension3D = VK_Physical_Device_Properties.limits.maxImageDimension3D;
+			Properties.Limits.maxImageDimensionCube = VK_Physical_Device_Properties.limits.maxImageDimensionCube;
+			Properties.Limits.maxImageArrayLayers = VK_Physical_Device_Properties.limits.maxImageArrayLayers;
+			Properties.Limits.maxTexelBufferElements = VK_Physical_Device_Properties.limits.maxTexelBufferElements;
+			Properties.Limits.maxUniformBufferRange = VK_Physical_Device_Properties.limits.maxUniformBufferRange;
+			Properties.Limits.maxStorageBufferRange = VK_Physical_Device_Properties.limits.maxStorageBufferRange;
+			Properties.Limits.maxPushConstantsSize = VK_Physical_Device_Properties.limits.maxPushConstantsSize;
+			Properties.Limits.maxMemoryAllocationCount = VK_Physical_Device_Properties.limits.maxMemoryAllocationCount;
+			Properties.Limits.maxSamplerAllocationCount = VK_Physical_Device_Properties.limits.maxSamplerAllocationCount;
+			Properties.Limits.bufferImageGranularity = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.bufferImageGranularity);
+			Properties.Limits.sparseAddressSpaceSize = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.sparseAddressSpaceSize);
+			Properties.Limits.maxBoundDescriptorSets = VK_Physical_Device_Properties.limits.maxBoundDescriptorSets;
+			Properties.Limits.maxPerStageDescriptorSamplers = VK_Physical_Device_Properties.limits.maxPerStageDescriptorSamplers;
+			Properties.Limits.maxPerStageDescriptorUniformBuffers = VK_Physical_Device_Properties.limits.maxPerStageDescriptorUniformBuffers;
+			Properties.Limits.maxPerStageDescriptorStorageBuffers = VK_Physical_Device_Properties.limits.maxPerStageDescriptorStorageBuffers;
+			Properties.Limits.maxPerStageDescriptorSampledImages = VK_Physical_Device_Properties.limits.maxPerStageDescriptorSampledImages;
+			Properties.Limits.maxPerStageDescriptorStorageImages = VK_Physical_Device_Properties.limits.maxPerStageDescriptorStorageImages;
+			Properties.Limits.maxPerStageDescriptorInputAttachments = VK_Physical_Device_Properties.limits.maxPerStageDescriptorInputAttachments;
+			Properties.Limits.maxPerStageResources = VK_Physical_Device_Properties.limits.maxPerStageResources;
+			Properties.Limits.maxDescriptorSetSamplers = VK_Physical_Device_Properties.limits.maxDescriptorSetSamplers;
+			Properties.Limits.maxDescriptorSetUniformBuffers = VK_Physical_Device_Properties.limits.maxDescriptorSetUniformBuffers;
+			Properties.Limits.maxDescriptorSetUniformBuffersDynamic = VK_Physical_Device_Properties.limits.maxDescriptorSetUniformBuffersDynamic;
+			Properties.Limits.maxDescriptorSetStorageBuffers = VK_Physical_Device_Properties.limits.maxDescriptorSetStorageBuffers;
+			Properties.Limits.maxDescriptorSetStorageBuffersDynamic = VK_Physical_Device_Properties.limits.maxDescriptorSetStorageBuffersDynamic;
+			Properties.Limits.maxDescriptorSetSampledImages = VK_Physical_Device_Properties.limits.maxDescriptorSetSampledImages;
+			Properties.Limits.maxDescriptorSetStorageImages = VK_Physical_Device_Properties.limits.maxDescriptorSetStorageImages;
+			Properties.Limits.maxDescriptorSetInputAttachments = VK_Physical_Device_Properties.limits.maxDescriptorSetInputAttachments;
+			Properties.Limits.maxVertexInputAttributes = VK_Physical_Device_Properties.limits.maxVertexInputAttributes;
+			Properties.Limits.maxVertexInputBindings = VK_Physical_Device_Properties.limits.maxVertexInputBindings;
+			Properties.Limits.maxVertexInputAttributeOffset = VK_Physical_Device_Properties.limits.maxVertexInputAttributeOffset;
+			Properties.Limits.maxVertexInputBindingStride = VK_Physical_Device_Properties.limits.maxVertexInputBindingStride;
+			Properties.Limits.maxVertexOutputComponents = VK_Physical_Device_Properties.limits.maxVertexOutputComponents;
+			Properties.Limits.maxTessellationGenerationLevel = VK_Physical_Device_Properties.limits.maxTessellationGenerationLevel;
+			Properties.Limits.maxTessellationPatchSize = VK_Physical_Device_Properties.limits.maxTessellationPatchSize;
+			Properties.Limits.maxTessellationControlPerVertexInputComponents = VK_Physical_Device_Properties.limits.maxTessellationControlPerVertexInputComponents;
+			Properties.Limits.maxTessellationControlPerVertexOutputComponents = VK_Physical_Device_Properties.limits.maxTessellationControlPerVertexOutputComponents;
+			Properties.Limits.maxTessellationControlPerPatchOutputComponents = VK_Physical_Device_Properties.limits.maxTessellationControlPerPatchOutputComponents;
+			Properties.Limits.maxTessellationControlTotalOutputComponents = VK_Physical_Device_Properties.limits.maxTessellationControlTotalOutputComponents;
+			Properties.Limits.maxTessellationEvaluationInputComponents = VK_Physical_Device_Properties.limits.maxTessellationEvaluationInputComponents;
+			Properties.Limits.maxTessellationEvaluationOutputComponents = VK_Physical_Device_Properties.limits.maxTessellationEvaluationOutputComponents;
+			Properties.Limits.maxGeometryShaderInvocations = VK_Physical_Device_Properties.limits.maxGeometryShaderInvocations;
+			Properties.Limits.maxGeometryInputComponents = VK_Physical_Device_Properties.limits.maxGeometryInputComponents;
+			Properties.Limits.maxGeometryOutputComponents = VK_Physical_Device_Properties.limits.maxGeometryOutputComponents;
+			Properties.Limits.maxGeometryOutputVertices = VK_Physical_Device_Properties.limits.maxGeometryOutputVertices;
+			Properties.Limits.maxGeometryTotalOutputComponents = VK_Physical_Device_Properties.limits.maxGeometryTotalOutputComponents;
+			Properties.Limits.maxFragmentInputComponents = VK_Physical_Device_Properties.limits.maxFragmentInputComponents;
+			Properties.Limits.maxFragmentOutputAttachments = VK_Physical_Device_Properties.limits.maxFragmentOutputAttachments;
+			Properties.Limits.maxFragmentDualSrcAttachments = VK_Physical_Device_Properties.limits.maxFragmentDualSrcAttachments;
+			Properties.Limits.maxFragmentCombinedOutputResources = VK_Physical_Device_Properties.limits.maxFragmentCombinedOutputResources;
+			Properties.Limits.maxComputeSharedMemorySize = VK_Physical_Device_Properties.limits.maxComputeSharedMemorySize;
+			for (uint32_t Index = 0; Index < 3; ++Index)
+				Properties.Limits.maxComputeWorkGroupCount[Index] = VK_Physical_Device_Properties.limits.maxComputeWorkGroupCount[Index];
+			Properties.Limits.maxComputeWorkGroupInvocations = VK_Physical_Device_Properties.limits.maxComputeWorkGroupInvocations;
+			for (uint32_t Index = 0; Index < 3; ++Index)
+				Properties.Limits.maxComputeWorkGroupSize[Index] = VK_Physical_Device_Properties.limits.maxComputeWorkGroupSize[Index];
+			Properties.Limits.subPixelPrecisionBits = VK_Physical_Device_Properties.limits.subPixelPrecisionBits;
+			Properties.Limits.subTexelPrecisionBits = VK_Physical_Device_Properties.limits.subTexelPrecisionBits;
+			Properties.Limits.mipmapPrecisionBits = VK_Physical_Device_Properties.limits.mipmapPrecisionBits;
+			Properties.Limits.maxDrawIndexedIndexValue = VK_Physical_Device_Properties.limits.maxDrawIndexedIndexValue;
+			Properties.Limits.maxDrawIndirectCount = VK_Physical_Device_Properties.limits.maxDrawIndirectCount;
+			Properties.Limits.maxSamplerLodBias = VK_Physical_Device_Properties.limits.maxSamplerLodBias;
+			Properties.Limits.maxSamplerAnisotropy = VK_Physical_Device_Properties.limits.maxSamplerAnisotropy;
+			Properties.Limits.maxViewports = VK_Physical_Device_Properties.limits.maxViewports;
+			for (uint32_t Index = 0; Index < 2; ++Index)
+				Properties.Limits.maxViewportDimensions[Index] = VK_Physical_Device_Properties.limits.maxViewportDimensions[Index];
+			for (uint32_t Index = 0; Index < 2; Index++)
+				Properties.Limits.viewportBoundsRange[Index] = VK_Physical_Device_Properties.limits.viewportBoundsRange[Index];
+			Properties.Limits.viewportSubPixelBits = VK_Physical_Device_Properties.limits.viewportSubPixelBits;
+			Properties.Limits.minMemoryMapAlignment = VK_Physical_Device_Properties.limits.minMemoryMapAlignment;
+			Properties.Limits.minTexelBufferOffsetAlignment = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.minTexelBufferOffsetAlignment);
+			Properties.Limits.minUniformBufferOffsetAlignment = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.minUniformBufferOffsetAlignment);
+			Properties.Limits.minStorageBufferOffsetAlignment = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.minStorageBufferOffsetAlignment);
+			Properties.Limits.minTexelOffset = VK_Physical_Device_Properties.limits.minTexelOffset;
+			Properties.Limits.maxTexelOffset = VK_Physical_Device_Properties.limits.maxTexelOffset;
+			Properties.Limits.minTexelGatherOffset = VK_Physical_Device_Properties.limits.minTexelGatherOffset;
+			Properties.Limits.maxTexelGatherOffset = VK_Physical_Device_Properties.limits.maxTexelGatherOffset;
+			Properties.Limits.minInterpolationOffset = VK_Physical_Device_Properties.limits.minInterpolationOffset;
+			Properties.Limits.maxInterpolationOffset = VK_Physical_Device_Properties.limits.maxInterpolationOffset;
+			Properties.Limits.subPixelInterpolationOffsetBits = VK_Physical_Device_Properties.limits.subPixelInterpolationOffsetBits;
+			Properties.Limits.maxFramebufferWidth = VK_Physical_Device_Properties.limits.maxFramebufferWidth;
+			Properties.Limits.maxFramebufferHeight = VK_Physical_Device_Properties.limits.maxFramebufferHeight;
+			Properties.Limits.maxFramebufferLayers = VK_Physical_Device_Properties.limits.maxFramebufferLayers;
+			Properties.Limits.framebufferColorSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.framebufferColorSampleCounts);
+			Properties.Limits.framebufferDepthSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.framebufferDepthSampleCounts);
+			Properties.Limits.framebufferStencilSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.framebufferStencilSampleCounts);
+			Properties.Limits.framebufferNoAttachmentsSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.framebufferNoAttachmentsSampleCounts);
+			Properties.Limits.maxColorAttachments = VK_Physical_Device_Properties.limits.maxColorAttachments;
+			Properties.Limits.sampledImageColorSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.sampledImageColorSampleCounts);
+			Properties.Limits.sampledImageIntegerSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.sampledImageIntegerSampleCounts);
+			Properties.Limits.sampledImageDepthSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.sampledImageDepthSampleCounts);
+			Properties.Limits.sampledImageStencilSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.sampledImageStencilSampleCounts);
+			Properties.Limits.storageImageSampleCounts = static_cast<VkSampleCountFlags>(VK_Physical_Device_Properties.limits.storageImageSampleCounts);
+			Properties.Limits.maxSampleMaskWords = VK_Physical_Device_Properties.limits.maxSampleMaskWords;
+			Properties.Limits.timestampComputeAndGraphics = static_cast<VkBool32>(VK_Physical_Device_Properties.limits.timestampComputeAndGraphics);
+			Properties.Limits.timestampPeriod = VK_Physical_Device_Properties.limits.timestampPeriod;
+			Properties.Limits.maxClipDistances = VK_Physical_Device_Properties.limits.maxClipDistances;
+			Properties.Limits.maxCullDistances = VK_Physical_Device_Properties.limits.maxCullDistances;
+			Properties.Limits.maxCombinedClipAndCullDistances = VK_Physical_Device_Properties.limits.maxCombinedClipAndCullDistances;
+			Properties.Limits.discreteQueuePriorities = VK_Physical_Device_Properties.limits.discreteQueuePriorities;
+			for (uint32_t Index = 0; Index < 2; Index++)
+				Properties.Limits.pointSizeRange[Index] = VK_Physical_Device_Properties.limits.pointSizeRange[Index];
+			for (uint32_t Index = 0; Index < 2; Index++)
+				Properties.Limits.lineWidthRange[Index] = VK_Physical_Device_Properties.limits.lineWidthRange[Index];
+			Properties.Limits.pointSizeGranularity = VK_Physical_Device_Properties.limits.pointSizeGranularity;
+			Properties.Limits.lineWidthGranularity = VK_Physical_Device_Properties.limits.lineWidthGranularity;
+			Properties.Limits.strictLines = static_cast<VkBool32>(VK_Physical_Device_Properties.limits.strictLines);
+			Properties.Limits.standardSampleLocations = static_cast<VkBool32>(VK_Physical_Device_Properties.limits.standardSampleLocations);
+			Properties.Limits.optimalBufferCopyOffsetAlignment = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.optimalBufferCopyOffsetAlignment);
+			Properties.Limits.optimalBufferCopyRowPitchAlignment = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.optimalBufferCopyRowPitchAlignment);
+			Properties.Limits.nonCoherentAtomSize = static_cast<VkDeviceSize>(VK_Physical_Device_Properties.limits.nonCoherentAtomSize);
+		}
+
+		return Properties;
+	}
+
 	RHI_Physical_Device* Vulkan_RHI::Get_Physical_Device(void) {
 		return this->m_RHI_Physical_Device.get();
 	}
@@ -738,6 +876,42 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return RHI_Command_Buffers;
 	}
 
+	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usages, RHI_Memory_Property_Flags Properties) {
+		VkBuffer  Temp_Buffer{ nullptr };
+		VkDeviceMemory Temp_Device_Memory{ nullptr };
+
+		NameSpace_Utilities::Create_Buffer(
+			this->m_VK_Physical_Device,
+			this->m_Logical_VK_Device,
+			Size,
+			static_cast<VkBufferUsageFlags>(Usages),
+			static_cast<VkMemoryPropertyFlags>(Properties),
+			this->m_Allocator.get(),
+			Temp_Buffer,
+			Temp_Device_Memory
+		);
+
+		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
+
+		unique_ptr<RHI_Device_Memory> Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
+		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
+		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Reset(Temp_Device_Memory);
+
+		return std::make_tuple(std::move(Buffer), std::move(Device_Memory));
+	}
+
+
+	void Vulkan_RHI::Map_Memory(RHI_Device_Memory* Memory, RHI_Device_Size Offset, RHI_Memopy_Map_Flags Flags, RHI_Device_Size Size, void** Data) {
+		THROW_IF_VK_FAILED(vkMapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Memory)->Get(), Offset, Size, static_cast<VkMemoryMapFlags>(Flags), Data));
+	}
+
+	void Vulkan_RHI::UnMap_Memory(RHI_Device_Memory* Memory) {
+		vkUnmapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Memory)->Get());
+	}
+
+
 
 	void Vulkan_RHI::Run(void) {
 		this->Create_Allocator();
@@ -837,7 +1011,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		VkSemaphore Semaphore{ nullptr };
 		VkFence InFlight_Fence{ nullptr };
-		for (uint8_t Index = 0; Index < Vulkan_RHI::s_Frames_In_Flight; ++Index) {
+		for (uint32_t Index = 0; Index < Vulkan_RHI::s_Frames_In_Flight; ++Index) {
 			{
 				THROW_IF_VK_FAILED(vkCreateSemaphore(this->m_Logical_VK_Device, &Semaphore_Info, this->m_Allocator.get(), &Semaphore));
 				if (nullptr == this->m_Image_available_For_Render_RHI_Semaphores[Index])
@@ -1223,31 +1397,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return  Shader;
 	}
 
-	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usages, RHI_Memory_Property_Flags Properties) {
-		VkBuffer  Temp_Buffer{ nullptr };
-		VkDeviceMemory Temp_Device_Memory{ nullptr };
-
-		NameSpace_Utilities::Create_Buffer(
-			this->m_VK_Physical_Device,
-			this->m_Logical_VK_Device,
-			Size,
-			static_cast<VkBufferUsageFlags>(Usages),
-			static_cast<VkMemoryPropertyFlags>(Properties),
-			this->m_Allocator.get(),
-			Temp_Buffer,
-			Temp_Device_Memory
-		);
-
-		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
-
-		unique_ptr<RHI_Device_Memory> Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
-		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
-		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Reset(Temp_Device_Memory);
-
-		return std::make_tuple(std::move(Buffer), std::move(Device_Memory));
-	}
 
 	bool Vulkan_RHI::Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) {
 		const auto& [Buffer, Device_Memory] = Buffer_And_Memory;
@@ -2269,11 +2418,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			vk_Render_Pass_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
 			vk_Render_Pass_Create_Info.pNext = Create_Info->pNext;
 			vk_Render_Pass_Create_Info.flags = static_cast<VkRenderPassCreateFlags>(Create_Info->Flags);
-			vk_Render_Pass_Create_Info.attachmentCount = vk_Attachment_Descriptions.size();
+			vk_Render_Pass_Create_Info.attachmentCount = static_cast<uint32_t>(vk_Attachment_Descriptions.size());
 			vk_Render_Pass_Create_Info.pAttachments = vk_Attachment_Descriptions.data();
-			vk_Render_Pass_Create_Info.subpassCount = vk_Subpass_Descriptions.size();
+			vk_Render_Pass_Create_Info.subpassCount = static_cast<uint32_t>(vk_Subpass_Descriptions.size());
 			vk_Render_Pass_Create_Info.pSubpasses = vk_Subpass_Descriptions.data();
-			vk_Render_Pass_Create_Info.dependencyCount = vk_Subpass_Dependencies.size();
+			vk_Render_Pass_Create_Info.dependencyCount = static_cast<uint32_t>(vk_Subpass_Dependencies.size());
 			vk_Render_Pass_Create_Info.pDependencies = vk_Subpass_Dependencies.data();
 		}
 
@@ -2974,7 +3123,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 	}
-	
+
 	bool Vulkan_RHI::Queue_Submit(RHI_Queue* Queue, const vector<const RHI_Submit_Info*>* Submits, RHI_Fence* Fence) {
 		if (nullptr == Submits || Submits->empty())
 			throw runtime_error("Submits is nullptr or empty!");
@@ -3068,7 +3217,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VkResult vk_Result{ vkQueueSubmit(vk_Queue, vk_Submit_Infos.size(), vk_Submit_Infos.data(), vk_Fence) };
 
 	}
-	
+
 	bool Vulkan_RHI::Queue_Wait_Idle(RHI_Queue* Queue) {
 		VkQueue vk_Queue{ static_cast<Vulkan_Queue*>(Queue)->Get() };
 

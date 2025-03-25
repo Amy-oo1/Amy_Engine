@@ -140,8 +140,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 		//NOTE : Static Member Variable
+	public:
+		static constexpr uint32_t s_Frames_In_Flight{ 3 };
+
 	private:
-		static constexpr uint8_t s_Frames_In_Flight{ 3 };
 
 		//TODO : Member Variable
 	private:
@@ -214,6 +216,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		[[nodiscard]] RHI_Instance* Get_Instance(void) override;
 
 		void Create_Physical_Device(void) override;// NOTE : Physical Device Life Time Is The Same As The Application
+		[[nodiscard]] const RHI_Physical_Device_Properties Get_Physical_Device_Properties(void) override;
 		[[nodiscard]] RHI_Physical_Device* Get_Physical_Device(void) override;
 
 		void Create_Logical_Device(void) override;
@@ -229,6 +232,26 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Allocate_Command_Buffers(
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) override;
+
+		[[nodiscard]] tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>>
+			Create_Buffer(
+				RHI_Device_Size Size,
+				RHI_Buffer_Usage_Flags Usages,
+				RHI_Memory_Property_Flags Properties
+			) override;
+
+		//NOTE : Memory
+		void
+			Map_Memory(
+				RHI_Device_Memory* Memory,
+				RHI_Device_Size Offset,
+				RHI_Memopy_Map_Flags Flags,
+				RHI_Device_Size Size,
+				void** Data
+			) override;
+
+		void UnMap_Memory(RHI_Device_Memory* Memory) override;
+
 
 
 		void Run(void) override;
@@ -363,7 +386,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 
-
 	private:
 
 
@@ -433,7 +455,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		[[nodiscard]] const unique_ptr<RHI_Shader_Module> Create_Shader_Module(const vector<unsigned char>& Shader_Code) override;
 
-		[[nodiscard]] tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usages, RHI_Memory_Property_Flags Properties) override;
 
 		bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) override;
 

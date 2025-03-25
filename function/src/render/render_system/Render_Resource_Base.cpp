@@ -91,6 +91,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		//TODO : 
 		//if (".obj" == Mesh_URL.extension())
+		return Render_Mesh_Data{};
 	}
 
 	const Render_Material_Data Render_Resource_Base::Load_Material(const path& Material_URL) const {

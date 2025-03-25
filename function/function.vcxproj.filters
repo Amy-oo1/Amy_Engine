@@ -228,6 +228,9 @@
     <ClInclude Include="include\render\render_system\Render_Resource_Base.h">
       <Filter>include\render\render_system</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_Resource.h">
+      <Filter>include\render\render_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -319,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_Utilities.cpp">
       <Filter>src\render\rhi\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_Resource.cpp">
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

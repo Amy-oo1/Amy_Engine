@@ -275,7 +275,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_BLEND_FACTOR Src_Alpha_Blend_Factor;
 		RHI_BLEND_FACTOR Dst_Alpha_Blend_Factor;
 		RHI_BLEND_OP Alpha_Blend_Op;
-		RHI_COLOR_COMPONENT_FLAGS Color_Write_Mask;
+		RHI_Color_Component_Flags Color_Write_Mask;
 	};
 
 	struct RHI_Pipeline_Color_Blend_State_Create_Info {

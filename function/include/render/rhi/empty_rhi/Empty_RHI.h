@@ -46,11 +46,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		virtual void Create_Physical_Device(void) = 0;// NOTE : Physical Device Life Time Is The Same As The Application
 		[[nodiscard]] virtual RHI_Physical_Device* Get_Physical_Device(void) = 0;
 
+		[[nodiscard]] virtual const RHI_Physical_Device_Properties Get_Physical_Device_Properties(void) = 0;
+
 		virtual void Create_Logical_Device(void) = 0;// NOTE : Logical Device Life Time Is The Same As The Application
 		[[nodiscard]] virtual RHI_Logical_Device* Get_Logical_Device(void) = 0;
 
 		[[nodiscard]] virtual RHI_Queue* Get_Graphics_Queue(void) = 0;//Command Queue
 
+		//NOTE : Command
 		[[nodiscard]] virtual unique_ptr<RHI_Command_Pool>
 			Create_Command_Pool(
 				const RHI_Command_Pool_Create_Info* Create_Info) = 0;
@@ -59,6 +62,28 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			Allocate_Command_Buffers(
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) = 0;
+
+		[[nodiscard]] virtual tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>>
+			Create_Buffer(
+				RHI_Device_Size Size,
+				RHI_Buffer_Usage_Flags Usages,
+				RHI_Memory_Property_Flags Properties
+			) = 0;
+
+		//NOTE : Memory
+		virtual void
+			Map_Memory(
+				RHI_Device_Memory* Memory,
+				RHI_Device_Size Offset,
+				RHI_Memopy_Map_Flags Flags,
+				RHI_Device_Size Size,
+				void** Data
+			) = 0;
+
+		virtual void UnMap_Memory(RHI_Device_Memory* Memory) = 0;
+
+
+
 
 		virtual void Run(void) = 0;
 
@@ -83,7 +108,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		[[nodiscard]] virtual const unique_ptr<RHI_Shader_Module> Create_Shader_Module(const std::vector<unsigned char>& Shader_Code) = 0;
 
-		[[nodiscard]] virtual tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usages, RHI_Memory_Property_Flags Properties) = 0;
 
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
 
@@ -434,4 +458,4 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			) = 0;
 
 	};
-} // namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI
+} // namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI

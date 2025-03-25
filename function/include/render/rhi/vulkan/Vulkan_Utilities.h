@@ -16,6 +16,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	using std::array;
 	using std::vector;
 
+	uint32_t Find_Memory_Type(
+		VkPhysicalDevice Physical_Device,
+		uint32_t Type_Filter,
+		VkMemoryPropertyFlags Property_Flags
+	);
+
+	void Create_Buffer(
+		VkPhysicalDevice Physical_Device,
+		VkDevice Logical_Device,
+		VkDeviceSize Size,
+		VkBufferUsageFlags Usages,
+		VkMemoryPropertyFlags Properties,
+		const VkAllocationCallbacks* Allocator,
+		VkBuffer& Buffer,
+		VkDeviceMemory& Buffer_Memory
+	);
+
 	//template<typename T, size_t N>
 	//const std::array<T, N> Fill_Array(T value) {
 	//	std::array<T, N> arr{};
@@ -42,20 +59,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 	const VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const vector<unsigned char>& Code);
 
-	uint32_t Find_Memory_Type(
-		VkPhysicalDevice Physical_Device,
-		uint32_t Type_Filter,
-		VkMemoryPropertyFlags Property_Flags);
 
-	void Create_Buffer(
-		VkPhysicalDevice Physical_Device,
-		VkDevice Logical_Device,
-		VkDeviceSize Size,
-		VkBufferUsageFlags Usages,
-		VkMemoryPropertyFlags Properties,
-		const VkAllocationCallbacks* Allocator,
-		VkBuffer& Buffer,
-		VkDeviceMemory& Buffer_Memory);
+
+
 
 	void Create_Image(
 		VkPhysicalDevice		Physical_Device,

@@ -8,6 +8,56 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 	using std::runtime_error;
 
+	uint32_t Find_Memory_Type(
+		VkPhysicalDevice Physical_Device,
+		uint32_t Type_Filter,
+		VkMemoryPropertyFlags Property_Flags) {
+		VkPhysicalDeviceMemoryProperties Memory_Properties{};
+		vkGetPhysicalDeviceMemoryProperties(Physical_Device, &Memory_Properties);
+
+		for (uint32_t Index = 0; Index < Memory_Properties.memoryTypeCount; ++Index)
+			if (Type_Filter & (1 << Index) && (Memory_Properties.memoryTypes[Index].propertyFlags & Property_Flags) == Property_Flags)
+				return Index;
+
+		throw runtime_error("Failed to find suitable memory type!");
+
+		return std::numeric_limits<uint32_t>::max();
+	}
+
+	void Create_Buffer(
+		VkPhysicalDevice Physical_Device,
+		VkDevice Logical_Device,
+		VkDeviceSize Size,
+		VkBufferUsageFlags Usages,
+		VkMemoryPropertyFlags Properties,
+		const VkAllocationCallbacks* Allocator,
+		VkBuffer& Buffer,
+		VkDeviceMemory& Buffer_Memory) {
+		VkBufferCreateInfo Buffer_Info{};
+		{
+			Buffer_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			Buffer_Info.size = Size;
+			Buffer_Info.usage = Usages;
+			Buffer_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		}
+
+		THROW_IF_VK_FAILED(vkCreateBuffer(Logical_Device, &Buffer_Info, Allocator, &Buffer));
+
+		VkMemoryRequirements Memory_Requirements{};
+		vkGetBufferMemoryRequirements(Logical_Device, Buffer, &Memory_Requirements);
+
+		VkMemoryAllocateInfo Memory_Allocate_Info{};
+		{
+			Memory_Allocate_Info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+			Memory_Allocate_Info.allocationSize = Memory_Requirements.size;
+			Memory_Allocate_Info.memoryTypeIndex = NameSpace_Utilities::Find_Memory_Type(Physical_Device, Memory_Requirements.memoryTypeBits, Properties);
+		}
+
+		THROW_IF_VK_FAILED(vkAllocateMemory(Logical_Device, &Memory_Allocate_Info, Allocator, &Buffer_Memory));
+
+		THROW_IF_VK_FAILED(vkBindBufferMemory(Logical_Device, Buffer, Buffer_Memory, 0));
+	}
+
 
 	VkDeviceSize Get_Image_Byte_Size(
 		uint32_t Image_Wedtih,
@@ -69,55 +119,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 
-	uint32_t Find_Memory_Type(
-		VkPhysicalDevice Physical_Device,
-		uint32_t Type_Filter,
-		VkMemoryPropertyFlags Property_Flags) {
-		VkPhysicalDeviceMemoryProperties Memory_Properties{};
-		vkGetPhysicalDeviceMemoryProperties(Physical_Device, &Memory_Properties);
 
-		for (uint32_t Index = 0; Index < Memory_Properties.memoryTypeCount; ++Index)
-			if (Type_Filter & (1 << Index) && (Memory_Properties.memoryTypes[Index].propertyFlags & Property_Flags) == Property_Flags)
-				return Index;
-
-		throw runtime_error("Failed to find suitable memory type!");
-
-		return std::numeric_limits<uint32_t>::max();
-	}
-
-	void Create_Buffer(
-		VkPhysicalDevice Physical_Device,
-		VkDevice Logical_Device,
-		VkDeviceSize Size,
-		VkBufferUsageFlags Usages,
-		VkMemoryPropertyFlags Properties,
-		const VkAllocationCallbacks* Allocator,
-		VkBuffer& Buffer,
-		VkDeviceMemory& Buffer_Memory) {
-		VkBufferCreateInfo Buffer_Info{};
-		{
-			Buffer_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			Buffer_Info.size = Size;
-			Buffer_Info.usage = Usages;
-			Buffer_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		}
-
-		THROW_IF_VK_FAILED(vkCreateBuffer(Logical_Device, &Buffer_Info, Allocator, &Buffer));
-
-		VkMemoryRequirements Memory_Requirements{};
-		vkGetBufferMemoryRequirements(Logical_Device, Buffer, &Memory_Requirements);
-
-		VkMemoryAllocateInfo Memory_Allocate_Info{};
-		{
-			Memory_Allocate_Info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-			Memory_Allocate_Info.allocationSize = Memory_Requirements.size;
-			Memory_Allocate_Info.memoryTypeIndex = NameSpace_Utilities::Find_Memory_Type(Physical_Device, Memory_Requirements.memoryTypeBits, Properties);
-		}
-
-		THROW_IF_VK_FAILED(vkAllocateMemory(Logical_Device, &Memory_Allocate_Info, Allocator, &Buffer_Memory));
-
-		THROW_IF_VK_FAILED(vkBindBufferMemory(Logical_Device, Buffer, Buffer_Memory, 0));
-	}
 
 	void Create_Image(
 		VkPhysicalDevice Physical_Device,

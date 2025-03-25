@@ -69,22 +69,22 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		virtual void Upload_Game_Object_Render_Resource(
 			shared_ptr<Empty_RHI> RHI,
 			const Render_Entity& Render_Entity,
-			const vector<Render_Mesh_Data>& Meshes,
-			const std::vector<Render_Material_Data>& Materials
+			const Render_Mesh_Data& Meshe_Data,
+			const Render_Material_Data& Material_Data
 		) = 0;
 
 
 		virtual void Upload_Game_Object_Render_Resource(
 			shared_ptr<Empty_RHI> RHI,
 			const Render_Entity& Render_Entity,
-			const vector<Render_Mesh_Data>& Meshes
+			const Render_Mesh_Data& Meshe_Data
 		) = 0;
 
 
 		virtual void Upload_Game_Object_Render_Resource(
 			shared_ptr<Empty_RHI> RHI,
 			const Render_Entity& Render_Entity,
-			const vector<Render_Mesh_Data>& Meshes
+			const Render_Material_Data& Material_Data
 		) = 0;
 
 
@@ -92,7 +92,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			//TODO
 			shared_ptr<Render_Camera> Camera
 		) = 0;
-
 
 	};
 
