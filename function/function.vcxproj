@@ -174,7 +174,9 @@
     </ClInclude>
     <ClInclude Include="include\physics\Utilities_Physics.h" />
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
+    <ClInclude Include="include\render\render_system\Light.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
+    <ClInclude Include="include\render\render_system\Render_Data_Struct.h" />
     <ClInclude Include="include\render\render_system\Render_Entity.h" />
     <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h" />
     <ClInclude Include="include\render\render_system\Render_Mesh.h" />
@@ -216,6 +218,7 @@
     </ClCompile>
     <ClCompile Include="src\physics\Utilities_Physics.cpp" />
     <ClCompile Include="src\render\debug_draw\Debug_Draw_Primitive.cpp" />
+    <ClCompile Include="src\render\render_system\Light.cpp" />
     <ClCompile Include="src\render\render_system\Render_Camera.cpp" />
     <ClCompile Include="src\render\render_system\Render_Mesh.cpp" />
     <ClCompile Include="src\render\render_system\Render_Object.cpp" />

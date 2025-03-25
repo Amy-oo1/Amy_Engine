@@ -204,6 +204,12 @@
     <ClInclude Include="include\render\render_system\Render_Swap_Context.h">
       <Filter>include\render\render_sysytem</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_system\Light.h">
+      <Filter>include\render\render_sysytem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_Data_Struct.h">
+      <Filter>include\render\render_sysytem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -282,6 +288,9 @@
       <Filter>src\render\render_sysytem</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_Swap_Context.cpp">
+      <Filter>src\render\render_sysytem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Light.cpp">
       <Filter>src\render\render_sysytem</Filter>
     </ClCompile>
   </ItemGroup>
