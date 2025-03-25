@@ -194,8 +194,10 @@
     <ClInclude Include="include\render\rhi\vulkan\Vulkan_RHI_Resource.h" />
     <ClInclude Include="include\render\rhi\vulkan\Vulkan_Utilities.h" />
     <ClInclude Include="include\render\window\Window_System.h" />
+    <ClInclude Include="include\render\window\Window_UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\render\window\Window_UI.cpp" />
     <ClInclude Include="include\render\render_system\Render_Swap_Context.h" />
     <ClCompile Include="include\src\render_system\Render_GUID_Allocator.cpp" />
     <ClCompile Include="src\animation\Animation_Loader.cpp" />

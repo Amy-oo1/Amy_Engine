@@ -213,6 +213,9 @@
     <ClInclude Include="include\render\render_system\Render_Commmon.h">
       <Filter>include\render\render_sysytem</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\window\Window_UI.h">
+      <Filter>include\render\window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -295,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="src\render\render_system\Light.cpp">
       <Filter>src\render\render_sysytem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\window\Window_UI.cpp">
+      <Filter>src\render\window</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
