@@ -176,6 +176,7 @@
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
     <ClInclude Include="include\render\render_system\Light.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
+    <ClInclude Include="include\render\render_system\Render_Commmon.h" />
     <ClInclude Include="include\render\render_system\Render_Data_Struct.h" />
     <ClInclude Include="include\render\render_system\Render_Entity.h" />
     <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h" />
