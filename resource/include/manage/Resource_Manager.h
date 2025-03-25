@@ -71,6 +71,8 @@ namespace NameSpace_Resource::NameSpace_Manage {
 	public:
 		static Resource_Manager& Get_Instance(const Resource_Configer& Configer);
 
+		const char* URL_To_File_Full_Path(const path& Resource_URL);
+
 	private:
 		const path Get_Resource_Path(const path& Resource_URL);
 

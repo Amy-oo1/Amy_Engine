@@ -225,6 +225,9 @@
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h">
       <Filter>include\render\render_pass</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_Resource_Base.h">
+      <Filter>include\render\render_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -275,15 +278,6 @@
     <ClCompile Include="src\render\window\Window_System.cpp">
       <Filter>src\render\window</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\rhi\vulkan\Vulkan_RHI.cpp">
-      <Filter>src\render\rhi\empty_rhi</Filter>
-    </ClCompile>
-    <ClCompile Include="src\render\rhi\vulkan\Vulkan_Test.cpp">
-      <Filter>src\render\rhi\empty_rhi</Filter>
-    </ClCompile>
-    <ClCompile Include="src\render\rhi\vulkan\Vulkan_Utilities.cpp">
-      <Filter>src\render\rhi\empty_rhi</Filter>
-    </ClCompile>
     <ClCompile Include="src\render\debug_draw\Debug_Draw_Primitive.cpp">
       <Filter>src\render\debug_draw</Filter>
     </ClCompile>
@@ -313,6 +307,18 @@
     </ClCompile>
     <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp">
       <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_Resource_Base.cpp">
+      <Filter>src\render\render_system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\rhi\vulkan\Vulkan_RHI.cpp">
+      <Filter>src\render\rhi\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\rhi\vulkan\Vulkan_Test.cpp">
+      <Filter>src\render\rhi\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\rhi\vulkan\Vulkan_Utilities.cpp">
+      <Filter>src\render\rhi\vulkan</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

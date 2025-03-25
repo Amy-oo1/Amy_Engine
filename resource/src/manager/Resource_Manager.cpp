@@ -5,7 +5,7 @@ namespace NameSpace_Resource::NameSpace_Manage {
 	Resource_Manager::Resource_Manager(const Resource_Configer& Configer)
 		: m_Configer{ Configer } {
 	}
-	
+
 
 	const bool Resource_Manager::Save(const path& Resource_URL, const JSON& Resource_JSON) {
 		if (Resource_URL.empty()) {
@@ -34,6 +34,11 @@ namespace NameSpace_Resource::NameSpace_Manage {
 		static Resource_Manager Instance{ Configer };
 
 		return Instance;
+	}
+
+	const char* Resource_Manager::URL_To_File_Full_Path(const path& Resource_URL) {
+		//TODO 
+		return path{}.generic_string().c_str();
 	}
 
 	const path Resource_Manager::Get_Resource_Path(const path& Resource_URL) {

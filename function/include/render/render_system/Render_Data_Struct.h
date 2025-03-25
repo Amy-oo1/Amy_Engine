@@ -2,12 +2,28 @@
 
 #include<malloc.h>
 #include<cstdint>
-
 #include<memory>
+#include<functional>
+
+#include "render/rhi/empty_rhi/RHI_Type.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
+	using std::unique_ptr;
 	using std::shared_ptr;
+	using std::function;
+
+	using NameSpace_RHI::RHI_FORMAT;
+
+	struct Mesh_Vertex_Data_Definition final {
+		float Position[3];
+		float Normal[3];
+		float Tangent[3];
+		float Bitangent[3];
+		float Texcoord[2];
+		float Color[4];
+	};
+
 
 	class Buffer_Data final {
 	private:
@@ -38,10 +54,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	public:
 		Texture_Data(void) = default;
 
-
-		~Texture_Data(void) {
-			free(this->Pixels);
-		}
+		~Texture_Data(void) = default;
 
 		bool Is_Valid(void)const { return nullptr != this->Pixels; }
 
@@ -49,9 +62,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		uint32_t Width;
 		uint32_t Height;
 		uint32_t Depth;
+		RHI_FORMAT Format;
 		uint32_t Mip_Levels{ 0 };
 		uint32_t Array_Layes{ 0 };
-		void* Pixels{ nullptr };
+		unique_ptr<void, function<void(void*)>> Pixels{ nullptr };
 
 	};
 

@@ -43,6 +43,14 @@ namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config {
 
 	constexpr const char* Include_Third_Part_Jolt{ "-D:/Amy_Engine/third_party/JoltPhysics-5.2.0/include" };
 
+	constexpr const char* Include_Third_Part_GLFW{ "-D:/Amy_Engine/third_party/glfw-3.4/include" };
+
+	constexpr const char* Include_Third_Part_STB{ "-D:/Amy_Engine/third_party/stb-master/include" };
+
+	constexpr const char* Include_Third_Part_Tiny_OBJ_Loader{ "-D:/Amy_Engine/third_party/tinyobjloader-release/include" };
+
+	constexpr const char* Include_Third_Part_Vulkan{ "-D:/Amy_Engine/third_party/VulkanSDK/1.4.309.0/Include" };
+
 	constexpr const char* Includes[]{
 		Include_Platform,
 		Include_Core,
@@ -51,7 +59,12 @@ namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config {
 		Include_third_part_clang,
 		Include_Third_Part_SpdLog,
 		Include_Third_Part_Mustance,
-		Include_Third_Part_Json
+		Include_Third_Part_Json,
+		Include_Third_Part_GLFW,
+		Include_Third_Part_STB,
+		Include_Third_Part_Tiny_OBJ_Loader,
+		Include_Third_Part_Vulkan,
+
 	};
 
 }// namespace NameSpace_Meta_Parser::NameSpace_Parser::NameSpace_Command_Config
