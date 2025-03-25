@@ -12,6 +12,7 @@
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
+#include "render/render_system/Render_Data_Struct.h"
 #include "render/render_system/Render_Commmon.h"
 #include "render/render_system/Render_Resource_Base.h"
 
@@ -29,25 +30,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_RHI::RHI_Image;
 	using NameSpace_RHI::RHI_Image_View;
 	using NameSpace_RHI::RHI_Sampler;
-
 	using NameSpace_RHI::RHI_Buffer;
-
 	using NameSpace_RHI::RHI_Device_Memory;
 
 	struct IBL_Resource final {
-		RHI_Image* BUDF_LUT_Texture_Image;
-		RHI_Image_View* BUDF_LUT_Texture_Image_View;
-		RHI_Sampler* BUDF_LUT_Texture_Sampler;
+		unique_ptr<RHI_Image> BUDF_LUT_Texture_Image;
+		unique_ptr<RHI_Image_View> BUDF_LUT_Texture_Image_View;
+		unique_ptr<RHI_Sampler> BUDF_LUT_Texture_Sampler;
 		VmaAllocation BUDF_LUT_Texture_Allocation;
 
-		RHI_Image* Irradiance_Map_Texture_Image;
-		RHI_Image_View* Irradiance_Map_Texture_Image_View;
-		RHI_Sampler* Irradiance_Map_Texture_Sampler;
+		unique_ptr<RHI_Image> Irradiance_Map_Texture_Image;
+		unique_ptr<RHI_Image_View> Irradiance_Map_Texture_Image_View;
+		unique_ptr<RHI_Sampler> Irradiance_Map_Texture_Sampler;
 		VmaAllocation Irradiance_Map_Texture_Allocation;
 
-		RHI_Image* Specular_Map_Texture_Image;
-		RHI_Image_View* Specular_Map_Texture_Image_View;
-		RHI_Sampler* Specular_Map_Texture_Sampler;
+		unique_ptr<RHI_Image> Specular_Map_Texture_Image;
+		unique_ptr<RHI_Image_View> Specular_Map_Texture_Image_View;
+		unique_ptr<RHI_Sampler> Specular_Map_Texture_Sampler;
 		VmaAllocation Specular_Map_Texture_Allocation;
 
 	};
@@ -127,6 +126,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		void Map_Storage_Buffer(shared_ptr<Empty_RHI> RHI);
 
 		void Un_Map_Storage_Resource(shared_ptr<Empty_RHI> RHI);
+
+		void Create_IBL_Samplers(shared_ptr<Empty_RHI> RHI);
+
+		void Create_IBL_Textures(
+			shared_ptr<Empty_RHI> RHI,
+			array<shared_ptr<Texture_Data>, 6> Irradiance_Maps,
+			array<shared_ptr<Texture_Data>, 6> Specular_Maps
+		);
+
+
 	public:
 		static constexpr uint32_t s_Max_Global_Stroage_Buffer_Size{ 1 << 27 };
 

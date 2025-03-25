@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "vulkan/vulkan.h"
+#include "vma/vk_mem_alloc.h"
 
 #include "render/window/Window_System.h"
 
@@ -70,6 +71,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				RHI_Memory_Property_Flags Properties
 			) = 0;
 
+		[[nodiscard]] virtual tuple<
+			unique_ptr<RHI_Image>,
+			unique_ptr<RHI_Image_View>,
+			VmaAllocation>
+			Create_Cube_Map(
+				RHI_Extent_2D Image_Extent,
+				RHI_FORMAT Image_Format,
+				uint32_t Mip_levels,
+				array<void*, 6> Image_Pixels
+			) = 0;
+
+
 		//NOTE : Memory
 		virtual void
 			Map_Memory(
@@ -82,7 +95,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void UnMap_Memory(RHI_Device_Memory* Memory) = 0;
 
-
+		//NOTE :Sampler
+		[[nodiscard]] virtual unique_ptr<RHI_Sampler>
+			Create_Sampler(
+				const RHI_Sampler_Create_Info* Create_Info
+			) = 0;
 
 
 		virtual void Run(void) = 0;
@@ -156,14 +173,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			unique_ptr<RHI_Device_Memory>>
 			Create_Global_Image() = 0;
 
-		[[nodiscard]] virtual tuple<
-			unique_ptr<RHI_Image>,
-			unique_ptr<RHI_Image_View>,
-			unique_ptr<RHI_Device_Memory>>
-			Create_Cube_Map() = 0;
-
-
-
 
 		[[nodiscard]] virtual unique_ptr<RHI_Descriptor_Pool>
 			Create_Descriptor_Pool(RHI_Descriptor_Pool_Create_Info Create_Info) = 0;
@@ -206,9 +215,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Render_Pass_Create_Info* Create_Info
 			) = 0;
 
-		[[nodiscard]] virtual unique_ptr<RHI_Sampler>
-			Create_Sampler(const RHI_Sampler_Create_Info* Create_Info
-			) = 0;
+
 
 		[[nodiscard]] virtual unique_ptr<RHI_Semaphore>
 			Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info

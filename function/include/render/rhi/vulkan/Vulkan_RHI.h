@@ -177,7 +177,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		vector<const char*> m_Physical_Device_Extensions{};
 		VkSampleCountFlagBits m_Msaa_Samples{ VK_SAMPLE_COUNT_1_BIT };
 
-
+		//VMA
+		VmaAllocator m_VMA_Allocator{ nullptr };
 
 		//Deleter
 		function<void(VkInstance)> m_VK_Instance_Deleter{ nullptr };
@@ -240,6 +241,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				RHI_Memory_Property_Flags Properties
 			) override;
 
+		//NOTE : Image
+		[[nodiscard]]  tuple<
+			unique_ptr<RHI_Image>,
+			unique_ptr<RHI_Image_View>,
+			VmaAllocation>
+			Create_Cube_Map(
+				RHI_Extent_2D Image_Extent,
+				RHI_FORMAT Image_Format,
+				uint32_t Mip_levels,
+				array<void*, 6> Image_Pixels
+			) override;
+
 		//NOTE : Memory
 		void
 			Map_Memory(
@@ -252,7 +265,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void UnMap_Memory(RHI_Device_Memory* Memory) override;
 
-
+		//NOTE : Sampler
+		[[nodiscard]] virtual unique_ptr<RHI_Sampler>
+			Create_Sampler(
+				const RHI_Sampler_Create_Info* Create_Info
+			) override;
 
 		void Run(void) override;
 
@@ -392,7 +409,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	private:
 
 		//NOTE : Deleter
-
 		function<void(VkDescriptorPool)> m_VK_Descriptor_Pool_Deleter;
 		function<void(VkSemaphore)> m_VK_Semaphore_Deleter;
 		function<void(VkFence)> m_VK_Fence_Deleter;
@@ -500,13 +516,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			unique_ptr<RHI_Device_Memory>>
 			Create_Global_Image() override;
 
-		[[nodiscard]] tuple<
-			unique_ptr<RHI_Image>,
-			unique_ptr<RHI_Image_View>,
-			unique_ptr<RHI_Device_Memory>>
-			Create_Cube_Map() override;
-
-
 		[[nodiscard]] unique_ptr<RHI_Descriptor_Pool>  Create_Descriptor_Pool(RHI_Descriptor_Pool_Create_Info Create_Info) override;
 
 		[[nodiscard]] unique_ptr<RHI_Descriptor_Set_Layout>
@@ -540,9 +549,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			) override;
 
 
-		[[nodiscard]] virtual unique_ptr<RHI_Sampler>
-			Create_Sampler(const RHI_Sampler_Create_Info* Create_Info
-			) override;
+
 
 		[[nodiscard]] virtual unique_ptr<RHI_Semaphore>
 			Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info

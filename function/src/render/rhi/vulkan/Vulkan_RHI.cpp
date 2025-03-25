@@ -902,6 +902,36 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_tuple(std::move(Buffer), std::move(Device_Memory));
 	}
 
+	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, VmaAllocation> NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI::Create_Cube_Map(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, array<void*, 6> Image_Pixels) {
+		VkImage VK_Image{ nullptr };
+		VkImageView VK_Image_View{ nullptr };
+		VmaAllocation VMA_Allocation{ nullptr };
+		NameSpace_Utilities::Create_Cube_Map(
+			this->m_VK_Physical_Device,
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			this->m_Default_VK_Command_Pool,
+			this->m_Queues.Graphic_Queue,
+			this->m_VMA_Allocator,
+			{ Image_Extent.Width, Image_Extent.Height },
+			static_cast<VkFormat>(Image_Format),
+			Mip_levels,
+			Image_Pixels,
+			VK_Image,
+			VK_Image_View,
+			VMA_Allocation
+		);
+
+		unique_ptr<RHI_Image> Image{ std::make_unique<Vulkan_Image>() };
+		static_cast<Vulkan_Image*>(Image.get())->Set_Deleter(this->m_VK_Image_Deleter);
+		static_cast<Vulkan_Image*>(Image.get())->Reset(VK_Image);
+
+		unique_ptr<RHI_Image_View> Image_View{ std::make_unique<Vulkan_Image_View>() };
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(VK_Image_View);
+
+		return std::make_tuple(std::move(Image), std::move(Image_View), VMA_Allocation);
+	}
 
 	void Vulkan_RHI::Map_Memory(RHI_Device_Memory* Memory, RHI_Device_Size Offset, RHI_Memopy_Map_Flags Flags, RHI_Device_Size Size, void** Data) {
 		THROW_IF_VK_FAILED(vkMapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Memory)->Get(), Offset, Size, static_cast<VkMemoryMapFlags>(Flags), Data));
@@ -911,6 +941,37 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		vkUnmapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Memory)->Get());
 	}
 
+	unique_ptr<RHI_Sampler> Vulkan_RHI::Create_Sampler(const RHI_Sampler_Create_Info* Create_Info) {
+		VkSamplerCreateInfo vk_Sampler_Create_Info{};
+		{
+			vk_Sampler_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			vk_Sampler_Create_Info.pNext = Create_Info->pNext;
+			vk_Sampler_Create_Info.flags = static_cast<VkSamplerCreateFlags>(Create_Info->Flags);
+			vk_Sampler_Create_Info.magFilter = static_cast<VkFilter>(Create_Info->Mag_Filter);
+			vk_Sampler_Create_Info.minFilter = static_cast<VkFilter>(Create_Info->Min_Filter);
+			vk_Sampler_Create_Info.mipmapMode = static_cast<VkSamplerMipmapMode>(Create_Info->Mipmap_Mode);
+			vk_Sampler_Create_Info.addressModeU = static_cast<VkSamplerAddressMode>(Create_Info->Address_Mode_U);
+			vk_Sampler_Create_Info.addressModeV = static_cast<VkSamplerAddressMode>(Create_Info->Address_Mode_V);
+			vk_Sampler_Create_Info.addressModeW = static_cast<VkSamplerAddressMode>(Create_Info->Address_Mode_W);
+			vk_Sampler_Create_Info.mipLodBias = Create_Info->Mip_Lod_Bias;
+			vk_Sampler_Create_Info.anisotropyEnable = static_cast<VkBool32>(Create_Info->Anisotropy_Enable);
+			vk_Sampler_Create_Info.maxAnisotropy = Create_Info->Max_Anisotropy;
+			vk_Sampler_Create_Info.compareEnable = static_cast<VkBool32>(Create_Info->Compare_Enable);
+			vk_Sampler_Create_Info.compareOp = static_cast<VkCompareOp>(Create_Info->Compare_Op);
+			vk_Sampler_Create_Info.minLod = Create_Info->Min_Lod;
+			vk_Sampler_Create_Info.maxLod = Create_Info->Max_Lod;
+			vk_Sampler_Create_Info.borderColor = static_cast<VkBorderColor>(Create_Info->Border_Color);
+			vk_Sampler_Create_Info.unnormalizedCoordinates = static_cast<VkBool32>(Create_Info->Unnormalized_Coordinates);
+		}
+
+		VkSampler vk_Sampler{};
+		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &vk_Sampler_Create_Info, this->m_Allocator.get(), &vk_Sampler));
+		unique_ptr<RHI_Sampler> Sampler{ std::make_unique<Vulkan_Sampler>() };
+		static_cast<Vulkan_Sampler*>(Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
+		static_cast<Vulkan_Sampler*>(Sampler.get())->Reset(vk_Sampler);
+
+		return Sampler;
+	}
 
 
 	void Vulkan_RHI::Run(void) {
@@ -1103,13 +1164,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 			VkImageView Image_View{ NameSpace_Utilities::Create_Image_View(
 				this->m_Logical_VK_Device,
+				this->m_Allocator.get(),
 				this->m_SwapChain_VK_Images[Index],
 				this->m_SwapChain_Image_Format,
 				1,
 					VK_IMAGE_ASPECT_COLOR_BIT,
 				VK_IMAGE_VIEW_TYPE_2D,
-				1,
-				this->m_Allocator.get())
+				1)
 			};
 
 			this->m_SwapChain_Image_Views[Index].reset(Image_View);
@@ -1553,13 +1614,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
 			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
 			static_cast<Vulkan_Image*>(Image.get())->Get(),
 			static_cast<VkFormat>(Format),
 			Mip_levels,
 			static_cast<VkImageAspectFlags>(Image_Aspect_Flags),
 			static_cast<VkImageViewType>(View_Type),
-			Layout_Count,
-			this->m_Allocator.get()
+			Layout_Count
 		));
 
 		return Image_View;
@@ -1570,10 +1631,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>>();
 	}
 
-	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Cube_Map()
-	{
-		return tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>>();
-	}
 
 
 
@@ -2435,37 +2492,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Render_Pass;
 	}
 
-	unique_ptr<RHI_Sampler> Vulkan_RHI::Create_Sampler(const RHI_Sampler_Create_Info* Create_Info) {
-		VkSamplerCreateInfo vk_Sampler_Create_Info{};
-		{
-			vk_Sampler_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
-			vk_Sampler_Create_Info.pNext = Create_Info->pNext;
-			vk_Sampler_Create_Info.flags = static_cast<VkSamplerCreateFlags>(Create_Info->Flags);
-			vk_Sampler_Create_Info.magFilter = static_cast<VkFilter>(Create_Info->Mag_Filter);
-			vk_Sampler_Create_Info.minFilter = static_cast<VkFilter>(Create_Info->Min_Filter);
-			vk_Sampler_Create_Info.mipmapMode = static_cast<VkSamplerMipmapMode>(Create_Info->Mipmap_Mode);
-			vk_Sampler_Create_Info.addressModeU = static_cast<VkSamplerAddressMode>(Create_Info->Address_Mode_U);
-			vk_Sampler_Create_Info.addressModeV = static_cast<VkSamplerAddressMode>(Create_Info->Address_Mode_V);
-			vk_Sampler_Create_Info.addressModeW = static_cast<VkSamplerAddressMode>(Create_Info->Address_Mode_W);
-			vk_Sampler_Create_Info.mipLodBias = Create_Info->Mip_Lod_Bias;
-			vk_Sampler_Create_Info.anisotropyEnable = static_cast<VkBool32>(Create_Info->Anisotropy_Enable);
-			vk_Sampler_Create_Info.maxAnisotropy = Create_Info->Max_Anisotropy;
-			vk_Sampler_Create_Info.compareEnable = static_cast<VkBool32>(Create_Info->Compare_Enable);
-			vk_Sampler_Create_Info.compareOp = static_cast<VkCompareOp>(Create_Info->Compare_Op);
-			vk_Sampler_Create_Info.minLod = Create_Info->Min_Lod;
-			vk_Sampler_Create_Info.maxLod = Create_Info->Max_Lod;
-			vk_Sampler_Create_Info.borderColor = static_cast<VkBorderColor>(Create_Info->Border_Color);
-			vk_Sampler_Create_Info.unnormalizedCoordinates = static_cast<VkBool32>(Create_Info->Unnormalized_Coordinates);
-		}
 
-		VkSampler vk_Sampler{};
-		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &vk_Sampler_Create_Info, this->m_Allocator.get(), &vk_Sampler));
-		unique_ptr<RHI_Sampler> Sampler{ std::make_unique<Vulkan_Sampler>() };
-		static_cast<Vulkan_Sampler*>(Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
-		static_cast<Vulkan_Sampler*>(Sampler.get())->Reset(vk_Sampler);
-
-		return Sampler;
-	}
 
 	unique_ptr<RHI_Semaphore> Vulkan_RHI::Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info) {
 		VkSemaphoreCreateInfo vk_Semaphore_Create_Info{};
