@@ -222,6 +222,9 @@
     <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h">
       <Filter>include\render\render_system</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_pass\Render_Pass_Base.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -307,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_GUID_Allocator.cpp">
       <Filter>src\render\render_system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp">
+      <Filter>src\render\render_pass</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

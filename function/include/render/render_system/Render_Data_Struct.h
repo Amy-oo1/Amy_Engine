@@ -1,8 +1,13 @@
 #pragma once
 
 #include<malloc.h>
+#include<cstdint>
+
+#include<memory>
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
+
+	using std::shared_ptr;
 
 	class Buffer_Data final {
 	private:
@@ -24,5 +29,53 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		void* m_Data{ nullptr };
 
 	};
+
+	class Texture_Data final {
+	private:
+		Texture_Data(const Texture_Data&) = delete;
+		Texture_Data& operator=(const Texture_Data&) = delete;
+
+	public:
+		Texture_Data(void) = default;
+
+
+		~Texture_Data(void) {
+			free(this->Pixels);
+		}
+
+		bool Is_Valid(void)const { return nullptr != this->Pixels; }
+
+	public:
+		uint32_t Width;
+		uint32_t Height;
+		uint32_t Depth;
+		uint32_t Mip_Levels{ 0 };
+		uint32_t Array_Layes{ 0 };
+		void* Pixels{ nullptr };
+
+	};
+
+	struct Static_Mesh_Data final {
+		shared_ptr<Buffer_Data> Vertex_Buffer;
+		shared_ptr<Buffer_Data> Index_Buffer;
+
+	};
+
+	struct Render_Mesh_Data final {
+		Static_Mesh_Data Static_Mesh_Data;
+		shared_ptr<Buffer_Data> Skeletion_Binding_Buffer;
+
+	};
+
+	struct Render_Material_Data final {
+		shared_ptr<Texture_Data> Base_Color_Texture;
+		shared_ptr<Texture_Data> Metallic_Roughness_Texture;
+		shared_ptr<Texture_Data> Normal_Texture;
+		shared_ptr<Texture_Data> Occlusion_Texture;
+		shared_ptr<Texture_Data> Emissive_Texture;
+
+	};
+
+
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System
