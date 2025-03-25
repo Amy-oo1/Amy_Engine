@@ -85,17 +85,23 @@
     <Filter Include="src\render\rhi\vulkan">
       <UniqueIdentifier>{aca7e5f7-dd9c-462b-b25f-0dc9029c4919}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\render\render_sysytem">
-      <UniqueIdentifier>{a922c053-275b-49e3-bf9a-d5a1b556023d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\render\render_sysytem">
-      <UniqueIdentifier>{74fda54d-1290-421e-8c9f-7c1fc9bf3ec6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\render\rhi\empty_rhi">
       <UniqueIdentifier>{d6850db8-ea09-4ffb-be38-d51e62fb4d7b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\render\rhi\empty_rhi">
       <UniqueIdentifier>{2688171b-7cb5-454e-9d4d-bdfffe44e22a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\render\render_pass">
+      <UniqueIdentifier>{45b36fc7-6335-4c02-995e-acaea8c8c8cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render\render_pass">
+      <UniqueIdentifier>{f5dd9425-0886-4486-b21f-a70e700bb55e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\render\render_system">
+      <UniqueIdentifier>{a922c053-275b-49e3-bf9a-d5a1b556023d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\render\render_system">
+      <UniqueIdentifier>{74fda54d-1290-421e-8c9f-7c1fc9bf3ec6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -184,37 +190,37 @@
       <Filter>include\render\debug_draw</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Camera.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Obejct.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_System.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Mesh.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Entity.h">
-      <Filter>include\render\render_sysytem</Filter>
-    </ClInclude>
-    <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Swap_Context.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Light.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Data_Struct.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\render_system\Render_Commmon.h">
-      <Filter>include\render\render_sysytem</Filter>
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
     <ClInclude Include="include\render\window\Window_UI.h">
       <Filter>include\render\window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h">
+      <Filter>include\render\render_system</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -279,28 +285,28 @@
       <Filter>src\render\debug_draw</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_Camera.cpp">
-      <Filter>src\render\render_sysytem</Filter>
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_System.cpp">
-      <Filter>src\render\render_sysytem</Filter>
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_Mesh.cpp">
-      <Filter>src\render\render_sysytem</Filter>
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_Object.cpp">
-      <Filter>src\render\render_sysytem</Filter>
-    </ClCompile>
-    <ClCompile Include="include\src\render_system\Render_GUID_Allocator.cpp">
-      <Filter>src\render\render_sysytem</Filter>
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_Swap_Context.cpp">
-      <Filter>src\render\render_sysytem</Filter>
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Light.cpp">
-      <Filter>src\render\render_sysytem</Filter>
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\window\Window_UI.cpp">
       <Filter>src\render\window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_GUID_Allocator.cpp">
+      <Filter>src\render\render_system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
