@@ -4,7 +4,7 @@
 #include<atomic>
 #include<limits>
 
-namespace NameSpace_Function::Namespace_Particle {
+namespace NameSpace_Function::NameSpace_Particle {
 
 	using Particle_Emitter_ID = std::size_t;
 
@@ -35,4 +35,4 @@ namespace NameSpace_Function::Namespace_Particle {
 
 	};
 
-}// namespace NameSpace_Function::Namespace_Particle
+}// namespace NameSpace_Function::NameSpace_Particle

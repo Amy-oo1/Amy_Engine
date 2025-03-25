@@ -2,7 +2,7 @@
 
 #include "logger/System_Logger.h"
 
-namespace NameSpace_Function::Namespace_Particle {
+namespace NameSpace_Function::NameSpace_Particle {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
@@ -22,4 +22,4 @@ namespace NameSpace_Function::Namespace_Particle {
 		return instance;
 	}
 
-}// namespace NameSpace_Function::Namespace_Particle
+}// namespace NameSpace_Function::NameSpace_Particle

@@ -16,7 +16,7 @@
 #include "particle/Emitter_ID_Allocator.h"
 
 
-namespace NameSpace_Function::Namespace_Particle {
+namespace NameSpace_Function::NameSpace_Particle {
 
 	using std::shared_ptr;
 
@@ -64,4 +64,4 @@ namespace NameSpace_Function::Namespace_Particle {
 
 	};
 
-}// namespace NameSpace_Function::Namespace_Particle
+}// namespace NameSpace_Function::NameSpace_Particle

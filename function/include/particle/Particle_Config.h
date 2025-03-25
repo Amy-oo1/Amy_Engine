@@ -7,7 +7,7 @@
 #include "math/Vector4.h"
 #include "math/Matrix4x4.h"
 
-namespace NameSpace_Function::Namespace_Particle {
+namespace NameSpace_Function::NameSpace_Particle {
 
 	using NameSpace_Core::NameSpace_Math::Vector2;
 	using NameSpace_Core::NameSpace_Math::Vector3;
@@ -35,4 +35,4 @@ namespace NameSpace_Function::Namespace_Particle {
 		INVALID
 	};
 
-}// namespace NameSpace_Function::Namespace_Particle
+}// namespace NameSpace_Function::NameSpace_Particle

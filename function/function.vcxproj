@@ -193,6 +193,7 @@
     <ClInclude Include="include\render\window\Window_System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\render\render_system\Render_Swap_Context.h" />
     <ClCompile Include="include\src\render_system\Render_GUID_Allocator.cpp" />
     <ClCompile Include="src\animation\Animation_Loader.cpp" />
     <ClCompile Include="src\animation\Animation_Manager.cpp">
@@ -218,6 +219,7 @@
     <ClCompile Include="src\render\render_system\Render_Camera.cpp" />
     <ClCompile Include="src\render\render_system\Render_Mesh.cpp" />
     <ClCompile Include="src\render\render_system\Render_Object.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Swap_Context.cpp" />
     <ClCompile Include="src\render\render_system\Render_System.cpp" />
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_RHI.cpp" />
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_Test.cpp">

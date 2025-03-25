@@ -2,7 +2,7 @@
 
 #include "meta/generated/reflection/Particle.Generated_Reflection.h"
 
-namespace NameSpace_Function::Namespace_Particle {
+namespace NameSpace_Function::NameSpace_Particle {
 
 	using NameSpace_Resource::NameSpace_Components::Reflection_Particle_Res_Operator;
 
@@ -17,4 +17,4 @@ namespace NameSpace_Function::Namespace_Particle {
 		m_Color{ Reflection_Particle_Res_Operator::Get_Color_Attribute(Temp_Particle_Res) } {
 	}
 
-}// namespace NameSpace_Function::Namespace_Particle
+}// namespace NameSpace_Function::NameSpace_Particle
