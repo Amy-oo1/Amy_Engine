@@ -37,163 +37,163 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return Table;
             }
 
-            static const string Get_Negative_X_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Positive_X_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Negative_X_Map_Spelling(void){
-                return string{"m_Negative_X_Map"};
+            static const string Get_Positive_X_Map_URL_Spelling(void){
+                return string{"m_Positive_X_Map_URL"};
             }
 
 
-            static const string Get_Negative_X_Map_Display_Name(void){
-                return string{"Negative_X_Map"};
+            static const string Get_Positive_X_Map_URL_Display_Name(void){
+                return string{"Positive_X_Map_URL"};
             }
 
-            static const string& Get_Negative_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Negative_X_Map;
+            static const path& Get_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Positive_X_Map_URL;
             }
 
-            static void Set_Field_Negative_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const string& Value){
-                Instance->m_Negative_X_Map=Value;
+            static void Set_Field_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Positive_X_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Negative_X_Map_CPPVector(void){
+            static const bool Is_Filed_Positive_X_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Positive_X_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Negative_X_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Positive_X_Map_Spelling(void){
-                return string{"m_Positive_X_Map"};
+            static const string Get_Negative_X_Map_URL_Spelling(void){
+                return string{"m_Negative_X_Map_URL"};
             }
 
 
-            static const string Get_Positive_X_Map_Display_Name(void){
-                return string{"Positive_X_Map"};
+            static const string Get_Negative_X_Map_URL_Display_Name(void){
+                return string{"Negative_X_Map_URL"};
             }
 
-            static const string& Get_Positive_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Positive_X_Map;
+            static const path& Get_Negative_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Negative_X_Map_URL;
             }
 
-            static void Set_Field_Positive_X_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const string& Value){
-                Instance->m_Positive_X_Map=Value;
+            static void Set_Field_Negative_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Negative_X_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_X_Map_CPPVector(void){
+            static const bool Is_Filed_Negative_X_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Negative_Y_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Positive_Y_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Negative_Y_Map_Spelling(void){
-                return string{"m_Negative_Y_Map"};
+            static const string Get_Positive_Y_Map_URL_Spelling(void){
+                return string{"m_Positive_Y_Map_URL"};
             }
 
 
-            static const string Get_Negative_Y_Map_Display_Name(void){
-                return string{"Negative_Y_Map"};
+            static const string Get_Positive_Y_Map_URL_Display_Name(void){
+                return string{"Positive_Y_Map_URL"};
             }
 
-            static const string& Get_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Negative_Y_Map;
+            static const path& Get_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Positive_Y_Map_URL;
             }
 
-            static void Set_Field_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const string& Value){
-                Instance->m_Negative_Y_Map=Value;
+            static void Set_Field_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Positive_Y_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Negative_Y_Map_CPPVector(void){
+            static const bool Is_Filed_Positive_Y_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Positive_Y_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Negative_Y_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Positive_Y_Map_Spelling(void){
-                return string{"m_Positive_Y_Map"};
+            static const string Get_Negative_Y_Map_URL_Spelling(void){
+                return string{"m_Negative_Y_Map_URL"};
             }
 
 
-            static const string Get_Positive_Y_Map_Display_Name(void){
-                return string{"Positive_Y_Map"};
+            static const string Get_Negative_Y_Map_URL_Display_Name(void){
+                return string{"Negative_Y_Map_URL"};
             }
 
-            static const string& Get_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Positive_Y_Map;
+            static const path& Get_Negative_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Negative_Y_Map_URL;
             }
 
-            static void Set_Field_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const string& Value){
-                Instance->m_Positive_Y_Map=Value;
+            static void Set_Field_Negative_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Negative_Y_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Y_Map_CPPVector(void){
+            static const bool Is_Filed_Negative_Y_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Negative_Z_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Positive_Z_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Negative_Z_Map_Spelling(void){
-                return string{"m_Negative_Z_Map"};
+            static const string Get_Positive_Z_Map_URL_Spelling(void){
+                return string{"m_Positive_Z_Map_URL"};
             }
 
 
-            static const string Get_Negative_Z_Map_Display_Name(void){
-                return string{"Negative_Z_Map"};
+            static const string Get_Positive_Z_Map_URL_Display_Name(void){
+                return string{"Positive_Z_Map_URL"};
             }
 
-            static const string& Get_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Negative_Z_Map;
+            static const path& Get_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Positive_Z_Map_URL;
             }
 
-            static void Set_Field_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const string& Value){
-                Instance->m_Negative_Z_Map=Value;
+            static void Set_Field_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Positive_Z_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Negative_Z_Map_CPPVector(void){
+            static const bool Is_Filed_Positive_Z_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Positive_Z_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Negative_Z_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Positive_Z_Map_Spelling(void){
-                return string{"m_Positive_Z_Map"};
+            static const string Get_Negative_Z_Map_URL_Spelling(void){
+                return string{"m_Negative_Z_Map_URL"};
             }
 
 
-            static const string Get_Positive_Z_Map_Display_Name(void){
-                return string{"Positive_Z_Map"};
+            static const string Get_Negative_Z_Map_URL_Display_Name(void){
+                return string{"Negative_Z_Map_URL"};
             }
 
-            static const string& Get_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Positive_Z_Map;
+            static const path& Get_Negative_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Negative_Z_Map_URL;
             }
 
-            static void Set_Field_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const string& Value){
-                Instance->m_Positive_Z_Map=Value;
+            static void Set_Field_Negative_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Negative_Z_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Z_Map_CPPVector(void){
+            static const bool Is_Filed_Negative_Z_Map_URL_CPPVector(void){
                 return  false;
             }
 
@@ -231,163 +231,163 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return Table;
             }
 
-            static const string Get_Negative_X_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Positive_X_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Negative_X_Map_Spelling(void){
-                return string{"m_Negative_X_Map"};
+            static const string Get_Positive_X_Map_URL_Spelling(void){
+                return string{"m_Positive_X_Map_URL"};
             }
 
 
-            static const string Get_Negative_X_Map_Display_Name(void){
-                return string{"Negative_X_Map"};
+            static const string Get_Positive_X_Map_URL_Display_Name(void){
+                return string{"Positive_X_Map_URL"};
             }
 
-            static const string& Get_Negative_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Negative_X_Map;
+            static const path& Get_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Positive_X_Map_URL;
             }
 
-            static void Set_Field_Negative_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const string& Value){
-                Instance->m_Negative_X_Map=Value;
+            static void Set_Field_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Positive_X_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Negative_X_Map_CPPVector(void){
+            static const bool Is_Filed_Positive_X_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Positive_X_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Negative_X_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Positive_X_Map_Spelling(void){
-                return string{"m_Positive_X_Map"};
+            static const string Get_Negative_X_Map_URL_Spelling(void){
+                return string{"m_Negative_X_Map_URL"};
             }
 
 
-            static const string Get_Positive_X_Map_Display_Name(void){
-                return string{"Positive_X_Map"};
+            static const string Get_Negative_X_Map_URL_Display_Name(void){
+                return string{"Negative_X_Map_URL"};
             }
 
-            static const string& Get_Positive_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Positive_X_Map;
+            static const path& Get_Negative_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Negative_X_Map_URL;
             }
 
-            static void Set_Field_Positive_X_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const string& Value){
-                Instance->m_Positive_X_Map=Value;
+            static void Set_Field_Negative_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Negative_X_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_X_Map_CPPVector(void){
+            static const bool Is_Filed_Negative_X_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Negative_Y_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Positive_Y_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Negative_Y_Map_Spelling(void){
-                return string{"m_Negative_Y_Map"};
+            static const string Get_Positive_Y_Map_URL_Spelling(void){
+                return string{"m_Positive_Y_Map_URL"};
             }
 
 
-            static const string Get_Negative_Y_Map_Display_Name(void){
-                return string{"Negative_Y_Map"};
+            static const string Get_Positive_Y_Map_URL_Display_Name(void){
+                return string{"Positive_Y_Map_URL"};
             }
 
-            static const string& Get_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Negative_Y_Map;
+            static const path& Get_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Positive_Y_Map_URL;
             }
 
-            static void Set_Field_Negative_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const string& Value){
-                Instance->m_Negative_Y_Map=Value;
+            static void Set_Field_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Positive_Y_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Negative_Y_Map_CPPVector(void){
+            static const bool Is_Filed_Positive_Y_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Positive_Y_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Negative_Y_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Positive_Y_Map_Spelling(void){
-                return string{"m_Positive_Y_Map"};
+            static const string Get_Negative_Y_Map_URL_Spelling(void){
+                return string{"m_Negative_Y_Map_URL"};
             }
 
 
-            static const string Get_Positive_Y_Map_Display_Name(void){
-                return string{"Positive_Y_Map"};
+            static const string Get_Negative_Y_Map_URL_Display_Name(void){
+                return string{"Negative_Y_Map_URL"};
             }
 
-            static const string& Get_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Positive_Y_Map;
+            static const path& Get_Negative_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Negative_Y_Map_URL;
             }
 
-            static void Set_Field_Positive_Y_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const string& Value){
-                Instance->m_Positive_Y_Map=Value;
+            static void Set_Field_Negative_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Negative_Y_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Y_Map_CPPVector(void){
+            static const bool Is_Filed_Negative_Y_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Negative_Z_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Positive_Z_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Negative_Z_Map_Spelling(void){
-                return string{"m_Negative_Z_Map"};
+            static const string Get_Positive_Z_Map_URL_Spelling(void){
+                return string{"m_Positive_Z_Map_URL"};
             }
 
 
-            static const string Get_Negative_Z_Map_Display_Name(void){
-                return string{"Negative_Z_Map"};
+            static const string Get_Positive_Z_Map_URL_Display_Name(void){
+                return string{"Positive_Z_Map_URL"};
             }
 
-            static const string& Get_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Negative_Z_Map;
+            static const path& Get_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Positive_Z_Map_URL;
             }
 
-            static void Set_Field_Negative_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const string& Value){
-                Instance->m_Negative_Z_Map=Value;
+            static void Set_Field_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Positive_Z_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Negative_Z_Map_CPPVector(void){
+            static const bool Is_Filed_Positive_Z_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Positive_Z_Map_Type_Spelling(void){
-                return string{"string"};
+            static const string Get_Negative_Z_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Positive_Z_Map_Spelling(void){
-                return string{"m_Positive_Z_Map"};
+            static const string Get_Negative_Z_Map_URL_Spelling(void){
+                return string{"m_Negative_Z_Map_URL"};
             }
 
 
-            static const string Get_Positive_Z_Map_Display_Name(void){
-                return string{"Positive_Z_Map"};
+            static const string Get_Negative_Z_Map_URL_Display_Name(void){
+                return string{"Negative_Z_Map_URL"};
             }
 
-            static const string& Get_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Positive_Z_Map;
+            static const path& Get_Negative_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Negative_Z_Map_URL;
             }
 
-            static void Set_Field_Positive_Z_Map_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const string& Value){
-                Instance->m_Positive_Z_Map=Value;
+            static void Set_Field_Negative_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Negative_Z_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Z_Map_CPPVector(void){
+            static const bool Is_Filed_Negative_Z_Map_URL_CPPVector(void){
                 return  false;
             }
 
@@ -592,55 +592,55 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_BRDF_Map_Type_Spelling(void){
-                return string{"std::string"};
+            static const string Get_BRDF_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_BRDF_Map_Spelling(void){
-                return string{"m_BRDF_Map"};
+            static const string Get_BRDF_Map_URL_Spelling(void){
+                return string{"m_BRDF_Map_URL"};
             }
 
 
-            static const string Get_BRDF_Map_Display_Name(void){
-                return string{"BRDF_Map"};
+            static const string Get_BRDF_Map_URL_Display_Name(void){
+                return string{"BRDF_Map_URL"};
             }
 
-            static const std::string& Get_BRDF_Map_Attribute(shared_ptr<Global_Rendering> Instance){
-                return Instance->m_BRDF_Map;
+            static const path& Get_BRDF_Map_URL_Attribute(shared_ptr<Global_Rendering> Instance){
+                return Instance->m_BRDF_Map_URL;
             }
 
-            static void Set_Field_BRDF_Map_Attribute(shared_ptr<Global_Rendering> Instance, const std::string& Value){
-                Instance->m_BRDF_Map=Value;
+            static void Set_Field_BRDF_Map_URL_Attribute(shared_ptr<Global_Rendering> Instance, const path& Value){
+                Instance->m_BRDF_Map_URL=Value;
             }
 
-            static const bool Is_Filed_BRDF_Map_CPPVector(void){
+            static const bool Is_Filed_BRDF_Map_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Color_Grading_Map_Type_Spelling(void){
-                return string{"std::string"};
+            static const string Get_Color_Grading_Map_URL_Type_Spelling(void){
+                return string{"path"};
             }
 
-            static const string Get_Color_Grading_Map_Spelling(void){
-                return string{"m_Color_Grading_Map"};
+            static const string Get_Color_Grading_Map_URL_Spelling(void){
+                return string{"m_Color_Grading_Map_URL"};
             }
 
 
-            static const string Get_Color_Grading_Map_Display_Name(void){
-                return string{"Color_Grading_Map"};
+            static const string Get_Color_Grading_Map_URL_Display_Name(void){
+                return string{"Color_Grading_Map_URL"};
             }
 
-            static const std::string& Get_Color_Grading_Map_Attribute(shared_ptr<Global_Rendering> Instance){
-                return Instance->m_Color_Grading_Map;
+            static const path& Get_Color_Grading_Map_URL_Attribute(shared_ptr<Global_Rendering> Instance){
+                return Instance->m_Color_Grading_Map_URL;
             }
 
-            static void Set_Field_Color_Grading_Map_Attribute(shared_ptr<Global_Rendering> Instance, const std::string& Value){
-                Instance->m_Color_Grading_Map=Value;
+            static void Set_Field_Color_Grading_Map_URL_Attribute(shared_ptr<Global_Rendering> Instance, const path& Value){
+                Instance->m_Color_Grading_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Color_Grading_Map_CPPVector(void){
+            static const bool Is_Filed_Color_Grading_Map_URL_CPPVector(void){
                 return  false;
             }
 

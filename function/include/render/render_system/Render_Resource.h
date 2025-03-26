@@ -52,20 +52,20 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 
 	struct IBL_Resource final {
-		unique_ptr<RHI_Image> BUDF_LUT_Texture_Image;
-		unique_ptr<RHI_Image_View> BUDF_LUT_Texture_Image_View;
-		unique_ptr<RHI_Sampler> BUDF_LUT_Texture_Sampler;
-		VmaAllocation BUDF_LUT_Texture_Allocation;
+		unique_ptr<RHI_Image> BUDF_LUT_Image;
+		unique_ptr<RHI_Image_View> BUDF_LUT_Image_View;
+		unique_ptr<RHI_Sampler> BUDF_LUT_Sampler;
+		VmaAllocation BUDF_LUT_Image_Allocation;
 
-		unique_ptr<RHI_Image> Irradiance_Map_Texture_Image;
-		unique_ptr<RHI_Image_View> Irradiance_Map_Texture_Image_View;
-		unique_ptr<RHI_Sampler> Irradiance_Map_Texture_Sampler;
-		VmaAllocation Irradiance_Map_Texture_Allocation;
+		unique_ptr<RHI_Image> Irradiance_Map_Image;
+		unique_ptr<RHI_Image_View> Irradiance_Map_Image_View;
+		unique_ptr<RHI_Sampler> Irradiance_Map_Sampler;
+		VmaAllocation Irradiance_Map_Image_Allocation;
 
-		unique_ptr<RHI_Image> Specular_Map_Texture_Image;
-		unique_ptr<RHI_Image_View> Specular_Map_Texture_Image_View;
-		unique_ptr<RHI_Sampler> Specular_Map_Texture_Sampler;
-		VmaAllocation Specular_Map_Texture_Allocation;
+		unique_ptr<RHI_Image> Specular_Map_Image;
+		unique_ptr<RHI_Image_View> Specular_Map_Image_View;
+		unique_ptr<RHI_Sampler> Specular_Map_Sampler;
+		VmaAllocation Specular_Map_Image_Allocation;
 
 	};
 
@@ -88,10 +88,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	struct Color_Grading_Resource final {
-		RHI_Image* Color_Grading_LUT_Texture_Image;
-		RHI_Image_View* Color_Grading_LUT_Texture_Image_View;
+		unique_ptr<RHI_Image> Color_Grading_Image;
+		unique_ptr<RHI_Image_View> Color_Grading_Image_View;
 		//RHI_Sampler* Color_Grading_LUT_Texture_Sampler;
-		VmaAllocation Color_Grading_LUT_Texture_Allocation;
+		VmaAllocation Color_Grading_Image_Allocation;
 
 	};
 
@@ -135,9 +135,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	class Render_Resource final :public Render_Resource_Base {
-
-
-
 	private:
 		void Create_Storge_Buffer(shared_ptr<Empty_RHI> RHI);
 
@@ -155,7 +152,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			);
 
 		[[nodiscard]] const Vulkan_Mesh&
-			Get_OR_Create_Vulkan_Resource(
+			Get_OR_Create_Vulkan_Mesh(
 				shared_ptr<Empty_RHI> RHI,
 				const Render_Entity& Render_Entity,
 				const Render_Mesh_Data& Mesh_Data
@@ -168,8 +165,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				const Render_Material_Data& Mesh_Data
 			);
 
-	private:
+		void Reset_Ring_Buffer_Offset(uint32_t Current_Frame_Index);
 
+		[[nodiscard]] const Vulkan_Mesh& Get_Entity_Mesh(const Render_Entity& Entity)const;
+		[[nodiscard]] const Vulkan_PBR_Material& Get_Entity_Material(const Render_Entity& Entity)const;
+
+	private:
 		[[nodiscard]] Vulkan_Mesh
 			Load_Mesh_Binding(
 				shared_ptr<Empty_RHI> RHI,
@@ -229,7 +230,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 
 		void
-			UpLoad_Global_Render_Resource(
+			Upload_Global_Render_Resource(
 				shared_ptr<Empty_RHI> RHI,
 				const Level_Resource_Desc& Level_Resource_Desc
 			) override;

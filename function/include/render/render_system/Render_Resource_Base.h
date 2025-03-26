@@ -60,7 +60,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	public:
 		virtual void
-			UpLoad_Global_Render_Resource(
+			Upload_Global_Render_Resource(
 				shared_ptr<Empty_RHI> RHI,
 				const Level_Resource_Desc& Level_Resource_Desc
 			) = 0;

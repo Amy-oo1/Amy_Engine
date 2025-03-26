@@ -39,8 +39,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Particle::Particle_Emitter_Transform_Desc;
 
 	struct Levle_IBL_Resource_Desc final {
-		shared_ptr<SkyBox_Irradiance_Map> Irradiance_Map{ nullptr };
-		shared_ptr<SkyBox_Specular_Map> Specular_Map{ nullptr };
+		shared_ptr<SkyBox_Irradiance_Map> m_SkyBox_Irradiance_Map{ nullptr };
+		shared_ptr<SkyBox_Specular_Map> m_SkyBox_Specular_Map{ nullptr };
 		path BRDF_Map_URL;
 
 	};

@@ -1,6 +1,6 @@
 #pragma once
 
-#include<string>
+#include "file/File_System.h"
 
 #include "meta/reflection/Reflection_Macro.h"
 
@@ -11,7 +11,7 @@
 
 namespace NameSpace_Resource::NameSpace_Global {
 
-	using std::string;
+	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Color::Color;
@@ -27,12 +27,12 @@ namespace NameSpace_Resource::NameSpace_Global {
 		~SkyBox_Irradiance_Map(void) = default;
 
 	private:
-		string m_Negative_X_Map;
-		string m_Positive_X_Map;
-		string m_Negative_Y_Map;
-		string m_Positive_Y_Map;
-		string m_Negative_Z_Map;
-		string m_Positive_Z_Map;
+		path m_Positive_X_Map_URL;
+		path m_Negative_X_Map_URL;
+		path m_Positive_Y_Map_URL;
+		path m_Negative_Y_Map_URL;
+		path m_Positive_Z_Map_URL;
+		path m_Negative_Z_Map_URL;
 
 	};
 
@@ -46,12 +46,13 @@ namespace NameSpace_Resource::NameSpace_Global {
 		~SkyBox_Specular_Map(void) = default;
 
 	private:
-		string m_Negative_X_Map;
-		string m_Positive_X_Map;
-		string m_Negative_Y_Map;
-		string m_Positive_Y_Map;
-		string m_Negative_Z_Map;
-		string m_Positive_Z_Map;
+		path m_Positive_X_Map_URL;
+		path m_Negative_X_Map_URL;
+		path m_Positive_Y_Map_URL;
+		path m_Negative_Y_Map_URL;
+		path m_Positive_Z_Map_URL;
+		path m_Negative_Z_Map_URL;
+
 	};
 
 	REFLECTION_STRUCT(Directional_Light);
@@ -84,8 +85,8 @@ namespace NameSpace_Resource::NameSpace_Global {
 		SkyBox_Irradiance_Map m_Skybox_Irradiance_Map;
 		SkyBox_Specular_Map   m_Skybox_Specular_Map;
 
-		std::string m_BRDF_Map;
-		std::string m_Color_Grading_Map;
+		path m_BRDF_Map_URL;
+		path m_Color_Grading_Map_URL;
 
 		Color m_Sky_Color;
 		Color m_Ambient_Light;

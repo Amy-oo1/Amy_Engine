@@ -4,11 +4,22 @@
 
 #include "logger/System_Logger.h"
 
+#include "global/Global_Rendering.h"
+#include "meta/generated/reflection/Global_Rendering.Generated_Reflection.h"
+
 #include "render/rhi/vulkan/Vulkan_RHI.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
+
+	using NameSpace_Resource::NameSpace_Global::SkyBox_Irradiance_Map;
+	using NameSpace_Resource::NameSpace_Global::SkyBox_Specular_Map;
+	using NameSpace_Resource::NameSpace_Global::Global_Rendering;
+
+	using NameSpace_Resource::NameSpace_Global::Reflection_SkyBox_Irradiance_Map_Operator;
+	using NameSpace_Resource::NameSpace_Global::Reflection_SkyBox_Specular_Map_Operator;
+	using NameSpace_Resource::NameSpace_Global::Reflection_Global_Rendering_Operator;
 
 	using NameSpace_RHI::RHI_Device_Size;
 
@@ -146,19 +157,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		auto& Ref_IBL_Resource{ this->m_Global_Render_Resource.IBL_Resource };
 
-		if (RHI_NULL_HANDLE != Ref_IBL_Resource.BUDF_LUT_Texture_Sampler)
+		if (RHI_NULL_HANDLE != Ref_IBL_Resource.BUDF_LUT_Sampler)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "BUDF_LUT_Texture_Sampler Already Created, Doing ReCreate");
-		Ref_IBL_Resource.BUDF_LUT_Texture_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
+		Ref_IBL_Resource.BUDF_LUT_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
 
 
 		Sampler_Create_Info.Max_Lod = 8.f; //RHI_WHOLE_SIZE;
-		if (RHI_NULL_HANDLE != Ref_IBL_Resource.Irradiance_Map_Texture_Sampler)
+		if (RHI_NULL_HANDLE != Ref_IBL_Resource.Irradiance_Map_Sampler)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Irradiance_Map_Texture_Sampler Already Created, Doing ReCreate");
-		Ref_IBL_Resource.Irradiance_Map_Texture_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
+		Ref_IBL_Resource.Irradiance_Map_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
 
-		if (RHI_NULL_HANDLE != Ref_IBL_Resource.Specular_Map_Texture_Sampler)
+		if (RHI_NULL_HANDLE != Ref_IBL_Resource.Specular_Map_Sampler)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Specular_Map_Texture_Sampler Already Created, Doing ReCreate");
-		Ref_IBL_Resource.Specular_Map_Texture_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
+		Ref_IBL_Resource.Specular_Map_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
 	}
 
 	void Render_Resource::Create_IBL_Textures(shared_ptr<Empty_RHI> RHI, array<shared_ptr<Texture_Data>, 6> Irradiance_Maps, array<shared_ptr<Texture_Data>, 6> Specular_Maps) {
@@ -171,9 +182,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Irradiance_Maps[0]->Mip_Levels,
 			{ Irradiance_Maps[0]->Pixels.get(), Irradiance_Maps[1]->Pixels.get(), Irradiance_Maps[2]->Pixels.get(), Irradiance_Maps[3]->Pixels.get(), Irradiance_Maps[4]->Pixels.get(), Irradiance_Maps[5]->Pixels.get() }
 		);
-		Ref_IBL_Resource.Irradiance_Map_Texture_Image = std::move(Irradiance_Image);
-		Ref_IBL_Resource.Irradiance_Map_Texture_Image_View = std::move(Irradiance_Image_View);
-		Ref_IBL_Resource.Irradiance_Map_Texture_Allocation = std::move(Irradiance_Image_Allocation);
+		Ref_IBL_Resource.Irradiance_Map_Image = std::move(Irradiance_Image);
+		Ref_IBL_Resource.Irradiance_Map_Image_View = std::move(Irradiance_Image_View);
+		Ref_IBL_Resource.Irradiance_Map_Image_Allocation = std::move(Irradiance_Image_Allocation);
 
 		auto [Specular_Image, Specular_Image_View, Specular_Image_Allocation] = Ref_Vulkan_RHI->Create_Cube_Map(
 			{ Specular_Maps[0]->Width, Specular_Maps[0]->Height },
@@ -181,13 +192,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Specular_Maps[0]->Mip_Levels,
 			{ Specular_Maps[0]->Pixels.get(), Specular_Maps[1]->Pixels.get(), Specular_Maps[2]->Pixels.get(), Specular_Maps[3]->Pixels.get(), Specular_Maps[4]->Pixels.get(), Specular_Maps[5]->Pixels.get() }
 		);
-		Ref_IBL_Resource.Specular_Map_Texture_Image = std::move(Specular_Image);
-		Ref_IBL_Resource.Specular_Map_Texture_Image_View = std::move(Specular_Image_View);
-		Ref_IBL_Resource.Specular_Map_Texture_Allocation = std::move(Specular_Image_Allocation);
+		Ref_IBL_Resource.Specular_Map_Image = std::move(Specular_Image);
+		Ref_IBL_Resource.Specular_Map_Image_View = std::move(Specular_Image_View);
+		Ref_IBL_Resource.Specular_Map_Image_Allocation = std::move(Specular_Image_Allocation);
 
 	}
 
-	const Vulkan_Mesh& Render_Resource::Get_OR_Create_Vulkan_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Mesh_Data) {
+	const Vulkan_Mesh& Render_Resource::Get_OR_Create_Vulkan_Mesh(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Mesh_Data) {
 		auto cIt{ this->m_Vulkan_Mesh_Map.find(Render_Entity.Mesh_Resource_ID) };
 		if (this->m_Vulkan_Mesh_Map.end() != cIt)
 			return cIt->second;
@@ -342,7 +353,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		//NOTE : Descriptor_Set
 		vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{ this->m_Material_Descriptor_Set_Layout.get() };
 
-
 		RHI_Descriptor_Set_Allocate_Info Descriptor_Set_Allocate_Info{};
 		{
 			Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -352,6 +362,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Material.Material_Descriptor_Set = std::move(Ref_Vulkan_RHI->Allocate_Descriptor_Sets(&Descriptor_Set_Allocate_Info).front());
 
+		//NOTE : Write Descriptor Set
 		{
 			RHI_Descriptor_Buffer_Info Material_Uniform_Buffer_Descriptor_Info{};
 			{
@@ -471,15 +482,28 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			};
 
 			Ref_Vulkan_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
-
-			return this->m_Vulkan_PBR_Material_Map[Render_Entity.Material_Resource_ID] = std::move(Material);
 		}
 
+		return this->m_Vulkan_PBR_Material_Map[Render_Entity.Material_Resource_ID] = std::move(Material);
+	}
 
+	void Render_Resource::Reset_Ring_Buffer_Offset(uint32_t Current_Frame_Index) {
+		this->m_Global_Render_Resource.Storage_Buffer.Global_Upload_Ring_Buffers_End[Current_Frame_Index] = this->m_Global_Render_Resource.Storage_Buffer.Global_Upload_Ring_Buffers_Begin[Current_Frame_Index];
+	}
 
+	const Vulkan_Mesh& Render_Resource::Get_Entity_Mesh(const Render_Entity& Entity) const {
+		auto cIt{ this->m_Vulkan_Mesh_Map.find(Entity.Mesh_Resource_ID) };
+		if (this->m_Vulkan_Mesh_Map.end() == cIt)
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Entity Mesh Not Found");
+		return cIt->second;
+	}
 
+	const Vulkan_PBR_Material& Render_Resource::Get_Entity_Material(const Render_Entity& Entity) const {
+		auto cIt{ this->m_Vulkan_PBR_Material_Map.find(Entity.Material_Resource_ID) };
+		if (this->m_Vulkan_PBR_Material_Map.end() == cIt)
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Entity Material Not Found");
 
-
+		return cIt->second;
 	}
 
 	Vulkan_Mesh Render_Resource::Load_Mesh_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
@@ -1050,24 +1074,75 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return { std::move(Index_Buffer), std::move(Index_Buffer_Allocation) };
 	}
 
-	void Render_Resource::UpLoad_Global_Render_Resource(shared_ptr<Empty_RHI> RHI, const Level_Resource_Desc& Level_Resource_Desc)
-	{
+	void Render_Resource::Upload_Global_Render_Resource(shared_ptr<Empty_RHI> RHI, const Level_Resource_Desc& Level_Resource_Desc) {
+		this->Create_Storge_Buffer(RHI);
+		this->Map_Storage_Buffer(RHI);
+
+		//NOTE :SkyBOX Irradiance
+		array<shared_ptr<Texture_Data>, 6> SkyBox_Irradiance_Map{
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Irradiance_Map_Operator::Get_Positive_X_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Irradiance_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Irradiance_Map_Operator::Get_Negative_X_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Irradiance_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Irradiance_Map_Operator::Get_Positive_Y_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Irradiance_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Irradiance_Map_Operator::Get_Negative_Y_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Irradiance_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Irradiance_Map_Operator::Get_Positive_Z_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Irradiance_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Irradiance_Map_Operator::Get_Negative_Z_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Irradiance_Map))
+		};
+
+		//NOTE :SkyBOX Specular
+		array<shared_ptr<Texture_Data>, 6> SkyBox_Specular_Map{
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Specular_Map_Operator::Get_Positive_X_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Specular_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Specular_Map_Operator::Get_Negative_X_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Specular_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Specular_Map_Operator::Get_Positive_Y_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Specular_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Specular_Map_Operator::Get_Negative_Y_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Specular_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Specular_Map_Operator::Get_Positive_Z_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Specular_Map)),
+			Render_Resource_Base::Load_Texture_HDR(Reflection_SkyBox_Specular_Map_Operator::Get_Negative_Z_Map_URL_Attribute(Level_Resource_Desc.IBL_Resource_Desc.m_SkyBox_Specular_Map))
+		};
+
+		//NOTE : SkyBox BRDF LUT
+		shared_ptr<Texture_Data> Ref_BDRF_LUT = Render_Resource_Base::Load_Texture_HDR(Level_Resource_Desc.IBL_Resource_Desc.BRDF_Map_URL);
+
+		this->Create_IBL_Textures(RHI, SkyBox_Irradiance_Map, SkyBox_Specular_Map);
+		auto [BDRF_LUT_Image, Image_View, BDRF_LUT_Image_Allocation] = static_cast<Vulkan_RHI*> (RHI.get())->Create_Global_Image(
+			{ Ref_BDRF_LUT->Width,Ref_BDRF_LUT->Height },
+			Ref_BDRF_LUT->Format,
+			0,
+			Ref_BDRF_LUT->Pixels.get()
+		);
+		this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image = std::move(BDRF_LUT_Image);
+		this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_View = std::move(Image_View);
+		this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_Allocation = BDRF_LUT_Image_Allocation;
+
+		this->Create_IBL_Samplers(RHI);
+
+
+		//NOTE : Color Grading
+		shared_ptr<Texture_Data> Ref_Color_Grading_Map = Render_Resource_Base::Load_Texture_HDR(Level_Resource_Desc.Color_Grading_Resource_Desc.Color_Grading_Map_URL);
+		auto [Color_Grading_Image, Color_Grading_Image_View, Color_Grading_Image_Allocation] = static_cast<Vulkan_RHI*> (RHI.get())->Create_Global_Image(
+			{ Ref_Color_Grading_Map->Width,Ref_Color_Grading_Map->Height },
+			Ref_Color_Grading_Map->Format,
+			0,
+			Ref_Color_Grading_Map->Pixels.get()
+		);
+		this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image = std::move(Color_Grading_Image);
+		this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_View = std::move(Color_Grading_Image_View);
+		this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_Allocation = Color_Grading_Image_Allocation;
 	}
 
-	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Meshe_Data, const Render_Material_Data& Material_Data)
-	{
+	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Meshe_Data, const Render_Material_Data& Material_Data) {
+		this->Get_OR_Create_Vulkan_Mesh(RHI, Render_Entity, Meshe_Data);
+		this->Get_OR_Create_Vulkan_Material(RHI, Render_Entity, Material_Data);
 	}
 
-	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Meshe_Data)
-	{
+	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Meshe_Data) {
+		this->Get_OR_Create_Vulkan_Mesh(RHI, Render_Entity, Meshe_Data);
 	}
 
-	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Material_Data& Material_Data)
-	{
+	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Material_Data& Material_Data) {
+		this->Get_OR_Create_Vulkan_Material(RHI, Render_Entity, Material_Data);
 	}
 
-	void Render_Resource::Updata_Per_Frame_Buffer(shared_ptr<Render_Camera> Camera)
-	{
+	void Render_Resource::Updata_Per_Frame_Buffer(shared_ptr<Render_Camera> Camera) {
+		//TODO : Update Per Frame Buffer
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System
