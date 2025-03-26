@@ -2,6 +2,7 @@
 
 #include<cstdint>
 #include<limits>
+#include<tuple>
 #include<array>
 #include<vector>
 #include<unordered_map>
@@ -26,6 +27,7 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
+	using std::tuple;
 	using std::array;
 	using std::vector;
 	using std::unordered_map;
@@ -162,7 +164,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	private:
 
 		[[nodiscard]] Vulkan_Mesh
-			Parser_Updata_Vertex_Buffer_Binding(
+			Load_Mesh_Binding(
 				shared_ptr<Empty_RHI> RHI,
 				uint32_t Index_Buffer_Size,
 				uint16_t* Index_Buffer_Data,
@@ -173,7 +175,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			);
 
 		[[nodiscard]] Vulkan_Mesh
-			Parser_Updata_Vertex_Buffer(
+			Load_Mesh_Buffer(
 				shared_ptr<Empty_RHI> RHI,
 				uint32_t Index_Buffer_Size,
 				uint16_t* Index_Buffer_Data,
@@ -181,8 +183,28 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data
 			);
 
+		[[nodiscard]] Vulkan_PBR_Material
+			Load_Texture_Image(
+				shared_ptr<Empty_RHI> RHI,
+				const Vulkan_PBR_Texture_Data_Info& Texture_Data_Info
+			);
+
+
+	private:
+		[[nodiscard]] static tuple<
+			unique_ptr<RHI_Buffer>,
+			VmaAllocation>
+			S_Load_Index_Buffer(
+				shared_ptr<Empty_RHI> RHI,
+				uint32_t Index_Buffer_Size,
+				uint16_t* Index_Buffer_Data
+			);
+
+
 	public:
 		static constexpr uint32_t s_Max_Global_Stroage_Buffer_Size{ 1 << 27 };
+
+
 
 
 	private:

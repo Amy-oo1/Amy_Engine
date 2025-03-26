@@ -1012,6 +1012,37 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->End_SingleTime_Commands(std::move(Command_Buffer));
 	}
 
+	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, VmaAllocation> Vulkan_RHI::Create_Global_Image(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, void* Image_Pixels) {
+		VkImage VK_Image{ nullptr };
+		VkImageView VK_Image_View{ nullptr };
+		VmaAllocation VMA_Allocation{ nullptr };
+		NameSpace_Utilities::Create_Global_Image(
+			this->m_VK_Physical_Device,
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			this->m_Default_VK_Command_Pool,
+			this->m_Queues.Graphic_Queue,
+			this->m_VMA_Allocator,
+			{ Image_Extent.Width, Image_Extent.Height },
+			static_cast<VkFormat>(Image_Format),
+			Mip_levels,
+			Image_Pixels,
+			VK_Image,
+			VK_Image_View,
+			VMA_Allocation
+		);
+
+		unique_ptr<RHI_Image> Image{ std::make_unique<Vulkan_Image>() };
+		static_cast<Vulkan_Image*>(Image.get())->Set_Deleter(this->m_VK_Image_Deleter);
+		static_cast<Vulkan_Image*>(Image.get())->Reset(VK_Image);
+
+		unique_ptr<RHI_Image_View> Image_View{ std::make_unique<Vulkan_Image_View>() };
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(VK_Image_View);
+
+		return std::make_tuple(std::move(Image), std::move(Image_View), VMA_Allocation);
+	}
+
 	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, VmaAllocation> Vulkan_RHI::Create_Cube_Map(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, array<void*, 6> Image_Pixels) {
 		VkImage VK_Image{ nullptr };
 		VkImageView VK_Image_View{ nullptr };
@@ -1083,7 +1114,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Sampler;
 	}
 
-	 vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info* Allocate_Info) {
+	vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info* Allocate_Info) {
 		vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
 		Descriptor_Set_Layouts.reserve(Allocate_Info->Descriptor_Set_Count);
 		for (size_t Index = 0; Index < Allocate_Info->Descriptor_Set_Count; ++Index)
@@ -1753,17 +1784,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		return Image_View;
 	}
-
-	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Global_Image()
-	{
-		return tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, unique_ptr<RHI_Device_Memory>>();
-	}
-
-
-
-
-
-
 
 
 

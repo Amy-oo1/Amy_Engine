@@ -105,6 +105,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			uint32_t Layer_Count
 		);
 
+	void Create_Global_Image(
+		VkPhysicalDevice Physical_Device,
+		VkDevice Logical_Device,
+		const VkAllocationCallbacks* VK_Allocator,
+		VkCommandPool Command_Pool,
+		VkQueue Graphics_Queue,
+		VmaAllocator VMA_Allocator,
+		VkExtent2D Image_Extent,
+		VkFormat Format,
+		uint32_t Mip_levels,
+		void* Image_Pixels,
+		VkImage& Image,
+		VkImageView& Image_View,
+		VmaAllocation& Image_Allocation
+	);
+
+
 	void
 		Create_Cube_Map(
 			VkPhysicalDevice Physical_Device,
@@ -143,27 +160,5 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VkImageCreateFlags		Image_Create_Flags,
 		uint32_t				Array_Layers,
 		const VkAllocationCallbacks* pAllocator);
-
-	void Create_Global_Image(
-		VkPhysicalDevice Physical_Device,
-		VkDevice Logical_Device,
-		VkCommandPool Command_Pool,
-		VkQueue Graphics_Queue,
-		void* Image_Pixels,
-		VkExtent2D Image_Extent,
-		VkFormat Format,
-		uint32_t Mip_levels,
-		VkImageCreateFlags Image_Create_Flags,
-		VkSampleCountFlagBits Samples,
-		VkImageTiling Image_Tiling,
-		VkImageUsageFlags Image_Usage_Flags,
-		VkMemoryPropertyFlags Memory_Property_Flags,
-		VkImage& Image,
-		VkImageView& Image_View,
-		VkDeviceMemory& Memory,
-		const VkAllocationCallbacks* VK_Allocations
-	);
-
-
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities

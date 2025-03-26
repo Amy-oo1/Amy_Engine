@@ -98,6 +98,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			unique_ptr<RHI_Image>,
 			unique_ptr<RHI_Image_View>,
 			VmaAllocation>
+			Create_Global_Image(
+				RHI_Extent_2D Image_Extent,
+				RHI_FORMAT Image_Format,
+				uint32_t Mip_levels,
+				void* Image_Pixels
+			) = 0;
+
+		[[nodiscard]] virtual tuple<
+			unique_ptr<RHI_Image>,
+			unique_ptr<RHI_Image_View>,
+			VmaAllocation>
 			Create_Cube_Map(
 				RHI_Extent_2D Image_Extent,
 				RHI_FORMAT Image_Format,
@@ -193,12 +204,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 
 		//TODO : 
-		[[nodiscard]] virtual tuple<
-			unique_ptr<RHI_Image>,
-			unique_ptr<RHI_Image_View>,
-			unique_ptr<RHI_Device_Memory>>
-			Create_Global_Image() = 0;
-
 
 		[[nodiscard]] virtual unique_ptr<RHI_Descriptor_Pool>
 			Create_Descriptor_Pool(RHI_Descriptor_Pool_Create_Info Create_Info) = 0;

@@ -319,6 +319,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			unique_ptr<RHI_Image>,
 			unique_ptr<RHI_Image_View>,
 			VmaAllocation>
+			Create_Global_Image(
+				RHI_Extent_2D Image_Extent,
+				RHI_FORMAT Image_Format,
+				uint32_t Mip_levels,
+				void* Image_Pixels
+			) override;
+
+		[[nodiscard]] tuple<
+			unique_ptr<RHI_Image>,
+			unique_ptr<RHI_Image_View>,
+			VmaAllocation>
 			Create_Cube_Map(
 				RHI_Extent_2D Image_Extent,
 				RHI_FORMAT Image_Format,
@@ -579,12 +590,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			RHI_Image_Aspect_Flags Image_Aspect_Flags,
 			RHI_IMAGE_VIEW_TYPE View_Type,
 			uint32_t Layout_Count) override;
-
-		[[nodiscard]] tuple<
-			unique_ptr<RHI_Image>,
-			unique_ptr<RHI_Image_View>,
-			unique_ptr<RHI_Device_Memory>>
-			Create_Global_Image() override;
 
 		[[nodiscard]] unique_ptr<RHI_Descriptor_Pool>  Create_Descriptor_Pool(RHI_Descriptor_Pool_Create_Info Create_Info) override;
 

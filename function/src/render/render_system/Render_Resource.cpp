@@ -199,7 +199,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Mesh_Vertex_Data_Definition* Vertex_Buffer_Data{ reinterpret_cast<Mesh_Vertex_Data_Definition*>(Mesh_Data.Static_Mesh_Data.Vertex_Buffer->Data) };
 
 		if (nullptr != Mesh_Data.Skeletion_Binding_Buffer)
-			return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Parser_Updata_Vertex_Buffer(
+			return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Load_Mesh_Buffer(
 				RHI,
 				Index_Buffer_size,
 				reinterpret_cast<uint16_t*>(Index_Buffer_Data),
@@ -210,7 +210,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		uint32_t Joint_Binding_Buffer_Size{ static_cast<uint32_t>(Mesh_Data.Skeletion_Binding_Buffer->Data_Size) };
 		Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data{ reinterpret_cast<Mesh_Vertx_Binding_Data_Definition*>(Mesh_Data.Skeletion_Binding_Buffer->Data) };
 
-		return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Parser_Updata_Vertex_Buffer_Binding(
+		return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Load_Mesh_Binding(
 			RHI,
 			Index_Buffer_size,
 			reinterpret_cast<uint16_t*>(Index_Buffer_Data),
@@ -221,7 +221,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		);
 	}
 
-	Vulkan_Mesh Render_Resource::Parser_Updata_Vertex_Buffer_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
+	Vulkan_Mesh Render_Resource::Load_Mesh_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
 		if (0 != (Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition)))
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition) != 0");
 
@@ -230,7 +230,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Joint_Binding_Buffer_Size % sizeof(uint16_t) != 0");
 
 		uint32_t Vertex_Count{ Vertex_Buffer_Size / sizeof(Mesh_Vertex_Data_Definition) };
-		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint32_t) };
+		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint16_t) };
 
 
 		RHI_Device_Size
@@ -315,7 +315,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Vulkan_Mesh Vulkan_Mesh_Data{};
 		Vulkan_Mesh_Data.Enable_Vertex_Blending = true;
 		Vulkan_Mesh_Data.Mesh_Vertex_Count = Vertex_Count;
-		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
 
 		RHI_Buffer_Create_Info Buffer_Create_Info{};
 		{
@@ -422,6 +421,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Inefficient_Staging_Buffer.reset();
 		Inefficient_Staging_Buffer_Memory.reset();
 
+		//NOTE: Index Buffer
+		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
+		auto&& [Index_Buffer, Index_Allocation] = this->S_Load_Index_Buffer(
+			RHI,
+			Index_Buffer_Size,
+			Index_Buffer_Data
+		);
+		Vulkan_Mesh_Data.Mesh_Index_Buffer = std::move(Index_Buffer);
+		Vulkan_Mesh_Data.Mesh_Index_Allocation = std::move(Index_Allocation);
+
+
 		//NOTE : Descriptor Set
 		vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{ this->m_Mesh_Descriptor_Set_Layout.get() };
 		RHI_Descriptor_Set_Allocate_Info Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info{};
@@ -462,11 +472,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return Vulkan_Mesh_Data;
 	}
 
-	Vulkan_Mesh Render_Resource::Parser_Updata_Vertex_Buffer(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data) {
+	Vulkan_Mesh Render_Resource::Load_Mesh_Buffer(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data) {
 		if (0 != (Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition)))
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition) != 0");
 
 		uint32_t Vertex_Count{ Vertex_Buffer_Size / sizeof(Mesh_Vertex_Data_Definition) };
+		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint16_t) };
 
 
 		RHI_Device_Size
@@ -612,6 +623,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Inefficient_Staging_Buffer.reset();
 		Inefficient_Staging_Buffer_Memory.reset();
 
+		//NOTE: Index Buffer
+		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
+		auto&& [Index_Buffer, Index_Allocation] = this->S_Load_Index_Buffer(
+			RHI,
+			Index_Buffer_Size,
+			Index_Buffer_Data
+		);
+		Vulkan_Mesh_Data.Mesh_Index_Buffer = std::move(Index_Buffer);
+		Vulkan_Mesh_Data.Mesh_Index_Allocation = std::move(Index_Allocation);
+
 		//NOTE : Descriptor Set
 		vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{ this->m_Mesh_Descriptor_Set_Layout.get() };
 		RHI_Descriptor_Set_Allocate_Info Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info{};
@@ -652,8 +673,131 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return Vulkan_Mesh_Data;
 	}
 
+	Vulkan_PBR_Material Render_Resource::Load_Texture_Image(shared_ptr<Empty_RHI> RHI, const Vulkan_PBR_Texture_Data_Info& Texture_Data_Info) {
+		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
 
+		Vulkan_PBR_Material Vulkan_PBR_Material_Data{};
+		{
+			auto [Base_Color_Image, Base_Image_View, Base_Color_Image_Vallocation] = Ref_Vulkan_RHI->Create_Global_Image(
+				{ Texture_Data_Info.Base_Color_Image_Width,Texture_Data_Info.Base_Color_Image_Height },
+				Texture_Data_Info.Base_Color_Image_Format,
+				0,
+				Texture_Data_Info.Base_Color_Image_Pixels
+			);
 
+			Vulkan_PBR_Material_Data.Base_Color_Image = std::move(Base_Color_Image);
+			Vulkan_PBR_Material_Data.Base_Color_Image_View = std::move(Base_Image_View);
+			Vulkan_PBR_Material_Data.Base_Color_Image_Allocation = Base_Color_Image_Vallocation;
+		}
+
+		{
+			auto [Metallic_Image, Metallic_Image_View, Metallic_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
+				{ Texture_Data_Info.Metallic_Roughness_Image_Width,Texture_Data_Info.Metallic_Roughness_Image_Height },
+				Texture_Data_Info.Metallic_Roughness_Image_Format,
+				0,
+				Texture_Data_Info.Metallic_Roughness_Image_Pixels
+			);
+
+			Vulkan_PBR_Material_Data.Metallic_Roughness_Image = std::move(Metallic_Image);
+			Vulkan_PBR_Material_Data.Metallic_Roughness_Image_View = std::move(Metallic_Image_View);
+			Vulkan_PBR_Material_Data.Metallic_Roughness_Image_Allocation = Metallic_Image_Allocation;
+		}
+
+		{
+			auto [Normal_Image, Normal_Image_View, Normal_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
+				{ Texture_Data_Info.Normal_Image_Width,Texture_Data_Info.Normal_Image_Height },
+				Texture_Data_Info.Normal_Image_Format,
+				0,
+				Texture_Data_Info.Normal_Image_Pixels
+			);
+
+			Vulkan_PBR_Material_Data.Normal_Image = std::move(Normal_Image);
+			Vulkan_PBR_Material_Data.Normal_Image_View = std::move(Normal_Image_View);
+			Vulkan_PBR_Material_Data.Normal_Image_Allocation = Normal_Image_Allocation;
+		}
+
+		{
+			auto [Roughness_Image, Roughness_Image_View, Roughness_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
+				{ Texture_Data_Info.Occlusion_Image_Width,Texture_Data_Info.Occlusion_Image_Height },
+				Texture_Data_Info.Occlusion_Image_Format,
+				0,
+				Texture_Data_Info.Occlusion_Image_Pixels
+			);
+
+			Vulkan_PBR_Material_Data.Occlusion_Image = std::move(Roughness_Image);
+			Vulkan_PBR_Material_Data.Occlusion_Image_View = std::move(Roughness_Image_View);
+			Vulkan_PBR_Material_Data.Occlusion_Image_Allocation = Roughness_Image_Allocation;
+		}
+
+		{
+			auto [Emissive_Image, Emissive_Image_View, Emissive_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
+				{ Texture_Data_Info.Emissive_Image_Width,Texture_Data_Info.Emissive_Image_Height },
+				Texture_Data_Info.Emissive_Image_Format,
+				0,
+				Texture_Data_Info.Emissive_Image_Pixels
+			);
+
+			Vulkan_PBR_Material_Data.Emissive_Image = std::move(Emissive_Image);
+			Vulkan_PBR_Material_Data.Emissive_Image_View = std::move(Emissive_Image_View);
+			Vulkan_PBR_Material_Data.Emissive_Image_Allocation = Emissive_Image_Allocation;
+		}
+
+		return Vulkan_PBR_Material_Data;
+	}
+
+	tuple<unique_ptr<RHI_Buffer>, VmaAllocation> Render_Resource::S_Load_Index_Buffer(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data) {
+		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
+
+		auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
+			static_cast<RHI_Device_Size>(Index_Buffer_Size),
+			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+		);
+
+		void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
+		Ref_Vulkan_RHI->Map_Memory(
+			Inefficient_Staging_Buffer_Memory.get(),
+			0,
+			RHI_WHOLE_SIZE,
+			0,
+			&Inefficient_Staging_Buffer_Mapped_Memory
+		);
+		memcpy(Inefficient_Staging_Buffer_Mapped_Memory, Index_Buffer_Data, Index_Buffer_Size);
+		Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
+
+		RHI_Buffer_Create_Info Buffer_Create_Info{};
+		{
+			Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			Buffer_Create_Info.Size = static_cast<RHI_Device_Size>(Index_Buffer_Size);
+			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_INDEX_BUFFER_BIT;
+		}
+
+		VmaAllocationCreateInfo Allocation_Create_Info{};
+		{
+			//Allocation_Create_Info.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+			Allocation_Create_Info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+		}
+
+		auto [Index_Buffer, Index_Buffer_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			Ref_Vulkan_RHI->Get_VMA_Allocator(),
+			&Buffer_Create_Info,
+			&Allocation_Create_Info,
+			nullptr
+		);
+
+		Ref_Vulkan_RHI->Copy_Buffer(
+			Inefficient_Staging_Buffer.get(),
+			Index_Buffer.get(),
+			0,
+			0,
+			static_cast<RHI_Device_Size>(Index_Buffer_Size)
+		);
+
+		Inefficient_Staging_Buffer.reset();
+		Inefficient_Staging_Buffer_Memory.reset();
+
+		return { std::move(Index_Buffer), std::move(Index_Buffer_Allocation) };
+	}
 
 	void Render_Resource::UpLoad_Global_Render_Resource(shared_ptr<Empty_RHI> RHI, const Level_Resource_Desc& Level_Resource_Desc)
 	{

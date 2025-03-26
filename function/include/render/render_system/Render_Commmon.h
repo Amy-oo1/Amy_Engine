@@ -212,29 +212,55 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		VmaAllocation Mesh_Index_Allocation;
 	};
 
-	struct alignas(16)
-		Vulkan_PBR_Material final {
-		RHI_Image* Base_Color_Textue_Image;
-		RHI_Image_View* Base_Color_Textue_Image_View;
-		VmaAllocation Base_Color_Image_Allcation;
+	struct Vulkan_PBR_Texture_Data_Info final {
+		void* Base_Color_Image_Pixels;
+		uint32_t Base_Color_Image_Width;
+		uint32_t Base_Color_Image_Height;
+		RHI_FORMAT Base_Color_Image_Format;
 
-		RHI_Image* Metallic_Roughness_Textue_Image;
-		RHI_Image_View* Metallic_Roughness_Textue_Image_View;
-		VmaAllocation Metallic_Roughness_Image_Allcation;
+		void* Metallic_Roughness_Image_Pixels;
+		uint32_t Metallic_Roughness_Image_Width;
+		uint32_t Metallic_Roughness_Image_Height;
+		RHI_FORMAT Metallic_Roughness_Image_Format;
 
-		RHI_Image* Normal_Textue_Image;
-		RHI_Image_View* Normal_Textue_Image_View;
-		VmaAllocation Normal_Image_Allcation;
+		void* Normal_Image_Pixels;
+		uint32_t Normal_Image_Width;
+		uint32_t Normal_Image_Height;
+		RHI_FORMAT Normal_Image_Format;
 
-		RHI_Image* Occlusion_Textue_Image;
-		RHI_Image_View* Occlusion_Textue_Image_View;
-		VmaAllocation Occlusion_Image_Allcation;
+		void* Occlusion_Image_Pixels;
+		uint32_t Occlusion_Image_Width;
+		uint32_t Occlusion_Image_Height;
+		RHI_FORMAT Occlusion_Image_Format;
 
-		RHI_Image* Emissive_Textue_Image;
-		RHI_Image_View* Emissive_Textue_Image_View;
-		VmaAllocation Emissive_Image_Allcation;
+		void* Emissive_Image_Pixels;
+		uint32_t Emissive_Image_Width;
+		uint32_t Emissive_Image_Height;
+		RHI_FORMAT Emissive_Image_Format;
+	};
 
-		RHI_Buffer* Material_Uniform_Buffer;
+	struct Vulkan_PBR_Material final {
+		unique_ptr<RHI_Image> Base_Color_Image;
+		unique_ptr<RHI_Image_View> Base_Color_Image_View;
+		VmaAllocation Base_Color_Image_Allocation;
+
+		unique_ptr<RHI_Image>Metallic_Roughness_Image;
+		unique_ptr<RHI_Image_View> Metallic_Roughness_Image_View;
+		VmaAllocation Metallic_Roughness_Image_Allocation;
+
+		unique_ptr<RHI_Image> Normal_Image;
+		unique_ptr<RHI_Image_View> Normal_Image_View;
+		VmaAllocation Normal_Image_Allocation;
+
+		unique_ptr<RHI_Image> Occlusion_Image;
+		unique_ptr<RHI_Image_View> Occlusion_Image_View;
+		VmaAllocation Occlusion_Image_Allocation;
+
+		unique_ptr<RHI_Image> Emissive_Image;
+		unique_ptr<RHI_Image_View> Emissive_Image_View;
+		VmaAllocation Emissive_Image_Allocation;
+
+		unique_ptr<RHI_Buffer> Material_Uniform_Buffer;
 		VmaAllocation Material_Uniform_Buffer_Allocation;
 
 		RHI_Descriptor_Set* Material_Descriptor_Set;
@@ -260,35 +286,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Vulkan_Mesh* Fef_Mesh{ nullptr };
 		uint_fast32_t Node_ID;
 		bool Enbale_Vertex_Blending{ false };
-	};
-
-	struct alignas(16)
-		Vulkan_Texture_Data_TO_Updata final {
-		void* Base_Color_Image_Pixels;
-		uint32_t Base_Color_Image_Wdith;
-		uint32_t Base_Color_Image_Height;
-
-		void* Metallic_Roughness_Image_Pixels;
-		uint32_t Metallic_Roughness_Image_Wdith;
-		uint32_t Metallic_Roughness_Image_Height;
-		RHI_FORMAT MEtallic_Roughness_Image_Format;
-
-		void* Normal_Image_Pixels;
-		uint32_t Normal_Image_Wdith;
-		uint32_t Normal_Image_Height;
-
-		void* Occlusion_Image_Pixels;
-		uint32_t Occlusion_Image_Wdith;
-		uint32_t Occlusion_Image_Height;
-		RHI_FORMAT Occlusion_Image_Format;
-
-		void* Emissive_Image_Pixels;
-		uint32_t Emissive_Image_Wdith;
-		uint32_t Emissive_Image_Height;
-		RHI_FORMAT Emissive_Image_Format;
-
-		Vulkan_PBR_Material* Ref_Material;
-
 	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

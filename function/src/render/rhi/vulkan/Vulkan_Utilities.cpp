@@ -368,6 +368,108 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		End_SingleTIme_Commands(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
 	}
 
+	void Create_Global_Image(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, const VkAllocationCallbacks* VK_Allocator, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VmaAllocator VMA_Allocator, VkExtent2D Image_Extent, VkFormat Format, uint32_t Mip_levels, void* Image_Pixels, VkImage& Image, VkImageView& Image_View, VmaAllocation& Image_Allocation) {
+		VkDeviceSize Image_Byte_Size{ Get_Image_Byte_Size(Image_Extent.width, Image_Extent.height, Format) };
+
+		VkBuffer Staging_Buffer{ nullptr };
+		VkDeviceMemory Staging_Memory{ nullptr };
+		Create_Buffer(
+			Physical_Device,
+			Logical_Device,
+			Image_Byte_Size,
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			VK_Allocator,
+			Staging_Buffer,
+			Staging_Memory);
+
+		void* Dst_Data{ nullptr };
+		vkMapMemory(Logical_Device, Staging_Memory, 0, Image_Byte_Size, 0, &Dst_Data);
+		memcpy(Dst_Data, Image_Pixels, static_cast<size_t>(Image_Byte_Size));
+		vkUnmapMemory(Logical_Device, Staging_Memory);
+
+		VkImageCreateInfo Image_Create_Info{};
+		{
+			Image_Create_Info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			Image_Create_Info.flags = 0;
+			Image_Create_Info.imageType = VK_IMAGE_TYPE_2D;
+			Image_Create_Info.format = Format;
+			Image_Create_Info.extent = { Image_Extent.width, Image_Extent.height, 1 };
+			Image_Create_Info.mipLevels = Mip_levels;
+			Image_Create_Info.arrayLayers = 1;
+			Image_Create_Info.samples = VK_SAMPLE_COUNT_1_BIT;
+			Image_Create_Info.tiling = VK_IMAGE_TILING_OPTIMAL;
+			Image_Create_Info.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+			Image_Create_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			Image_Create_Info.queueFamilyIndexCount = 0;//TODO : Set this
+			Image_Create_Info.pQueueFamilyIndices = nullptr;
+			Image_Create_Info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		}
+
+		VmaAllocationCreateInfo Allocation_Create_Info{};
+		{
+			Allocation_Create_Info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+		}
+
+		vmaCreateImage(
+			VMA_Allocator,
+			&Image_Create_Info,
+			&Allocation_Create_Info,
+			&Image,
+			&Image_Allocation,
+			VK_NULL_HANDLE
+		);
+
+		Transition_Image_Layout(
+			Logical_Device,
+			Command_Pool,
+			Graphics_Queue,
+			Image,
+			Mip_levels,
+			Format,
+			VK_IMAGE_ASPECT_COLOR_BIT,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			1
+		);
+
+		Copy_Buffer_To_Image(
+			Logical_Device,
+			Command_Pool,
+			Graphics_Queue,
+			Staging_Buffer,
+			Image,
+			Image_Extent,
+			1
+		);
+
+		vkDestroyBuffer(Logical_Device, Staging_Buffer, VK_Allocator);
+		vkFreeMemory(Logical_Device, Staging_Memory, VK_Allocator);
+
+		Generate_Mipmaps(
+			Physical_Device,
+			Logical_Device,
+			Command_Pool,
+			Graphics_Queue,
+			Image,
+			Image_Extent,
+			Format,
+			Mip_levels,
+			1
+		);
+
+		Image_View = Create_Image_View(
+			Logical_Device,
+			VK_Allocator,
+			Image,
+			Format,
+			Mip_levels,
+			VK_IMAGE_ASPECT_COLOR_BIT,
+			VK_IMAGE_VIEW_TYPE_2D,
+			1
+		);
+	}
+
 	void Create_Cube_Map(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, const VkAllocationCallbacks* VK_Allocator, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VmaAllocator VMA_Allocator, VkExtent2D Image_Extent, VkFormat Format, uint32_t Mip_levels, array<void*, 6> Image_Pixels, VkImage& Image, VkImageView& Image_View, VmaAllocation& Image_Allocation) {
 		VkDeviceSize
 			Image_Byte_Size{ Get_Image_Byte_Size(Image_Extent.width, Image_Extent.height, Format) },
@@ -421,7 +523,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void* Dst_Data{ nullptr };
 		vkMapMemory(Logical_Device, Staging_Memory, 0, Cube_Byte_Size, 0, &Dst_Data);
 		for (size_t Index = 0; Index < 6; ++Index)
-			memcpy(static_cast<unsigned char*>(Dst_Data) + Image_Byte_Size * Index, Image_Pixels[Index], static_cast<size_t>(Image_Byte_Size));
+			memcpy(
+				static_cast<unsigned char*>(Dst_Data) + Image_Byte_Size * Index,
+				Image_Pixels[Index],
+				static_cast<size_t>(Image_Byte_Size)
+			);
 		vkUnmapMemory(Logical_Device, Staging_Memory);
 
 		Transition_Image_Layout(
@@ -544,126 +650,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkAllocateMemory(Device, &Memory_Allocate_Info, pAllocator, &Memory));
 		THROW_IF_VK_FAILED(vkBindImageMemory(Device, Image, Memory, 0));
 	}
-
-
-
-
-	void Create_Global_Image(
-		VkPhysicalDevice Physical_Device,
-		VkDevice Logical_Device,
-		VkCommandPool Command_Pool,
-		VkQueue Graphics_Queue,
-		void* Image_Pixels,
-		VkExtent2D Image_Extent,
-		VkFormat Format,
-		uint32_t Mip_levels,
-		VkImageCreateFlags Image_Create_Flags,
-		VkSampleCountFlagBits Samples,
-		VkImageTiling Image_Tiling,
-		VkImageUsageFlags Image_Usage_Flags,
-		VkMemoryPropertyFlags Memory_Property_Flags,
-		VkImage& Image,
-		VkImageView& Image_View,
-		VkDeviceMemory& Memory,
-		const VkAllocationCallbacks* VK_Allocations) {
-
-
-		VkDeviceSize Image_Byte_Size{ Get_Image_Byte_Size(Image_Extent.width, Image_Extent.height, Format) };
-
-		VkBuffer Staging_Buffer{ nullptr };
-		VkDeviceMemory Staging_Memory{ nullptr };
-		Create_Buffer(
-			Physical_Device,
-			Logical_Device,
-			Image_Byte_Size,
-			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-			VK_Allocations,
-			Staging_Buffer,
-			Staging_Memory);
-
-		void* Dst_Data{ nullptr };
-		vkMapMemory(Logical_Device, Staging_Memory, 0, Image_Byte_Size, 0, &Dst_Data);
-		memcpy(Dst_Data, Image_Pixels, static_cast<size_t>(Image_Byte_Size));
-		vkUnmapMemory(Logical_Device, Staging_Memory);
-
-		Create_Image(
-			Physical_Device,
-			Logical_Device,
-			Image_Extent,
-			Format,
-			Mip_levels,
-			VK_SAMPLE_COUNT_1_BIT,
-			VK_IMAGE_TILING_OPTIMAL,
-			VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-			Image,
-			Memory,
-			Image_Create_Flags,
-			1,
-			VK_Allocations
-		);
-
-		Transition_Image_Layout(
-			Logical_Device,
-			Command_Pool,
-			Graphics_Queue,
-			Image,
-			Mip_levels,
-			Format,
-			VK_IMAGE_ASPECT_COLOR_BIT,
-			VK_IMAGE_LAYOUT_UNDEFINED,
-			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			1
-		);
-
-		Copy_Buffer_To_Image(
-			Logical_Device,
-			Command_Pool,
-			Graphics_Queue,
-			Staging_Buffer,
-			Image,
-			Image_Extent,
-			6
-		);
-
-		vkDestroyBuffer(Logical_Device, Staging_Buffer, VK_Allocations);
-		vkFreeMemory(Logical_Device, Staging_Memory, VK_Allocations);
-
-		Generate_Mipmaps(
-			Physical_Device,
-			Logical_Device,
-			Command_Pool,
-			Graphics_Queue,
-			Image,
-			Image_Extent,
-			Format,
-			Mip_levels,
-			6
-		);
-
-		Image_View = Create_Image_View(
-			Logical_Device,
-			VK_Allocations,
-			Image,
-			Format,
-			Mip_levels,
-			VK_IMAGE_ASPECT_COLOR_BIT,
-			VK_IMAGE_VIEW_TYPE_2D,
-			6
-		);
-	}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
