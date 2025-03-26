@@ -35,17 +35,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	public:
 		Buffer_Data(size_t Size) :
-			m_Size{ Size },
-			m_Data{ malloc(Size) } {
+			Data_Size{ Size },
+			Data{ malloc(Size) } {
 		}
 
 
-		~Buffer_Data() { if (nullptr != this->m_Data) { free(this->m_Data); } }
+		~Buffer_Data() { if (nullptr != this->Data) { free(this->Data); } }
 
-		bool Is_Valid(void)const { return nullptr != this->m_Data; }
+		bool Is_Valid(void)const { return nullptr != this->Data; }
 
-		size_t m_Size{ 0 };
-		void* m_Data{ nullptr };
+		size_t Data_Size{ 0 };
+		void* Data{ nullptr };
 
 	};
 
@@ -80,7 +80,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	struct Render_Mesh_Data final {
 		Static_Mesh_Data Static_Mesh_Data;
-		shared_ptr<Buffer_Data> Skeletion_Binding_Buffer;
+		shared_ptr<Buffer_Data> Skeletion_Binding_Buffer{nullptr};
 
 	};
 

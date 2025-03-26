@@ -186,33 +186,42 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	}
 
-	void Render_Resource::UpData_Vertex_Buffer(shared_ptr<Empty_RHI> RHI, bool Enbale_Vertex_Blending, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data, Vulkan_Mesh& Vulkan_Mesh_Data) {
-		if (Enbale_Vertex_Blending)
-			this->Parser_Updata_Vertex_Buffer_Binding(
+	const Vulkan_Mesh& Render_Resource::Get_OR_Create_Vulkan_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Mesh_Data) {
+		auto cIt{ this->m_Vulkan_Mesh_Map.find(Render_Entity.Mesh_Resource_ID) };
+		if (this->m_Vulkan_Mesh_Map.end() != cIt)
+			return cIt->second;
+
+		uint32_t Index_Buffer_size{ static_cast<uint32_t>(Mesh_Data.Static_Mesh_Data.Index_Buffer->Data_Size * sizeof(uint16_t)) };
+		void* Index_Buffer_Data{ Mesh_Data.Static_Mesh_Data.Index_Buffer->Data };
+
+		uint32_t Vertex_Buffer_Size{ static_cast<uint32_t>(Mesh_Data.Static_Mesh_Data.Vertex_Buffer->Data_Size) };
+
+		Mesh_Vertex_Data_Definition* Vertex_Buffer_Data{ reinterpret_cast<Mesh_Vertex_Data_Definition*>(Mesh_Data.Static_Mesh_Data.Vertex_Buffer->Data) };
+
+		if (nullptr != Mesh_Data.Skeletion_Binding_Buffer)
+			return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Parser_Updata_Vertex_Buffer(
 				RHI,
-				Index_Buffer_Size,
-				Index_Buffer_Data,
+				Index_Buffer_size,
+				reinterpret_cast<uint16_t*>(Index_Buffer_Data),
 				Vertex_Buffer_Size,
-				Vertex_Buffer_Data,
-				Joint_Binding_Buffer_Size,
-				Joint_Binding_Buffer_Data,
-				Vulkan_Mesh_Data
-			);
-		else
-			this->Parser_Updata_Vertex_Buffer(
-				RHI,
-				Index_Buffer_Size,
-				Index_Buffer_Data,
-				Vertex_Buffer_Size,
-				Vertex_Buffer_Data,
-				Joint_Binding_Buffer_Size,
-				Joint_Binding_Buffer_Data,
-				Vulkan_Mesh_Data
+				Vertex_Buffer_Data
 			);
 
+		uint32_t Joint_Binding_Buffer_Size{ static_cast<uint32_t>(Mesh_Data.Skeletion_Binding_Buffer->Data_Size) };
+		Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data{ reinterpret_cast<Mesh_Vertx_Binding_Data_Definition*>(Mesh_Data.Skeletion_Binding_Buffer->Data) };
+
+		return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Parser_Updata_Vertex_Buffer_Binding(
+			RHI,
+			Index_Buffer_size,
+			reinterpret_cast<uint16_t*>(Index_Buffer_Data),
+			Vertex_Buffer_Size,
+			Vertex_Buffer_Data,
+			Joint_Binding_Buffer_Size,
+			Joint_Binding_Buffer_Data
+		);
 	}
 
-	void Render_Resource::Parser_Updata_Vertex_Buffer_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data, Vulkan_Mesh& Vulkan_Mesh_Data) {
+	Vulkan_Mesh Render_Resource::Parser_Updata_Vertex_Buffer_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
 		if (0 != (Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition)))
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition) != 0");
 
@@ -221,7 +230,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Joint_Binding_Buffer_Size % sizeof(uint16_t) != 0");
 
 		uint32_t Vertex_Count{ Vertex_Buffer_Size / sizeof(Mesh_Vertex_Data_Definition) };
-		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint16_t) };
+		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint32_t) };
 
 
 		RHI_Device_Size
@@ -303,7 +312,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
 
+		Vulkan_Mesh Vulkan_Mesh_Data{};
+		Vulkan_Mesh_Data.Enable_Vertex_Blending = true;
 		Vulkan_Mesh_Data.Mesh_Vertex_Count = Vertex_Count;
+		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
 
 		RHI_Buffer_Create_Info Buffer_Create_Info{};
 		{
@@ -446,9 +458,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			&Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes,
 			nullptr
 		);
+
+		return Vulkan_Mesh_Data;
 	}
 
-	void Render_Resource::Parser_Updata_Vertex_Buffer(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data, Vulkan_Mesh& Vulkan_Mesh_Data) {
+	Vulkan_Mesh Render_Resource::Parser_Updata_Vertex_Buffer(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data) {
 		if (0 != (Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition)))
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition) != 0");
 
@@ -511,7 +525,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
 
+		Vulkan_Mesh Vulkan_Mesh_Data{};
+		Vulkan_Mesh_Data.Enable_Vertex_Blending = false;
 		Vulkan_Mesh_Data.Mesh_Vertex_Count = Vertex_Count;
+		Vulkan_Mesh_Data.Mesh_Index_Count = std::numeric_limits<uint32_t>::max();
 
 		RHI_Buffer_Create_Info Buffer_Create_Info{};
 		{
@@ -631,6 +648,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			&Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes,
 			nullptr
 		);
+
+		return Vulkan_Mesh_Data;
 	}
 
 

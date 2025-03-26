@@ -16,7 +16,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Core::NameSpace_Bounding::AxisAligned_Bounding_Box;
 
 	struct Render_Entity final {
-		uint32_t Instance_ID{ 0 };
+		size_t Instance_ID{ 0 };
 		Matrix4x4 Model_Matrix{ Matrix4x4::IDENTITY };
 
 		//NOTE : Mesh

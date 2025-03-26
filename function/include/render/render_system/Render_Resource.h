@@ -1,6 +1,7 @@
 #pragma once
 
 #include<cstdint>
+#include<limits>
 #include<array>
 #include<vector>
 #include<unordered_map>
@@ -151,22 +152,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				array<shared_ptr<Texture_Data>, 6> Specular_Maps
 			);
 
-	private:
-
-		void
-			UpData_Vertex_Buffer(
+		[[nodiscard]] const Vulkan_Mesh&
+			Get_OR_Create_Vulkan_Resource(
 				shared_ptr<Empty_RHI> RHI,
-				bool Enbale_Vertex_Blending,
-				uint32_t Index_Buffer_Size,
-				uint16_t* Index_Buffer_Data,
-				uint32_t Vertex_Buffer_Size,
-				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data,
-				uint32_t Joint_Binding_Buffer_Size,
-				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data,
-				Vulkan_Mesh& Vulkan_Mesh_Data
+				const Render_Entity& Render_Entity,
+				const Render_Mesh_Data& Mesh_Data
 			);
 
-		void
+	private:
+
+		[[nodiscard]] Vulkan_Mesh
 			Parser_Updata_Vertex_Buffer_Binding(
 				shared_ptr<Empty_RHI> RHI,
 				uint32_t Index_Buffer_Size,
@@ -174,20 +169,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				uint32_t Vertex_Buffer_Size,
 				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data,
 				uint32_t Joint_Binding_Buffer_Size,
-				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data,
-				Vulkan_Mesh& Vulkan_Mesh_Data
+				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data
 			);
 
-		void
+		[[nodiscard]] Vulkan_Mesh
 			Parser_Updata_Vertex_Buffer(
 				shared_ptr<Empty_RHI> RHI,
 				uint32_t Index_Buffer_Size,
 				uint16_t* Index_Buffer_Data,
 				uint32_t Vertex_Buffer_Size,
-				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data,
-				uint32_t Joint_Binding_Buffer_Size,
-				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data,
-				Vulkan_Mesh& Vulkan_Mesh_Data
+				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data
 			);
 
 	public:
@@ -198,6 +189,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Global_Render_Resource m_Global_Render_Resource;
 
 		unique_ptr<RHI_Descriptor_Set_Layout>m_Mesh_Descriptor_Set_Layout{ nullptr };
+
+		unordered_map<size_t, Vulkan_Mesh> m_Vulkan_Mesh_Map;
 
 
 	public:
