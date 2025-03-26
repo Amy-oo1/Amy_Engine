@@ -16,12 +16,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_RHI::RHI_FORMAT;
 
 	struct Mesh_Vertex_Data_Definition final {
-		float Position[3];
-		float Normal[3];
-		float Tangent[3];
-		float Bitangent[3];
-		float Texcoord[2];
-		float Color[4];
+		float X, Y, Z;
+		float NX, NY, NZ;
+		float TX, TY, TZ;
+		float U, V;
+	};
+
+	struct Mesh_Vertx_Binding_Data_Definition final {
+		int Index0, Index1, Index2, Index3;
+		float Weight0{ 0 }, Weight1{ 0 }, Weight2{ 0 }, Weight3{ 0 };
 	};
 
 

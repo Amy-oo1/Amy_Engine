@@ -64,13 +64,36 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) = 0;
 
-		[[nodiscard]] virtual tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>>
+		[[nodiscard]] virtual tuple<
+			unique_ptr<RHI_Buffer>,
+			unique_ptr<RHI_Device_Memory>>
 			Create_Buffer(
 				RHI_Device_Size Size,
-				RHI_Buffer_Usage_Flags Usages,
+				RHI_Buffer_Usage_Flags Usage,
 				RHI_Memory_Property_Flags Properties
 			) = 0;
 
+		[[nodiscard]] virtual tuple<
+			unique_ptr<RHI_Buffer>,
+			VmaAllocation>
+			Create_Buffer_VMA(
+				VmaAllocator Vma_Allocator,
+				const RHI_Buffer_Create_Info* Buffer_Create_Info,
+				const VmaAllocationCreateInfo* Allocation_Create_Info,
+				VmaAllocationInfo* AllocationInfo
+			) = 0;
+
+		virtual void
+			Copy_Buffer(
+				RHI_Buffer* Src_Buffer,
+				RHI_Buffer* Dst_Buffer,
+				RHI_Device_Size Src_Offset,
+				RHI_Device_Size Dst_Offset,
+				RHI_Device_Size Size
+			) = 0;
+
+
+		//NOTE : Image
 		[[nodiscard]] virtual tuple<
 			unique_ptr<RHI_Image>,
 			unique_ptr<RHI_Image_View>,
@@ -81,6 +104,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				uint32_t Mip_levels,
 				array<void*, 6> Image_Pixels
 			) = 0;
+
 
 
 		//NOTE : Memory
@@ -101,6 +125,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Sampler_Create_Info* Create_Info
 			) = 0;
 
+		[[nodiscard]] virtual vector<unique_ptr<RHI_Descriptor_Set>>
+			Allocate_Descriptor_Sets(
+				const RHI_Descriptor_Set_Allocate_Info* Allocate_Info
+			) = 0;
+
+		virtual void
+			Update_Descriptor_Sets(
+				const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes,
+				const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies
+			) = 0;
+
 
 		virtual void Run(void) = 0;
 
@@ -116,10 +151,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		//TODO : Add SwapChain Image Depth Image View
 
-
-
-		[[nodiscard]] virtual const vector<unique_ptr<RHI_Descriptor_Set>> Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) = 0;
-
 		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
 		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Mipmap_Sampler(uint32_t width, uint32_t height) = 0;
 
@@ -128,12 +159,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
 
-		/*[[nodiscard]] virtual unique_ptr<RHI_Buffer> Create_Buffer_VMA(
-			VmaAllocator Vma_Allocator,
-			const RHI_Buffer_Create_Info& Buffer_Create_Info,
-			const VmaAllocationCreateInfo* pAllocation_Create_Info,
-			VmaAllocation* pAllocation,
-			VmaAllocationInfo* pAllocationInfo) = 0;
+
 
 		[[nodiscard]] virtual unique_ptr<RHI_Buffer> Create_Buffer_With_Alignment_VMA(
 			VmaAllocator Vma_Allocator,
@@ -141,7 +167,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			const VmaAllocationCreateInfo* pAllocation_Create_Info,
 			RHI_Device_Size Min_Alignment,
 			VmaAllocation* pAllocation,
-			VmaAllocationInfo* pAllocationInfo) = 0;*/
+			VmaAllocationInfo* pAllocationInfo) = 0;
 
 
 
@@ -149,7 +175,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		virtual void End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
 
 
-		virtual void Copy_Buffer(unique_ptr<RHI_Buffer> Src_Buffer, unique_ptr<RHI_Buffer> Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) = 0;
+
 
 		[[nodiscard]] virtual tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Create_Image(
 			RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format,
@@ -443,13 +469,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const vector<const RHI_Image_Memory_Barrier*>* Image_Memory_Barriers
 			) = 0;
 
-
-
-		virtual void
-			Update_Descriptor_Sets(
-				const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes,
-				const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies
-			) = 0;
 
 		virtual bool
 			Queue_Submit(

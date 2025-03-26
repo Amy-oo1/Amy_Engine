@@ -240,6 +240,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
+	VmaAllocator Vulkan_RHI::Get_VMA_Allocator(void) const {
+		return this->m_VMA_Allocator;
+	}
+
+	RHI_Descriptor_Pool* NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI::Get_Default_Descriptor_Pool(void) const {
+		return this->m_Default_RHI_Descriptor_Pool.get();
+	}
+
 	//Private Func
 	void Vulkan_RHI::Create_Allocator(void) {
 
@@ -528,6 +536,71 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			throw runtime_error("Failed to find a queue family with compute bit!");
 
 		return Queue_Family_Indices;
+	}
+
+	const optional<VkWriteDescriptorSet> Vulkan_RHI::Parser_RHI_Write_Descriptor_Set(const RHI_Write_Descriptor_Set* Write_Descriptor_Set, optional<vector<VkDescriptorImageInfo>>& Image_Infos, optional<vector<VkDescriptorBufferInfo>>& Buffer_Infos, optional<vector<VkBufferView>>& vk_Buffer_Views) {
+		if (nullptr == Write_Descriptor_Set)
+			return std::nullopt;
+
+		if (nullptr == Write_Descriptor_Set->Image_Infos || Write_Descriptor_Set->Image_Infos->empty())
+			Image_Infos = std::nullopt;
+		else {
+			Image_Infos = std::make_optional<vector<VkDescriptorImageInfo>>();
+			Image_Infos->reserve(Write_Descriptor_Set->Image_Infos->size());
+			for (const auto& Image_Info : *Write_Descriptor_Set->Image_Infos) {
+				VkDescriptorImageInfo vk_Image_Info{};
+				{
+					vk_Image_Info.sampler = static_cast<Vulkan_Sampler*>(Image_Info->Sampler)->Get();
+					vk_Image_Info.imageView = static_cast<Vulkan_Image_View*>(Image_Info->ImageView)->Get();
+					vk_Image_Info.imageLayout = static_cast<VkImageLayout>(Image_Info->Image_Layout);
+				}
+
+				Image_Infos->push_back(vk_Image_Info);
+			}
+		}
+
+		if (nullptr == Write_Descriptor_Set->Buffer_Infos || Write_Descriptor_Set->Buffer_Infos->empty())
+			Buffer_Infos = std::nullopt;
+		else {
+			Buffer_Infos = std::make_optional<vector<VkDescriptorBufferInfo>>();
+			Buffer_Infos->reserve(Write_Descriptor_Set->Buffer_Infos->size());
+			for (const auto& Buffer_Info : *Write_Descriptor_Set->Buffer_Infos) {
+				VkDescriptorBufferInfo vk_Buffer_Info{};
+				{
+					vk_Buffer_Info.buffer = static_cast<Vulkan_Buffer*>(Buffer_Info->Buffer)->Get();
+					vk_Buffer_Info.offset = static_cast<VkDeviceSize>(Buffer_Info->Offset);
+					vk_Buffer_Info.range = static_cast<VkDeviceSize>(Buffer_Info->Range);
+				}
+
+				Buffer_Infos->push_back(vk_Buffer_Info);
+			}
+		}
+
+		if (nullptr == Write_Descriptor_Set->Texel_Buffer_Views || Write_Descriptor_Set->Texel_Buffer_Views->empty())
+			vk_Buffer_Views = std::nullopt;
+		else {
+			vk_Buffer_Views = std::make_optional<vector<VkBufferView>>();
+			vk_Buffer_Views->reserve(Write_Descriptor_Set->Texel_Buffer_Views->size());
+
+			for (const auto& Buffer_View : *Write_Descriptor_Set->Texel_Buffer_Views)
+				vk_Buffer_Views->push_back(static_cast<Vulkan_Buffer_View*>(Buffer_View)->Get());
+		}
+
+		VkWriteDescriptorSet vk_Write_Descriptor_Set{};
+		{
+			vk_Write_Descriptor_Set.sType = static_cast<VkStructureType>(Write_Descriptor_Set->sType);
+			vk_Write_Descriptor_Set.pNext = Write_Descriptor_Set->pNext;
+			vk_Write_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Write_Descriptor_Set->Dst_Set)->Get();
+			vk_Write_Descriptor_Set.dstBinding = Write_Descriptor_Set->Dst_Binding;
+			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;
+			vk_Write_Descriptor_Set.descriptorCount = Write_Descriptor_Set->Descriptor_Count;
+			vk_Write_Descriptor_Set.descriptorType = static_cast<VkDescriptorType>(Write_Descriptor_Set->Descriptor_Type);
+			vk_Write_Descriptor_Set.pImageInfo = Image_Infos.has_value() ? Image_Infos->data() : nullptr;
+			vk_Write_Descriptor_Set.pBufferInfo = Buffer_Infos.has_value() ? Buffer_Infos->data() : nullptr;
+			vk_Write_Descriptor_Set.pTexelBufferView = vk_Buffer_Views.has_value() ? vk_Buffer_Views->data() : nullptr;
+		}
+
+		return std::make_optional(vk_Write_Descriptor_Set);
 	}
 
 
@@ -876,7 +949,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return RHI_Command_Buffers;
 	}
 
-	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usages, RHI_Memory_Property_Flags Properties) {
+	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usage, RHI_Memory_Property_Flags Properties) {
 		VkBuffer  Temp_Buffer{ nullptr };
 		VkDeviceMemory Temp_Device_Memory{ nullptr };
 
@@ -884,7 +957,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			this->m_VK_Physical_Device,
 			this->m_Logical_VK_Device,
 			Size,
-			static_cast<VkBufferUsageFlags>(Usages),
+			static_cast<VkBufferUsageFlags>(Usage),
 			static_cast<VkMemoryPropertyFlags>(Properties),
 			this->m_Allocator.get(),
 			Temp_Buffer,
@@ -902,7 +975,44 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_tuple(std::move(Buffer), std::move(Device_Memory));
 	}
 
-	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, VmaAllocation> NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI::Create_Cube_Map(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, array<void*, 6> Image_Pixels) {
+	tuple<unique_ptr<RHI_Buffer>, VmaAllocation> Vulkan_RHI::Create_Buffer_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info* Buffer_Create_Info, const VmaAllocationCreateInfo* Allocation_Create_Info, VmaAllocationInfo* AllocationInfo) {
+		VkBufferCreateInfo vk_Buffer_Create_Info{};
+		{
+			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info->sType);
+			vk_Buffer_Create_Info.pNext = Buffer_Create_Info->pNext;
+			vk_Buffer_Create_Info.flags = static_cast<VkBufferCreateFlags>(Buffer_Create_Info->Flags);
+			vk_Buffer_Create_Info.size = static_cast<VkDeviceSize>(Buffer_Create_Info->Size);
+			vk_Buffer_Create_Info.usage = static_cast<VkBufferUsageFlags>(Buffer_Create_Info->Usage);
+			vk_Buffer_Create_Info.sharingMode = static_cast<VkSharingMode>(Buffer_Create_Info->Sharing_Mode);
+			vk_Buffer_Create_Info.queueFamilyIndexCount = Buffer_Create_Info->Queue_Family_Index_Count;
+			vk_Buffer_Create_Info.pQueueFamilyIndices = Buffer_Create_Info->pQueue_Family_Indices;
+		}
+
+		VkBuffer VK_Buffer{ nullptr };
+		VmaAllocation Allocation{ nullptr };
+		THROW_IF_VK_FAILED(vmaCreateBuffer(Vma_Allocator, &vk_Buffer_Create_Info, Allocation_Create_Info, &VK_Buffer, &Allocation, AllocationInfo));
+		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(VK_Buffer);
+
+		return std::make_tuple(std::move(Buffer), Allocation);
+	}
+
+	void Vulkan_RHI::Copy_Buffer(RHI_Buffer* Src_Buffer, RHI_Buffer* Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) {
+		unique_ptr<RHI_Command_Buffer> Command_Buffer{ this->Begin_SingleTime_Commands() };
+
+		VkBufferCopy Copy_Region{};
+		{
+			Copy_Region.srcOffset = static_cast<VkDeviceSize>(Src_Offset);
+			Copy_Region.dstOffset = static_cast<VkDeviceSize>(Dst_Offset);
+			Copy_Region.size = static_cast<VkDeviceSize>(Size);
+		}
+
+		vkCmdCopyBuffer(static_cast<Vulkan_Command_Buffer*>(Command_Buffer.get())->Get(), static_cast<Vulkan_Buffer*>(Src_Buffer)->Get(), static_cast<Vulkan_Buffer*>(Dst_Buffer)->Get(), 1, &Copy_Region);
+		this->End_SingleTime_Commands(std::move(Command_Buffer));
+	}
+
+	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, VmaAllocation> Vulkan_RHI::Create_Cube_Map(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, array<void*, 6> Image_Pixels) {
 		VkImage VK_Image{ nullptr };
 		VkImageView VK_Image_View{ nullptr };
 		VmaAllocation VMA_Allocation{ nullptr };
@@ -971,6 +1081,100 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		static_cast<Vulkan_Sampler*>(Sampler.get())->Reset(vk_Sampler);
 
 		return Sampler;
+	}
+
+	 vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info* Allocate_Info) {
+		vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
+		Descriptor_Set_Layouts.reserve(Allocate_Info->Descriptor_Set_Count);
+		for (size_t Index = 0; Index < Allocate_Info->Descriptor_Set_Count; ++Index)
+			Descriptor_Set_Layouts.emplace_back(static_cast<Vulkan_Descriptor_Set_Layout*>(Allocate_Info->Set_Layouts->at(Index))->Get());
+
+		VkDescriptorSetAllocateInfo Descriptor_Set_Allocate_Info{};
+		{
+			Descriptor_Set_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info->sType);
+			Descriptor_Set_Allocate_Info.pNext = Allocate_Info->pNext;
+			Descriptor_Set_Allocate_Info.descriptorPool = static_cast<Vulkan_Descriptor_Pool*>(Allocate_Info->Descriptor_Pool)->Get();
+			Descriptor_Set_Allocate_Info.descriptorSetCount = Allocate_Info->Descriptor_Set_Count;
+			Descriptor_Set_Allocate_Info.pSetLayouts = Descriptor_Set_Layouts.data();
+		}
+
+		vector<VkDescriptorSet> Descriptor_Sets{};
+		Descriptor_Sets.resize(Allocate_Info->Descriptor_Set_Count, nullptr);
+		THROW_IF_VK_FAILED(vkAllocateDescriptorSets(this->m_Logical_VK_Device, &Descriptor_Set_Allocate_Info, Descriptor_Sets.data()));
+
+		vector<unique_ptr<RHI_Descriptor_Set>> RHI_Descriptor_Sets{};
+		RHI_Descriptor_Sets.reserve(Allocate_Info->Descriptor_Set_Count);
+		for (size_t Index = 0; Index < Allocate_Info->Descriptor_Set_Count; ++Index) {
+			RHI_Descriptor_Sets.emplace_back(std::make_unique<Vulkan_Descriptor_Set>());
+			static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Reset(Descriptor_Sets[Index]);
+		}
+
+		return RHI_Descriptor_Sets;
+	}
+
+	void Vulkan_RHI::Update_Descriptor_Sets(const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes, const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies) {
+		vector<VkWriteDescriptorSet> vk_Write_Descriptor_Sets{};
+		if (nullptr != Descriptor_Writes && (!Descriptor_Writes->empty())) {
+			vector<optional<vector<VkDescriptorImageInfo>>> Image_Infos{};
+			vector<optional<vector<VkDescriptorBufferInfo>>> Buffer_Infos{};
+			vector<optional<vector<VkBufferView>>> vk_Buffer_Views;
+
+			vk_Write_Descriptor_Sets.reserve(Descriptor_Writes->size());
+			Image_Infos.reserve(Descriptor_Writes->size());
+			Buffer_Infos.reserve(Descriptor_Writes->size());
+			vk_Buffer_Views.reserve(Descriptor_Writes->size());
+
+			for (const auto& Descriptor_Write : *Descriptor_Writes) {
+				if (nullptr == Descriptor_Write)
+					throw runtime_error("Descriptor Write is nullptr!");
+
+				optional<vector<VkDescriptorImageInfo>> vk_Image_Info{};
+				optional<vector<VkDescriptorBufferInfo>> vk_Buffer_Info{};
+				optional<vector<VkBufferView>> vk_Buffer_View{};
+				const auto vk_Write_Descriptor_Set{ Vulkan_RHI::Parser_RHI_Write_Descriptor_Set(Descriptor_Write, vk_Image_Info, vk_Buffer_Info, vk_Buffer_View) };
+
+				Image_Infos.emplace_back(vk_Image_Info);
+				Buffer_Infos.emplace_back(vk_Buffer_Info);
+				vk_Buffer_Views.emplace_back(vk_Buffer_View);
+
+				vk_Write_Descriptor_Sets.emplace_back(vk_Write_Descriptor_Set.value());
+
+			}
+
+			vector<VkCopyDescriptorSet> vk_Copy_Descriptor_Sets{};
+			if (nullptr != Descriptor_Copies && !Descriptor_Copies->empty()) {
+				vk_Copy_Descriptor_Sets.reserve(Descriptor_Copies->size());
+				for (const auto& Descriptor_Copy : *Descriptor_Copies) {
+					if (nullptr == Descriptor_Copy)
+						throw runtime_error("Descriptor Copy is nullptr!");
+
+					VkCopyDescriptorSet vk_Copy_Descriptor_Set{};
+					{
+						vk_Copy_Descriptor_Set.sType = static_cast<VkStructureType>(Descriptor_Copy->sType);
+						vk_Copy_Descriptor_Set.pNext = Descriptor_Copy->pNext;
+						vk_Copy_Descriptor_Set.srcSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Src_Set)->Get();
+						vk_Copy_Descriptor_Set.srcBinding = Descriptor_Copy->Src_Binding;
+						vk_Copy_Descriptor_Set.srcArrayElement = Descriptor_Copy->Src_Array_Element;
+						vk_Copy_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Dst_Set)->Get();
+						vk_Copy_Descriptor_Set.dstBinding = Descriptor_Copy->Dst_Binding;
+						vk_Copy_Descriptor_Set.dstArrayElement = Descriptor_Copy->Dst_Array_Element;
+						vk_Copy_Descriptor_Set.descriptorCount = Descriptor_Copy->Descriptor_Count;
+					}
+
+					vk_Copy_Descriptor_Sets.emplace_back(vk_Copy_Descriptor_Set);
+				}
+			}
+
+			vkUpdateDescriptorSets(
+				this->m_Logical_VK_Device,
+				vk_Write_Descriptor_Sets.size(),
+				vk_Write_Descriptor_Sets.data(),
+				vk_Copy_Descriptor_Sets.size(),
+				vk_Copy_Descriptor_Sets.data()
+			);
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Empty Input");
 	}
 
 
@@ -1356,43 +1560,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-	const vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) {
-		//vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
-		//Descriptor_Set_Layouts.reserve(Allocate_Info.Descriptor_Set_Count);
-		//for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
-		//	Descriptor_Set_Layouts.emplace_back(static_cast<Vulkan_Descriptor_Set_Layout*>(Allocate_Info.Set_Layouts[Index].get())->Get());
-
-		//VkDescriptorSetAllocateInfo Descriptor_Set_Allocate_Info{};
-		//{
-		//	Descriptor_Set_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info.sType);
-		//	Descriptor_Set_Allocate_Info.pNext = Allocate_Info.pNext;
-		//	Descriptor_Set_Allocate_Info.descriptorPool = static_cast<Vulkan_Descriptor_Pool*>(Allocate_Info.Descriptor_Pool)->Get();
-		//	Descriptor_Set_Allocate_Info.descriptorSetCount = Allocate_Info.Descriptor_Set_Count;
-		//	Descriptor_Set_Allocate_Info.pSetLayouts = Descriptor_Set_Layouts.data();
-		//}
-
-		//vector<VkDescriptorSet> Descriptor_Sets{};
-		//Descriptor_Sets.resize(Allocate_Info.Descriptor_Set_Count, nullptr);
-		//THROW_IF_VK_FAILED(vkAllocateDescriptorSets(this->m_Logical_VK_Device.get(), &Descriptor_Set_Allocate_Info, Descriptor_Sets.data()));
-
-		//vector<unique_ptr<RHI_Descriptor_Set>> RHI_Descriptor_Sets{ Allocate_Info.Descriptor_Set_Count ,std::make_unique<Vulkan_Descriptor_Set>() };
-		//for (size_t Index = 0; Index < Allocate_Info.Descriptor_Set_Count; ++Index)
-		//	static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Reset(Descriptor_Sets[Index]);
-
-		//return RHI_Descriptor_Sets;
-
-		return {};
-	}
-
 	const unique_ptr<RHI_Sampler>& Vulkan_RHI::Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) {
 		switch (Type)
 		{
@@ -1473,37 +1640,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return true;
 	}
 
-	/*unique_ptr<RHI_Buffer> Vulkan_RHI::Create_Buffer_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info& Buffer_Create_Info, const VmaAllocationCreateInfo* pAllocation_Create_Info, VmaAllocation* pAllocation, VmaAllocationInfo* pAllocationInfo) {
+	/*unique_ptr<RHI_Buffer> Vulkan_RHI::Create_Buffer_With_Alignment_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info& Buffer_Create_Info, const VmaAllocationCreateInfo* pAllocation_Create_Info, RHI_Device_Size Min_Alignment, VmaAllocation* pAllocation, VmaAllocationInfo* pAllocationInfo) {
 		VkBufferCreateInfo vk_Buffer_Create_Info{};
 		{
 			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info.sType);
 			vk_Buffer_Create_Info.pNext = Buffer_Create_Info.pNext;
 			vk_Buffer_Create_Info.flags = static_cast<VkBufferCreateFlags>(Buffer_Create_Info.Flags);
 			vk_Buffer_Create_Info.size = static_cast<VkDeviceSize>(Buffer_Create_Info.Size);
-			vk_Buffer_Create_Info.usage = static_cast<VkBufferUsageFlags>(Buffer_Create_Info.Usages);
-			vk_Buffer_Create_Info.sharingMode = static_cast<VkSharingMode>(Buffer_Create_Info.Sharing_Mode);
-			vk_Buffer_Create_Info.queueFamilyIndexCount = Buffer_Create_Info.Queue_Family_Index_Count;
-			vk_Buffer_Create_Info.pQueueFamilyIndices = Buffer_Create_Info.pQueue_Family_Indices;
-		}
-
-		VkBuffer Temp_Buffer{ nullptr };
-		THROW_IF_VK_FAILED(vmaCreateBuffer(Vma_Allocator, &vk_Buffer_Create_Info, pAllocation_Create_Info, &Temp_Buffer, pAllocation, pAllocationInfo));
-		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
-
-		return Buffer;
-
-	}
-
-	unique_ptr<RHI_Buffer> Vulkan_RHI::Create_Buffer_With_Alignment_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info& Buffer_Create_Info, const VmaAllocationCreateInfo* pAllocation_Create_Info, RHI_Device_Size Min_Alignment, VmaAllocation* pAllocation, VmaAllocationInfo* pAllocationInfo) {
-		VkBufferCreateInfo vk_Buffer_Create_Info{};
-		{
-			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info.sType);
-			vk_Buffer_Create_Info.pNext = Buffer_Create_Info.pNext;
-			vk_Buffer_Create_Info.flags = static_cast<VkBufferCreateFlags>(Buffer_Create_Info.Flags);
-			vk_Buffer_Create_Info.size = static_cast<VkDeviceSize>(Buffer_Create_Info.Size);
-			vk_Buffer_Create_Info.usage = static_cast<VkBufferUsageFlags>(Buffer_Create_Info.Usages);
+			vk_Buffer_Create_Info.usage = static_cast<VkBufferUsageFlags>(Buffer_Create_Info.Usage);
 			vk_Buffer_Create_Info.sharingMode = static_cast<VkSharingMode>(Buffer_Create_Info.Sharing_Mode);
 			vk_Buffer_Create_Info.queueFamilyIndexCount = Buffer_Create_Info.Queue_Family_Index_Count;
 			vk_Buffer_Create_Info.pQueueFamilyIndices = Buffer_Create_Info.pQueue_Family_Indices;
@@ -1559,22 +1703,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkQueueWaitIdle(this->m_Queues.Graphic_Queue));
 
 		vkFreeCommandBuffers(this->m_Logical_VK_Device, static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
-	}
-
-	void Vulkan_RHI::Copy_Buffer(unique_ptr<RHI_Buffer> Src_Buffer, unique_ptr<RHI_Buffer> Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) {
-		VkBuffer Src{ static_cast<Vulkan_Buffer*>(Src_Buffer.get())->Get() };
-		VkBuffer Dst{ static_cast<Vulkan_Buffer*>(Dst_Buffer.get())->Get() };
-		unique_ptr<RHI_Command_Buffer> Command_Buffer{ this->Begin_SingleTime_Commands() };
-
-		VkBufferCopy Copy_Region{};
-		{
-			Copy_Region.srcOffset = static_cast<VkDeviceSize>(Src_Offset);
-			Copy_Region.dstOffset = static_cast<VkDeviceSize>(Dst_Offset);
-			Copy_Region.size = static_cast<VkDeviceSize>(Size);
-		}
-
-		vkCmdCopyBuffer(static_cast<Vulkan_Command_Buffer*>(Command_Buffer.get())->Get(), Src, Dst, 1, &Copy_Region);
-		this->End_SingleTime_Commands(std::move(Command_Buffer));
 	}
 
 	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Image(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, RHI_SAMPLE_COUNT_FLAG_BIT Num_Samples, RHI_IMAGE_TILING Image_Tiling, RHI_Image_Usage_Flags Image_Usage_Flags, RHI_Memory_Property_Flags Memory_Property_Flags, RHI_Image_Create_Flags Image_Create_Flags, uint32_t Array_Layers) {
@@ -2197,61 +2325,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
 
 		return std::make_optional(vk_Clear_Value);
-	}
-
-	const optional<VkWriteDescriptorSet> Vulkan_RHI::Parser_RHI_Write_Descriptor_Set(const RHI_Write_Descriptor_Set* Write_Descriptor_Set, optional<VkDescriptorImageInfo>& Image_Info, optional<VkDescriptorBufferInfo>& Buffer_Info, optional<vector<VkBufferView>>& vk_Buffer_Views) {
-		if (nullptr == Write_Descriptor_Set)
-			return std::nullopt;
-
-		if (nullptr == Write_Descriptor_Set->Image_Info)
-			Image_Info = std::nullopt;
-		else {
-			Image_Info = std::make_optional<VkDescriptorImageInfo>();
-			{
-				Image_Info->sampler = static_cast<Vulkan_Sampler*>(Write_Descriptor_Set->Image_Info->Sampler)->Get();
-				Image_Info->imageView = static_cast<Vulkan_Image_View*>(Write_Descriptor_Set->Image_Info->ImageView)->Get();
-				Image_Info->imageLayout = static_cast<VkImageLayout>(Write_Descriptor_Set->Image_Info->Image_Layout);
-			}
-		}
-
-		if (nullptr == Write_Descriptor_Set->Buffer_Info)
-			Buffer_Info = std::nullopt;
-		else {
-			Buffer_Info = std::make_optional<VkDescriptorBufferInfo>();
-
-			{
-				Buffer_Info->buffer = static_cast<Vulkan_Buffer*>(Write_Descriptor_Set->Buffer_Info->Buffer)->Get();
-				Buffer_Info->offset = Write_Descriptor_Set->Buffer_Info->Offset;
-				Buffer_Info->range = Write_Descriptor_Set->Buffer_Info->Range;
-			}
-		}
-
-		if (nullptr == Write_Descriptor_Set->Texel_Buffer_View || Write_Descriptor_Set->Texel_Buffer_View->empty())
-			vk_Buffer_Views = std::nullopt;
-		else {
-			vk_Buffer_Views = std::make_optional<vector<VkBufferView>>();
-			vk_Buffer_Views->reserve(Write_Descriptor_Set->Texel_Buffer_View->size());
-
-			for (const auto& Buffer_View : *Write_Descriptor_Set->Texel_Buffer_View)
-				vk_Buffer_Views->push_back(static_cast<Vulkan_Buffer_View*>(Buffer_View)->Get());
-		}
-
-		VkWriteDescriptorSet vk_Write_Descriptor_Set{};
-		{
-			vk_Write_Descriptor_Set.sType = static_cast<VkStructureType>(Write_Descriptor_Set->sType);
-			vk_Write_Descriptor_Set.pNext = Write_Descriptor_Set->pNext;
-			vk_Write_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Write_Descriptor_Set->Dst_Set)->Get();
-			vk_Write_Descriptor_Set.dstBinding = Write_Descriptor_Set->Dst_Binding;
-			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;
-			vk_Write_Descriptor_Set.descriptorCount = Write_Descriptor_Set->Descriptor_Count;
-			vk_Write_Descriptor_Set.descriptorType = static_cast<VkDescriptorType>(Write_Descriptor_Set->Descriptor_Type);
-			vk_Write_Descriptor_Set.pImageInfo = Image_Info.has_value() ? &Image_Info.value() : nullptr;
-			vk_Write_Descriptor_Set.pBufferInfo = Buffer_Info.has_value() ? &Buffer_Info.value() : nullptr;
-			vk_Write_Descriptor_Set.pTexelBufferView = vk_Buffer_Views.has_value() ? vk_Buffer_Views->data() : nullptr;
-		}
-
-		return std::make_optional(vk_Write_Descriptor_Set);
-
 	}
 
 
@@ -3085,70 +3158,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
 
 		vkCmdPipelineBarrier(vk_Command_Buffer, static_cast<VkPipelineStageFlags>(Src_Stage_Mask), static_cast<VkPipelineStageFlags>(Dst_Stage_Mask), static_cast<VkDependencyFlags>(Dependency_Flags), vk_Memory_Barriers.size(), vk_Memory_Barriers.data(), vk_Buffer_Memory_Barriers.size(), vk_Buffer_Memory_Barriers.data(), vk_Image_Memory_Barriers.size(), vk_Image_Memory_Barriers.data());
-	}
-
-	void Vulkan_RHI::Update_Descriptor_Sets(const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes, const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies) {
-		vector<VkWriteDescriptorSet> vk_Write_Descriptor_Sets{};
-		if (nullptr != Descriptor_Writes && (!Descriptor_Writes->empty())) {
-			vector<optional<VkDescriptorImageInfo>> Image_Infos{};
-			vector<optional<VkDescriptorBufferInfo>> Buffer_Infos{};
-			vector<optional<vector<VkBufferView>>> vk_Buffer_Views;
-
-			vk_Write_Descriptor_Sets.reserve(Descriptor_Writes->size());
-			Image_Infos.reserve(Descriptor_Writes->size());
-			Buffer_Infos.reserve(Descriptor_Writes->size());
-			vk_Buffer_Views.reserve(Descriptor_Writes->size());
-
-			for (const auto& Descriptor_Write : *Descriptor_Writes) {
-				if (nullptr == Descriptor_Write)
-					throw runtime_error("Descriptor Write is nullptr!");
-
-				optional<VkDescriptorImageInfo> vk_Image_Info{};
-				optional<VkDescriptorBufferInfo> vk_Buffer_Info{};
-				optional<vector<VkBufferView>> vk_Buffer_View{};
-
-				const auto vk_Write_Descriptor_Set{ Vulkan_RHI::Parser_RHI_Write_Descriptor_Set(Descriptor_Write, vk_Image_Info, vk_Buffer_Info, vk_Buffer_View) };
-				if (!vk_Write_Descriptor_Set.has_value())
-					throw runtime_error("Write Descriptor Set is nullptr!");
-				Image_Infos.emplace_back(vk_Image_Info);
-				Buffer_Infos.emplace_back(vk_Buffer_Info);
-				vk_Buffer_Views.emplace_back(vk_Buffer_View);
-
-				vk_Write_Descriptor_Sets.emplace_back(vk_Write_Descriptor_Set.value());
-
-			}
-
-			vector< VkCopyDescriptorSet> vk_Copy_Descriptor_Sets{};
-			if (nullptr != Descriptor_Copies && !Descriptor_Copies->empty()) {
-				vk_Copy_Descriptor_Sets.reserve(Descriptor_Copies->size());
-				for (const auto& Descriptor_Copy : *Descriptor_Copies) {
-					if (nullptr == Descriptor_Copy)
-						throw runtime_error("Descriptor Copy is nullptr!");
-
-					VkCopyDescriptorSet vk_Copy_Descriptor_Set{};
-					{
-						vk_Copy_Descriptor_Set.sType = static_cast<VkStructureType>(Descriptor_Copy->sType);
-						vk_Copy_Descriptor_Set.pNext = Descriptor_Copy->pNext;
-						vk_Copy_Descriptor_Set.srcSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Src_Set)->Get();
-						vk_Copy_Descriptor_Set.srcBinding = Descriptor_Copy->Src_Binding;
-						vk_Copy_Descriptor_Set.srcArrayElement = Descriptor_Copy->Src_Array_Element;
-						vk_Copy_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Dst_Set)->Get();
-						vk_Copy_Descriptor_Set.dstBinding = Descriptor_Copy->Dst_Binding;
-						vk_Copy_Descriptor_Set.dstArrayElement = Descriptor_Copy->Dst_Array_Element;
-						vk_Copy_Descriptor_Set.descriptorCount = Descriptor_Copy->Descriptor_Count;
-					}
-
-					vk_Copy_Descriptor_Sets.emplace_back(vk_Copy_Descriptor_Set);
-				}
-			}
-
-			vkUpdateDescriptorSets(this->m_Logical_VK_Device, vk_Write_Descriptor_Sets.size(), vk_Write_Descriptor_Sets.data(), vk_Copy_Descriptor_Sets.size(), vk_Copy_Descriptor_Sets.data());
-		}
-
-
-
-
-
 	}
 
 	bool Vulkan_RHI::Queue_Submit(RHI_Queue* Queue, const vector<const RHI_Submit_Info*>* Submits, RHI_Fence* Fence) {

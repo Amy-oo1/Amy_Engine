@@ -80,7 +80,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		const void* pNext;
 		RHI_Descriptor_Pool* Descriptor_Pool;
 		uint32_t Descriptor_Set_Count;
-		const vector<unique_ptr<RHI_Descriptor_Set_Layout>> Set_Layouts;
+		const vector<RHI_Descriptor_Set_Layout*>* Set_Layouts;
 	};
 
 	struct RHI_Buffer_Create_Info final {
@@ -88,7 +88,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		const void* pNext;
 		RHI_Buffer_Create_Flags Flags;
 		RHI_Device_Size Size;
-		RHI_Buffer_Usage_Flags Usages;
+		RHI_Buffer_Usage_Flags Usage;
 		RHI_SHARING_MODE Sharing_Mode;
 		uint32_t Queue_Family_Index_Count;
 		const uint32_t* pQueue_Family_Indices;
@@ -550,9 +550,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		uint32_t Dst_Array_Element;
 		uint32_t Descriptor_Count;
 		RHI_DESCRIPTOR_TYPE Descriptor_Type;
-		const RHI_Descriptor_Image_Info* Image_Info;
-		const RHI_Descriptor_Buffer_Info* Buffer_Info;
-		const vector<RHI_Buffer_View*>* Texel_Buffer_View;
+		const vector<const RHI_Descriptor_Image_Info*>* Image_Infos;
+		const vector<const RHI_Descriptor_Buffer_Info*>* Buffer_Infos;
+		const vector<RHI_Buffer_View*>* Texel_Buffer_Views;
 	};
 
 	struct RHI_Copy_Descriptor_Set final {

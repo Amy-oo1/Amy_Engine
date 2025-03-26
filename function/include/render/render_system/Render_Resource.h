@@ -9,11 +9,17 @@
 
 #include "vma/vk_mem_alloc.h"
 
+#include "math/Vector2.h"
+#include"math/Vector3.h"
+#include"math/Vector4.h"
+
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
+#include "render/rhi/vulkan/Vulkan_RHI_Resource.h"
 #include "render/render_system/Render_Data_Struct.h"
 #include "render/render_system/Render_Commmon.h"
+#include "render/render_system/Render_Mesh.h"
 #include "render/render_system/Render_Resource_Base.h"
 
 
@@ -25,13 +31,22 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using std::unique_ptr;
 	using std::shared_ptr;
 
+	using NameSpace_Core::NameSpace_Math::Vector2;
+	using NameSpace_Core::NameSpace_Math::Vector3;
+	using NameSpace_Core::NameSpace_Math::Vector4;
+
 	using NameSpace_RHI::RHI_FORMAT;
 
 	using NameSpace_RHI::RHI_Image;
 	using NameSpace_RHI::RHI_Image_View;
-	using NameSpace_RHI::RHI_Sampler;
 	using NameSpace_RHI::RHI_Buffer;
 	using NameSpace_RHI::RHI_Device_Memory;
+	using NameSpace_RHI::RHI_Sampler;
+	using NameSpace_RHI::RHI_Descriptor_Set_Layout;
+
+	using NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_Descriptor_Set_Layout;
+
+
 
 	struct IBL_Resource final {
 		unique_ptr<RHI_Image> BUDF_LUT_Texture_Image;
@@ -129,12 +144,40 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		void Create_IBL_Samplers(shared_ptr<Empty_RHI> RHI);
 
-		void Create_IBL_Textures(
-			shared_ptr<Empty_RHI> RHI,
-			array<shared_ptr<Texture_Data>, 6> Irradiance_Maps,
-			array<shared_ptr<Texture_Data>, 6> Specular_Maps
-		);
+		void
+			Create_IBL_Textures(
+				shared_ptr<Empty_RHI> RHI,
+				array<shared_ptr<Texture_Data>, 6> Irradiance_Maps,
+				array<shared_ptr<Texture_Data>, 6> Specular_Maps
+			);
 
+	private:
+
+		void
+			UpData_Vertex_Buffer(
+				shared_ptr<Empty_RHI> RHI,
+				bool Enbale_Vertex_Blending,
+				uint32_t Index_Buffer_Size,
+				uint16_t* Index_Buffer_Data,
+				uint32_t Vertex_Buffer_Size,
+				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data,
+				uint32_t Joint_Binding_Buffer_Size,
+				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data,
+				Vulkan_Mesh& Vulkan_Mesh_Data
+			);
+
+		void
+			Parser_Updata_Vertex_Buffer_Binding(
+				shared_ptr<Empty_RHI> RHI,
+				bool Enbale_Vertex_Blending,
+				uint32_t Index_Buffer_Size,
+				uint16_t* Index_Buffer_Data,
+				uint32_t Vertex_Buffer_Size,
+				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data,
+				uint32_t Joint_Binding_Buffer_Size,
+				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data,
+				Vulkan_Mesh& Vulkan_Mesh_Data
+			);
 
 	public:
 		static constexpr uint32_t s_Max_Global_Stroage_Buffer_Size{ 1 << 27 };
@@ -142,10 +185,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	private:
 		Global_Render_Resource m_Global_Render_Resource;
-		IBL_Resource_Data m_IBL_Resource_Data;
-		IBL_Grading_Resource_Data m_IBL_Grading_Resource_Data;
-		//TODO : Add Color Grading Data
-		//TODO : Add Storage Buffer Data
+
+		unique_ptr<RHI_Descriptor_Set_Layout>m_Mesh_Descriptor_Set_Layout{ nullptr };
 
 
 	public:

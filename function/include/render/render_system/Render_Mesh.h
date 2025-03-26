@@ -36,7 +36,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		struct Vulkan_Mesh_Vertex_Joint_Binding final {
 			array<int, 4> Indices;
-			Vector4 Weigths;
+			Vector4 Weights;
 		};
 
 		static  array< RHI_Vertex_Input_Binding_Description, 3>

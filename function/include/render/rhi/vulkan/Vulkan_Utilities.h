@@ -28,7 +28,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			VkPhysicalDevice Physical_Device,
 			VkDevice Logical_Device,
 			VkDeviceSize Size,
-			VkBufferUsageFlags Usages,
+			VkBufferUsageFlags Usage,
 			VkMemoryPropertyFlags Properties,
 			const VkAllocationCallbacks* Allocator,
 			VkBuffer& Buffer,

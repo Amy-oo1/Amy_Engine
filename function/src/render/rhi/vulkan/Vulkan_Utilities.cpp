@@ -21,12 +21,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::numeric_limits<uint32_t>::max();
 	}
 
-	void Create_Buffer(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, VkDeviceSize Size, VkBufferUsageFlags Usages, VkMemoryPropertyFlags Properties, const VkAllocationCallbacks* Allocator, VkBuffer& Buffer, VkDeviceMemory& Buffer_Memory) {
+	void Create_Buffer(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, VkDeviceSize Size, VkBufferUsageFlags Usage, VkMemoryPropertyFlags Properties, const VkAllocationCallbacks* Allocator, VkBuffer& Buffer, VkDeviceMemory& Buffer_Memory) {
 		VkBufferCreateInfo Buffer_Info{};
 		{
 			Buffer_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 			Buffer_Info.size = Size;
-			Buffer_Info.usage = Usages;
+			Buffer_Info.usage = Usage;
 			Buffer_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		}
 

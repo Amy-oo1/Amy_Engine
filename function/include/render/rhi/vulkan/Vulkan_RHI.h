@@ -70,13 +70,30 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	private:
 		bool Check_Vaildation_Layer_Support(void);
 
-		static VKAPI_ATTR VkBool32 VKAPI_CALL Debug_Call_Back(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData);
+		static VKAPI_ATTR VkBool32 VKAPI_CALL
+			Debug_Call_Back(
+				VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+				VkDebugUtilsMessageTypeFlagsEXT messageType,
+				const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+				void* pUserData
+			);
 
 		void Build_Debug_Messenger_Create_Info(void);
 
-		static const VkResult Create_DebugUtils_Messenger_EXT(VkInstance Instance, const VkDebugUtilsMessengerCreateInfoEXT* Create_Info, const VkAllocationCallbacks* Allocator, VkDebugUtilsMessengerEXT* m_Debug_Messenger);
+		static const VkResult
+			Create_DebugUtils_Messenger_EXT(
+				VkInstance Instance,
+				const VkDebugUtilsMessengerCreateInfoEXT* Create_Info,
+				const VkAllocationCallbacks* Allocator,
+				VkDebugUtilsMessengerEXT* m_Debug_Messenger
+			);
 
-		static void Destroy_DebugUtils_Messenger_EXT(VkInstance Instance, VkDebugUtilsMessengerEXT m_Debug_Messenger, const VkAllocationCallbacks* Allocator);
+		static void
+			Destroy_DebugUtils_Messenger_EXT(
+				VkInstance Instance,
+				VkDebugUtilsMessengerEXT m_Debug_Messenger,
+				const VkAllocationCallbacks* Allocator
+			);
 
 		void Set_Debug_Messenger(void);
 
@@ -96,6 +113,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Create_Default_Command_Pool(void);
 		void Allocate_Default_Command_Buffers(void);
 
+		//TODO Get Func
+		[[nodiscard]] VmaAllocator Get_VMA_Allocator(void) const;
+		[[nodiscard]] RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const;
 
 
 		//TODO : Private Member Func
@@ -129,15 +149,44 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		[[nodiscard]] static void VKAPI_CALL S_Free(void* pUserData, void* memory);
 
 		[[nodiscard]] static const vector<const char*> S_Get_Physical_Device_Extensions_Require(void);
-		[[nodiscard]] static bool S_Check_Physical_Device_Extension_Support(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
-		[[nodiscard]] static bool S_Is_Device_Suitable(VkPhysicalDevice Device, const vector<const char*>& Require_Extensions);
+
+		[[nodiscard]] static bool
+			S_Check_Physical_Device_Extension_Support(
+				VkPhysicalDevice Device,
+				const vector<const char*>& Require_Extensions
+			);
+		[[nodiscard]] static bool
+			S_Is_Device_Suitable(
+				VkPhysicalDevice Device,
+				const vector<const char*>& Require_Extensions
+			);
 
 		[[nodiscard]] static  VkSampleCountFlagBits S_Get_Max_Usable_Sample_Count(VkPhysicalDevice Physical_Device);
 
-		[[nodiscard]] static uint32_t S_Get_Physical_Device_Queue_Present_Family(VkPhysicalDevice Physical_Device, VkSurfaceKHR Surface, uint32_t Graphics_Family_Index = numeric_limits<uint32_t>::max());
-		[[nodiscard]] static uint32_t S_Find_Queue_Families(VkPhysicalDevice Physical_Device, VkQueueFlagBits Vk_Queue_FlagBit);
-		[[nodiscard]] static const Queue_Family_Indices S_Get_Queue_Framies(VkPhysicalDevice Physical_Device, VkSurfaceKHR Suraface);
+		[[nodiscard]] static uint32_t
+			S_Get_Physical_Device_Queue_Present_Family(
+				VkPhysicalDevice Physical_Device,
+				VkSurfaceKHR Surface,
+				uint32_t Graphics_Family_Index = numeric_limits<uint32_t>::max()
+			);
+		[[nodiscard]] static uint32_t
+			S_Find_Queue_Families(
+				VkPhysicalDevice Physical_Device,
+				VkQueueFlagBits Vk_Queue_FlagBit
+			);
+		[[nodiscard]] static const Queue_Family_Indices
+			S_Get_Queue_Framies(
+				VkPhysicalDevice Physical_Device, VkSurfaceKHR Suraface
+			);
 
+		//NOTE :Parser RHI Struct To Vulkan Struct
+		[[nodiscard]] static const optional<VkWriteDescriptorSet>
+			Parser_RHI_Write_Descriptor_Set(
+				const RHI_Write_Descriptor_Set* Write_Descriptor_Set,
+				optional<vector<VkDescriptorImageInfo>>& Image_Infos,
+				optional<vector<VkDescriptorBufferInfo>>& Buffer_Infos,
+				optional<vector<VkBufferView>>& vk_Buffer_Views
+			);
 
 		//NOTE : Static Member Variable
 	public:
@@ -210,6 +259,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		array<VkCommandBuffer, s_Frames_In_Flight> m_VK_Command_Buffers{ nullptr,nullptr,nullptr };
 		uint8_t m_Current_Frame{ 0 };
 
+		unique_ptr<RHI_Descriptor_Pool> m_Default_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
+		VkDescriptorPool m_Default_VK_Descriptor_Pool{ nullptr };
+
 
 		//TODO : Override Func
 	public:
@@ -234,15 +286,36 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) override;
 
-		[[nodiscard]] tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>>
+		[[nodiscard]] tuple<
+			unique_ptr<RHI_Buffer>,
+			unique_ptr<RHI_Device_Memory>>
 			Create_Buffer(
 				RHI_Device_Size Size,
-				RHI_Buffer_Usage_Flags Usages,
+				RHI_Buffer_Usage_Flags Usage,
 				RHI_Memory_Property_Flags Properties
 			) override;
 
+		[[nodiscard]] tuple<
+			unique_ptr<RHI_Buffer>,
+			VmaAllocation>
+			Create_Buffer_VMA(
+				VmaAllocator Vma_Allocator,
+				const RHI_Buffer_Create_Info* Buffer_Create_Info,
+				const VmaAllocationCreateInfo* Allocation_Create_Info,
+				VmaAllocationInfo* AllocationInfo
+			) override;
+
+		void
+			Copy_Buffer(
+				RHI_Buffer* Src_Buffer,
+				RHI_Buffer* Dst_Buffer,
+				RHI_Device_Size Src_Offset,
+				RHI_Device_Size Dst_Offset,
+				RHI_Device_Size Size
+			) override;
+
 		//NOTE : Image
-		[[nodiscard]]  tuple<
+		[[nodiscard]] tuple<
 			unique_ptr<RHI_Image>,
 			unique_ptr<RHI_Image_View>,
 			VmaAllocation>
@@ -270,6 +343,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Create_Sampler(
 				const RHI_Sampler_Create_Info* Create_Info
 			) override;
+
+		[[nodiscard]] vector<unique_ptr<RHI_Descriptor_Set>>
+			Allocate_Descriptor_Sets(
+				const RHI_Descriptor_Set_Allocate_Info* Allocate_Info
+			) override;
+
+		void
+			Update_Descriptor_Sets(
+				const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes,
+				const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies
+			) override;
+
 
 		void Run(void) override;
 
@@ -390,13 +475,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Clear_Value* Clear_Value
 			);
 
-		[[nodiscard]] static const optional <VkWriteDescriptorSet>
-			Parser_RHI_Write_Descriptor_Set(
-				const RHI_Write_Descriptor_Set* Write_Descriptor_Set,
-				optional< VkDescriptorImageInfo>& Image_Info,
-				optional< VkDescriptorBufferInfo>& Buffer_Info,
-				optional<vector<VkBufferView>>& vk_Buffer_Views
-			);
+
 
 
 
@@ -463,7 +542,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 
-		[[nodiscard]] const vector < unique_ptr<RHI_Descriptor_Set>> Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info& Allocate_Info) override;
 
 
 		[[nodiscard]] const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) override;
@@ -473,13 +551,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 		bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) override;
-
-		//[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_VMA(
-		//	VmaAllocator Vma_Allocator,
-		//	const RHI_Buffer_Create_Info& Buffer_Create_Info,
-		//	const VmaAllocationCreateInfo* pAllocation_Create_Info,
-		//	VmaAllocation* pAllocation,
-		//	VmaAllocationInfo* pAllocationInfo) override;
 
 		//[[nodiscard]] unique_ptr<RHI_Buffer> Create_Buffer_With_Alignment_VMA(
 		//	VmaAllocator Vma_Allocator,
@@ -493,7 +564,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		[[nodiscard]] unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) override;
 		void End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) override;
 
-		void Copy_Buffer(unique_ptr<RHI_Buffer> Src_Buffer, unique_ptr<RHI_Buffer> Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) override;
 
 		[[nodiscard]] tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Create_Image(
 			RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format,
@@ -774,11 +844,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const vector<const RHI_Image_Memory_Barrier*>* Image_Memory_Barriers
 			) override;
 
-		void
-			Update_Descriptor_Sets(
-				const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes,
-				const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies
-			) override;
+
 
 		bool
 			Queue_Submit(

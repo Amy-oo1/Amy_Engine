@@ -193,23 +193,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		uint32_t Mesh_Vertex_Count;
 
-		RHI_Buffer* Mesh_Vertex_Position_Buffer;
+		unique_ptr<RHI_Buffer> Mesh_Vertex_Position_Buffer;
 		VmaAllocation Mesh_Vertex_Position_Allocation;
 
-		RHI_Buffer* Mesh_Vertex_Varying_Enable_Blending_Buffer;
+		unique_ptr<RHI_Buffer> Mesh_Vertex_Varying_Enable_Blending_Buffer;
 		VmaAllocation Mesh_Vertex_Varying_Enable_Blending_Allocation;
 
-		RHI_Buffer* Mesh_Vertex_Joint_Binding_Buffer;
+		unique_ptr<RHI_Buffer>  Mesh_Vertex_Joint_Binding_Buffer;
 		VmaAllocation Mesh_Vertex_Joint_Binding_Allocation;
 
-		RHI_Descriptor_Set* Mesh_Vertex_Blending_Descriptor_Set;
+		unique_ptr<RHI_Descriptor_Set> Mesh_Vertex_Blending_Descriptor_Set;
 
-		RHI_Buffer* Mesh_Vertex_Varying_Buffer;
+		unique_ptr<RHI_Buffer>  Mesh_Vertex_Varying_Buffer;
 		VmaAllocation Mesh_Vertex_Varying_Allocation;
 
 		uint32_t Mesh_Index_Count;
 
-		RHI_Buffer* Mesh_Index_Buffer;
+		unique_ptr<RHI_Buffer>  Mesh_Index_Buffer;
 		VmaAllocation Mesh_Index_Allocation;
 	};
 
