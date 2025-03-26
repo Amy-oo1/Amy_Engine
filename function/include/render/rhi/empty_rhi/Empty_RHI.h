@@ -77,11 +77,22 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			unique_ptr<RHI_Buffer>,
 			VmaAllocation>
 			Create_Buffer_VMA(
-				VmaAllocator Vma_Allocator,
 				const RHI_Buffer_Create_Info* Buffer_Create_Info,
 				const VmaAllocationCreateInfo* Allocation_Create_Info,
 				VmaAllocationInfo* AllocationInfo
 			) = 0;
+
+		[[nodiscard]] virtual tuple<
+			unique_ptr<RHI_Buffer>,
+			VmaAllocation>
+			Create_Buffer_Alignment_VMA(
+				const RHI_Buffer_Create_Info* Buffer_Create_Info,
+				const VmaAllocationCreateInfo* Allocation_Create_Info,
+				VmaAllocationInfo* AllocationInfo,
+				RHI_Device_Size Min_Alignment
+			) = 0;
+
+
 
 		virtual void
 			Copy_Buffer(
@@ -136,6 +147,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Sampler_Create_Info* Create_Info
 			) = 0;
 
+		[[nodiscard]] virtual RHI_Sampler*
+			Get_Mipmap_Sampler(
+				uint32_t Mip_Levels
+			) = 0;
+
 		[[nodiscard]] virtual vector<unique_ptr<RHI_Descriptor_Set>>
 			Allocate_Descriptor_Sets(
 				const RHI_Descriptor_Set_Allocate_Info* Allocate_Info
@@ -163,24 +179,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		//TODO : Add SwapChain Image Depth Image View
 
 		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
-		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Mipmap_Sampler(uint32_t width, uint32_t height) = 0;
 
 		[[nodiscard]] virtual const unique_ptr<RHI_Shader_Module> Create_Shader_Module(const std::vector<unsigned char>& Shader_Code) = 0;
 
 
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
-
-
-
-		[[nodiscard]] virtual unique_ptr<RHI_Buffer> Create_Buffer_With_Alignment_VMA(
-			VmaAllocator Vma_Allocator,
-			const RHI_Buffer_Create_Info& Buffer_Create_Info,
-			const VmaAllocationCreateInfo* pAllocation_Create_Info,
-			RHI_Device_Size Min_Alignment,
-			VmaAllocation* pAllocation,
-			VmaAllocationInfo* pAllocationInfo) = 0;
-
-
 
 		[[nodiscard]] virtual unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) = 0;
 		virtual void End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;

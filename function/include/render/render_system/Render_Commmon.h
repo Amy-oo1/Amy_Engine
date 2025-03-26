@@ -77,7 +77,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	struct alignas(16)
 		Mesh_Per_Material_Uniform_Buffer_Object final {
-		Vector4 Nase_Color_Factor{ Vector4::ZERO };
+		Vector4 Base_Color_Factor{ Vector4::ZERO };
 
 		float Metallic_Factor{ 0.f };
 		float Roughness_Factor{ 0.f };
@@ -86,7 +86,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Vector3 Emissive_Factor{ Vector3::ZERO };
 		int32_t Is_Blend = 0;
-		uint32_t is_Double_Sided = 0;
+		uint32_t Is_Double_Sided = 0;
 
 	};
 
@@ -208,7 +208,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		uint32_t Mesh_Index_Count;
 
-		unique_ptr<RHI_Buffer>  Mesh_Index_Buffer;
+		unique_ptr<RHI_Buffer> Mesh_Index_Buffer;
 		VmaAllocation Mesh_Index_Allocation;
 	};
 
@@ -263,7 +263,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		unique_ptr<RHI_Buffer> Material_Uniform_Buffer;
 		VmaAllocation Material_Uniform_Buffer_Allocation;
 
-		RHI_Descriptor_Set* Material_Descriptor_Set;
+		unique_ptr<RHI_Descriptor_Set> Material_Descriptor_Set;
 	};
 
 	struct alignas(16)

@@ -22,6 +22,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_RHI::RHI_SAMPLER_MIPMAP_MODE;
 
 	using NameSpace_RHI::RHI_DESCRIPTOR_TYPE;
+	using NameSpace_RHI::RHI_IMAGE_LAYOUT;
 
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
 
@@ -31,7 +32,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_RHI::RHI_Buffer_Create_Info;
 	using NameSpace_RHI::RHI_Descriptor_Set_Allocate_Info;
 	using NameSpace_RHI::RHI_Descriptor_Buffer_Info;
-
+	using NameSpace_RHI::RHI_Descriptor_Image_Info;
 	using NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI;
 
 	using NameSpace_RHI::RHI_Write_Descriptor_Set;
@@ -221,6 +222,266 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		);
 	}
 
+	const Vulkan_PBR_Material& Render_Resource::Get_OR_Create_Vulkan_Material(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Material_Data& Mesh_Data) {
+		auto cIt{ this->m_Vulkan_PBR_Material_Map.find(Render_Entity.Material_Resource_ID) };
+		if (this->m_Vulkan_PBR_Material_Map.end() != cIt)
+			return cIt->second;
+
+		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
+
+		//NOTE : Image
+		Vulkan_PBR_Texture_Data_Info Texture_Data_Info{};
+		{
+			{
+				Texture_Data_Info.Base_Color_Image_Width = Mesh_Data.Base_Color_Texture->Width;
+				Texture_Data_Info.Base_Color_Image_Height = Mesh_Data.Base_Color_Texture->Height;
+				Texture_Data_Info.Base_Color_Image_Format = Mesh_Data.Base_Color_Texture->Format;
+				Texture_Data_Info.Base_Color_Image_Pixels = Mesh_Data.Base_Color_Texture->Pixels.get();
+			}
+
+			{
+				Texture_Data_Info.Metallic_Roughness_Image_Width = Mesh_Data.Metallic_Roughness_Texture->Width;
+				Texture_Data_Info.Metallic_Roughness_Image_Height = Mesh_Data.Metallic_Roughness_Texture->Height;
+				Texture_Data_Info.Metallic_Roughness_Image_Format = Mesh_Data.Metallic_Roughness_Texture->Format;
+				Texture_Data_Info.Metallic_Roughness_Image_Pixels = Mesh_Data.Metallic_Roughness_Texture->Pixels.get();
+			}
+
+			{
+				Texture_Data_Info.Normal_Image_Width = Mesh_Data.Normal_Texture->Width;
+				Texture_Data_Info.Normal_Image_Height = Mesh_Data.Normal_Texture->Height;
+				Texture_Data_Info.Normal_Image_Format = Mesh_Data.Normal_Texture->Format;
+				Texture_Data_Info.Normal_Image_Pixels = Mesh_Data.Normal_Texture->Pixels.get();
+			}
+
+			{
+				Texture_Data_Info.Occlusion_Image_Width = Mesh_Data.Occlusion_Texture->Width;
+				Texture_Data_Info.Occlusion_Image_Height = Mesh_Data.Occlusion_Texture->Height;
+				Texture_Data_Info.Occlusion_Image_Format = Mesh_Data.Occlusion_Texture->Format;
+				Texture_Data_Info.Occlusion_Image_Pixels = Mesh_Data.Occlusion_Texture->Pixels.get();
+			}
+
+			{
+				Texture_Data_Info.Emissive_Image_Width = Mesh_Data.Emissive_Texture->Width;
+				Texture_Data_Info.Emissive_Image_Height = Mesh_Data.Emissive_Texture->Height;
+				Texture_Data_Info.Emissive_Image_Format = Mesh_Data.Emissive_Texture->Format;
+				Texture_Data_Info.Emissive_Image_Pixels = Mesh_Data.Emissive_Texture->Pixels.get();
+			}
+		}
+
+		Vulkan_PBR_Material Material = this->Load_PBR_Material_Image(
+			RHI,
+			Texture_Data_Info
+		);
+
+		//NOTE : Create Material Uniform Buffer
+		{
+			RHI_Device_Size Uniform_Buffer_size{ sizeof(Mesh_Per_Material_Uniform_Buffer_Object) };
+			auto [Inefficient_Buffer, Inefficient_Buffer_Memory] = RHI->Create_Buffer(
+				Uniform_Buffer_size,
+				RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			);
+
+			void* Inefficient_Buffer_Mapped_Memory{ nullptr };
+			Ref_Vulkan_RHI->Map_Memory(
+				Inefficient_Buffer_Memory.get(),
+				0,
+				RHI_WHOLE_SIZE,
+				0,
+				&Inefficient_Buffer_Mapped_Memory
+			);
+
+			Mesh_Per_Material_Uniform_Buffer_Object* Uniform_Buffer_Object{ reinterpret_cast<Mesh_Per_Material_Uniform_Buffer_Object*>(Inefficient_Buffer_Mapped_Memory) };
+			{
+				Uniform_Buffer_Object->Base_Color_Factor = Render_Entity.Base_Color_Factor;
+				Uniform_Buffer_Object->Metallic_Factor = Render_Entity.Metallic_Factor;
+				Uniform_Buffer_Object->Roughness_Factor = Render_Entity.Roughness_Factor;
+				Uniform_Buffer_Object->Normal_Scale = Render_Entity.Normal_Scale;
+				Uniform_Buffer_Object->Occlusion_Strength = Render_Entity.Occlusion_Strength;
+				Uniform_Buffer_Object->Emissive_Factor = Render_Entity.Emissive_Factor;
+				Uniform_Buffer_Object->Is_Blend = Render_Entity.Is_Blend;
+				Uniform_Buffer_Object->Is_Double_Sided = Render_Entity.Is_Double_Sided;
+			}
+
+			Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Buffer_Memory.get());
+
+			RHI_Buffer_Create_Info Buffer_Create_Info{};
+			{
+				Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+				Buffer_Create_Info.Size = Uniform_Buffer_size;
+				Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+			}
+
+			VmaAllocationCreateInfo Allocation_Create_Info{};
+			{
+				Allocation_Create_Info.flags = 0;
+				Allocation_Create_Info.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
+			}
+
+			auto [Material_Uniform_Buffer, Material_Uniform_Buffer_Allocation] = Ref_Vulkan_RHI->Create_Buffer_Alignment_VMA(
+				&Buffer_Create_Info,
+				&Allocation_Create_Info,
+				nullptr,
+				this->m_Global_Render_Resource.Storage_Buffer.Min_Uniform_Buffer_Offset_Alignment
+			);
+			Material.Material_Uniform_Buffer = std::move(Material_Uniform_Buffer);
+			Material.Material_Uniform_Buffer_Allocation = std::move(Material_Uniform_Buffer_Allocation);
+
+			Ref_Vulkan_RHI->Copy_Buffer(
+				Inefficient_Buffer.get(),
+				Material.Material_Uniform_Buffer.get(),
+				0,
+				0,
+				Uniform_Buffer_size
+			);
+
+			Inefficient_Buffer.reset();
+			Inefficient_Buffer_Memory.reset();
+		}
+
+		//NOTE : Descriptor_Set
+		vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{ this->m_Material_Descriptor_Set_Layout.get() };
+
+
+		RHI_Descriptor_Set_Allocate_Info Descriptor_Set_Allocate_Info{};
+		{
+			Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
+			Descriptor_Set_Allocate_Info.Set_Layouts = &Descriptor_Set_Layouts;
+		}
+
+		Material.Material_Descriptor_Set = std::move(Ref_Vulkan_RHI->Allocate_Descriptor_Sets(&Descriptor_Set_Allocate_Info).front());
+
+		{
+			RHI_Descriptor_Buffer_Info Material_Uniform_Buffer_Descriptor_Info{};
+			{
+				Material_Uniform_Buffer_Descriptor_Info.Buffer = Material.Material_Uniform_Buffer.get();
+				Material_Uniform_Buffer_Descriptor_Info.Offset = 0;
+				Material_Uniform_Buffer_Descriptor_Info.Range = sizeof(Mesh_Per_Material_Uniform_Buffer_Object);
+			}
+
+			RHI_Descriptor_Image_Info Base_Color_Image_Descriptor_Info{};
+			{
+				Base_Color_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Base_Color_Texture->Mip_Levels);
+				Base_Color_Image_Descriptor_Info.ImageView = Material.Base_Color_Image_View.get();
+				Base_Color_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			}
+
+			RHI_Descriptor_Image_Info Metallic_Roughness_Image_Descriptor_Info{};
+			{
+				Metallic_Roughness_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Metallic_Roughness_Texture->Mip_Levels);
+				Metallic_Roughness_Image_Descriptor_Info.ImageView = Material.Metallic_Roughness_Image_View.get();
+				Metallic_Roughness_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			}
+
+			RHI_Descriptor_Image_Info Normal_Image_Descriptor_Info{};
+			{
+				Normal_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Normal_Texture->Mip_Levels);
+				Normal_Image_Descriptor_Info.ImageView = Material.Normal_Image_View.get();
+				Normal_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			}
+
+			RHI_Descriptor_Image_Info Occlusion_Image_Descriptor_Info{};
+			{
+				Occlusion_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Occlusion_Texture->Mip_Levels);
+				Occlusion_Image_Descriptor_Info.ImageView = Material.Occlusion_Image_View.get();
+				Occlusion_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			}
+
+			RHI_Descriptor_Image_Info Emissive_Image_Descriptor_Info{};
+			{
+				Emissive_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Emissive_Texture->Mip_Levels);
+				Emissive_Image_Descriptor_Info.ImageView = Material.Emissive_Image_View.get();
+				Emissive_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			}
+
+			vector<const RHI_Descriptor_Buffer_Info*> Material_Uniform_Buffer_Descriptor_Infos{ &Material_Uniform_Buffer_Descriptor_Info };
+			RHI_Write_Descriptor_Set Material_Uniform_Buffer_Write_Descriptor_Set{};
+			{
+				Material_Uniform_Buffer_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Material_Uniform_Buffer_Write_Descriptor_Set.Dst_Set = Material.Material_Descriptor_Set.get();
+				Material_Uniform_Buffer_Write_Descriptor_Set.Dst_Binding = 0;
+				Material_Uniform_Buffer_Write_Descriptor_Set.Dst_Array_Element = 0;
+				Material_Uniform_Buffer_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				Material_Uniform_Buffer_Write_Descriptor_Set.Buffer_Infos = &Material_Uniform_Buffer_Descriptor_Infos;
+			}
+
+			vector<const RHI_Descriptor_Image_Info*> Base_Color_Image_Descriptor_Infos{ &Base_Color_Image_Descriptor_Info };
+			RHI_Write_Descriptor_Set Base_Color_Image_Write_Descriptor_Set{};
+			{
+				Base_Color_Image_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Base_Color_Image_Write_Descriptor_Set.Dst_Set = Material.Material_Descriptor_Set.get();
+				Base_Color_Image_Write_Descriptor_Set.Dst_Binding = 1;
+				Base_Color_Image_Write_Descriptor_Set.Dst_Array_Element = 0;
+				Base_Color_Image_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Base_Color_Image_Write_Descriptor_Set.Image_Infos = &Base_Color_Image_Descriptor_Infos;
+			}
+
+			vector<const RHI_Descriptor_Image_Info*> Metallic_Roughness_Image_Descriptor_Infos{ &Metallic_Roughness_Image_Descriptor_Info };
+			RHI_Write_Descriptor_Set Metallic_Roughness_Image_Write_Descriptor_Set{};
+			{
+				Metallic_Roughness_Image_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Metallic_Roughness_Image_Write_Descriptor_Set.Dst_Set = Material.Material_Descriptor_Set.get();
+				Metallic_Roughness_Image_Write_Descriptor_Set.Dst_Binding = 2;
+				Metallic_Roughness_Image_Write_Descriptor_Set.Dst_Array_Element = 0;
+				Metallic_Roughness_Image_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Metallic_Roughness_Image_Write_Descriptor_Set.Image_Infos = &Metallic_Roughness_Image_Descriptor_Infos;
+			}
+
+			vector<const RHI_Descriptor_Image_Info*> Normal_Image_Descriptor_Infos{ &Normal_Image_Descriptor_Info };
+			RHI_Write_Descriptor_Set Normal_Image_Write_Descriptor_Set{};
+			{
+				Normal_Image_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Normal_Image_Write_Descriptor_Set.Dst_Set = Material.Material_Descriptor_Set.get();
+				Normal_Image_Write_Descriptor_Set.Dst_Binding = 3;
+				Normal_Image_Write_Descriptor_Set.Dst_Array_Element = 0;
+				Normal_Image_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Normal_Image_Write_Descriptor_Set.Image_Infos = &Normal_Image_Descriptor_Infos;
+			}
+
+			vector<const RHI_Descriptor_Image_Info*> Occlusion_Image_Descriptor_Infos{ &Occlusion_Image_Descriptor_Info };
+			RHI_Write_Descriptor_Set Occlusion_Image_Write_Descriptor_Set{};
+			{
+				Occlusion_Image_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Occlusion_Image_Write_Descriptor_Set.Dst_Set = Material.Material_Descriptor_Set.get();
+				Occlusion_Image_Write_Descriptor_Set.Dst_Binding = 4;
+				Occlusion_Image_Write_Descriptor_Set.Dst_Array_Element = 0;
+				Occlusion_Image_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Occlusion_Image_Write_Descriptor_Set.Image_Infos = &Occlusion_Image_Descriptor_Infos;
+			}
+
+			vector<const RHI_Descriptor_Image_Info*> Emissive_Image_Descriptor_Infos{ &Emissive_Image_Descriptor_Info };
+			RHI_Write_Descriptor_Set Emissive_Image_Write_Descriptor_Set{};
+			{
+				Emissive_Image_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Emissive_Image_Write_Descriptor_Set.Dst_Set = Material.Material_Descriptor_Set.get();
+				Emissive_Image_Write_Descriptor_Set.Dst_Binding = 5;
+				Emissive_Image_Write_Descriptor_Set.Dst_Array_Element = 0;
+				Emissive_Image_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Emissive_Image_Write_Descriptor_Set.Image_Infos = &Emissive_Image_Descriptor_Infos;
+			}
+
+			vector<const RHI_Write_Descriptor_Set*> Write_Descriptor_Sets{
+				&Material_Uniform_Buffer_Write_Descriptor_Set,
+				&Base_Color_Image_Write_Descriptor_Set,
+				&Metallic_Roughness_Image_Write_Descriptor_Set,
+				&Normal_Image_Write_Descriptor_Set,
+				&Occlusion_Image_Write_Descriptor_Set,
+				&Emissive_Image_Write_Descriptor_Set
+			};
+
+			Ref_Vulkan_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
+
+			return this->m_Vulkan_PBR_Material_Map[Render_Entity.Material_Resource_ID] = std::move(Material);
+		}
+
+
+
+
+
+
+	}
+
 	Vulkan_Mesh Render_Resource::Load_Mesh_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
 		if (0 != (Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition)))
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition) != 0");
@@ -332,7 +593,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			auto [Vertex_Position_Buffer, Vertex_Position_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -355,7 +615,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			auto [Vertex_Varying_Enable_Bleding_Buffer, Vertex_Varying_Enable_Bleding_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -378,7 +637,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			auto [Vertex_Varying_Buffer, Vertex_Varying_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -400,7 +658,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 
 			auto [Vertex_Joint_Bleding_Buffer, Vertex_Joint_Bleding_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -438,7 +695,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		{
 			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Set_Count = 1;
 			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Set_Layouts = &Mesh_Descriptor_Set_Layouts;
 		}
 
@@ -557,7 +813,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			auto [Vertex_Position_Buffer, Vertex_Position_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -580,7 +835,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			auto [Vertex_Varying_Enable_Bleding_Buffer, Vertex_Varying_Enable_Bleding_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -603,7 +857,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			auto [Vertex_Varying_Buffer, Vertex_Varying_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				Ref_Vulkan_RHI->Get_VMA_Allocator(),
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
@@ -639,7 +892,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		{
 			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Set_Count = 1;
 			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Set_Layouts = &Mesh_Descriptor_Set_Layouts;
 		}
 
@@ -673,7 +925,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return Vulkan_Mesh_Data;
 	}
 
-	Vulkan_PBR_Material Render_Resource::Load_Texture_Image(shared_ptr<Empty_RHI> RHI, const Vulkan_PBR_Texture_Data_Info& Texture_Data_Info) {
+	Vulkan_PBR_Material Render_Resource::Load_PBR_Material_Image(shared_ptr<Empty_RHI> RHI, const Vulkan_PBR_Texture_Data_Info& Texture_Data_Info) {
 		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
 
 		Vulkan_PBR_Material Vulkan_PBR_Material_Data{};
@@ -779,7 +1031,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		}
 
 		auto [Index_Buffer, Index_Buffer_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
-			Ref_Vulkan_RHI->Get_VMA_Allocator(),
 			&Buffer_Create_Info,
 			&Allocation_Create_Info,
 			nullptr

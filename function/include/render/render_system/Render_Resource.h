@@ -161,6 +161,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				const Render_Mesh_Data& Mesh_Data
 			);
 
+		[[nodiscard]] const Vulkan_PBR_Material&
+			Get_OR_Create_Vulkan_Material(
+				shared_ptr<Empty_RHI> RHI,
+				const Render_Entity& Render_Entity,
+				const Render_Material_Data& Mesh_Data
+			);
+
 	private:
 
 		[[nodiscard]] Vulkan_Mesh
@@ -184,7 +191,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			);
 
 		[[nodiscard]] Vulkan_PBR_Material
-			Load_Texture_Image(
+			Load_PBR_Material_Image(
 				shared_ptr<Empty_RHI> RHI,
 				const Vulkan_PBR_Texture_Data_Info& Texture_Data_Info
 			);
@@ -212,8 +219,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		unique_ptr<RHI_Descriptor_Set_Layout>m_Mesh_Descriptor_Set_Layout{ nullptr };
 
-		unordered_map<size_t, Vulkan_Mesh> m_Vulkan_Mesh_Map;
+		unique_ptr<RHI_Descriptor_Set_Layout>m_Material_Descriptor_Set_Layout{ nullptr };
 
+		unordered_map<size_t, Vulkan_Mesh> m_Vulkan_Mesh_Map;
+		unordered_map<size_t, Vulkan_PBR_Material> m_Vulkan_PBR_Material_Map;
 
 	public:
 

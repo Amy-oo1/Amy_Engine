@@ -27,7 +27,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		float Weight0{ 0 }, Weight1{ 0 }, Weight2{ 0 }, Weight3{ 0 };
 	};
 
-
 	class Buffer_Data final {
 	private:
 		Buffer_Data(const Buffer_Data&) = delete;

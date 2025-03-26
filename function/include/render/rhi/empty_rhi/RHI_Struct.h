@@ -79,7 +79,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Descriptor_Pool* Descriptor_Pool;
-		uint32_t Descriptor_Set_Count;
 		const vector<RHI_Descriptor_Set_Layout*>* Set_Layouts;
 	};
 
@@ -548,7 +547,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_Descriptor_Set* Dst_Set;
 		uint32_t Dst_Binding;
 		uint32_t Dst_Array_Element;
-		uint32_t Descriptor_Count;
 		RHI_DESCRIPTOR_TYPE Descriptor_Type;
 		const vector<const RHI_Descriptor_Image_Info*>* Image_Infos;
 		const vector<const RHI_Descriptor_Buffer_Info*>* Buffer_Infos;

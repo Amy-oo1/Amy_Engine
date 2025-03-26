@@ -262,6 +262,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		unique_ptr<RHI_Descriptor_Pool> m_Default_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 		VkDescriptorPool m_Default_VK_Descriptor_Pool{ nullptr };
 
+		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
 		//TODO : Override Func
 	public:
@@ -299,10 +300,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			unique_ptr<RHI_Buffer>,
 			VmaAllocation>
 			Create_Buffer_VMA(
-				VmaAllocator Vma_Allocator,
 				const RHI_Buffer_Create_Info* Buffer_Create_Info,
 				const VmaAllocationCreateInfo* Allocation_Create_Info,
 				VmaAllocationInfo* AllocationInfo
+			) override;
+
+		[[nodiscard]] tuple<
+			unique_ptr<RHI_Buffer>,
+			VmaAllocation>
+			Create_Buffer_Alignment_VMA(
+				const RHI_Buffer_Create_Info* Buffer_Create_Info,
+				const VmaAllocationCreateInfo* Allocation_Create_Info,
+				VmaAllocationInfo* AllocationInfo,
+				RHI_Device_Size Min_Alignment
 			) override;
 
 		void
@@ -353,6 +363,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		[[nodiscard]] virtual unique_ptr<RHI_Sampler>
 			Create_Sampler(
 				const RHI_Sampler_Create_Info* Create_Info
+			) override;
+
+		[[nodiscard]] RHI_Sampler*
+			Get_Mipmap_Sampler(
+				uint32_t Mip_Levels
 			) override;
 
 		[[nodiscard]] vector<unique_ptr<RHI_Descriptor_Set>>
@@ -543,7 +558,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		unique_ptr<RHI_Sampler> m_Linear_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
 		unique_ptr<RHI_Sampler> m_Nearest_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
-		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
 
 
@@ -556,7 +570,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 		[[nodiscard]] const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) override;
-		[[nodiscard]] const unique_ptr<RHI_Sampler>& Get_Mipmap_Sampler(uint32_t width, uint32_t height) override;
+
 
 		[[nodiscard]] const unique_ptr<RHI_Shader_Module> Create_Shader_Module(const vector<unsigned char>& Shader_Code) override;
 

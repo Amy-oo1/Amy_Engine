@@ -593,7 +593,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			vk_Write_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Write_Descriptor_Set->Dst_Set)->Get();
 			vk_Write_Descriptor_Set.dstBinding = Write_Descriptor_Set->Dst_Binding;
 			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;
-			vk_Write_Descriptor_Set.descriptorCount = Write_Descriptor_Set->Descriptor_Count;
 			vk_Write_Descriptor_Set.descriptorType = static_cast<VkDescriptorType>(Write_Descriptor_Set->Descriptor_Type);
 			vk_Write_Descriptor_Set.pImageInfo = Image_Infos.has_value() ? Image_Infos->data() : nullptr;
 			vk_Write_Descriptor_Set.pBufferInfo = Buffer_Infos.has_value() ? Buffer_Infos->data() : nullptr;
@@ -975,7 +974,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_tuple(std::move(Buffer), std::move(Device_Memory));
 	}
 
-	tuple<unique_ptr<RHI_Buffer>, VmaAllocation> Vulkan_RHI::Create_Buffer_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info* Buffer_Create_Info, const VmaAllocationCreateInfo* Allocation_Create_Info, VmaAllocationInfo* AllocationInfo) {
+	tuple<unique_ptr<RHI_Buffer>, VmaAllocation> Vulkan_RHI::Create_Buffer_VMA(const RHI_Buffer_Create_Info* Buffer_Create_Info, const VmaAllocationCreateInfo* Allocation_Create_Info, VmaAllocationInfo* AllocationInfo) {
 		VkBufferCreateInfo vk_Buffer_Create_Info{};
 		{
 			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info->sType);
@@ -990,7 +989,30 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		VkBuffer VK_Buffer{ nullptr };
 		VmaAllocation Allocation{ nullptr };
-		THROW_IF_VK_FAILED(vmaCreateBuffer(Vma_Allocator, &vk_Buffer_Create_Info, Allocation_Create_Info, &VK_Buffer, &Allocation, AllocationInfo));
+		THROW_IF_VK_FAILED(vmaCreateBuffer(this->m_VMA_Allocator, &vk_Buffer_Create_Info, Allocation_Create_Info, &VK_Buffer, &Allocation, AllocationInfo));
+		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
+		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(VK_Buffer);
+
+		return std::make_tuple(std::move(Buffer), Allocation);
+	}
+
+	tuple<unique_ptr<RHI_Buffer>, VmaAllocation> Vulkan_RHI::Create_Buffer_Alignment_VMA(const RHI_Buffer_Create_Info* Buffer_Create_Info, const VmaAllocationCreateInfo* Allocation_Create_Info, VmaAllocationInfo* AllocationInfo, RHI_Device_Size Min_Alignment) {
+		VkBufferCreateInfo vk_Buffer_Create_Info{};
+		{
+			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info->sType);
+			vk_Buffer_Create_Info.pNext = Buffer_Create_Info->pNext;
+			vk_Buffer_Create_Info.flags = static_cast<VkBufferCreateFlags>(Buffer_Create_Info->Flags);
+			vk_Buffer_Create_Info.size = static_cast<VkDeviceSize>(Buffer_Create_Info->Size);
+			vk_Buffer_Create_Info.usage = static_cast<VkBufferUsageFlags>(Buffer_Create_Info->Usage);
+			vk_Buffer_Create_Info.sharingMode = static_cast<VkSharingMode>(Buffer_Create_Info->Sharing_Mode);
+			vk_Buffer_Create_Info.queueFamilyIndexCount = Buffer_Create_Info->Queue_Family_Index_Count;
+			vk_Buffer_Create_Info.pQueueFamilyIndices = Buffer_Create_Info->pQueue_Family_Indices;
+		}
+
+		VkBuffer VK_Buffer{ nullptr };
+		VmaAllocation Allocation{ nullptr };
+		THROW_IF_VK_FAILED(vmaCreateBufferWithAlignment(this->m_VMA_Allocator, &vk_Buffer_Create_Info, Allocation_Create_Info, static_cast<VkDeviceSize>(Min_Alignment), &VK_Buffer, &Allocation, AllocationInfo));
 		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
 		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
 		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(VK_Buffer);
@@ -1114,10 +1136,52 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Sampler;
 	}
 
+	RHI_Sampler* Vulkan_RHI::Get_Mipmap_Sampler(uint32_t Mip_Levels) {
+		if (0 == Mip_Levels)
+			throw runtime_error("Mip Levels Must Be Greater Than 0!");
+
+		const auto It = this->m_Mipmap_RHI_Samplers.find(Mip_Levels);
+		if (this->m_Mipmap_RHI_Samplers.end() == It) {
+			VkPhysicalDeviceProperties Properties{};
+			vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
+
+			VkSamplerCreateInfo Sampler_Create_Info{};
+			{
+				Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+				Sampler_Create_Info.magFilter = VK_FILTER_LINEAR;
+				Sampler_Create_Info.minFilter = VK_FILTER_LINEAR;
+				Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				Sampler_Create_Info.anisotropyEnable = VK_TRUE;
+				Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
+				Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+				Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
+				Sampler_Create_Info.compareEnable = VK_FALSE;
+				Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
+				Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+				Sampler_Create_Info.mipLodBias = 0.0f;
+				Sampler_Create_Info.minLod = 0.0f;
+				Sampler_Create_Info.maxLod = static_cast<float>(Mip_Levels - 1);
+			}
+
+			VkSampler Mipmap_Sampler{ nullptr };
+			THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Mipmap_Sampler));
+			this->m_Mipmap_RHI_Samplers[Mip_Levels] = std::make_unique<Vulkan_Sampler>();
+			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Set_Deleter(this->m_VK_Sampler_Deleter);
+			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Reset(Mipmap_Sampler);
+
+			return this->m_Mipmap_RHI_Samplers[Mip_Levels].get();
+		}
+		else
+			return It->second.get();
+	}
+
+
 	vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info* Allocate_Info) {
 		vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
-		Descriptor_Set_Layouts.reserve(Allocate_Info->Descriptor_Set_Count);
-		for (size_t Index = 0; Index < Allocate_Info->Descriptor_Set_Count; ++Index)
+		Descriptor_Set_Layouts.reserve(Allocate_Info->Set_Layouts->size());
+		for (size_t Index = 0; Index < Allocate_Info->Set_Layouts->size(); ++Index)
 			Descriptor_Set_Layouts.emplace_back(static_cast<Vulkan_Descriptor_Set_Layout*>(Allocate_Info->Set_Layouts->at(Index))->Get());
 
 		VkDescriptorSetAllocateInfo Descriptor_Set_Allocate_Info{};
@@ -1125,17 +1189,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Descriptor_Set_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info->sType);
 			Descriptor_Set_Allocate_Info.pNext = Allocate_Info->pNext;
 			Descriptor_Set_Allocate_Info.descriptorPool = static_cast<Vulkan_Descriptor_Pool*>(Allocate_Info->Descriptor_Pool)->Get();
-			Descriptor_Set_Allocate_Info.descriptorSetCount = Allocate_Info->Descriptor_Set_Count;
+			Descriptor_Set_Allocate_Info.descriptorSetCount = Allocate_Info->Set_Layouts->size();
 			Descriptor_Set_Allocate_Info.pSetLayouts = Descriptor_Set_Layouts.data();
 		}
 
 		vector<VkDescriptorSet> Descriptor_Sets{};
-		Descriptor_Sets.resize(Allocate_Info->Descriptor_Set_Count, nullptr);
+		Descriptor_Sets.resize(Allocate_Info->Set_Layouts->size(), nullptr);
 		THROW_IF_VK_FAILED(vkAllocateDescriptorSets(this->m_Logical_VK_Device, &Descriptor_Set_Allocate_Info, Descriptor_Sets.data()));
 
 		vector<unique_ptr<RHI_Descriptor_Set>> RHI_Descriptor_Sets{};
-		RHI_Descriptor_Sets.reserve(Allocate_Info->Descriptor_Set_Count);
-		for (size_t Index = 0; Index < Allocate_Info->Descriptor_Set_Count; ++Index) {
+		RHI_Descriptor_Sets.reserve(Allocate_Info->Set_Layouts->size());
+		for (size_t Index = 0; Index < Allocate_Info->Set_Layouts->size(); ++Index) {
 			RHI_Descriptor_Sets.emplace_back(std::make_unique<Vulkan_Descriptor_Set>());
 			static_cast<Vulkan_Descriptor_Set*>(RHI_Descriptor_Sets[Index].get())->Reset(Descriptor_Sets[Index]);
 		}
@@ -1604,48 +1668,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
-	const unique_ptr<RHI_Sampler>& Vulkan_RHI::Get_Mipmap_Sampler(uint32_t width, uint32_t height) {
-		if (0 == width || 0 == height)
-			throw runtime_error("Failed to find mipmap sampler!");
-
-		uint32_t Mip_Levels{ static_cast<uint32_t>(std::floor(std::log2(std::max(width, height))) + 1) };
-
-		auto It = this->m_Mipmap_RHI_Samplers.find(Mip_Levels);
-		if (this->m_Mipmap_RHI_Samplers.cend() == It) {
-			VkPhysicalDeviceProperties Properties{};
-			vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
-
-			VkSamplerCreateInfo Sampler_Create_Info{};
-			{
-				Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-				Sampler_Create_Info.magFilter = VK_FILTER_LINEAR;
-				Sampler_Create_Info.minFilter = VK_FILTER_LINEAR;
-				Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-				Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-				Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-				Sampler_Create_Info.anisotropyEnable = VK_TRUE;
-				Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
-				Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-				Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
-				Sampler_Create_Info.compareEnable = VK_FALSE;
-				Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
-				Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-				Sampler_Create_Info.mipLodBias = 0.0f;
-				Sampler_Create_Info.minLod = 0.0f;
-				Sampler_Create_Info.maxLod = static_cast<float>(Mip_Levels - 1);
-			}
-
-			VkSampler Mipmap_Sampler{ nullptr };
-			THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Mipmap_Sampler));
-			this->m_Mipmap_RHI_Samplers[Mip_Levels] = std::make_unique<Vulkan_Sampler>();
-			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Set_Deleter(this->m_VK_Sampler_Deleter);
-			static_cast<Vulkan_Sampler*>(this->m_Mipmap_RHI_Samplers[Mip_Levels].get())->Reset(Mipmap_Sampler);
-
-			return this->m_Mipmap_RHI_Samplers[Mip_Levels];
-		}
-		else
-			return It->second;
-	}
 
 	const unique_ptr<RHI_Shader_Module> Vulkan_RHI::Create_Shader_Module(const vector<unsigned char>& Shader_Code) {
 
@@ -1670,28 +1692,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		return true;
 	}
-
-	/*unique_ptr<RHI_Buffer> Vulkan_RHI::Create_Buffer_With_Alignment_VMA(VmaAllocator Vma_Allocator, const RHI_Buffer_Create_Info& Buffer_Create_Info, const VmaAllocationCreateInfo* pAllocation_Create_Info, RHI_Device_Size Min_Alignment, VmaAllocation* pAllocation, VmaAllocationInfo* pAllocationInfo) {
-		VkBufferCreateInfo vk_Buffer_Create_Info{};
-		{
-			vk_Buffer_Create_Info.sType = static_cast<VkStructureType>(Buffer_Create_Info.sType);
-			vk_Buffer_Create_Info.pNext = Buffer_Create_Info.pNext;
-			vk_Buffer_Create_Info.flags = static_cast<VkBufferCreateFlags>(Buffer_Create_Info.Flags);
-			vk_Buffer_Create_Info.size = static_cast<VkDeviceSize>(Buffer_Create_Info.Size);
-			vk_Buffer_Create_Info.usage = static_cast<VkBufferUsageFlags>(Buffer_Create_Info.Usage);
-			vk_Buffer_Create_Info.sharingMode = static_cast<VkSharingMode>(Buffer_Create_Info.Sharing_Mode);
-			vk_Buffer_Create_Info.queueFamilyIndexCount = Buffer_Create_Info.Queue_Family_Index_Count;
-			vk_Buffer_Create_Info.pQueueFamilyIndices = Buffer_Create_Info.pQueue_Family_Indices;
-		}
-
-		VkBuffer Temp_Buffer{ nullptr };
-		THROW_IF_VK_FAILED(vmaCreateBufferWithAlignment(Vma_Allocator, &vk_Buffer_Create_Info, pAllocation_Create_Info, static_cast<VkDeviceSize>(Min_Alignment), &Temp_Buffer, pAllocation, pAllocationInfo));
-		unique_ptr<RHI_Buffer> Buffer{ std::make_unique<Vulkan_Buffer>() };
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Set_Deleter(this->m_VK_Buffer_Deleter);
-		static_cast<Vulkan_Buffer*>(Buffer.get())->Reset(Temp_Buffer);
-
-		return Buffer;
-	}*/
 
 	unique_ptr<RHI_Command_Buffer> Vulkan_RHI::Begin_SingleTime_Commands(void) {
 		VkCommandBufferAllocateInfo Allocate_Info{};
