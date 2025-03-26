@@ -331,8 +331,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Map_Memory(
 				RHI_Device_Memory* Memory,
 				RHI_Device_Size Offset,
-				RHI_Memopy_Map_Flags Flags,
 				RHI_Device_Size Size,
+				RHI_Memopy_Map_Flags Flags,
 				void** Data
 			) override;
 

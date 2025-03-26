@@ -169,7 +169,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		void
 			Parser_Updata_Vertex_Buffer_Binding(
 				shared_ptr<Empty_RHI> RHI,
-				bool Enbale_Vertex_Blending,
+				uint32_t Index_Buffer_Size,
+				uint16_t* Index_Buffer_Data,
+				uint32_t Vertex_Buffer_Size,
+				const  Mesh_Vertex_Data_Definition* Vertex_Buffer_Data,
+				uint32_t Joint_Binding_Buffer_Size,
+				const  Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data,
+				Vulkan_Mesh& Vulkan_Mesh_Data
+			);
+
+		void
+			Parser_Updata_Vertex_Buffer(
+				shared_ptr<Empty_RHI> RHI,
 				uint32_t Index_Buffer_Size,
 				uint16_t* Index_Buffer_Data,
 				uint32_t Vertex_Buffer_Size,

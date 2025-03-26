@@ -1043,7 +1043,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_tuple(std::move(Image), std::move(Image_View), VMA_Allocation);
 	}
 
-	void Vulkan_RHI::Map_Memory(RHI_Device_Memory* Memory, RHI_Device_Size Offset, RHI_Memopy_Map_Flags Flags, RHI_Device_Size Size, void** Data) {
+	void Vulkan_RHI::Map_Memory(RHI_Device_Memory* Memory, RHI_Device_Size Offset, RHI_Device_Size Size, RHI_Memopy_Map_Flags Flags, void** Data) {
 		THROW_IF_VK_FAILED(vkMapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Memory)->Get(), Offset, Size, static_cast<VkMemoryMapFlags>(Flags), Data));
 	}
 
