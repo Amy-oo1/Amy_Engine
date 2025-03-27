@@ -1,5 +1,6 @@
 #include "render/render_system/Render_Resource.h"
 
+#include<tuple>
 #include<utility>
 
 #include "logger/System_Logger.h"
@@ -63,13 +64,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Ref_Stroage_Buffer.Max_Storage_Buffer_Range = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.maxStorageBufferRange);
 		Ref_Stroage_Buffer.Non_Coherent_Atom_Size = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.nonCoherentAtomSize);
 
-		auto [Storage_Buffer, Strage_Memory] = Ref_Vulkan_RHI->Create_Buffer(
+		std::tie(Ref_Stroage_Buffer.Global_Upload_Ring_Buffer, Ref_Stroage_Buffer.Global_Upload_Ring_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Max_Storage_Buffer_Range,//NOTE : Set Max Size
 			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT,
 			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
-		Ref_Stroage_Buffer.Global_Upload_Ring_Buffer = std::move(Storage_Buffer);
-		Ref_Stroage_Buffer.Global_Upload_Ring_Buffer_Memory = std::move(Strage_Memory);
 
 		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin.resize(Ref_Stroage_Buffer.Max_Storage_Buffer_Range);
 		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_End.resize(Ref_Stroage_Buffer.Max_Storage_Buffer_Range);
@@ -81,23 +80,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		}
 
 		//NOTE :Axis Storage Buffer
-		auto [Axis_Buffer, Axis_Memory] = Ref_Vulkan_RHI->Create_Buffer(
+		std::tie(Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer, Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Axis_Storage_Buffer_Size,
 			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT,
 			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
-		Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer = std::move(Axis_Buffer);
-		Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer_Memory = std::move(Axis_Memory);
-
 
 		//NOTE : Null Descriptor Storage Buffer
-		auto [Null_Descriptor_Buffer, Null_Descriptor_Memory] = Ref_Vulkan_RHI->Create_Buffer(
+		std::tie(Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer, Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Global_Null_Descriptor_Buffer_Size,
 			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT,
 			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
-		Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer = std::move(Null_Descriptor_Buffer);
-		Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer_Memory = std::move(Null_Descriptor_Memory);
 	}
 
 	void Render_Resource::Map_Storage_Buffer(shared_ptr<Empty_RHI> RHI) {
@@ -159,42 +153,36 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		if (RHI_NULL_HANDLE != Ref_IBL_Resource.BUDF_LUT_Sampler)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "BUDF_LUT_Texture_Sampler Already Created, Doing ReCreate");
-		Ref_IBL_Resource.BUDF_LUT_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
+		Ref_IBL_Resource.BUDF_LUT_Sampler = Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info);
 
 
 		Sampler_Create_Info.Max_Lod = 8.f; //RHI_WHOLE_SIZE;
 		if (RHI_NULL_HANDLE != Ref_IBL_Resource.Irradiance_Map_Sampler)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Irradiance_Map_Texture_Sampler Already Created, Doing ReCreate");
-		Ref_IBL_Resource.Irradiance_Map_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
+		Ref_IBL_Resource.Irradiance_Map_Sampler = Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info);
 
 		if (RHI_NULL_HANDLE != Ref_IBL_Resource.Specular_Map_Sampler)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Specular_Map_Texture_Sampler Already Created, Doing ReCreate");
-		Ref_IBL_Resource.Specular_Map_Sampler = std::move(Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info));
+		Ref_IBL_Resource.Specular_Map_Sampler = Ref_Vulkan_RHI->Create_Sampler(&Sampler_Create_Info);
 	}
 
 	void Render_Resource::Create_IBL_Textures(shared_ptr<Empty_RHI> RHI, array<shared_ptr<Texture_Data>, 6> Irradiance_Maps, array<shared_ptr<Texture_Data>, 6> Specular_Maps) {
 		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
 		auto& Ref_IBL_Resource{ this->m_Global_Render_Resource.IBL_Resource };
 
-		auto [Irradiance_Image, Irradiance_Image_View, Irradiance_Image_Allocation] = Ref_Vulkan_RHI->Create_Cube_Map(
+		std::tie(Ref_IBL_Resource.Irradiance_Map_Image, Ref_IBL_Resource.Irradiance_Map_Image_View, Ref_IBL_Resource.Irradiance_Map_Image_Allocation) = Ref_Vulkan_RHI->Create_Cube_Map(
 			{ Irradiance_Maps[0]->Width, Irradiance_Maps[0]->Height },
 			Irradiance_Maps[0]->Format,
 			Irradiance_Maps[0]->Mip_Levels,
 			{ Irradiance_Maps[0]->Pixels.get(), Irradiance_Maps[1]->Pixels.get(), Irradiance_Maps[2]->Pixels.get(), Irradiance_Maps[3]->Pixels.get(), Irradiance_Maps[4]->Pixels.get(), Irradiance_Maps[5]->Pixels.get() }
 		);
-		Ref_IBL_Resource.Irradiance_Map_Image = std::move(Irradiance_Image);
-		Ref_IBL_Resource.Irradiance_Map_Image_View = std::move(Irradiance_Image_View);
-		Ref_IBL_Resource.Irradiance_Map_Image_Allocation = std::move(Irradiance_Image_Allocation);
 
-		auto [Specular_Image, Specular_Image_View, Specular_Image_Allocation] = Ref_Vulkan_RHI->Create_Cube_Map(
+		std::tie(Ref_IBL_Resource.Specular_Map_Image, Ref_IBL_Resource.Specular_Map_Image_View, Ref_IBL_Resource.Specular_Map_Image_Allocation) = Ref_Vulkan_RHI->Create_Cube_Map(
 			{ Specular_Maps[0]->Width, Specular_Maps[0]->Height },
 			Specular_Maps[0]->Format,
 			Specular_Maps[0]->Mip_Levels,
 			{ Specular_Maps[0]->Pixels.get(), Specular_Maps[1]->Pixels.get(), Specular_Maps[2]->Pixels.get(), Specular_Maps[3]->Pixels.get(), Specular_Maps[4]->Pixels.get(), Specular_Maps[5]->Pixels.get() }
 		);
-		Ref_IBL_Resource.Specular_Map_Image = std::move(Specular_Image);
-		Ref_IBL_Resource.Specular_Map_Image_View = std::move(Specular_Image_View);
-		Ref_IBL_Resource.Specular_Map_Image_Allocation = std::move(Specular_Image_Allocation);
 
 	}
 
@@ -329,14 +317,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				Allocation_Create_Info.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 			}
 
-			auto [Material_Uniform_Buffer, Material_Uniform_Buffer_Allocation] = Ref_Vulkan_RHI->Create_Buffer_Alignment_VMA(
+			std::tie(Material.Material_Uniform_Buffer, Material.Material_Uniform_Buffer_Allocation) = Ref_Vulkan_RHI->Create_Buffer_Alignment_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr,
 				this->m_Global_Render_Resource.Storage_Buffer.Min_Uniform_Buffer_Offset_Alignment
 			);
-			Material.Material_Uniform_Buffer = std::move(Material_Uniform_Buffer);
-			Material.Material_Uniform_Buffer_Allocation = std::move(Material_Uniform_Buffer_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Buffer.get(),
@@ -616,14 +602,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-			auto [Vertex_Position_Buffer, Vertex_Position_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-
-			Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer = std::move(Vertex_Position_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation = std::move(Vertex_Position_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -638,14 +621,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-			auto [Vertex_Varying_Enable_Bleding_Buffer, Vertex_Varying_Enable_Bleding_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer = std::move(Vertex_Varying_Enable_Bleding_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation = std::move(Vertex_Varying_Enable_Bleding_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -660,13 +640,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-			auto [Vertex_Varying_Buffer, Vertex_Varying_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer = std::move(Vertex_Varying_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation = std::move(Vertex_Varying_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -681,14 +659,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Joint_Binding_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 
-			auto [Vertex_Joint_Bleding_Buffer, Vertex_Joint_Bleding_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-
-			Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer = std::move(Vertex_Joint_Bleding_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Allocation = std::move(Vertex_Joint_Bleding_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -704,14 +679,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		//NOTE: Index Buffer
 		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
-		auto&& [Index_Buffer, Index_Allocation] = this->S_Load_Index_Buffer(
+		std::tie(Vulkan_Mesh_Data.Mesh_Index_Buffer, Vulkan_Mesh_Data.Mesh_Index_Allocation) = this->S_Load_Index_Buffer(
 			RHI,
 			Index_Buffer_Size,
 			Index_Buffer_Data
 		);
-		Vulkan_Mesh_Data.Mesh_Index_Buffer = std::move(Index_Buffer);
-		Vulkan_Mesh_Data.Mesh_Index_Allocation = std::move(Index_Allocation);
-
 
 		//NOTE : Descriptor Set
 		vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{ this->m_Mesh_Descriptor_Set_Layout.get() };
@@ -836,14 +808,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-			auto [Vertex_Position_Buffer, Vertex_Position_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-
-			Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer = std::move(Vertex_Position_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation = std::move(Vertex_Position_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -858,14 +827,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-			auto [Vertex_Varying_Enable_Bleding_Buffer, Vertex_Varying_Enable_Bleding_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer = std::move(Vertex_Varying_Enable_Bleding_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation = std::move(Vertex_Varying_Enable_Bleding_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -880,13 +846,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
 			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-			auto [Vertex_Varying_Buffer, Vertex_Varying_Allocation] = Ref_Vulkan_RHI->Create_Buffer_VMA(
+			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
 				&Allocation_Create_Info,
 				nullptr
 			);
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer = std::move(Vertex_Varying_Buffer);
-			Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation = std::move(Vertex_Varying_Allocation);
 
 			Ref_Vulkan_RHI->Copy_Buffer(
 				Inefficient_Staging_Buffer.get(),
@@ -902,13 +866,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		//NOTE: Index Buffer
 		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
-		auto&& [Index_Buffer, Index_Allocation] = this->S_Load_Index_Buffer(
+		std::tie(Vulkan_Mesh_Data.Mesh_Index_Buffer, Vulkan_Mesh_Data.Mesh_Index_Allocation) = this->S_Load_Index_Buffer(
 			RHI,
 			Index_Buffer_Size,
 			Index_Buffer_Data
 		);
-		Vulkan_Mesh_Data.Mesh_Index_Buffer = std::move(Index_Buffer);
-		Vulkan_Mesh_Data.Mesh_Index_Allocation = std::move(Index_Allocation);
 
 		//NOTE : Descriptor Set
 		vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{ this->m_Mesh_Descriptor_Set_Layout.get() };
@@ -953,70 +915,41 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
 
 		Vulkan_PBR_Material Vulkan_PBR_Material_Data{};
-		{
-			auto [Base_Color_Image, Base_Image_View, Base_Color_Image_Vallocation] = Ref_Vulkan_RHI->Create_Global_Image(
-				{ Texture_Data_Info.Base_Color_Image_Width,Texture_Data_Info.Base_Color_Image_Height },
-				Texture_Data_Info.Base_Color_Image_Format,
-				0,
-				Texture_Data_Info.Base_Color_Image_Pixels
-			);
 
-			Vulkan_PBR_Material_Data.Base_Color_Image = std::move(Base_Color_Image);
-			Vulkan_PBR_Material_Data.Base_Color_Image_View = std::move(Base_Image_View);
-			Vulkan_PBR_Material_Data.Base_Color_Image_Allocation = Base_Color_Image_Vallocation;
-		}
+		std::tie(Vulkan_PBR_Material_Data.Base_Color_Image, Vulkan_PBR_Material_Data.Base_Color_Image_View, Vulkan_PBR_Material_Data.Base_Color_Image_Allocation) = Ref_Vulkan_RHI->Create_Global_Image(
+			{ Texture_Data_Info.Base_Color_Image_Width,Texture_Data_Info.Base_Color_Image_Height },
+			Texture_Data_Info.Base_Color_Image_Format,
+			0,
+			Texture_Data_Info.Base_Color_Image_Pixels
+		);
 
-		{
-			auto [Metallic_Image, Metallic_Image_View, Metallic_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
-				{ Texture_Data_Info.Metallic_Roughness_Image_Width,Texture_Data_Info.Metallic_Roughness_Image_Height },
-				Texture_Data_Info.Metallic_Roughness_Image_Format,
-				0,
-				Texture_Data_Info.Metallic_Roughness_Image_Pixels
-			);
+		std::tie(Vulkan_PBR_Material_Data.Metallic_Roughness_Image, Vulkan_PBR_Material_Data.Metallic_Roughness_Image_View, Vulkan_PBR_Material_Data.Metallic_Roughness_Image_Allocation) = Ref_Vulkan_RHI->Create_Global_Image(
+			{ Texture_Data_Info.Metallic_Roughness_Image_Width,Texture_Data_Info.Metallic_Roughness_Image_Height },
+			Texture_Data_Info.Metallic_Roughness_Image_Format,
+			0,
+			Texture_Data_Info.Metallic_Roughness_Image_Pixels
+		);
 
-			Vulkan_PBR_Material_Data.Metallic_Roughness_Image = std::move(Metallic_Image);
-			Vulkan_PBR_Material_Data.Metallic_Roughness_Image_View = std::move(Metallic_Image_View);
-			Vulkan_PBR_Material_Data.Metallic_Roughness_Image_Allocation = Metallic_Image_Allocation;
-		}
+		std::tie(Vulkan_PBR_Material_Data.Normal_Image, Vulkan_PBR_Material_Data.Normal_Image_View, Vulkan_PBR_Material_Data.Normal_Image_Allocation) = Ref_Vulkan_RHI->Create_Global_Image(
+			{ Texture_Data_Info.Normal_Image_Width,Texture_Data_Info.Normal_Image_Height },
+			Texture_Data_Info.Normal_Image_Format,
+			0,
+			Texture_Data_Info.Normal_Image_Pixels
+		);
 
-		{
-			auto [Normal_Image, Normal_Image_View, Normal_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
-				{ Texture_Data_Info.Normal_Image_Width,Texture_Data_Info.Normal_Image_Height },
-				Texture_Data_Info.Normal_Image_Format,
-				0,
-				Texture_Data_Info.Normal_Image_Pixels
-			);
+		std::tie(Vulkan_PBR_Material_Data.Occlusion_Image, Vulkan_PBR_Material_Data.Occlusion_Image_View, Vulkan_PBR_Material_Data.Occlusion_Image_Allocation) = Ref_Vulkan_RHI->Create_Global_Image(
+			{ Texture_Data_Info.Occlusion_Image_Width,Texture_Data_Info.Occlusion_Image_Height },
+			Texture_Data_Info.Occlusion_Image_Format,
+			0,
+			Texture_Data_Info.Occlusion_Image_Pixels
+		);
 
-			Vulkan_PBR_Material_Data.Normal_Image = std::move(Normal_Image);
-			Vulkan_PBR_Material_Data.Normal_Image_View = std::move(Normal_Image_View);
-			Vulkan_PBR_Material_Data.Normal_Image_Allocation = Normal_Image_Allocation;
-		}
-
-		{
-			auto [Roughness_Image, Roughness_Image_View, Roughness_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
-				{ Texture_Data_Info.Occlusion_Image_Width,Texture_Data_Info.Occlusion_Image_Height },
-				Texture_Data_Info.Occlusion_Image_Format,
-				0,
-				Texture_Data_Info.Occlusion_Image_Pixels
-			);
-
-			Vulkan_PBR_Material_Data.Occlusion_Image = std::move(Roughness_Image);
-			Vulkan_PBR_Material_Data.Occlusion_Image_View = std::move(Roughness_Image_View);
-			Vulkan_PBR_Material_Data.Occlusion_Image_Allocation = Roughness_Image_Allocation;
-		}
-
-		{
-			auto [Emissive_Image, Emissive_Image_View, Emissive_Image_Allocation] = Ref_Vulkan_RHI->Create_Global_Image(
-				{ Texture_Data_Info.Emissive_Image_Width,Texture_Data_Info.Emissive_Image_Height },
-				Texture_Data_Info.Emissive_Image_Format,
-				0,
-				Texture_Data_Info.Emissive_Image_Pixels
-			);
-
-			Vulkan_PBR_Material_Data.Emissive_Image = std::move(Emissive_Image);
-			Vulkan_PBR_Material_Data.Emissive_Image_View = std::move(Emissive_Image_View);
-			Vulkan_PBR_Material_Data.Emissive_Image_Allocation = Emissive_Image_Allocation;
-		}
+		std::tie(Vulkan_PBR_Material_Data.Emissive_Image, Vulkan_PBR_Material_Data.Emissive_Image_View, Vulkan_PBR_Material_Data.Emissive_Image_Allocation) = Ref_Vulkan_RHI->Create_Global_Image(
+			{ Texture_Data_Info.Emissive_Image_Width,Texture_Data_Info.Emissive_Image_Height },
+			Texture_Data_Info.Emissive_Image_Format,
+			0,
+			Texture_Data_Info.Emissive_Image_Pixels
+		);
 
 		return Vulkan_PBR_Material_Data;
 	}
@@ -1071,7 +1004,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Inefficient_Staging_Buffer.reset();
 		Inefficient_Staging_Buffer_Memory.reset();
 
-		return { std::move(Index_Buffer), std::move(Index_Buffer_Allocation) };
+		return { std::move(Index_Buffer), Index_Buffer_Allocation };
 	}
 
 	void Render_Resource::Upload_Global_Render_Resource(shared_ptr<Empty_RHI> RHI, const Level_Resource_Desc& Level_Resource_Desc) {
@@ -1102,30 +1035,26 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		shared_ptr<Texture_Data> Ref_BDRF_LUT = Render_Resource_Base::Load_Texture_HDR(Level_Resource_Desc.IBL_Resource_Desc.BRDF_Map_URL);
 
 		this->Create_IBL_Textures(RHI, SkyBox_Irradiance_Map, SkyBox_Specular_Map);
-		auto [BDRF_LUT_Image, Image_View, BDRF_LUT_Image_Allocation] = static_cast<Vulkan_RHI*> (RHI.get())->Create_Global_Image(
+
+		std::tie(this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image, this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_View, this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_Allocation) = RHI->Create_Global_Image(
 			{ Ref_BDRF_LUT->Width,Ref_BDRF_LUT->Height },
 			Ref_BDRF_LUT->Format,
 			0,
 			Ref_BDRF_LUT->Pixels.get()
 		);
-		this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image = std::move(BDRF_LUT_Image);
-		this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_View = std::move(Image_View);
-		this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_Allocation = BDRF_LUT_Image_Allocation;
 
 		this->Create_IBL_Samplers(RHI);
 
 
 		//NOTE : Color Grading
 		shared_ptr<Texture_Data> Ref_Color_Grading_Map = Render_Resource_Base::Load_Texture_HDR(Level_Resource_Desc.Color_Grading_Resource_Desc.Color_Grading_Map_URL);
-		auto [Color_Grading_Image, Color_Grading_Image_View, Color_Grading_Image_Allocation] = static_cast<Vulkan_RHI*> (RHI.get())->Create_Global_Image(
+
+		std::tie(this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image, this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_View, this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_Allocation) = RHI->Create_Global_Image(
 			{ Ref_Color_Grading_Map->Width,Ref_Color_Grading_Map->Height },
 			Ref_Color_Grading_Map->Format,
 			0,
 			Ref_Color_Grading_Map->Pixels.get()
 		);
-		this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image = std::move(Color_Grading_Image);
-		this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_View = std::move(Color_Grading_Image_View);
-		this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_Allocation = Color_Grading_Image_Allocation;
 	}
 
 	void Render_Resource::Upload_Game_Object_Render_Resource(shared_ptr<Empty_RHI> RHI, const Render_Entity& Render_Entity, const Render_Mesh_Data& Meshe_Data, const Render_Material_Data& Material_Data) {
