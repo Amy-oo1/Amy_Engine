@@ -66,6 +66,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	class Render_Pass :public Render_Pass_Base {
 	public:
 		struct Frame_Buffer_Attachment final {
+			RHI_FORMAT Format;
+
 			unique_ptr<RHI_Image> Image;
 			unique_ptr<RHI_Image_View> Image_View;
 			unique_ptr<RHI_Device_Memory> Image_Memory;
@@ -110,7 +112,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		vector<Render_Pipeline> m_Render_Pipelines;
 		Frame_Buffer m_Frame_Buffer;
 
-
+		/*virtual void Post_Inittialize(void) = 0;
+		virtual void Draw(void) = 0;*/
 	};
 
 

@@ -81,7 +81,42 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			throw runtime_error("Failed to get image byte size!");
 			break;
 		}
-	};
+	}
+
+	void Create_Image(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, const VkAllocationCallbacks* Allocator, VkExtent2D Image_Extent, VkFormat Format, uint32_t Array_Layers, uint32_t Mip_levels, VkImageTiling Image_Tiling, VkImageUsageFlags Image_Usage_Flags, VkMemoryPropertyFlags Memory_Property_Flags, VkImageCreateFlags Image_Create_Flags, VkImage& Image, VkDeviceMemory& Memory) {
+		VkImageCreateInfo Image_Create_Info{};
+		{
+			Image_Create_Info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			Image_Create_Info.flags = Image_Create_Flags;
+			Image_Create_Info.imageType = VK_IMAGE_TYPE_2D;
+			Image_Create_Info.format = Format;
+			Image_Create_Info.extent = { Image_Extent.width, Image_Extent.height, 1 };
+			Image_Create_Info.mipLevels = Mip_levels;
+			Image_Create_Info.arrayLayers = Array_Layers;
+			Image_Create_Info.samples = VK_SAMPLE_COUNT_1_BIT;
+			Image_Create_Info.tiling = Image_Tiling;
+			Image_Create_Info.usage = Image_Usage_Flags;
+			Image_Create_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			Image_Create_Info.queueFamilyIndexCount = 0;//TODO : Set this
+			Image_Create_Info.pQueueFamilyIndices = nullptr;
+			Image_Create_Info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		}
+
+		THROW_IF_VK_FAILED(vkCreateImage(Logical_Device, &Image_Create_Info, Allocator, &Image));
+
+		VkMemoryRequirements Memory_Requirements{};
+		vkGetImageMemoryRequirements(Logical_Device, Image, &Memory_Requirements);
+
+		VkMemoryAllocateInfo Memory_Allocate_Info{};
+		{
+			Memory_Allocate_Info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+			Memory_Allocate_Info.allocationSize = Memory_Requirements.size;
+			Memory_Allocate_Info.memoryTypeIndex = Find_Memory_Type(Physical_Device, Memory_Requirements.memoryTypeBits, Memory_Property_Flags);
+		}
+
+		THROW_IF_VK_FAILED(vkAllocateMemory(Logical_Device, &Memory_Allocate_Info, Allocator, &Memory));
+		THROW_IF_VK_FAILED(vkBindImageMemory(Logical_Device, Image, Memory, 0));
+	}
 
 	const VkImageView Create_Image_View(VkDevice Logical_Device, const VkAllocationCallbacks* Allocator, VkImage Image, VkFormat Format, uint32_t Mip_Levels, VkImageAspectFlags Image_Aspect_Flags, VkImageViewType View_Type, uint32_t Layout_Count) {
 		VkComponentMapping Component_Mapping{};
@@ -581,11 +616,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 
-
-
-
-
-
 	const VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const vector<unsigned char>& Code) {
 		VkShaderModuleCreateInfo Create_Info{};
 		{
@@ -598,107 +628,4 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkCreateShaderModule(Logical_Device, &Create_Info, nullptr, &Shader_Module));
 		return Shader_Module;
 	}
-
-
-
-
-
-
-	void Create_Image(
-		VkPhysicalDevice Physical_Device,
-		VkDevice Device,
-		VkExtent2D Image_Extent,
-		VkFormat Format,
-		uint32_t Mip_levels,
-		VkSampleCountFlagBits Samples,
-		VkImageTiling Image_Tiling,
-		VkImageUsageFlags Image_Usage_Flags,
-		VkMemoryPropertyFlags Memory_Property_Flags,
-		VkImage& Image,
-		VkDeviceMemory& Memory,
-		VkImageCreateFlags Image_Create_Flags,
-		uint32_t Array_Layers,
-		const VkAllocationCallbacks* pAllocator) {
-		VkImageCreateInfo Image_Info{};
-		{
-			Image_Info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-			Image_Info.imageType = VK_IMAGE_TYPE_2D;
-			Image_Info.extent = { Image_Extent.width, Image_Extent.height, 1 };
-			Image_Info.mipLevels = Mip_levels;
-			Image_Info.arrayLayers = Array_Layers;
-			Image_Info.format = Format;
-			Image_Info.tiling = Image_Tiling;
-			Image_Info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			Image_Info.usage = Image_Usage_Flags;
-			Image_Info.samples = Samples;
-			Image_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			Image_Info.flags = Image_Create_Flags;
-		}
-
-		THROW_IF_VK_FAILED(vkCreateImage(Device, &Image_Info, nullptr, &Image));
-
-		VkMemoryRequirements Memory_Requirements{};
-		vkGetImageMemoryRequirements(Device, Image, &Memory_Requirements);
-
-		VkMemoryAllocateInfo Memory_Allocate_Info{};
-		{
-			Memory_Allocate_Info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-			Memory_Allocate_Info.allocationSize = Memory_Requirements.size;
-			Memory_Allocate_Info.memoryTypeIndex = Find_Memory_Type(Physical_Device, Memory_Requirements.memoryTypeBits, Memory_Property_Flags);
-		}
-
-		THROW_IF_VK_FAILED(vkAllocateMemory(Device, &Memory_Allocate_Info, pAllocator, &Memory));
-		THROW_IF_VK_FAILED(vkBindImageMemory(Device, Image, Memory, 0));
-	}
-
-
-
-
-	/*void Create_Image(
-		VkDevice Logical_Device,
-		uint32_t Width,
-		uint32_t Height,
-		uint32_t Mip_Levels,
-		VkFormat Format,
-		VkSampleCountFlagBits Num_Samples,
-		VkImageTiling Tiling,
-		VkImageUsageFlags Usage,
-		VkMemoryPropertyFlags Properties,
-		VkImage& Image,
-		VkDeviceMemory& Image_Memory) {
-		VkImageCreateInfo Image_Create_Info{};
-		{
-			Image_Create_Info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-			Image_Create_Info.imageType = VK_IMAGE_TYPE_2D;
-			Image_Create_Info.extent.width = Width;
-			Image_Create_Info.extent.height = Height;
-			Image_Create_Info.extent.depth = 1;
-			Image_Create_Info.mipLevels = Mip_Levels;
-			Image_Create_Info.arrayLayers = 1;
-			Image_Create_Info.format = Format;
-			Image_Create_Info.tiling = Tiling;
-			Image_Create_Info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			Image_Create_Info.usage = Usage;
-			Image_Create_Info.samples = Num_Samples;
-			Image_Create_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		}
-
-		THROW_IF_VK_FAILED(vkCreateImage(this->m_Logical_Device.get(), &Image_Create_Info, nullptr, &Image));
-
-		VkMemoryRequirements Memory_Requirements{};
-		vkGetImageMemoryRequirements(this->m_Logical_Device.get(), Image, &Memory_Requirements);
-
-		VkMemoryAllocateInfo Memory_Allocate_Info{};
-		{
-			Memory_Allocate_Info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-			Memory_Allocate_Info.allocationSize = Memory_Requirements.size;
-			Memory_Allocate_Info.memoryTypeIndex = this->Find_Memory_Type(Memory_Requirements.memoryTypeBits, Properties);
-		}
-
-		THROW_IF_VK_FAILED(vkAllocateMemory(this->m_Logical_Device.get(), &Memory_Allocate_Info, nullptr, &Image_Memory));
-
-		THROW_IF_VK_FAILED(vkBindImageMemory(this->m_Logical_Device.get(), Image, Image_Memory, 0));
-	}*/
-
-
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities

@@ -37,6 +37,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		shared_ptr<Empty_RHI> m_RHI;
 		shared_ptr<Render_Resource_Base> m_Resource;
 
+		virtual void Post_Inittialize(void) = 0;
+		virtual void PrePare_Pass_Data(shared_ptr< Render_Resource_Base> Resource) = 0;
+		virtual void Draw(void) = 0;
+
 	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

@@ -92,8 +92,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				RHI_Device_Size Min_Alignment
 			) = 0;
 
-
-
 		virtual void
 			Copy_Buffer(
 				RHI_Buffer* Src_Buffer,
@@ -105,6 +103,31 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 
 		//NOTE : Image
+		[[nodiscard]] virtual tuple<
+			unique_ptr<RHI_Image>,
+			unique_ptr<RHI_Device_Memory>>
+			Create_Image(
+				RHI_Extent_2D Image_Extent,
+				RHI_FORMAT Image_Format,
+				uint32_t Array_Layers,
+				uint32_t Mip_levels,
+				RHI_IMAGE_TILING Image_Tiling,
+				RHI_Image_Usage_Flags Image_Usage_Flags,
+				RHI_Memory_Property_Flags Memory_Property_Flags,
+				RHI_Image_Create_Flags Image_Create_Flags
+			) = 0;
+
+		[[nodiscard]] virtual unique_ptr<RHI_Image_View>
+			Create_Image_View(
+				RHI_Image* Image,
+				RHI_FORMAT Format,
+				uint32_t Mip_levels,
+				uint32_t Layout_Count,
+				RHI_IMAGE_VIEW_TYPE View_Type,
+				RHI_Image_Aspect_Flags Image_Aspect_Flags
+			) = 0;
+
+
 		[[nodiscard]] virtual tuple<
 			unique_ptr<RHI_Image>,
 			unique_ptr<RHI_Image_View>,
@@ -188,22 +211,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		[[nodiscard]] virtual unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) = 0;
 		virtual void End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
 
-
-
-
-		[[nodiscard]] virtual tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Create_Image(
-			RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format,
-			uint32_t Mip_levels, RHI_SAMPLE_COUNT_FLAG_BIT Num_Samples, RHI_IMAGE_TILING Image_Tiling,
-			RHI_Image_Usage_Flags Image_Usage_Flags, RHI_Memory_Property_Flags Memory_Property_Flags,
-			RHI_Image_Create_Flags Image_Create_Flags, uint32_t Array_Layers) = 0;
-
-		[[nodiscard]] virtual unique_ptr<RHI_Image_View> Create_Image_View(
-			const unique_ptr<RHI_Image> Image,
-			RHI_FORMAT Format,
-			uint32_t Mip_levels,
-			RHI_Image_Aspect_Flags Image_Aspect_Flags,
-			RHI_IMAGE_VIEW_TYPE View_Type,
-			uint32_t Layout_Count) = 0;
 
 
 		//TODO : 

@@ -174,6 +174,7 @@
     </ClInclude>
     <ClInclude Include="include\physics\Utilities_Physics.h" />
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
+    <ClInclude Include="include\render\render_pass\Directional_Light_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h" />
     <ClInclude Include="include\render\render_system\Light.h" />
@@ -184,6 +185,8 @@
     <ClInclude Include="include\render\render_system\Render_GUID_Allocator.h" />
     <ClInclude Include="include\render\render_system\Render_Mesh.h" />
     <ClInclude Include="include\render\render_system\Render_Obejct.h" />
+    <ClInclude Include="include\render\render_system\Render_Pipeline.h" />
+    <ClInclude Include="include\render\render_system\Render_Pipeline_Base.h" />
     <ClInclude Include="include\render\render_system\Render_Resource.h" />
     <ClInclude Include="include\render\render_system\Render_Resource_Base.h" />
     <ClInclude Include="include\render\render_system\Render_Scene.h" />
@@ -203,9 +206,12 @@
     <ClInclude Include="include\render\window\Window_UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\render\render_pass\Directional_Light_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp" />
     <ClCompile Include="src\render\render_system\Render_GUID_Allocator.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Pipeline.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Pipeline_Base.h.cpp" />
     <ClCompile Include="src\render\render_system\Render_Resource.cpp" />
     <ClCompile Include="src\render\render_system\Render_Resource_Base.cpp" />
     <ClCompile Include="src\render\render_system\Render_Scene.cpp" />

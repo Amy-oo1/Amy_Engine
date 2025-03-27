@@ -538,7 +538,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Queue_Family_Indices;
 	}
 
-	const optional<VkWriteDescriptorSet> Vulkan_RHI::Parser_RHI_Write_Descriptor_Set(const RHI_Write_Descriptor_Set* Write_Descriptor_Set, optional<vector<VkDescriptorImageInfo>>& Image_Infos, optional<vector<VkDescriptorBufferInfo>>& Buffer_Infos, optional<vector<VkBufferView>>& vk_Buffer_Views) {
+	const optional<VkWriteDescriptorSet> Vulkan_RHI::S_Parser_RHI_Write_Descriptor_Set(const RHI_Write_Descriptor_Set* Write_Descriptor_Set, optional<vector<VkDescriptorImageInfo>>& Image_Infos, optional<vector<VkDescriptorBufferInfo>>& Buffer_Infos, optional<vector<VkBufferView>>& vk_Buffer_Views) {
 		if (nullptr == Write_Descriptor_Set)
 			return std::nullopt;
 
@@ -1034,6 +1034,55 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->End_SingleTime_Commands(std::move(Command_Buffer));
 	}
 
+	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Image(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Array_Layers, uint32_t Mip_levels, RHI_IMAGE_TILING Image_Tiling, RHI_Image_Usage_Flags Image_Usage_Flags, RHI_Memory_Property_Flags Memory_Property_Flags, RHI_Image_Create_Flags Image_Create_Flags) {
+		VkImage VK_Image{ nullptr };
+		VkDeviceMemory VK_Device_Memory{ nullptr };
+		NameSpace_Utilities::Create_Image(
+			this->m_VK_Physical_Device,
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			{ Image_Extent.Width,Image_Extent.Height },
+			static_cast<VkFormat>(Image_Format),
+			Array_Layers,
+			Mip_levels,
+			static_cast<VkImageTiling>(Image_Tiling),
+			static_cast<VkImageUsageFlags>(Image_Usage_Flags),
+			static_cast<VkMemoryPropertyFlags>(Memory_Property_Flags),
+			static_cast<VkImageCreateFlags>(Image_Create_Flags),
+			VK_Image,
+			VK_Device_Memory
+		);
+
+		unique_ptr<RHI_Image> Image{ std::make_unique<Vulkan_Image>() };
+		static_cast<Vulkan_Image*>(Image.get())->Set_Deleter(this->m_VK_Image_Deleter);
+		static_cast<Vulkan_Image*>(Image.get())->Reset(VK_Image);
+
+		unique_ptr<RHI_Device_Memory> Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
+		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
+		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Reset(VK_Device_Memory);
+
+		return std::make_tuple(std::move(Image), std::move(Device_Memory));
+	}
+
+	unique_ptr<RHI_Image_View> Vulkan_RHI::Create_Image_View(RHI_Image* Image, RHI_FORMAT Format, uint32_t Mip_levels, uint32_t Layout_Count, RHI_IMAGE_VIEW_TYPE View_Type, RHI_Image_Aspect_Flags Image_Aspect_Flags) {
+		unique_ptr<RHI_Image_View> Image_View{ std::make_unique<Vulkan_Image_View>() };
+
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
+
+		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			static_cast<Vulkan_Image*>(Image)->Get(),
+			static_cast<VkFormat>(Format),
+			Mip_levels,
+			static_cast<VkImageAspectFlags>(Image_Aspect_Flags),
+			static_cast<VkImageViewType>(View_Type),
+			Layout_Count
+		));
+
+		return Image_View;
+	}
+
 	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Image_View>, VmaAllocation> Vulkan_RHI::Create_Global_Image(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, void* Image_Pixels) {
 		VkImage VK_Image{ nullptr };
 		VkImageView VK_Image_View{ nullptr };
@@ -1177,7 +1226,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			return It->second.get();
 	}
 
-
 	vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info* Allocate_Info) {
 		vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
 		Descriptor_Set_Layouts.reserve(Allocate_Info->Set_Layouts->size());
@@ -1226,7 +1274,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				optional<vector<VkDescriptorImageInfo>> vk_Image_Info{};
 				optional<vector<VkDescriptorBufferInfo>> vk_Buffer_Info{};
 				optional<vector<VkBufferView>> vk_Buffer_View{};
-				const auto vk_Write_Descriptor_Set{ Vulkan_RHI::Parser_RHI_Write_Descriptor_Set(Descriptor_Write, vk_Image_Info, vk_Buffer_Info, vk_Buffer_View) };
+				const auto vk_Write_Descriptor_Set{ Vulkan_RHI::S_Parser_RHI_Write_Descriptor_Set(Descriptor_Write, vk_Image_Info, vk_Buffer_Info, vk_Buffer_View) };
 
 				Image_Infos.emplace_back(vk_Image_Info);
 				Buffer_Infos.emplace_back(vk_Buffer_Info);
@@ -1734,55 +1782,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkQueueWaitIdle(this->m_Queues.Graphic_Queue));
 
 		vkFreeCommandBuffers(this->m_Logical_VK_Device, static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
-	}
-
-	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Image(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Mip_levels, RHI_SAMPLE_COUNT_FLAG_BIT Num_Samples, RHI_IMAGE_TILING Image_Tiling, RHI_Image_Usage_Flags Image_Usage_Flags, RHI_Memory_Property_Flags Memory_Property_Flags, RHI_Image_Create_Flags Image_Create_Flags, uint32_t Array_Layers) {
-		VkImage VK_Image{ nullptr };
-		VkDeviceMemory VK_Device_Memory{ nullptr };
-		NameSpace_Utilities::Create_Image(
-			this->m_VK_Physical_Device,
-			this->m_Logical_VK_Device,
-			static_cast<VkExtent2D>(Image_Extent),
-			static_cast<VkFormat>(Image_Format),
-			Mip_levels,
-			static_cast<VkSampleCountFlagBits>(Num_Samples),
-			static_cast<VkImageTiling>(Image_Tiling),
-			static_cast<VkImageUsageFlags>(Image_Usage_Flags),
-			static_cast<VkMemoryPropertyFlags>(Memory_Property_Flags),
-			VK_Image,
-			VK_Device_Memory,
-			static_cast<VkImageCreateFlags>(Image_Create_Flags),
-			Array_Layers,
-			this->m_Allocator.get()
-		);
-
-		unique_ptr<RHI_Image> Image{ std::make_unique<Vulkan_Image>() };
-		static_cast<Vulkan_Image*>(Image.get())->Set_Deleter(this->m_VK_Image_Deleter);
-		static_cast<Vulkan_Image*>(Image.get())->Reset(VK_Image);
-
-		unique_ptr<RHI_Device_Memory> Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
-		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
-		static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Reset(VK_Device_Memory);
-
-		return std::make_tuple(std::move(Image), std::move(Device_Memory));
-	}
-
-	unique_ptr<RHI_Image_View> Vulkan_RHI::Create_Image_View(const unique_ptr<RHI_Image> Image, RHI_FORMAT Format, uint32_t Mip_levels, RHI_Image_Aspect_Flags Image_Aspect_Flags, RHI_IMAGE_VIEW_TYPE View_Type, uint32_t Layout_Count) {
-		unique_ptr<RHI_Image_View> Image_View{ std::make_unique<Vulkan_Image_View>() };
-		static_cast<Vulkan_Image_View*>(Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
-
-		static_cast<Vulkan_Image_View*>(Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
-			this->m_Logical_VK_Device,
-			this->m_Allocator.get(),
-			static_cast<Vulkan_Image*>(Image.get())->Get(),
-			static_cast<VkFormat>(Format),
-			Mip_levels,
-			static_cast<VkImageAspectFlags>(Image_Aspect_Flags),
-			static_cast<VkImageViewType>(View_Type),
-			Layout_Count
-		));
-
-		return Image_View;
 	}
 
 

@@ -240,6 +240,15 @@
     <ClInclude Include="include\render\render_pass\Render_Pass.h">
       <Filter>include\render\render_pass</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_Pipeline.h">
+      <Filter>include\render\render_system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\render_system\Render_Pipeline_Base.h">
+      <Filter>include\render\render_system</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\render_pass\Directional_Light_Pass.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -342,6 +351,15 @@
       <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_pass\Render_Pass.cpp">
+      <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_Pipeline_Base.h.cpp">
+      <Filter>src\render\render_system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_system\Render_Pipeline.cpp">
+      <Filter>src\render\render_system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Directional_Light_Pass.cpp">
       <Filter>src\render\render_pass</Filter>
     </ClCompile>
   </ItemGroup>

@@ -44,6 +44,22 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			VkFormat Format
 		);
 
+	void Create_Image(
+		VkPhysicalDevice		Physical_Device,
+		VkDevice				Logical_Device,
+		const VkAllocationCallbacks* Allocator,
+		VkExtent2D Image_Extent,
+		VkFormat Format,
+		uint32_t Array_Layers,
+		uint32_t Mip_levels,
+		VkImageTiling Image_Tiling,
+		VkImageUsageFlags Image_Usage_Flags,
+		VkMemoryPropertyFlags Memory_Property_Flags,
+		VkImageCreateFlags Image_Create_Flags,
+		VkImage& Image,
+		VkDeviceMemory& Memory
+	);
+
 	[[nodiscard]] const VkImageView
 		Create_Image_View(
 			VkDevice Logical_Device,
@@ -144,21 +160,5 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 	const VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const vector<unsigned char>& Code);
-
-	void Create_Image(
-		VkPhysicalDevice		Physical_Device,
-		VkDevice				Device,
-		VkExtent2D				Image_Extent,
-		VkFormat				Format,
-		uint32_t				Mip_levels,
-		VkSampleCountFlagBits   Samples,
-		VkImageTiling			Image_Tiling,
-		VkImageUsageFlags		Image_Usage_Flags,
-		VkMemoryPropertyFlags	Memory_Property_Flags,
-		VkImage& Image,
-		VkDeviceMemory& Memory,
-		VkImageCreateFlags		Image_Create_Flags,
-		uint32_t				Array_Layers,
-		const VkAllocationCallbacks* pAllocator);
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities
