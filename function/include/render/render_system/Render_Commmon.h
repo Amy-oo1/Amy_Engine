@@ -8,12 +8,17 @@
 
 #include "math/Vector3.h"
 #include "math/Vector4.h"
+#include<memory>
+
 #include "math/Matrix4x4.h"
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Class.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
+
+	using std::unique_ptr;
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Math::Vector4;

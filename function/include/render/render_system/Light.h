@@ -29,7 +29,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	};
 
-	struct PDirectional_Light final {
+	struct Directional_Light final {
 		Vector3 Direction;
 		Vector3 Irradiance;
 

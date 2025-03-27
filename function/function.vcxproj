@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -174,6 +174,7 @@
     </ClInclude>
     <ClInclude Include="include\physics\Utilities_Physics.h" />
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
+    <ClInclude Include="include\render\render_pass\Render_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h" />
     <ClInclude Include="include\render\render_system\Light.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
@@ -185,7 +186,9 @@
     <ClInclude Include="include\render\render_system\Render_Obejct.h" />
     <ClInclude Include="include\render\render_system\Render_Resource.h" />
     <ClInclude Include="include\render\render_system\Render_Resource_Base.h" />
+    <ClInclude Include="include\render\render_system\Render_Scene.h" />
     <ClInclude Include="include\render\render_system\Render_System.h" />
+    <ClInclude Include="include\render\render_system\Render_Utilities.h" />
     <ClInclude Include="include\render\rhi\empty_rhi\Empty_RHI.h" />
     <ClInclude Include="include\render\rhi\empty_rhi\RHI_Class.h" />
     <ClInclude Include="include\render\rhi\empty_rhi\RHI_Macro.h" />
@@ -200,10 +203,13 @@
     <ClInclude Include="include\render\window\Window_UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\render\render_pass\Render_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp" />
     <ClCompile Include="src\render\render_system\Render_GUID_Allocator.cpp" />
     <ClCompile Include="src\render\render_system\Render_Resource.cpp" />
     <ClCompile Include="src\render\render_system\Render_Resource_Base.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Scene.cpp" />
+    <ClCompile Include="src\render\render_system\Render_Utilities.cpp" />
     <ClCompile Include="src\render\window\Window_UI.cpp" />
     <ClInclude Include="include\render\render_system\Render_Swap_Context.h" />
     <ClCompile Include="src\animation\Animation_Loader.cpp" />

@@ -15,6 +15,9 @@
 
 #include "animation/Animation_Loader.h"
 
+#include "render/render_system/Render_Obejct.h"
+#include "render/render_system/Render_GUID_Allocator.h"
+
 namespace NameSpace_Function::Namespace_Global {
 
 	using std::vector;
@@ -30,6 +33,9 @@ namespace NameSpace_Function::Namespace_Global {
 	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
 
 	using NameSpace_Animation::Animation_Loader;
+
+	using NameSpace_Render::NameSpace_Render_System::Render_GUID_Allocator;
+	using NameSpace_Render::NameSpace_Render_System::Game_Object_Part_ID;
 
 	class Global_Systemer final {
 	private:
@@ -60,6 +66,9 @@ namespace NameSpace_Function::Namespace_Global {
 		Animation_Loader& Animation_Loader;
 
 		Factory*& Factory_Instance;
+
+		//Render_GUID_Allocator<Game_Object_Part_ID>& Render_GUID_Allocator;
+
 
 	private:
 		static inline vector<string> g_Arguments{};
