@@ -1,9 +1,13 @@
 #pragma once
 
+#include<vector>
+
 #include "render/render_system/Render_Resource.h"
 #include "render/render_pass/Render_Pass.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
+
+	using std::vector;
 
 	class Directional_Light_Pass final :public Render_Pass {
 	private:
@@ -16,9 +20,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		~Directional_Light_Pass(void) = default;
 
 	private:
-		void Setup__Attachments(void);
-		void Setup_RenderPass(void);
-		void Setup_FrameBuffer(void);
+		void Setup_Attachments(void);
+		void Setup_Render_Pass(void);
+		void Setup_Frame_Buffer(void);
 		void Setup_Descriptor_Set_Layout(void);
 		void Setup_Descriptor_Set(void);
 		void Setup_Pipeline(void);

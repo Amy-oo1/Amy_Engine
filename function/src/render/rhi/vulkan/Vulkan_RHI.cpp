@@ -244,10 +244,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return this->m_VMA_Allocator;
 	}
 
-	RHI_Descriptor_Pool* NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI::Get_Default_Descriptor_Pool(void) const {
-		return this->m_Default_RHI_Descriptor_Pool.get();
-	}
-
 	//Private Func
 	void Vulkan_RHI::Create_Allocator(void) {
 
@@ -538,6 +534,21 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Queue_Family_Indices;
 	}
 
+	const VkFormat Vulkan_RHI::S_Find_Supported_Format(VkPhysicalDevice Physical_Device, const vector<VkFormat>& Candidates, VkImageTiling Tiling, VkFormatFeatureFlags Features) {
+		for (const auto& Candidate : Candidates) {
+			VkFormatProperties Properties{};
+			vkGetPhysicalDeviceFormatProperties(Physical_Device, Candidate, &Properties);
+
+			if (VK_IMAGE_TILING_LINEAR == Tiling && (Properties.linearTilingFeatures & Features) == Features)
+				return Candidate;
+			else if (VK_IMAGE_TILING_OPTIMAL == Tiling && (Properties.optimalTilingFeatures & Features) == Features)
+				return Candidate;
+		}
+		throw runtime_error("Failed to find supported format!");
+
+		return VK_FORMAT_UNDEFINED;
+	}
+
 	const optional<VkWriteDescriptorSet> Vulkan_RHI::S_Parser_RHI_Write_Descriptor_Set(const RHI_Write_Descriptor_Set* Write_Descriptor_Set, optional<vector<VkDescriptorImageInfo>>& Image_Infos, optional<vector<VkDescriptorBufferInfo>>& Buffer_Infos, optional<vector<VkBufferView>>& vk_Buffer_Views) {
 		if (nullptr == Write_Descriptor_Set)
 			return std::nullopt;
@@ -602,7 +613,27 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_optional(vk_Write_Descriptor_Set);
 	}
 
+	const optional<vector<VkAttachmentReference>> Vulkan_RHI::S_Parser_RHI_Attachment_Reference(const vector<const RHI_Attachment_Reference*>* Attachment_References) {
+		if (nullptr == Attachment_References || Attachment_References->empty())
+			return std::nullopt;
 
+		vector<VkAttachmentReference> vk_Attachment_References{};
+		vk_Attachment_References.reserve(Attachment_References->size());
+		for (size_t Index = 0; Index < Attachment_References->size(); ++Index) {
+			if (nullptr == Attachment_References->at(Index))
+				throw runtime_error("Attachment Reference is nullptr!");
+
+			VkAttachmentReference vk_Attachment_Reference{};
+			{
+				vk_Attachment_Reference.attachment = Attachment_References->at(Index)->Attachment;
+				vk_Attachment_Reference.layout = static_cast<VkImageLayout>(Attachment_References->at(Index)->Layout);
+			}
+
+			vk_Attachment_References.emplace_back(vk_Attachment_Reference);
+		}
+
+		return std::make_optional(vk_Attachment_References);
+	}
 
 
 
@@ -659,7 +690,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 #endif // _DEBUG
 	}
 
-	RHI_Instance* Vulkan_RHI::Get_Instance(void) {
+	RHI_Instance* Vulkan_RHI::Get_Instance(void) const {
 		return this->m_RHI_Instance.get();
 	}
 
@@ -690,7 +721,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->m_Msaa_Samples = S_Get_Max_Usable_Sample_Count(this->m_VK_Physical_Device);
 	}
 
-	const RHI_Physical_Device_Properties Vulkan_RHI::Get_Physical_Device_Properties(void) {
+	const RHI_Physical_Device_Properties Vulkan_RHI::Get_Physical_Device_Properties(void) const {
 		VkPhysicalDeviceProperties VK_Physical_Device_Properties;
 		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &VK_Physical_Device_Properties);
 
@@ -828,8 +859,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Properties;
 	}
 
-	RHI_Physical_Device* Vulkan_RHI::Get_Physical_Device(void) {
+	RHI_Physical_Device* Vulkan_RHI::Get_Physical_Device(void) const {
 		return this->m_RHI_Physical_Device.get();
+	}
+
+	const RHI_FORMAT Vulkan_RHI::Get_Physical_Depth_Format(void) const {
+		return static_cast<RHI_FORMAT>(Vulkan_RHI::S_Find_Supported_Format(
+			this->m_VK_Physical_Device,
+			{ VK_FORMAT_D32_SFLOAT,VK_FORMAT_D32_SFLOAT_S8_UINT,VK_FORMAT_D24_UNORM_S8_UINT },
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+		));
 	}
 
 	void Vulkan_RHI::Create_Logical_Device(void) {
@@ -897,11 +937,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->Reset_Device_Deleters(this->m_Logical_VK_Device, this->m_Allocator.get());
 	}
 
-	RHI_Logical_Device* Vulkan_RHI::Get_Logical_Device(void) {
+	RHI_Logical_Device* Vulkan_RHI::Get_Logical_Device(void) const {
 		return this->m_RHI_Logical_Device.get();
 	}
 
-	RHI_Queue* Vulkan_RHI::Get_Graphics_Queue(void) {
+	RHI_Queue* Vulkan_RHI::Get_Graphics_Queue(void) const {
 		return this->m_Queues.Graphic_RHI_Queue.get();
 	}
 
@@ -922,6 +962,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		static_cast<Vulkan_Command_Pool*>(Command_Pool.get())->Reset(VK_Command_Pool);
 
 		return Command_Pool;
+	}
+
+	RHI_Descriptor_Pool* Vulkan_RHI::Get_Default_Descriptor_Pool(void) const {
+		return this->m_Default_RHI_Descriptor_Pool.get();
 	}
 
 	const vector<unique_ptr<RHI_Command_Buffer>> Vulkan_RHI::Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info* Allocate_Info) {
@@ -1226,6 +1270,203 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			return It->second.get();
 	}
 
+	unique_ptr<RHI_Render_Pass> Vulkan_RHI::Create_Render_Pass(const RHI_Render_Pass_Create_Info* Create_Info) {
+		if (nullptr == Create_Info)
+			throw runtime_error("Create Info is nullptr!");
+
+		vector<VkAttachmentDescription> vk_Attachment_Descriptions{};
+		if (nullptr != Create_Info->Attachments && (!Create_Info->Attachments->empty())) {
+			vk_Attachment_Descriptions.reserve(Create_Info->Attachments->size());
+			for (const auto& Attachment : *Create_Info->Attachments) {
+				VkAttachmentDescription vk_Attachment_Description{};
+				{
+					vk_Attachment_Description.flags = static_cast<VkAttachmentDescriptionFlags>(Attachment->Flags);
+					vk_Attachment_Description.format = static_cast<VkFormat>(Attachment->Format);
+					vk_Attachment_Description.samples = static_cast<VkSampleCountFlagBits>(Attachment->Samples);
+					vk_Attachment_Description.loadOp = static_cast<VkAttachmentLoadOp>(Attachment->Load_Op);
+					vk_Attachment_Description.storeOp = static_cast<VkAttachmentStoreOp>(Attachment->Store_Op);
+					vk_Attachment_Description.stencilLoadOp = static_cast<VkAttachmentLoadOp>(Attachment->Stencil_Load_Op);
+					vk_Attachment_Description.stencilStoreOp = static_cast<VkAttachmentStoreOp>(Attachment->Stencil_Store_Op);
+					vk_Attachment_Description.initialLayout = static_cast<VkImageLayout>(Attachment->Initial_Layout);
+					vk_Attachment_Description.finalLayout = static_cast<VkImageLayout>(Attachment->Final_Layout);
+				}
+
+				vk_Attachment_Descriptions.emplace_back(vk_Attachment_Description);
+			}
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Attachment_Descriptions Input Is EMpty");
+
+		vector<VkSubpassDescription> vk_Subpass_Descriptions{};
+		if (nullptr != Create_Info->Subpasses && !Create_Info->Subpasses->empty()) {
+			vk_Subpass_Descriptions.reserve(Create_Info->Subpasses->size());
+			for (const auto& Subpass : *Create_Info->Subpasses) {
+				const vector<const RHI_Attachment_Reference*> Depth_Stencil_Attachment{ Subpass->Depth_Stencil_Attachment };
+				const auto vk_Input_Attachments{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Input_Attachments) };
+				const auto vk_Color_Attachments{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Color_Attachments) };
+				const auto vk_Resolve_Attachments{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Resolve_Attachments) };
+				const auto vk_Depth_Stencil_Attachment{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(&Depth_Stencil_Attachment) };
+
+				vector<uint32_t> Preserve_Attachments{};
+				if (nullptr != Subpass->Preserve_Attachments && !Subpass->Preserve_Attachments->empty()) {
+					Preserve_Attachments.reserve(Subpass->Preserve_Attachments->size());
+
+					for (const auto& Preserve_Attachment : *Subpass->Preserve_Attachments)
+						Preserve_Attachments.push_back(Preserve_Attachment);
+				}
+
+				VkSubpassDescription vk_Subpass_Description{};
+				{
+					vk_Subpass_Description.flags = static_cast<VkSubpassDescriptionFlags>(Subpass->Flags);
+					vk_Subpass_Description.pipelineBindPoint = static_cast<VkPipelineBindPoint>(Subpass->Pipeline_Bind_Point);
+					vk_Subpass_Description.inputAttachmentCount = vk_Input_Attachments.has_value() ? static_cast<uint32_t>(vk_Input_Attachments->size()) : 0;
+					vk_Subpass_Description.pInputAttachments = vk_Input_Attachments.has_value() ? vk_Input_Attachments->data() : nullptr;
+					vk_Subpass_Description.colorAttachmentCount = vk_Color_Attachments.has_value() ? static_cast<uint32_t>(vk_Color_Attachments->size()) : 0;
+					vk_Subpass_Description.pColorAttachments = vk_Color_Attachments.has_value() ? vk_Color_Attachments->data() : nullptr;
+					vk_Subpass_Description.pResolveAttachments = vk_Resolve_Attachments.has_value() ? vk_Resolve_Attachments->data() : nullptr;
+					vk_Subpass_Description.pDepthStencilAttachment = vk_Depth_Stencil_Attachment.has_value() ? &vk_Depth_Stencil_Attachment.value().front() : nullptr;
+					vk_Subpass_Description.preserveAttachmentCount = static_cast<uint32_t>(Preserve_Attachments.size());
+					vk_Subpass_Description.pPreserveAttachments = Preserve_Attachments.data();
+				}
+
+				vk_Subpass_Descriptions.emplace_back(vk_Subpass_Description);
+			}
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Subpasses Input Is Empty");
+
+		vector<VkSubpassDependency> vk_Subpass_Dependencies{};
+		if (nullptr != Create_Info->Dependencies && !Create_Info->Dependencies->empty()) {
+			vk_Subpass_Dependencies.reserve(Create_Info->Dependencies->size());
+			for (const auto& Subpass_Dependency : *Create_Info->Dependencies) {
+				VkSubpassDependency vk_Subpass_Dependency{};
+				{
+					vk_Subpass_Dependency.srcSubpass = Subpass_Dependency->Src_Subpass;
+					vk_Subpass_Dependency.dstSubpass = Subpass_Dependency->Dst_Subpass;
+					vk_Subpass_Dependency.srcStageMask = static_cast<VkPipelineStageFlags>(Subpass_Dependency->Src_Stage_Mask);
+					vk_Subpass_Dependency.dstStageMask = static_cast<VkPipelineStageFlags>(Subpass_Dependency->Dst_Stage_Mask);
+					vk_Subpass_Dependency.srcAccessMask = static_cast<VkAccessFlags>(Subpass_Dependency->Src_Access_Mask);
+					vk_Subpass_Dependency.dstAccessMask = static_cast<VkAccessFlags>(Subpass_Dependency->Dst_Access_Mask);
+					vk_Subpass_Dependency.dependencyFlags = static_cast<VkDependencyFlags>(Subpass_Dependency->Dependency_Flags);
+				}
+
+				vk_Subpass_Dependencies.emplace_back(vk_Subpass_Dependency);
+			}
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Subpass_Dependencies Input Is Empty");
+
+		VkRenderPassCreateInfo vk_Render_Pass_Create_Info{};
+		{
+			vk_Render_Pass_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			vk_Render_Pass_Create_Info.pNext = Create_Info->pNext;
+			vk_Render_Pass_Create_Info.flags = static_cast<VkRenderPassCreateFlags>(Create_Info->Flags);
+			vk_Render_Pass_Create_Info.attachmentCount = static_cast<uint32_t>(vk_Attachment_Descriptions.size());
+			vk_Render_Pass_Create_Info.pAttachments = vk_Attachment_Descriptions.data();
+			vk_Render_Pass_Create_Info.subpassCount = static_cast<uint32_t>(vk_Subpass_Descriptions.size());
+			vk_Render_Pass_Create_Info.pSubpasses = vk_Subpass_Descriptions.data();
+			vk_Render_Pass_Create_Info.dependencyCount = static_cast<uint32_t>(vk_Subpass_Dependencies.size());
+			vk_Render_Pass_Create_Info.pDependencies = vk_Subpass_Dependencies.data();
+		}
+
+		VkRenderPass vk_Render_Pass{};
+		THROW_IF_VK_FAILED(vkCreateRenderPass(this->m_Logical_VK_Device, &vk_Render_Pass_Create_Info, this->m_Allocator.get(), &vk_Render_Pass));
+		unique_ptr<RHI_Render_Pass> Render_Pass{ std::make_unique<Vulkan_Render_Pass>() };
+		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Set_Deleter(this->m_VK_Render_Pass_Deleter);
+		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Reset(vk_Render_Pass);
+
+		return Render_Pass;
+	}
+
+	unique_ptr<RHI_Frame_Buffer> Vulkan_RHI::Create_Frame_Buffer(const RHI_Frame_buffer_Create_Info* Create_Info) {
+		if (nullptr == Create_Info)
+			throw runtime_error("Create Info is nullptr!");
+
+		vector<VkImageView> Attachments{};
+		if (nullptr != Create_Info->Attachments && !Create_Info->Attachments->empty()) {
+			Attachments.reserve(Create_Info->Attachments->size());
+			for (size_t Index = 0; Index < Create_Info->Attachments->size(); ++Index)
+				Attachments.emplace_back(static_cast<Vulkan_Image_View*>(Create_Info->Attachments->at(Index))->Get());
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Attachments Input Is Empty");
+
+		VkFramebufferCreateInfo Frame_Buffer_Create_Info{};
+		{
+			Frame_Buffer_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			Frame_Buffer_Create_Info.pNext = Create_Info->pNext;
+			Frame_Buffer_Create_Info.flags = static_cast<VkFramebufferCreateFlags>(Create_Info->Flags);
+			Frame_Buffer_Create_Info.renderPass = static_cast<Vulkan_Render_Pass*>(Create_Info->Render_Pass)->Get();
+			Frame_Buffer_Create_Info.attachmentCount = static_cast<uint32_t>(Attachments.size());
+			Frame_Buffer_Create_Info.pAttachments = Attachments.data();
+			Frame_Buffer_Create_Info.width = Create_Info->Width;
+			Frame_Buffer_Create_Info.height = Create_Info->Height;
+			Frame_Buffer_Create_Info.layers = Create_Info->Layers;
+		}
+
+		VkFramebuffer VK_Frame_Buffer{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateFramebuffer(this->m_Logical_VK_Device, &Frame_Buffer_Create_Info, this->m_Allocator.get(), &VK_Frame_Buffer));
+		auto Frame_Buffer{ std::make_unique<Vulkan_Frame_Buffer>() };
+		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Set_Deleter(this->m_VK_Frame_Buffer_Deleter);
+		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Reset(VK_Frame_Buffer);
+
+		return Frame_Buffer;
+	}
+
+
+	unique_ptr<RHI_Descriptor_Set_Layout> Vulkan_RHI::Create_Descriptor_Set_Layout(const RHI_Descriptor_Set_Layout_Create_Info* Create_Info) {
+		if (nullptr == Create_Info)
+			throw runtime_error("Create Info is nullptr!");
+
+		vector<VkDescriptorSetLayoutBinding> Bindings{};
+		if (nullptr != Create_Info->Bindings && !Create_Info->Bindings->empty()) {
+			Bindings.reserve(Create_Info->Bindings->size());
+			for (const auto& Binding : *Create_Info->Bindings) {
+				vector<VkSampler> Samplers{};
+
+				if ((!Binding->Immutable_Samplers->empty()) && Binding->Immutable_Samplers->size() != Binding->Descriptor_Count)
+					System_Logger::Get_Instance().Log(System_Logger::Level::err, "Immutable_Samplers size is not equal to Descriptor_Count");
+
+				Samplers.reserve(Binding->Descriptor_Count);
+				for (size_t Sampler_Index = 0; Sampler_Index < Binding->Descriptor_Count; ++Sampler_Index) {
+					Samplers.emplace_back(static_cast<Vulkan_Sampler*>(Binding->Immutable_Samplers->at(Sampler_Index))->Get());
+
+					if (nullptr == Samplers[Sampler_Index])
+						System_Logger::Get_Instance().Log(System_Logger::Level::err, "Sampler is nullptr");
+				}
+				VkDescriptorSetLayoutBinding vk_Binding{};
+				{
+					vk_Binding.binding = Binding->Binding;
+					vk_Binding.descriptorType = static_cast<VkDescriptorType>(Binding->Descriptor_Type);
+					vk_Binding.descriptorCount = static_cast<uint32_t>(Samplers.size());
+					vk_Binding.stageFlags = static_cast<VkShaderStageFlags>(Binding->Stage_Flags);
+					vk_Binding.pImmutableSamplers = Samplers.data();
+				}
+
+				Bindings.emplace_back(vk_Binding);
+			}
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Bindings Input Is Empty");
+
+		VkDescriptorSetLayoutCreateInfo Descriptor_Set_Layout_Create_Info{};
+		{
+			Descriptor_Set_Layout_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			Descriptor_Set_Layout_Create_Info.pNext = Create_Info->pNext;
+			Descriptor_Set_Layout_Create_Info.flags = static_cast<VkDescriptorSetLayoutCreateFlags>(Create_Info->Flags);
+			Descriptor_Set_Layout_Create_Info.bindingCount = static_cast<uint32_t>(Bindings.size());
+			Descriptor_Set_Layout_Create_Info.pBindings = Bindings.data();
+		}
+
+		VkDescriptorSetLayout VK_Descriptor_Set_Layout{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateDescriptorSetLayout(this->m_Logical_VK_Device, &Descriptor_Set_Layout_Create_Info, this->m_Allocator.get(), &VK_Descriptor_Set_Layout));
+		auto Descriptor_Set_Layout{ std::make_unique<Vulkan_Descriptor_Set_Layout>() };
+		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Set_Deleter(this->m_VK_Descriptor_Set_Layout_Deleter);
+		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Reset(VK_Descriptor_Set_Layout);
+
+		return Descriptor_Set_Layout;
+	}
+
 	vector<unique_ptr<RHI_Descriptor_Set>> Vulkan_RHI::Allocate_Descriptor_Sets(const RHI_Descriptor_Set_Allocate_Info* Allocate_Info) {
 		vector<VkDescriptorSetLayout> Descriptor_Set_Layouts{};
 		Descriptor_Set_Layouts.reserve(Allocate_Info->Set_Layouts->size());
@@ -1319,6 +1560,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		else
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Empty Input");
 	}
+
 
 
 	void Vulkan_RHI::Run(void) {
@@ -1610,37 +1852,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 
-	VkFormat Vulkan_RHI::Find_Supported_Format(const VkPhysicalDevice& Physical_Device, const vector<VkFormat>& Candidates, VkImageTiling Tiling, VkFormatFeatureFlags Features) {
-		for (const auto& Candidate : Candidates) {
-			VkFormatProperties Properties{};
-			vkGetPhysicalDeviceFormatProperties(Physical_Device, Candidate, &Properties);
-
-			if (VK_IMAGE_TILING_LINEAR == Tiling && (Properties.linearTilingFeatures & Features) == Features)
-				return Candidate;
-			else if (VK_IMAGE_TILING_OPTIMAL == Tiling && (Properties.optimalTilingFeatures & Features) == Features)
-				return Candidate;
-		}
-		throw runtime_error("Failed to find supported format!");
-
-		return VK_FORMAT_UNDEFINED;
-	}
-
-	VkFormat Vulkan_RHI::Find_Depth_Format(const VkPhysicalDevice& Physical_Device) {
-		return Vulkan_RHI::Find_Supported_Format(
-			Physical_Device,
-			{ VK_FORMAT_D32_SFLOAT,VK_FORMAT_D32_SFLOAT_S8_UINT,VK_FORMAT_D24_UNORM_S8_UINT },
-			VK_IMAGE_TILING_OPTIMAL,
-			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
-		);
-	}
-
-
-
-
-
-
-
-
 
 
 
@@ -1812,44 +2023,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Descriptor_Pool;
 	}
 
-	unique_ptr<RHI_Descriptor_Set_Layout> Vulkan_RHI::Create_Descriptor_Set_Layout(const RHI_Descriptor_Set_LayOut_Create_Info pCreateInfo) {
-		vector<VkDescriptorSetLayoutBinding> Bindings{};
-		Bindings.reserve(pCreateInfo.Bindings.size());
-		for (size_t Index = 0; Index < pCreateInfo.Bindings.size(); ++Index) {
-			vector<VkSampler> Samplers{};
-			Samplers.reserve(pCreateInfo.Bindings[Index].Immutable_Samplers.size());
-			for (size_t Sampler_Index = 0; Sampler_Index < pCreateInfo.Bindings[Index].Immutable_Samplers.size(); ++Sampler_Index)
-				Samplers.emplace_back(static_cast<Vulkan_Sampler*>(pCreateInfo.Bindings[Index].Immutable_Samplers[Sampler_Index].get())->Get());
-
-			VkDescriptorSetLayoutBinding Binding{};
-			{
-				Binding.binding = pCreateInfo.Bindings[Index].Binding;
-				Binding.descriptorType = static_cast<VkDescriptorType>(pCreateInfo.Bindings[Index].Descriptor_Type);
-				Binding.descriptorCount = pCreateInfo.Bindings[Index].Descriptor_Count;
-				Binding.stageFlags = static_cast<VkShaderStageFlags>(pCreateInfo.Bindings[Index].Stage_Flags);
-				Binding.pImmutableSamplers = Samplers.data();
-			}
-
-			Bindings.emplace_back(Binding);
-		}
-
-		VkDescriptorSetLayoutCreateInfo Descriptor_Set_Layout_Create_Info{};
-		{
-			Descriptor_Set_Layout_Create_Info.sType = static_cast<VkStructureType>(pCreateInfo.sType);
-			Descriptor_Set_Layout_Create_Info.pNext = pCreateInfo.pNext;
-			Descriptor_Set_Layout_Create_Info.flags = static_cast<VkDescriptorSetLayoutCreateFlags>(pCreateInfo.Flags);
-			Descriptor_Set_Layout_Create_Info.bindingCount = Bindings.size();
-			Descriptor_Set_Layout_Create_Info.pBindings = Bindings.data();
-		}
-
-		VkDescriptorSetLayout VK_Descriptor_Set_Layout{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateDescriptorSetLayout(this->m_Logical_VK_Device, &Descriptor_Set_Layout_Create_Info, this->m_Allocator.get(), &VK_Descriptor_Set_Layout));
-		auto Descriptor_Set_Layout{ std::make_unique<Vulkan_Descriptor_Set_Layout>() };
-		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Set_Deleter(this->m_VK_Descriptor_Set_Layout_Deleter);
-		static_cast<Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout.get())->Reset(VK_Descriptor_Set_Layout);
-
-		return Descriptor_Set_Layout;
-	}
 
 	unique_ptr<RHI_Fence> Vulkan_RHI::Create_Fence(const RHI_Fence_Create_Info pCreateInfo) {
 		VkFenceCreateInfo Fence_Create_Info{};
@@ -1868,33 +2041,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Fence;
 	}
 
-	unique_ptr<RHI_Frame_Buffer> Vulkan_RHI::Create_Frame_Buffer(const RHI_Frame_buffer_Create_Info Create_Info) {
-		vector<VkImageView> Attachments{};
-		Attachments.reserve(Create_Info.Attachments.size());
-		for (size_t Index = 0; Index < Create_Info.Attachments.size(); ++Index)
-			Attachments.emplace_back(static_cast<Vulkan_Image_View*>(Create_Info.Attachments[Index].get())->Get());
-
-		VkFramebufferCreateInfo Frame_Buffer_Create_Info{};
-		{
-			Frame_Buffer_Create_Info.sType = static_cast<VkStructureType>(Create_Info.sType);
-			Frame_Buffer_Create_Info.pNext = Create_Info.pNext;
-			Frame_Buffer_Create_Info.flags = static_cast<VkFramebufferCreateFlags>(Create_Info.Flags);
-			Frame_Buffer_Create_Info.renderPass = static_cast<Vulkan_Render_Pass*>(Create_Info.Render_Pass.get())->Get();
-			Frame_Buffer_Create_Info.attachmentCount = Attachments.size();
-			Frame_Buffer_Create_Info.pAttachments = Attachments.data();
-			Frame_Buffer_Create_Info.width = Create_Info.Width;
-			Frame_Buffer_Create_Info.height = Create_Info.Height;
-			Frame_Buffer_Create_Info.layers = Create_Info.Layers;
-		}
-
-		VkFramebuffer VK_Frame_Buffer{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateFramebuffer(this->m_Logical_VK_Device, &Frame_Buffer_Create_Info, this->m_Allocator.get(), &VK_Frame_Buffer));
-		auto Frame_Buffer{ std::make_unique<Vulkan_Frame_Buffer>() };
-		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Set_Deleter(this->m_VK_Frame_Buffer_Deleter);
-		static_cast<Vulkan_Frame_Buffer*>(Frame_Buffer.get())->Reset(VK_Frame_Buffer);
-
-		return Frame_Buffer;
-	}
 
 
 	const optional<vector<VkPipelineShaderStageCreateInfo>> Vulkan_RHI::Parse_RHI_Pipeline_Shader_Stage_Create_Info(const vector<const RHI_Pipeline_Shader_Stage_Create_Info*>* Stages, vector<optional<vector<VkSpecializationMapEntry>>>& vk_Specialization_Map_Entryss, vector<optional<VkSpecializationInfo>>& vk_Specialization_Infos) {
@@ -2286,28 +2432,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_optional(vk_Pipeline_Dynamic_State_Create_Info);
 	}
 
-	const optional<vector<VkAttachmentReference>> Vulkan_RHI::Parser_RHI_Attachment_Reference(const vector<const RHI_Attachment_Reference*>* Attachment_References) {
-		if (nullptr == Attachment_References || Attachment_References->empty())
-			return std::nullopt;
-
-		vector<VkAttachmentReference> vk_Attachment_References{};
-		vk_Attachment_References.reserve(Attachment_References->size());
-		for (size_t Index = 0; Index < Attachment_References->size(); ++Index) {
-			if (nullptr == Attachment_References->at(Index))
-				throw runtime_error("Attachment Reference is nullptr!");
-
-			VkAttachmentReference vk_Attachment_Reference{};
-			{
-				vk_Attachment_Reference.attachment = Attachment_References->at(Index)->Attachment;
-				vk_Attachment_Reference.layout = static_cast<VkImageLayout>(Attachment_References->at(Index)->Layout);
-			}
-
-			vk_Attachment_References.emplace_back(vk_Attachment_Reference);
-		}
-
-		return std::make_optional(vk_Attachment_References);
-	}
-
 	const optional<VkClearValue> Vulkan_RHI::Parser_RHI_Clear_Value(const RHI_Clear_Value* Clear_Value) {
 		if (nullptr == Clear_Value)
 			return std::nullopt;
@@ -2484,105 +2608,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Pipeline_Layout;
 	}
 
-	unique_ptr<RHI_Render_Pass> Vulkan_RHI::Create_Render_Pass(const RHI_Render_Pass_Create_Info* Create_Info) {
-		vector<VkAttachmentDescription> vk_Attachment_Descriptions{};
-		if (nullptr != Create_Info->Attachments && (!Create_Info->Attachments->empty())) {
-			vk_Attachment_Descriptions.reserve(Create_Info->Attachments->size());
-			for (const auto& Attachment : *Create_Info->Attachments) {
-				VkAttachmentDescription vk_Attachment_Description{};
-				{
-					vk_Attachment_Description.flags = static_cast<VkAttachmentDescriptionFlags>(Attachment->Flags);
-					vk_Attachment_Description.format = static_cast<VkFormat>(Attachment->Format);
-					vk_Attachment_Description.samples = static_cast<VkSampleCountFlagBits>(Attachment->Samples);
-					vk_Attachment_Description.loadOp = static_cast<VkAttachmentLoadOp>(Attachment->Load_Op);
-					vk_Attachment_Description.storeOp = static_cast<VkAttachmentStoreOp>(Attachment->Store_Op);
-					vk_Attachment_Description.stencilLoadOp = static_cast<VkAttachmentLoadOp>(Attachment->Stencil_Load_Op);
-					vk_Attachment_Description.stencilStoreOp = static_cast<VkAttachmentStoreOp>(Attachment->Stencil_Store_Op);
-					vk_Attachment_Description.initialLayout = static_cast<VkImageLayout>(Attachment->Initial_Layout);
-					vk_Attachment_Description.finalLayout = static_cast<VkImageLayout>(Attachment->Final_Layout);
-				}
 
-				vk_Attachment_Descriptions.emplace_back(vk_Attachment_Description);
-			}
-		}
-
-		vector<VkSubpassDescription> vk_Subpass_Descriptions{};
-		if (nullptr != Create_Info->Subpasses && !Create_Info->Subpasses->empty()) {
-			vk_Subpass_Descriptions.reserve(Create_Info->Subpasses->size());
-			for (const auto& Subpass : *Create_Info->Subpasses) {
-				const vector<const RHI_Attachment_Reference*> Depth_Stencil_Attachment{ Subpass->Depth_Stencil_Attachment };
-				const auto vk_Input_Attachments{ Vulkan_RHI::Parser_RHI_Attachment_Reference(Subpass->Input_Attachments) };
-				const auto vk_Color_Attachments{ Vulkan_RHI::Parser_RHI_Attachment_Reference(Subpass->Color_Attachments) };
-				const auto vk_Resolve_Attachments{ Vulkan_RHI::Parser_RHI_Attachment_Reference(Subpass->Resolve_Attachments) };
-				const auto vk_Depth_Stencil_Attachment{ Vulkan_RHI::Parser_RHI_Attachment_Reference(&Depth_Stencil_Attachment) };
-
-				vector<uint32_t> Preserve_Attachments{};
-				if (nullptr != Subpass->Preserve_Attachments && !Subpass->Preserve_Attachments->empty()) {
-					Preserve_Attachments.reserve(Subpass->Preserve_Attachments->size());
-
-					for (const auto& Preserve_Attachment : *Subpass->Preserve_Attachments)
-						Preserve_Attachments.push_back(Preserve_Attachment);
-				}
-
-				VkSubpassDescription vk_Subpass_Description{};
-				{
-					vk_Subpass_Description.flags = static_cast<VkSubpassDescriptionFlags>(Subpass->Flags);
-					vk_Subpass_Description.pipelineBindPoint = static_cast<VkPipelineBindPoint>(Subpass->Pipeline_Bind_Point);
-					vk_Subpass_Description.inputAttachmentCount = vk_Input_Attachments.has_value() ? vk_Input_Attachments->size() : 0;
-					vk_Subpass_Description.pInputAttachments = vk_Input_Attachments.has_value() ? vk_Input_Attachments->data() : nullptr;
-					vk_Subpass_Description.colorAttachmentCount = vk_Color_Attachments.has_value() ? vk_Color_Attachments->size() : 0;
-					vk_Subpass_Description.pColorAttachments = vk_Color_Attachments.has_value() ? vk_Color_Attachments->data() : nullptr;
-					vk_Subpass_Description.pResolveAttachments = vk_Resolve_Attachments.has_value() ? vk_Resolve_Attachments->data() : nullptr;
-					vk_Subpass_Description.pDepthStencilAttachment = vk_Depth_Stencil_Attachment.has_value() ? &vk_Depth_Stencil_Attachment.value().front() : nullptr;
-					vk_Subpass_Description.preserveAttachmentCount = Preserve_Attachments.size();
-					vk_Subpass_Description.pPreserveAttachments = Preserve_Attachments.data();
-				}
-
-				vk_Subpass_Descriptions.emplace_back(vk_Subpass_Description);
-			}
-		}
-
-		vector<VkSubpassDependency> vk_Subpass_Dependencies{};
-		if (nullptr != Create_Info->Dependencies && !Create_Info->Dependencies->empty()) {
-			vk_Subpass_Dependencies.reserve(Create_Info->Dependencies->size());
-
-			for (const auto& Subpass_Dependency : *Create_Info->Dependencies) {
-				VkSubpassDependency vk_Subpass_Dependency{};
-				{
-					vk_Subpass_Dependency.srcSubpass = Subpass_Dependency->Src_Subpass;
-					vk_Subpass_Dependency.dstSubpass = Subpass_Dependency->Dst_Subpass;
-					vk_Subpass_Dependency.srcStageMask = static_cast<VkPipelineStageFlags>(Subpass_Dependency->Src_Stage_Mask);
-					vk_Subpass_Dependency.dstStageMask = static_cast<VkPipelineStageFlags>(Subpass_Dependency->Dst_Stage_Mask);
-					vk_Subpass_Dependency.srcAccessMask = static_cast<VkAccessFlags>(Subpass_Dependency->Src_Access_Mask);
-					vk_Subpass_Dependency.dstAccessMask = static_cast<VkAccessFlags>(Subpass_Dependency->Dst_Access_Mask);
-					vk_Subpass_Dependency.dependencyFlags = static_cast<VkDependencyFlags>(Subpass_Dependency->Dependency_Flags);
-				}
-
-				vk_Subpass_Dependencies.emplace_back(vk_Subpass_Dependency);
-			}
-		}
-
-		VkRenderPassCreateInfo vk_Render_Pass_Create_Info{};
-		{
-			vk_Render_Pass_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
-			vk_Render_Pass_Create_Info.pNext = Create_Info->pNext;
-			vk_Render_Pass_Create_Info.flags = static_cast<VkRenderPassCreateFlags>(Create_Info->Flags);
-			vk_Render_Pass_Create_Info.attachmentCount = static_cast<uint32_t>(vk_Attachment_Descriptions.size());
-			vk_Render_Pass_Create_Info.pAttachments = vk_Attachment_Descriptions.data();
-			vk_Render_Pass_Create_Info.subpassCount = static_cast<uint32_t>(vk_Subpass_Descriptions.size());
-			vk_Render_Pass_Create_Info.pSubpasses = vk_Subpass_Descriptions.data();
-			vk_Render_Pass_Create_Info.dependencyCount = static_cast<uint32_t>(vk_Subpass_Dependencies.size());
-			vk_Render_Pass_Create_Info.pDependencies = vk_Subpass_Dependencies.data();
-		}
-
-		VkRenderPass vk_Render_Pass{};
-		THROW_IF_VK_FAILED(vkCreateRenderPass(this->m_Logical_VK_Device, &vk_Render_Pass_Create_Info, this->m_Allocator.get(), &vk_Render_Pass));
-		unique_ptr<RHI_Render_Pass> Render_Pass{ std::make_unique<Vulkan_Render_Pass>() };
-		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Set_Deleter(this->m_VK_Render_Pass_Deleter);
-		static_cast<Vulkan_Render_Pass*>(Render_Pass.get())->Reset(vk_Render_Pass);
-
-		return Render_Pass;
-	}
 
 
 

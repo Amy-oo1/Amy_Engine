@@ -76,10 +76,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		struct Frame_Buffer final {
 			uint32_t Width;
 			uint32_t Height;
-			unique_ptr<RHI_Frame_Buffer> Frame_Buffer;
-			unique_ptr<RHI_Render_Pass> Render_Pass;
 
 			vector<Frame_Buffer_Attachment> Attachments;
+			unique_ptr<RHI_Render_Pass> Render_Pass;
+			unique_ptr<RHI_Frame_Buffer> Frame_Buffer;
 		};
 
 		struct Descriptor final {
@@ -108,9 +108,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	public://TODO : 
 		shared_ptr<Global_Render_Resource> m_Global_Render_Resource{ nullptr };
 
+		Frame_Buffer m_Frame_Buffer;
 		vector<Descriptor> m_Descriptors;
 		vector<Render_Pipeline> m_Render_Pipelines;
-		Frame_Buffer m_Frame_Buffer;
+		
 
 		/*virtual void Post_Inittialize(void) = 0;
 		virtual void Draw(void) = 0;*/

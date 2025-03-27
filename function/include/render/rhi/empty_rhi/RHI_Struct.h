@@ -119,15 +119,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_DESCRIPTOR_TYPE Descriptor_Type;
 		uint32_t Descriptor_Count;
 		RHI_Shader_Stage_Flags Stage_Flags;
-		const vector<unique_ptr<RHI_Sampler>> Immutable_Samplers;
+		vector<RHI_Sampler*>* Immutable_Samplers;
 	};
 
-	struct RHI_Descriptor_Set_LayOut_Create_Info final {
+	struct RHI_Descriptor_Set_Layout_Create_Info final {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Descriptor_Set_Layout_Create_Flags Flags;
-		uint32_t Binding_Count;
-		const vector<RHI_Descriptor_Set_Layout_Binding> Bindings;
+		const vector<const RHI_Descriptor_Set_Layout_Binding*>* Bindings;
 	};
 
 	struct RHI_Fence_Create_Info final {
@@ -140,8 +139,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Frame_Buffer_Create_Flags Flags;
-		unique_ptr<RHI_Render_Pass> Render_Pass;
-		const vector<unique_ptr<RHI_Image_View>> Attachments;
+		RHI_Render_Pass* Render_Pass;
+		const vector<RHI_Image_View*>* Attachments;
 		uint32_t Width;
 		uint32_t Height;
 		uint32_t Layers;
