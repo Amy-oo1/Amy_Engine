@@ -2,6 +2,7 @@
 
 #include<vector>
 
+#include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/render_system/Render_Resource.h"
 #include "render/render_pass/Render_Pass.h"
 
@@ -30,7 +31,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Draw_Model(void);
 
 	private:
-
+		vector<unsigned char> m_Vertex_Shader_Code;
+		vector<unsigned char> m_Fragment_Shader_Code;
 
 
 	public:

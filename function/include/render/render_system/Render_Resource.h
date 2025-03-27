@@ -212,7 +212,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	public:
 		static constexpr uint32_t s_Max_Global_Stroage_Buffer_Size{ 1 << 27 };
 
-
+		const Global_Render_Resource& Get_Global_Render_Resource(void)const;
 
 
 	private:

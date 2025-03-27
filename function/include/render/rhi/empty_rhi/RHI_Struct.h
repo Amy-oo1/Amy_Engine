@@ -111,7 +111,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		const void* pNext;
 		RHI_Descriptor_Pool_Create_Flags Flags;
 		uint32_t Max_Sets;
-		const vector<RHI_Descriptor_Pool_Size> Pool_Sizes;
+		const vector<const RHI_Descriptor_Pool_Size*>* Pool_Sizes;
 	};
 
 	struct RHI_Descriptor_Set_Layout_Binding final {
@@ -168,9 +168,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Pipeline_Shader_Stage_Create_Flags Flags;
-		RHI_SHADER_STAGE_BITS Stage;
+		RHI_SHADER_STAGE_FLAG_BITS Stage;
 		RHI_Shader_Module* Module;
-		const char* pName;
+		const char* Name;
 		const RHI_Specialization_Info* Specialization_Info;
 	};
 
@@ -283,7 +283,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_Bool32 Logic_Op_Enable;
 		RHI_LOGIC_OP Logic_Op;
 		const vector<const RHI_Pipeline_Color_Blend_Attachment_State*>* Attachments;
-		std::array<float, 4> Blend_Constan;
+		std::array<float, 4> Blend_Constants;
 	};
 
 	struct RHI_Pipeline_Dynamic_State_Create_Info {

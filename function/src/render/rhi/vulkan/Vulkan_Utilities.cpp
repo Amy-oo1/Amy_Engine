@@ -616,16 +616,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 
-	const VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const vector<unsigned char>& Code) {
+	VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const VkAllocationCallbacks* VK_Allocator, const vector<unsigned char>* Shader_Code) {
 		VkShaderModuleCreateInfo Create_Info{};
 		{
 			Create_Info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-			Create_Info.codeSize = Code.size();
-			Create_Info.pCode = reinterpret_cast<const uint32_t*>(Code.data());
+			Create_Info.codeSize = Shader_Code->size();
+			Create_Info.pCode = reinterpret_cast<const uint32_t*>(Shader_Code->data());
 		}
 
 		VkShaderModule Shader_Module{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateShaderModule(Logical_Device, &Create_Info, nullptr, &Shader_Module));
+		THROW_IF_VK_FAILED(vkCreateShaderModule(Logical_Device, &Create_Info, VK_Allocator, &Shader_Module));
 		return Shader_Module;
 	}
+
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities

@@ -188,6 +188,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Frame_buffer_Create_Info* Create_Info
 			) = 0;
 
+		[[nodiscard]] virtual unique_ptr<RHI_Descriptor_Pool>
+			Create_Descriptor_Pool(
+				const RHI_Descriptor_Pool_Create_Info* Create_Info
+			) = 0;
+
 		[[nodiscard]] virtual unique_ptr<RHI_Descriptor_Set_Layout>
 			Create_Descriptor_Set_Layout(
 				const RHI_Descriptor_Set_Layout_Create_Info* Create_Info
@@ -202,6 +207,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			Update_Descriptor_Sets(
 				const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes,
 				const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies
+			) = 0;
+
+		[[nodiscard]] virtual
+			unique_ptr<RHI_Shader_Module>
+			Create_Shader_Module(
+				const vector<unsigned char>* Shader_Code
+			) = 0;
+
+		[[nodiscard]] virtual unique_ptr<RHI_Pipeline>
+			Create_Graphics_Pipeline(
+				const RHI_Graphics_Pipeline_Create_Info* Create_Info,
+				RHI_Pipeline_Cache* Pipeline_Cache = nullptr
 			) = 0;
 
 
@@ -226,9 +243,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
 
-		[[nodiscard]] virtual const unique_ptr<RHI_Shader_Module> Create_Shader_Module(const std::vector<unsigned char>& Shader_Code) = 0;
-
-
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
 
 		[[nodiscard]] virtual unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) = 0;
@@ -238,20 +252,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		//TODO : 
 
-		[[nodiscard]] virtual unique_ptr<RHI_Descriptor_Pool>
-			Create_Descriptor_Pool(RHI_Descriptor_Pool_Create_Info Create_Info) = 0;
-
 
 		[[nodiscard]] virtual unique_ptr<RHI_Fence>
 			Create_Fence(const RHI_Fence_Create_Info pCreateInfo) = 0;
 
-
-
-		[[nodiscard]] virtual unique_ptr<RHI_Pipeline>
-			Create_Graphics_Pipeline(
-				optional<RHI_Pipeline_Cache*> Pipeline_Cache,
-				const RHI_Graphics_Pipeline_Create_Info* Create_Info
-			) = 0;
 
 
 		[[nodiscard]] virtual unique_ptr<RHI_Pipeline>

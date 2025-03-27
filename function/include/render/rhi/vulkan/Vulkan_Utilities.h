@@ -155,10 +155,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			VmaAllocation& Image_Allocation
 		);
 
-
-
-
-
-	const VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const vector<unsigned char>& Code);
+	[[nodiscard]] VkShaderModule
+		Create_Shader_Module(
+			VkDevice Logical_Device,
+			const VkAllocationCallbacks* VK_Allocator,
+			const vector<unsigned char>* Shader_Code
+		);
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Utilities

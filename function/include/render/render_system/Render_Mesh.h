@@ -1,16 +1,22 @@
 #pragma once
 
 #include<array>
+#include<vector>
 
 #include "math/Vector2.h"
 #include "math/Vector3.h"
 #include "math/Vector4.h"
 
+#include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::array;
+	using std::vector;
+
+	using NameSpace_RHI::RHI_VERTEX_INPUT_RATE;
+	using NameSpace_RHI::RHI_FORMAT;
 
 	using NameSpace_RHI::RHI_Vertex_Input_Binding_Description;
 	using NameSpace_RHI::RHI_Vertex_Input_Attribute_Description;
@@ -39,11 +45,55 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Vector4 Weights;
 		};
 
-		static  array< RHI_Vertex_Input_Binding_Description, 3>
-			Get_Vertex_Input_Binding_Description(void);
+		static constexpr RHI_Vertex_Input_Binding_Description Position_Binding_Description{
+			0,
+			sizeof(Vulkan_Mesh_Vertex_Position),
+			RHI_VERTEX_INPUT_RATE::RHI_VERTEX_INPUT_RATE_VERTEX
+		};
 
-		static array< RHI_Vertex_Input_Attribute_Description, 4>
-			Get_Vertex_Input_Attribute_Description(void);
+		static constexpr RHI_Vertex_Input_Binding_Description Varying_Enable_Blending_Binding_Description{
+			1,
+			sizeof(Vulkan_Mesh_Vertex_Varying_Enable_Blending),
+			RHI_VERTEX_INPUT_RATE::RHI_VERTEX_INPUT_RATE_VERTEX
+		};
+
+		static constexpr RHI_Vertex_Input_Binding_Description Varying_Binding_Description{
+			2,
+			sizeof(Vulkan_Mesh_Vertex_Varying),
+			RHI_VERTEX_INPUT_RATE::RHI_VERTEX_INPUT_RATE_VERTEX
+		};
+
+		static constexpr RHI_Vertex_Input_Attribute_Description Position_Attribute_Description{
+			0,
+			0,
+			RHI_FORMAT::RHI_FORMAT_R32G32B32_SFLOAT,
+			offsetof(Vulkan_Mesh_Vertex_Position, Position)
+		};
+
+		static constexpr RHI_Vertex_Input_Attribute_Description Normal_Attribute_Description{
+			1,
+			1,
+			RHI_FORMAT::RHI_FORMAT_R32G32B32_SFLOAT,
+			offsetof(Vulkan_Mesh_Vertex_Varying_Enable_Blending, Normal)
+		};
+
+		static constexpr RHI_Vertex_Input_Attribute_Description Tangent_Attribute_Description{
+			2,
+			1,
+			RHI_FORMAT::RHI_FORMAT_R32G32_SFLOAT,
+			 offsetof(Vulkan_Mesh_Vertex_Varying_Enable_Blending, Tangent)
+		};
+
+		static constexpr RHI_Vertex_Input_Attribute_Description TexCoord_Attribute_Description{
+			3,
+			2,
+			RHI_FORMAT::RHI_FORMAT_R32G32_SFLOAT,
+			offsetof(Vulkan_Mesh_Vertex_Varying, TexCoord)
+		};
+
+		const vector<const RHI_Vertex_Input_Binding_Description*>* Get_Vertex_Input_Binding_Description(void);//NOTE : Return All Of The Binding Description
+
+		const vector<const RHI_Vertex_Input_Attribute_Description*>* Get_Vertex_Input_Attribute_Description(void);// NOTE : Return All Of The Attribute Description
 
 	};
 

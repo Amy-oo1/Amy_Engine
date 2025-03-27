@@ -24,8 +24,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_RHI::RHI_Device_Size;
 
-	using NameSpace_RHI::RHI_Buffer_Usage_Flag_Bits;
-	using NameSpace_RHI::RHI_Memory_Property_Flag_Bits;
+	using NameSpace_RHI::RHI_BUFFER_USAGE_FLAG_BITS;
+	using NameSpace_RHI::RHI_MEMORY_PROPERTY_FLAG_BITS;
 
 	using NameSpace_RHI::RHI_FILTER;
 	using NameSpace_RHI::RHI_SAMPLER_ADDRESS_MODE;
@@ -66,8 +66,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		std::tie(Ref_Stroage_Buffer.Global_Upload_Ring_Buffer, Ref_Stroage_Buffer.Global_Upload_Ring_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Max_Storage_Buffer_Range,//NOTE : Set Max Size
-			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT,
-			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT),
+			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 
 		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin.resize(Ref_Stroage_Buffer.Max_Storage_Buffer_Range);
@@ -82,15 +82,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		//NOTE :Axis Storage Buffer
 		std::tie(Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer, Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Axis_Storage_Buffer_Size,
-			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT,
-			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT),
+			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 
 		//NOTE : Null Descriptor Storage Buffer
 		std::tie(Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer, Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Global_Null_Descriptor_Buffer_Size,
-			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT,
-			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT),
+			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 	}
 
@@ -277,8 +277,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			RHI_Device_Size Uniform_Buffer_size{ sizeof(Mesh_Per_Material_Uniform_Buffer_Object) };
 			auto [Inefficient_Buffer, Inefficient_Buffer_Memory] = RHI->Create_Buffer(
 				Uniform_Buffer_size,
-				RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-				RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+				to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_UNIFORM_BUFFER_BIT),
+				RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 			);
 
 			void* Inefficient_Buffer_Mapped_Memory{ nullptr };
@@ -308,7 +308,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			{
 				Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 				Buffer_Create_Info.Size = Uniform_Buffer_size;
-				Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+				Buffer_Create_Info.Usage = to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 			}
 
 			VmaAllocationCreateInfo Allocation_Create_Info{};
@@ -521,8 +521,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
 			Inefficient_Staging_Buffer_Size,
-			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
+			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 
 		void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
@@ -600,7 +600,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -619,7 +619,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -638,7 +638,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -657,7 +657,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Joint_Binding_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -747,8 +747,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
 			Inefficient_Staging_Buffer_Size,
-			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
+			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 
 		void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
@@ -806,7 +806,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -825,7 +825,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -844,7 +844,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		{
 			Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
 			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
 				&Buffer_Create_Info,
@@ -959,8 +959,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
 			static_cast<RHI_Device_Size>(Index_Buffer_Size),
-			RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT,
-			RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_Memory_Property_Flag_Bits::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
+			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 
 		void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
@@ -978,7 +978,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		{
 			Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 			Buffer_Create_Info.Size = static_cast<RHI_Device_Size>(Index_Buffer_Size);
-			Buffer_Create_Info.Usage = RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_Buffer_Usage_Flag_Bits::RHI_BUFFER_USAGE_INDEX_BUFFER_BIT;
+			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_INDEX_BUFFER_BIT;
 		}
 
 		VmaAllocationCreateInfo Allocation_Create_Info{};
@@ -1005,6 +1005,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Inefficient_Staging_Buffer_Memory.reset();
 
 		return { std::move(Index_Buffer), Index_Buffer_Allocation };
+	}
+
+	const Global_Render_Resource& Render_Resource::Get_Global_Render_Resource(void) const {
+		return this->m_Global_Render_Resource;
 	}
 
 	void Render_Resource::Upload_Global_Render_Resource(shared_ptr<Empty_RHI> RHI, const Level_Resource_Desc& Level_Resource_Desc) {

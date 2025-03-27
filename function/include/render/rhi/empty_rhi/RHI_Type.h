@@ -2,8 +2,13 @@
 
 #include<cstdint>
 
-namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
+//NOTE : cpp23 : std::to_underlying is a new function in C++23
+template <typename Enum>
+constexpr std::underlying_type_t<Enum> to_underlying(Enum e) noexcept {
+	return static_cast<std::underlying_type_t<Enum>>(e);
+}
 
+namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	//NOTE : Refence_Vulkan : https://www.khronos.org/registry/vulkan/specs/1.2-extensions
 	using RHI_Device_Size = uint64_t;
 	using RHI_Bool32 = uint32_t;
@@ -14,7 +19,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Image_Create_Flags = uint32_t;
 
 	using RHI_Image_Usage_Flags = uint32_t;
-	enum RHI_Image_Usage_Flag_Bits {
+	enum class RHI_IMAGE_USAGE_FLAG_BITS :uint32_t {
 		RHI_IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001,
 		RHI_IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002,
 		RHI_IMAGE_USAGE_SAMPLED_BIT = 0x00000004,
@@ -29,9 +34,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = RHI_IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR,
 		RHI_IMAGE_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Image_Usage_Flags operator|(RHI_IMAGE_USAGE_FLAG_BITS lhs, RHI_IMAGE_USAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Image_Usage_Flags>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
+	}
+	constexpr RHI_Image_Usage_Flags operator|(RHI_Image_Usage_Flags lhs, RHI_IMAGE_USAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Image_Usage_Flags>(lhs | static_cast<RHI_Image_Usage_Flags>(rhs));
+	}
 
 	using RHI_Image_Aspect_Flags = uint32_t;
-	enum RHI_Image_Aspect_Flag_Bits {
+	enum class RHI_IMAGE_ASPECT_FLAG_BITS :uint32_t {
 		RHI_IMAGE_ASPECT_COLOR_BIT = 0x00000001,
 		RHI_IMAGE_ASPECT_DEPTH_BIT = 0x00000002,
 		RHI_IMAGE_ASPECT_STENCIL_BIT = 0x00000004,
@@ -48,9 +59,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_IMAGE_ASPECT_PLANE_2_BIT_KHR = RHI_IMAGE_ASPECT_PLANE_2_BIT,
 		RHI_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Image_Aspect_Flags operator|(RHI_IMAGE_ASPECT_FLAG_BITS lhs, RHI_IMAGE_ASPECT_FLAG_BITS rhs) {
+		return static_cast<RHI_Image_Aspect_Flags>(static_cast<RHI_Image_Aspect_Flags>(lhs) | static_cast<RHI_Image_Aspect_Flags>(rhs));
+	}
+	constexpr RHI_Image_Aspect_Flags operator|(RHI_Image_Aspect_Flags lhs, RHI_IMAGE_ASPECT_FLAG_BITS rhs) {
+		return static_cast<RHI_Image_Aspect_Flags>(lhs | static_cast<RHI_Image_Aspect_Flags>(rhs));
+	}
 
 	using RHI_Memory_Property_Flags = uint32_t;
-	enum RHI_Memory_Property_Flag_Bits {
+	enum class RHI_MEMORY_PROPERTY_FLAG_BITS :uint32_t {
 		RHI_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = 0x00000001,
 		RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT = 0x00000002,
 		RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT = 0x00000004,
@@ -62,6 +79,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV = 0x00000100,
 		RHI_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Memory_Property_Flags operator|(RHI_MEMORY_PROPERTY_FLAG_BITS lhs, RHI_MEMORY_PROPERTY_FLAG_BITS rhs) {
+		return static_cast<RHI_Memory_Property_Flags>(static_cast<RHI_Memory_Property_Flags>(lhs) | static_cast<RHI_Memory_Property_Flags>(rhs));
+	}
+	constexpr RHI_Memory_Property_Flags operator|(RHI_Memory_Property_Flags lhs, RHI_MEMORY_PROPERTY_FLAG_BITS rhs) {
+		return static_cast<RHI_Memory_Property_Flags>(lhs | static_cast<RHI_Memory_Property_Flags>(rhs));
+	}
 
 	using RHI_Memopy_Map_Flags = uint32_t;
 
@@ -72,8 +95,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Descriptor_Set_Layout_Create_Flags = uint32_t;
 
 	using RHI_Shader_Stage_Flags = uint32_t;
-	enum RHI_Shader_Stage_Flag_Bits : int
-	{
+	enum class RHI_SHADER_STAGE_FLAG_BITS : uint32_t {
 		RHI_SHADER_STAGE_VERTEX_BIT = 0x00000001,
 		RHI_SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002,
 		RHI_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004,
@@ -99,6 +121,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_SHADER_STAGE_CALLABLE_BIT_NV = RHI_SHADER_STAGE_CALLABLE_BIT_KHR,
 		RHI_SHADER_STAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Shader_Stage_Flags operator|(RHI_SHADER_STAGE_FLAG_BITS lhs, RHI_SHADER_STAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Shader_Stage_Flags>(static_cast<RHI_Shader_Stage_Flags>(lhs) | static_cast<RHI_Shader_Stage_Flags>(rhs));
+	}
+	constexpr RHI_Shader_Stage_Flags operator|(RHI_Shader_Stage_Flags lhs, RHI_SHADER_STAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Shader_Stage_Flags>(lhs | static_cast<RHI_Shader_Stage_Flags>(rhs));
+	}
 
 	using RHI_Fence_Create_Flags = uint32_t;
 
@@ -121,6 +149,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Pipeline_Rasterization_State_Create_Flags = uint32_t;
 
 	using RHI_Cull_Mode_Flags = uint32_t;
+	enum class RHI_CULL_MODE_FLAG_BITS :uint32_t {
+		RHI_CULL_MODE_NONE = 0,
+		RHI_CULL_MODE_FRONT_BIT = 0x00000001,
+		RHI_CULL_MODE_BACK_BIT = 0x00000002,
+		RHI_CULL_MODE_FRONT_AND_BACK = 0x00000003,
+		RHI_CULL_MODE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+	};
+	constexpr RHI_Cull_Mode_Flags operator|(RHI_CULL_MODE_FLAG_BITS lhs, RHI_CULL_MODE_FLAG_BITS rhs) {
+		return static_cast<RHI_Cull_Mode_Flags>(static_cast<RHI_Cull_Mode_Flags>(lhs) | static_cast<RHI_Cull_Mode_Flags>(rhs));
+	}
+	constexpr RHI_Cull_Mode_Flags operator|(RHI_Cull_Mode_Flags lhs, RHI_CULL_MODE_FLAG_BITS rhs) {
+		return static_cast<RHI_Cull_Mode_Flags>(lhs | static_cast<RHI_Cull_Mode_Flags>(rhs));
+	}
 
 	using RHI_Pipeline_Multisample_State_Create_Flags = uint32_t;
 
@@ -131,6 +172,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Pipeline_Color_Blend_State_Create_Flags = uint32_t;
 
 	using RHI_Color_Component_Flags = uint32_t;
+	enum class RHI_COLOR_COMPONENT_FLAG_BITS :uint32_t {
+		RHI_COLOR_COMPONENT_R_BIT = 0x00000001,
+		RHI_COLOR_COMPONENT_G_BIT = 0x00000002,
+		RHI_COLOR_COMPONENT_B_BIT = 0x00000004,
+		RHI_COLOR_COMPONENT_A_BIT = 0x00000008,
+		RHI_COLOR_COMPONENT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+	};
+	constexpr RHI_Color_Component_Flags operator|(RHI_COLOR_COMPONENT_FLAG_BITS lhs, RHI_COLOR_COMPONENT_FLAG_BITS rhs) {
+		return static_cast<RHI_Color_Component_Flags>(static_cast<RHI_Color_Component_Flags>(lhs) | static_cast<RHI_Color_Component_Flags>(rhs));
+	}
+	constexpr RHI_Color_Component_Flags operator|(RHI_Color_Component_Flags lhs, RHI_COLOR_COMPONENT_FLAG_BITS  rhs) {
+		return static_cast<RHI_Color_Component_Flags>(lhs | static_cast<RHI_Color_Component_Flags>(rhs));
+	}
 
 	using RHI_Pipeline_Dynamic_State_Create_Flags = uint32_t;
 
@@ -139,7 +193,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Pipeline_Layout_Create_Flags = uint32_t;
 
 	using RHI_Pipeline_Stage_Flags = uint32_t;
-	enum RHI_Pipeline_Stage_Flag_Bits {
+	enum class RHI_PIPELINE_STAGE_FLAG_BITS :uint32_t {
 		RHI_PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001,
 		RHI_PIPELINE_STAGE_DRAW_INDIRECT_BIT = 0x00000002,
 		RHI_PIPELINE_STAGE_VERTEX_INPUT_BIT = 0x00000004,
@@ -172,6 +226,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV = RHI_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR,
 		RHI_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Pipeline_Stage_Flags operator|(RHI_PIPELINE_STAGE_FLAG_BITS lhs, RHI_PIPELINE_STAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Pipeline_Stage_Flags>(static_cast<RHI_Pipeline_Stage_Flags>(lhs) | static_cast<RHI_Pipeline_Stage_Flags>(rhs));
+	}
+	constexpr RHI_Pipeline_Stage_Flags operator|(RHI_Pipeline_Stage_Flags lhs, RHI_PIPELINE_STAGE_FLAG_BITS  rhs) {
+		return static_cast<RHI_Pipeline_Stage_Flags>(lhs | static_cast<RHI_Pipeline_Stage_Flags>(rhs));
+	}
 
 	using RHI_Render_Pass_Create_Flags = uint32_t;
 
@@ -180,7 +240,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Subpass_Description_Flags = uint32_t;
 
 	using RHI_Access_Flags = uint32_t;
-	enum RHI_Access_Flag_Bits {
+	enum class RHI_ACCESS_FLAG_BITS :uint32_t {
 		RHI_ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001,
 		RHI_ACCESS_INDEX_READ_BIT = 0x00000002,
 		RHI_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004,
@@ -215,6 +275,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV = RHI_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR,
 		RHI_ACCESS_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Access_Flags operator|(RHI_ACCESS_FLAG_BITS lhs, RHI_ACCESS_FLAG_BITS rhs) {
+		return static_cast<RHI_Access_Flags>(static_cast<RHI_Access_Flags>(lhs) | static_cast<RHI_Access_Flags>(rhs));
+	}
+	constexpr RHI_Access_Flags operator|(RHI_Access_Flags lhs, RHI_ACCESS_FLAG_BITS  rhs) {
+		return static_cast<RHI_Access_Flags>(lhs | static_cast<RHI_Access_Flags>(rhs));
+	}
 
 	using RHI_Dependency_Flags = uint32_t;
 
@@ -233,7 +299,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	using RHI_Sample_Count_Flags = uint32_t;
 
 	using RHI_Buffer_Usage_Flags = uint32_t;
-	enum RHI_Buffer_Usage_Flag_Bits {
+	enum class RHI_BUFFER_USAGE_FLAG_BITS :uint32_t {
 		RHI_BUFFER_USAGE_TRANSFER_SRC_BIT = 0x00000001,
 		RHI_BUFFER_USAGE_TRANSFER_DST_BIT = 0x00000002,
 		RHI_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = 0x00000004,
@@ -255,6 +321,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_KHR = RHI_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
 		RHI_BUFFER_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	constexpr RHI_Buffer_Usage_Flags operator|(RHI_BUFFER_USAGE_FLAG_BITS lhs, RHI_BUFFER_USAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Buffer_Usage_Flags>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
+	}
 
 	enum class RHI_PHYSICAL_DEVICE_TYPE : uint32_t {
 		RHI_PHYSICAL_DEVICE_TYPE_OTHER = 0,
@@ -1287,33 +1356,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_DESCRIPTOR_TYPE_MAX_ENUM = 0x7FFFFFFF
 	};
 
-	enum class RHI_SHADER_STAGE_BITS : uint32_t {
-		RHI_SHADER_STAGE_VERTEX_BIT = 0x00000001,
-		RHI_SHADER_STAGE_TESSELLATION_CONTROL_BIT = 0x00000002,
-		RHI_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 0x00000004,
-		RHI_SHADER_STAGE_GEOMETRY_BIT = 0x00000008,
-		RHI_SHADER_STAGE_FRAGMENT_BIT = 0x00000010,
-		RHI_SHADER_STAGE_COMPUTE_BIT = 0x00000020,
-		RHI_SHADER_STAGE_ALL_GRAPHICS = 0x0000001F,
-		RHI_SHADER_STAGE_ALL = 0x7FFFFFFF,
-		RHI_SHADER_STAGE_RAYGEN_BIT_KHR = 0x00000100,
-		RHI_SHADER_STAGE_ANY_HIT_BIT_KHR = 0x00000200,
-		RHI_SHADER_STAGE_CLOSEST_HIT_BIT_KHR = 0x00000400,
-		RHI_SHADER_STAGE_MISS_BIT_KHR = 0x00000800,
-		RHI_SHADER_STAGE_INTERSECTION_BIT_KHR = 0x00001000,
-		RHI_SHADER_STAGE_CALLABLE_BIT_KHR = 0x00002000,
-		RHI_SHADER_STAGE_TASK_BIT_NV = 0x00000040,
-		RHI_SHADER_STAGE_MESH_BIT_NV = 0x00000080,
-		RHI_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI = 0x00004000,
-		RHI_SHADER_STAGE_RAYGEN_BIT_NV = RHI_SHADER_STAGE_RAYGEN_BIT_KHR,
-		RHI_SHADER_STAGE_ANY_HIT_BIT_NV = RHI_SHADER_STAGE_ANY_HIT_BIT_KHR,
-		RHI_SHADER_STAGE_CLOSEST_HIT_BIT_NV = RHI_SHADER_STAGE_CLOSEST_HIT_BIT_KHR,
-		RHI_SHADER_STAGE_MISS_BIT_NV = RHI_SHADER_STAGE_MISS_BIT_KHR,
-		RHI_SHADER_STAGE_INTERSECTION_BIT_NV = RHI_SHADER_STAGE_INTERSECTION_BIT_KHR,
-		RHI_SHADER_STAGE_CALLABLE_BIT_NV = RHI_SHADER_STAGE_CALLABLE_BIT_KHR,
-		RHI_SHADER_STAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
-	};
-
 	enum class RHI_VERTEX_INPUT_RATE : uint32_t {
 		RHI_VERTEX_INPUT_RATE_VERTEX = 0,
 		RHI_VERTEX_INPUT_RATE_INSTANCE = 1,
@@ -1628,22 +1670,5 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_INDEX_TYPE_MAX_ENUM = 0x7FFFFFFF
 	};
 
-	enum class RHI_IMAGE_ASPECT_FLAG_BITS :uint32_t {
-		RHI_IMAGE_ASPECT_COLOR_BIT = 0x00000001,
-		RHI_IMAGE_ASPECT_DEPTH_BIT = 0x00000002,
-		RHI_IMAGE_ASPECT_STENCIL_BIT = 0x00000004,
-		RHI_IMAGE_ASPECT_METADATA_BIT = 0x00000008,
-		RHI_IMAGE_ASPECT_PLANE_0_BIT = 0x00000010,
-		RHI_IMAGE_ASPECT_PLANE_1_BIT = 0x00000020,
-		RHI_IMAGE_ASPECT_PLANE_2_BIT = 0x00000040,
-		RHI_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT = 0x00000080,
-		RHI_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT = 0x00000100,
-		RHI_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT = 0x00000200,
-		RHI_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = 0x00000400,
-		RHI_IMAGE_ASPECT_PLANE_0_BIT_KHR = RHI_IMAGE_ASPECT_PLANE_0_BIT,
-		RHI_IMAGE_ASPECT_PLANE_1_BIT_KHR = RHI_IMAGE_ASPECT_PLANE_1_BIT,
-		RHI_IMAGE_ASPECT_PLANE_2_BIT_KHR = RHI_IMAGE_ASPECT_PLANE_2_BIT,
-		RHI_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
-	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI
