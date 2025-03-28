@@ -530,7 +530,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 	struct RHI_Descriptor_Image_Info final {
 		RHI_Sampler* Sampler;
-		RHI_Image_View* ImageView;
+		RHI_Image_View* Image_View;
 		RHI_IMAGE_LAYOUT Image_Layout;
 	};
 

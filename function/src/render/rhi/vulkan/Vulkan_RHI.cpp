@@ -240,6 +240,66 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
+	void Vulkan_RHI::Create_Nearest_Sampler(void) {
+		VkPhysicalDeviceProperties Properties{};
+		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
+
+		VkSamplerCreateInfo Sampler_Create_Info{};
+		{
+			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			Sampler_Create_Info.magFilter = VK_FILTER_NEAREST;
+			Sampler_Create_Info.minFilter = VK_FILTER_NEAREST;
+			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
+			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
+			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
+			Sampler_Create_Info.compareEnable = VK_FALSE;
+			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
+			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+			Sampler_Create_Info.mipLodBias = 0.0f;
+			Sampler_Create_Info.minLod = 0.0f;
+			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
+		}
+
+		VkSampler Sampler{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
+		//static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
+		static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Reset(Sampler);
+	}
+
+	void Vulkan_RHI::Create_Linear_Sampler(void) {
+		VkPhysicalDeviceProperties Properties{};
+		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
+
+		VkSamplerCreateInfo Sampler_Create_Info{};
+		{
+			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+			Sampler_Create_Info.magFilter = VK_FILTER_LINEAR;
+			Sampler_Create_Info.minFilter = VK_FILTER_LINEAR;
+			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
+			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
+			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
+			Sampler_Create_Info.compareEnable = VK_FALSE;
+			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
+			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+			Sampler_Create_Info.mipLodBias = 0.0f;
+			Sampler_Create_Info.minLod = 0.0f;
+			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
+		}
+
+		VkSampler Sampler{ nullptr };
+		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
+		//static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
+		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
+	}
+
 	size_t Vulkan_RHI::Get_API_Version(void) const {
 		return NameSpace_Config::API_Verssion;
 	}
@@ -303,7 +363,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			this->m_VK_Semaphore_Deleter = [Device, pAllocator](VkSemaphore Semaphore) {if (nullptr != Semaphore) vkDestroySemaphore(Device, Semaphore, pAllocator); };
 			this->m_VK_Fence_Deleter = [Device, pAllocator](VkFence Fence) {if (nullptr != Fence) vkDestroyFence(Device, Fence, pAllocator); };
 			this->m_VK_SwapChain_Deleter = [Device, pAllocator](VkSwapchainKHR SwapChain) {if (nullptr != SwapChain) vkDestroySwapchainKHR(Device, SwapChain, pAllocator); };
-			this->m_VK_Image_View_Deleter = [Device, pAllocator](VkImageView ImageView) {if (nullptr != ImageView) vkDestroyImageView(Device, ImageView, pAllocator); };
+			this->m_VK_Image_View_Deleter = [Device, pAllocator](VkImageView Image_View) {if (nullptr != Image_View) vkDestroyImageView(Device, Image_View, pAllocator); };
 
 			this->m_VK_Sampler_Deleter = [Device, pAllocator](VkSampler Sampler) {if (nullptr != Sampler) vkDestroySampler(Device, Sampler, pAllocator); };
 
@@ -573,7 +633,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				VkDescriptorImageInfo vk_Image_Info{};
 				{
 					vk_Image_Info.sampler = static_cast<Vulkan_Sampler*>(Image_Info->Sampler)->Get();
-					vk_Image_Info.imageView = static_cast<Vulkan_Image_View*>(Image_Info->ImageView)->Get();
+					vk_Image_Info.imageView = static_cast<Vulkan_Image_View*>(Image_Info->Image_View)->Get();
 					vk_Image_Info.imageLayout = static_cast<VkImageLayout>(Image_Info->Image_Layout);
 				}
 
@@ -1645,6 +1705,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Sampler;
 	}
 
+	RHI_Sampler* Vulkan_RHI::Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) {
+		switch (Type) {
+		case RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_LINEAR:
+			return this->m_Linear_RHI_Sampler.get();
+		case RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST:
+			return this->m_Nearest_RHI_Sampler.get();
+		default:
+			throw runtime_error("Failed to find default sampler!");
+			break;
+		}
+	}
+
 	RHI_Sampler* Vulkan_RHI::Get_Mipmap_Sampler(uint32_t Mip_Levels) {
 		if (0 == Mip_Levels)
 			throw runtime_error("Mip Levels Must Be Greater Than 0!");
@@ -2368,68 +2440,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 
-	void Vulkan_RHI::Create_Nearest_Sampler(void) {
-		VkPhysicalDeviceProperties Properties{};
-		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
-
-		VkSamplerCreateInfo Sampler_Create_Info{};
-		{
-			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-			Sampler_Create_Info.magFilter = VK_FILTER_NEAREST;
-			Sampler_Create_Info.minFilter = VK_FILTER_NEAREST;
-			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
-			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
-			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
-			Sampler_Create_Info.compareEnable = VK_FALSE;
-			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
-			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-			Sampler_Create_Info.mipLodBias = 0.0f;
-			Sampler_Create_Info.minLod = 0.0f;
-			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
-		}
-
-		VkSampler Sampler{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
-
-		static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Reset(Sampler);
-	}
-
-
-	void Vulkan_RHI::Create_Linear_Sampler(void) {
-		VkPhysicalDeviceProperties Properties{};
-		vkGetPhysicalDeviceProperties(this->m_VK_Physical_Device, &Properties);
-
-		VkSamplerCreateInfo Sampler_Create_Info{};
-		{
-			Sampler_Create_Info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-			Sampler_Create_Info.magFilter = VK_FILTER_LINEAR;
-			Sampler_Create_Info.minFilter = VK_FILTER_LINEAR;
-			Sampler_Create_Info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			Sampler_Create_Info.anisotropyEnable = VK_FALSE;
-			Sampler_Create_Info.maxAnisotropy = Properties.limits.maxSamplerAnisotropy;
-			Sampler_Create_Info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-			Sampler_Create_Info.unnormalizedCoordinates = VK_FALSE;
-			Sampler_Create_Info.compareEnable = VK_FALSE;
-			Sampler_Create_Info.compareOp = VK_COMPARE_OP_ALWAYS;
-			Sampler_Create_Info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-			Sampler_Create_Info.mipLodBias = 0.0f;
-			Sampler_Create_Info.minLod = 0.0f;
-			Sampler_Create_Info.maxLod = VK_LOD_CLAMP_NONE;
-		}
-
-		VkSampler Sampler{ nullptr };
-		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
-
-		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
-	}
-
-
 
 
 
@@ -2492,20 +2502,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			return Actual_Extent;
 		}
 	}
-
-	const unique_ptr<RHI_Sampler>& Vulkan_RHI::Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) {
-		switch (Type)
-		{
-		case RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_LINEAR:
-			return this->m_Linear_RHI_Sampler;
-		case RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST:
-			return this->m_Nearest_RHI_Sampler;
-		default:
-			throw runtime_error("Failed to find default sampler!");
-			break;
-		}
-	}
-
 
 
 

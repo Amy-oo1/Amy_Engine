@@ -177,6 +177,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Sampler_Create_Info* Create_Info
 			) = 0;
 
+		[[nodiscard]] virtual  RHI_Sampler* Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
+
 		[[nodiscard]] virtual RHI_Sampler*
 			Get_Mipmap_Sampler(
 				uint32_t Mip_Levels
@@ -248,9 +250,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		virtual void Create_SwapChhain_Image_Views(void) = 0;
 
 		//TODO : Add SwapChain Image Depth Image View
-
-		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
-
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
 
 		//TODO : 

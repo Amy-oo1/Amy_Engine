@@ -360,35 +360,35 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			RHI_Descriptor_Image_Info Base_Color_Image_Descriptor_Info{};
 			{
 				Base_Color_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Base_Color_Texture->Mip_Levels);
-				Base_Color_Image_Descriptor_Info.ImageView = Material.Base_Color_Image_View.get();
+				Base_Color_Image_Descriptor_Info.Image_View = Material.Base_Color_Image_View.get();
 				Base_Color_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			}
 
 			RHI_Descriptor_Image_Info Metallic_Roughness_Image_Descriptor_Info{};
 			{
 				Metallic_Roughness_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Metallic_Roughness_Texture->Mip_Levels);
-				Metallic_Roughness_Image_Descriptor_Info.ImageView = Material.Metallic_Roughness_Image_View.get();
+				Metallic_Roughness_Image_Descriptor_Info.Image_View = Material.Metallic_Roughness_Image_View.get();
 				Metallic_Roughness_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			}
 
 			RHI_Descriptor_Image_Info Normal_Image_Descriptor_Info{};
 			{
 				Normal_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Normal_Texture->Mip_Levels);
-				Normal_Image_Descriptor_Info.ImageView = Material.Normal_Image_View.get();
+				Normal_Image_Descriptor_Info.Image_View = Material.Normal_Image_View.get();
 				Normal_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			}
 
 			RHI_Descriptor_Image_Info Occlusion_Image_Descriptor_Info{};
 			{
 				Occlusion_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Occlusion_Texture->Mip_Levels);
-				Occlusion_Image_Descriptor_Info.ImageView = Material.Occlusion_Image_View.get();
+				Occlusion_Image_Descriptor_Info.Image_View = Material.Occlusion_Image_View.get();
 				Occlusion_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			}
 
 			RHI_Descriptor_Image_Info Emissive_Image_Descriptor_Info{};
 			{
 				Emissive_Image_Descriptor_Info.Sampler = Ref_Vulkan_RHI->Get_Mipmap_Sampler(Mesh_Data.Emissive_Texture->Mip_Levels);
-				Emissive_Image_Descriptor_Info.ImageView = Material.Emissive_Image_View.get();
+				Emissive_Image_Descriptor_Info.Image_View = Material.Emissive_Image_View.get();
 				Emissive_Image_Descriptor_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			}
 

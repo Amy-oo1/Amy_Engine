@@ -109,9 +109,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		//TODO : Public Func
 	public:
+		//TODO Set Function 
 		void Create_Surface(void);
 		void Create_Default_Command_Pool(void);
 		void Allocate_Default_Command_Buffers(void);
+		void Create_Nearest_Sampler(void);
+		void Create_Linear_Sampler(void);
 
 		//TODO Get Func
 		[[nodiscard]] size_t Get_API_Version(void)const;
@@ -340,6 +343,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		unique_ptr<RHI_Descriptor_Pool> m_Default_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 		VkDescriptorPool m_Default_VK_Descriptor_Pool{ nullptr };
 
+		unique_ptr<RHI_Sampler> m_Linear_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
+		unique_ptr<RHI_Sampler> m_Nearest_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
 		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
 		//TODO : Override Func
@@ -474,6 +479,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Sampler_Create_Info* Create_Info
 			) override;
 
+		[[nodiscard]] RHI_Sampler* Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) override;
+
 		[[nodiscard]] RHI_Sampler*
 			Get_Mipmap_Sampler(
 				uint32_t Mip_Levels
@@ -548,9 +555,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//TODO : Set Func 
 
 		void Create_Resource_Allocator(void);
-
-		void Create_Nearest_Sampler(void);
-		void Create_Linear_Sampler(void);
 		void CleanUp_SwapChain(void) override;
 
 		void Re_Create_SwapChain(void) override;
@@ -645,10 +649,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//VmaAllocator m_Vma_Allocator{ nullptr };
 
 
-		unique_ptr<RHI_Sampler> m_Linear_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
-		unique_ptr<RHI_Sampler> m_Nearest_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
-
-
 
 
 		//virtual void prepareContext() override final;
@@ -657,8 +657,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 
-
-		[[nodiscard]] const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) override;
 
 
 
