@@ -1991,6 +1991,60 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return  Shader;
 	}
 
+	unique_ptr<RHI_Pipeline_Layout> Vulkan_RHI::Create_Pipeline_Layout(const RHI_Pipeline_Layout_Create_Info* Create_Info) {
+		if (nullptr == Create_Info)
+			throw runtime_error("Create Info is nullptr!");
+
+		vector<VkDescriptorSetLayout> vk_Descriptor_Set_Layouts{};
+		if (nullptr == Create_Info->Set_Layouts || Create_Info->Set_Layouts->empty())
+			throw runtime_error("Set Layouts is nullptr or empty!");
+
+		vk_Descriptor_Set_Layouts.reserve(Create_Info->Set_Layouts->size());
+		for (const auto& Descriptor_Set_Layout : *Create_Info->Set_Layouts) {
+			if (nullptr == Descriptor_Set_Layout)
+				throw runtime_error("Descriptor Set Layout is nullptr!");
+
+			vk_Descriptor_Set_Layouts.push_back(static_cast<const Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout)->Get());
+		}
+
+		vector<VkPushConstantRange> vk_Push_Constant_Ranges{};
+		if (nullptr != Create_Info->Push_Constant_Ranges && !Create_Info->Push_Constant_Ranges->empty()) {
+			vk_Push_Constant_Ranges.reserve(Create_Info->Push_Constant_Ranges->size());
+			for (const auto& Push_Constant_Range : *Create_Info->Push_Constant_Ranges) {
+				if (nullptr == Push_Constant_Range)
+					throw runtime_error("Push Constant Range is nullptr!");
+
+				VkPushConstantRange vk_Push_Constant_Range{};
+				{
+					vk_Push_Constant_Range.stageFlags = static_cast<VkShaderStageFlags>(Push_Constant_Range->Stage_Flags);
+					vk_Push_Constant_Range.offset = Push_Constant_Range->Offset;
+					vk_Push_Constant_Range.size = Push_Constant_Range->Size;
+				}
+				vk_Push_Constant_Ranges.emplace_back(vk_Push_Constant_Range);
+			}
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Push_Constant_Ranges Input Is Empty");
+
+		VkPipelineLayoutCreateInfo vk_Pipeline_Layout_Create_Info{}; {
+			vk_Pipeline_Layout_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			vk_Pipeline_Layout_Create_Info.pNext = Create_Info->pNext;
+			vk_Pipeline_Layout_Create_Info.flags = static_cast<VkPipelineLayoutCreateFlags>(Create_Info->Flags);
+			vk_Pipeline_Layout_Create_Info.setLayoutCount = static_cast<uint32_t>(vk_Descriptor_Set_Layouts.size());
+			vk_Pipeline_Layout_Create_Info.pSetLayouts = vk_Descriptor_Set_Layouts.data();
+			vk_Pipeline_Layout_Create_Info.pushConstantRangeCount = static_cast<uint32_t>(vk_Push_Constant_Ranges.size());
+			vk_Pipeline_Layout_Create_Info.pPushConstantRanges = vk_Push_Constant_Ranges.data();
+		}
+
+		VkPipelineLayout vk_Pipeline_Layout{};
+		THROW_IF_VK_FAILED(vkCreatePipelineLayout(this->m_Logical_VK_Device, &vk_Pipeline_Layout_Create_Info, this->m_Allocator.get(), &vk_Pipeline_Layout));
+		unique_ptr<RHI_Pipeline_Layout> Pipeline_Layout{ std::make_unique<Vulkan_Pipeline_Layout>() };
+		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Set_Deleter(this->m_VK_Pipeline_Layout_Deleter);
+		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Reset(vk_Pipeline_Layout);
+
+		return Pipeline_Layout;
+	}
+
 	unique_ptr<RHI_Pipeline> Vulkan_RHI::Create_Graphics_Pipeline(const RHI_Graphics_Pipeline_Create_Info* Create_Info, RHI_Pipeline_Cache* Pipeline_Cache) {
 		vector<optional<vector<VkSpecializationMapEntry>>> vk_Specialization_Map_Entryss{};
 		vector<optional<VkSpecializationInfo>> vk_Specialization_Infos{};
@@ -2585,44 +2639,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
 
 		return Pipeline;
-	}
-
-	unique_ptr<RHI_Pipeline_Layout> Vulkan_RHI::Create_Pipeline_Layout(const RHI_Pipeline_Layout_Create_Info* Create_Info) {
-		vector<VkDescriptorSetLayout> vk_Descriptor_Set_Layouts{};
-		vk_Descriptor_Set_Layouts.reserve(Create_Info->Set_Layouts->size());
-		for (const auto& Descriptor_Set_Layout : *Create_Info->Set_Layouts)
-			vk_Descriptor_Set_Layouts.push_back(static_cast<const Vulkan_Descriptor_Set_Layout*>(Descriptor_Set_Layout)->Get());
-
-		vector<VkPushConstantRange> vk_Push_Constant_Ranges{};
-		vk_Push_Constant_Ranges.reserve(Create_Info->Push_Constant_Ranges->size());
-		for (const auto& Push_Constant_Range : *Create_Info->Push_Constant_Ranges) {
-			VkPushConstantRange vk_Push_Constant_Range{};
-			{
-				vk_Push_Constant_Range.stageFlags = static_cast<VkShaderStageFlags>(Push_Constant_Range->Stage_Flags);
-				vk_Push_Constant_Range.offset = Push_Constant_Range->Offset;
-				vk_Push_Constant_Range.size = Push_Constant_Range->Size;
-			}
-
-			vk_Push_Constant_Ranges.emplace_back(vk_Push_Constant_Range);
-		}
-
-		VkPipelineLayoutCreateInfo vk_Pipeline_Layout_Create_Info{}; {
-			vk_Pipeline_Layout_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
-			vk_Pipeline_Layout_Create_Info.pNext = Create_Info->pNext;
-			vk_Pipeline_Layout_Create_Info.flags = static_cast<VkPipelineLayoutCreateFlags>(Create_Info->Flags);
-			vk_Pipeline_Layout_Create_Info.setLayoutCount = vk_Descriptor_Set_Layouts.size();
-			vk_Pipeline_Layout_Create_Info.pSetLayouts = vk_Descriptor_Set_Layouts.data();
-			vk_Pipeline_Layout_Create_Info.pushConstantRangeCount = vk_Push_Constant_Ranges.size();
-			vk_Pipeline_Layout_Create_Info.pPushConstantRanges = vk_Push_Constant_Ranges.data();
-		}
-
-		VkPipelineLayout vk_Pipeline_Layout{};
-		THROW_IF_VK_FAILED(vkCreatePipelineLayout(this->m_Logical_VK_Device, &vk_Pipeline_Layout_Create_Info, this->m_Allocator.get(), &vk_Pipeline_Layout));
-		unique_ptr<RHI_Pipeline_Layout> Pipeline_Layout{ std::make_unique<Vulkan_Pipeline_Layout>() };
-		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Set_Deleter(this->m_VK_Pipeline_Layout_Deleter);
-		static_cast<Vulkan_Pipeline_Layout*>(Pipeline_Layout.get())->Reset(vk_Pipeline_Layout);
-
-		return Pipeline_Layout;
 	}
 
 

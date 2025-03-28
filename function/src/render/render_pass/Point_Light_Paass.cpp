@@ -1,8 +1,9 @@
-#include "render/render_pass/Directional_Light_Pass.h"
+#include "render/render_pass/Point_Light_Paass.h"
 
 #include<tuple>
 #include<utility>
 
+#include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
 
@@ -65,7 +66,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Mesh_Vertex;
 
-	Directional_Light_Pass::Directional_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
+	Point_Light_Pass::Point_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
 		Render_Pass{ Command_Info } {
 		this->Setup_Attachments();
 		this->Setup_Render_Pass();
@@ -75,14 +76,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set_Layout();
 	}
 
-	void Directional_Light_Pass::Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout) {
+	void Point_Light_Pass::Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout){
 		this->m_Per_Mesh_Set_Layout = Set_Layout;
 	}
 
-	void Directional_Light_Pass::Setup_Attachments(void) {
-		this->m_Frame_Buffer.Width = NameSpace_Render_System::g_Directional_Light_Shadow_map_Dimension;
-		this->m_Frame_Buffer.Height = NameSpace_Render_System::g_Directional_Light_Shadow_map_Dimension;
-		this->m_Frame_Buffer.Layers = 1;
+	void Point_Light_Pass::Setup_Attachments(void) {
+		this->m_Frame_Buffer.Width = NameSpace_Render_System::g_Point_Light_Shadow_map_Dimension;
+		this->m_Frame_Buffer.Height = NameSpace_Render_System::g_Point_Light_Shadow_map_Dimension;
+		this->m_Frame_Buffer.Layers = NameSpace_Render_System::g_Max_Point_Light_Count;
 
 		auto& Ref_Attachments{ this->Render_Pass::m_Frame_Buffer.Attachments };
 
@@ -136,7 +137,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 	}
 
-	void Directional_Light_Pass::Setup_Render_Pass(void) {
+	void Point_Light_Pass::Setup_Render_Pass(void) {
 		RHI_Attachment_Description Color_Attachment_Description{};
 		{
 			Color_Attachment_Description.Flags = 0;
@@ -216,7 +217,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Frame_Buffer.Render_Pass = this->m_RHI->Create_Render_Pass(&Render_Pass_Create_Info);
 	}
 
-	void Directional_Light_Pass::Setup_Frame_Buffer(void) {
+	void Point_Light_Pass::Setup_Frame_Buffer(void) {
 		vector<RHI_Image_View*> Attachments{
 			this->m_Frame_Buffer.Attachments[0].Image_View.get(),
 			this->m_Frame_Buffer.Attachments[1].Image_View.get()
@@ -234,7 +235,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 	}
 
-	void Directional_Light_Pass::Setup_Descriptor_Set_Layout(void) {
+	void Point_Light_Pass::Setup_Descriptor_Set_Layout(void) {
 		RHI_Descriptor_Set_Layout_Binding Per_Frame_Storage_Buffer_Binding{};
 		{
 			Per_Frame_Storage_Buffer_Binding.Binding = 0;
@@ -277,7 +278,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Descriptors[0].Descriptor_Set_Layout = this->m_RHI->Create_Descriptor_Set_Layout(&Descriptor_Set_Layout_Create_Info);
 	}
 
-	void Directional_Light_Pass::Setup_Descriptor_Set(void) {
+	void Point_Light_Pass::Setup_Descriptor_Set(void) {
 		const vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{ this->m_Descriptors[0].Descriptor_Set_Layout.get() };
 
 		RHI_Descriptor_Set_Allocate_Info Descriptor_Set_Allocate_Info{};
@@ -352,7 +353,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_RHI->Update_Descriptor_Sets(&Writes, nullptr);
 	}
 
-	void Directional_Light_Pass::Setup_Pipeline(void) {
+	void Point_Light_Pass::Setup_Pipeline(void) {
 		RHI_Pipeline_Layout_Create_Info Pipeline_Layout_Create_Info{};
 		{
 			vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
@@ -557,17 +558,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
 	}
 
-	void Directional_Light_Pass::Post_Inittialize(void) {
+	void Point_Light_Pass::Post_Inittialize(void) {
 		this->Setup_Descriptor_Set();
 
 		this->Setup_Pipeline();
 	}
 
-	void Directional_Light_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
+	void Point_Light_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
 		this->m_Global_Render_Resource = std::dynamic_pointer_cast<Global_Render_Resource>(Resource);
 	}
 
-	void Directional_Light_Pass::Draw(void) {
+	void Point_Light_Pass::Draw(void) {
 		//TODO : Implement
 	}
 

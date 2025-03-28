@@ -3,26 +3,24 @@
 #include<vector>
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
-#include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/render_system/Render_Resource.h"
 #include "render/render_pass/Render_Pass.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
-	using std::vector;
-
-	class Directional_Light_Pass final :public Render_Pass {
+	class Point_Light_Pass final :public Render_Pass {
 	private:
-		Directional_Light_Pass(const Directional_Light_Pass&) = delete;
+		Point_Light_Pass(const Point_Light_Pass&) = delete;
 
-		Directional_Light_Pass& operator=(const Directional_Light_Pass&) = delete;
+		Point_Light_Pass& operator=(const Point_Light_Pass&) = delete;
 	public:
-		Directional_Light_Pass(const Render_Pass_Command_Info& Command_Info);
+		Point_Light_Pass(const Render_Pass_Command_Info& Command_Info);
 
-		~Directional_Light_Pass(void) = default;
+		~Point_Light_Pass(void) = default;
 
 	public:
 		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
+
 
 	private:
 		void Setup_Attachments(void);
@@ -44,4 +42,4 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Draw(void) override;
 	};
 
-}// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass
+}//namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

@@ -175,6 +175,7 @@
     <ClInclude Include="include\physics\Utilities_Physics.h" />
     <ClInclude Include="include\render\debug_draw\Debug_Draw_Primitive.h" />
     <ClInclude Include="include\render\render_pass\Directional_Light_Pass.h" />
+    <ClInclude Include="include\render\render_pass\Point_Light_Paass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h" />
     <ClInclude Include="include\render\render_system\Light.h" />
@@ -207,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\render\render_pass\Directional_Light_Pass.cpp" />
+    <ClCompile Include="src\render\render_pass\Point_Light_Paass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp" />
     <ClCompile Include="src\render\render_system\Render_GUID_Allocator.cpp" />

@@ -209,10 +209,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies
 			) = 0;
 
-		[[nodiscard]] virtual
-			unique_ptr<RHI_Shader_Module>
+		[[nodiscard]] virtual unique_ptr<RHI_Shader_Module>
 			Create_Shader_Module(
 				const vector<unsigned char>* Shader_Code
+			) = 0;
+
+		[[nodiscard]] virtual unique_ptr<RHI_Pipeline_Layout>
+			Create_Pipeline_Layout(
+				const RHI_Pipeline_Layout_Create_Info* Create_Info
 			) = 0;
 
 		[[nodiscard]] virtual unique_ptr<RHI_Pipeline>
@@ -262,12 +266,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 			Create_Compute_Pipeline(
 				optional<RHI_Pipeline_Cache*> Pipeline_Cache,
 				const RHI_Compute_Pipeline_Create_Info* pCreateInfos
-			) = 0;
-
-		[[nodiscard]] virtual unique_ptr<RHI_Pipeline_Layout>
-			Create_Pipeline_Layout(
-				const RHI_Pipeline_Layout_Create_Info* Create_Info
-
 			) = 0;
 
 

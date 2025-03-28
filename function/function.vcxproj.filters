@@ -249,6 +249,9 @@
     <ClInclude Include="include\render\render_pass\Directional_Light_Pass.h">
       <Filter>include\render\render_pass</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_pass\Point_Light_Paass.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -360,6 +363,9 @@
       <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_pass\Directional_Light_Pass.cpp">
+      <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Point_Light_Paass.cpp">
       <Filter>src\render\render_pass</Filter>
     </ClCompile>
   </ItemGroup>

@@ -76,6 +76,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		struct Frame_Buffer final {
 			uint32_t Width;
 			uint32_t Height;
+			uint32_t Layers;
 
 			vector<Frame_Buffer_Attachment> Attachments;
 			unique_ptr<RHI_Render_Pass> Render_Pass;
