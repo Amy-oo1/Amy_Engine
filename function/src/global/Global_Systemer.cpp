@@ -8,17 +8,14 @@ namespace NameSpace_Function::Namespace_Global {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
-	Global_Systemer::Global_Systemer(const vector<string>& Arguments) :
+	Global_Systemer::Global_Systemer(void) :
 		System_Logger{ System_Logger::Get_Instance() },
-		Resource_Configer{ Resource_Configer::Get_Instance(Arguments[0]) },
-		Resource_Manager{ Resource_Manager::Get_Instance(this->Resource_Configer) },
-		Animation_Loader{ Animation_Loader::Get_Instance(this->Resource_Manager) },
+		Resource_Configer{ Resource_Configer::Get_Instance() },
+		Resource_Manager{ Resource_Manager::Get_Instance() },
+		Animation_Loader{ Animation_Loader::Get_Instance() },
 		Factory_Instance{ Factory::sInstance = new Factory() } {
-		if (!Global_Systemer::g_Arguments.empty())
-			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Global Systemer Already Initialized");
-
-		Global_Systemer::g_Arguments = Arguments;
-
+		if (Global_Systemer::s_Arguments.empty())
+			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Global Systemer No Initialized");
 		JPH::RegisterTypes();
 	}
 
@@ -26,17 +23,15 @@ namespace NameSpace_Function::Namespace_Global {
 		delete Factory_Instance;
 	}
 
-	Global_Systemer& Global_Systemer::Get_Instance(const vector<string>& Arguments) {
-		static Global_Systemer Instance{ Arguments };
-
-		return Instance;
+	void Global_Systemer::Initialize(const vector<string>& Arguments){
+		//TODO : change this to a config file
+		Global_Systemer::s_Arguments = Arguments;
 	}
 
 	Global_Systemer& Global_Systemer::Get_Instance(void) {
-		if (Global_Systemer::g_Arguments.empty())
-			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Global Systemer Not Initialized");
+		static Global_Systemer Instance{};
 
-		return Global_Systemer::Get_Instance(Global_Systemer::g_Arguments);
+		return Instance;
 	}
 
 }// namespace NameSpace_Function::Namespace_Global

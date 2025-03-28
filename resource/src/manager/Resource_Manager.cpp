@@ -2,12 +2,7 @@
 
 namespace NameSpace_Resource::NameSpace_Manage {
 
-	Resource_Manager::Resource_Manager(const Resource_Configer& Configer)
-		: m_Configer{ Configer } {
-	}
-
-
-	const bool Resource_Manager::Save(const path& Resource_URL, const JSON& Resource_JSON) {
+	bool Resource_Manager::Save(const path& Resource_URL, const JSON& Resource_JSON) {
 		if (Resource_URL.empty()) {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is empty", Resource_URL.generic_string());
 			return false;
@@ -30,8 +25,8 @@ namespace NameSpace_Resource::NameSpace_Manage {
 		return true;
 	}
 
-	Resource_Manager& Resource_Manager::Get_Instance(const Resource_Configer& Configer) {
-		static Resource_Manager Instance{ Configer };
+	Resource_Manager& Resource_Manager::Get_Instance(void) {
+		static Resource_Manager Instance{};
 
 		return Instance;
 	}
@@ -42,7 +37,8 @@ namespace NameSpace_Resource::NameSpace_Manage {
 	}
 
 	const path Resource_Manager::Get_Resource_Path(const path& Resource_URL) {
-		return std::filesystem::absolute(this->m_Configer.Get_Root_Directory() / Resource_URL);
+		//TODO :Delete 
+		return Resource_URL;
 	}
 
 }// namespace NameSpace_Resource::NameSpace_Manage

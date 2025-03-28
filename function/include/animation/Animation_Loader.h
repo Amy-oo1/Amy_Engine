@@ -29,15 +29,13 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 	class [[nodiscard]] Animation_Loader final {
 	private:
-		Animation_Loader(void) = delete;
-
 		Animation_Loader(const Animation_Loader&) = delete;
 		Animation_Loader(Animation_Loader&&) = delete;
 
 		Animation_Loader& operator=(const Animation_Loader&) = delete;
 		Animation_Loader& operator=(Animation_Loader&&) = delete;
 
-		Animation_Loader(Resource_Manager& Ref_Resource_Manager);
+		Animation_Loader(void) = default;
 
 	public:
 		~Animation_Loader(void) = default;
@@ -49,12 +47,12 @@ namespace NameSpace_Function::NameSpace_Animation {
 		shared_ptr<Animation_Clip> Load_Animation_Clip(const path& Animation_Clip_URL);
 
 	public:
-		static Animation_Loader& Get_Instance(Resource_Manager& Ref_Resource_Manager);
+		static Animation_Loader& Get_Instance(void);
 
 	private:
 		template<typename Resource_Type>
 		shared_ptr<Resource_Type> Load_Resource(const path& Resource_URL) {
-			std::optional<Resource_Type> Resource{ m_Ref_Resource_Manager.Load<Resource_Type>(Resource_URL) };
+			std::optional<Resource_Type> Resource{ Resource_Manager::Get_Instance().Load<Resource_Type>(Resource_URL) };
 
 			if (!Resource.has_value()) {
 				//TODO : Logg Repeat
@@ -64,9 +62,6 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 			return std::make_shared<Resource_Type>(std::move(Resource.value()));
 		}
-
-	private:
-		Resource_Manager& m_Ref_Resource_Manager;
 
 	};
 

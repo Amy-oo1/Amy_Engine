@@ -26,15 +26,13 @@ namespace NameSpace_Resource::NameSpace_Manage {
 
 	class [[nodiscard]] Resource_Manager final {
 	private:
-		Resource_Manager(void) = delete;
-
 		Resource_Manager(const Resource_Manager&) = delete;
 		Resource_Manager(Resource_Manager&&) = delete;
 
 		Resource_Manager& operator=(const Resource_Manager&) = delete;
 		Resource_Manager& operator=(Resource_Manager&&) = delete;
 
-		Resource_Manager(const Resource_Configer& Configer);
+		Resource_Manager(void) = default;
 
 	public:
 		~Resource_Manager(void) = default;
@@ -66,18 +64,15 @@ namespace NameSpace_Resource::NameSpace_Manage {
 			//return Serializer::Read<Resource_Type>(Resource_JSON);
 		}
 
-		const bool Save(const path& Resource_URL, const JSON& Resource_JSON);
+		bool Save(const path& Resource_URL, const JSON& Resource_JSON);
 
 	public:
-		static Resource_Manager& Get_Instance(const Resource_Configer& Configer);
+		static Resource_Manager& Get_Instance(void);
 
 		const char* URL_To_File_Full_Path(const path& Resource_URL);
 
 	private:
 		const path Get_Resource_Path(const path& Resource_URL);
-
-	private:
-		const Resource_Configer& m_Configer;
 
 	};
 

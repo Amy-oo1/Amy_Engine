@@ -110,11 +110,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//TODO : Public Func
 	public:
 		//TODO Set Function 
-		void Create_Surface(void);
-		void Create_Default_Command_Pool(void);
-		void Allocate_Default_Command_Buffers(void);
-		void Create_Nearest_Sampler(void);
-		void Create_Linear_Sampler(void);
+		void Create_Surface(void);//TODO : Direct12 Not Have Surface 
 
 		//TODO Get Func
 		[[nodiscard]] size_t Get_API_Version(void)const;
@@ -131,6 +127,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator);
 
 		void Get_Device_ProcAddrs(void);
+		void Create_VAM_Allocator(void);
+
+		void Create_Nearest_Sampler(void);
+		void Create_Linear_Sampler(void);
 
 		//TODO : Static Public Func
 	public:
@@ -192,6 +192,20 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				VkImageTiling Tiling,
 				VkFormatFeatureFlags Features
 			);
+
+		[[nodiscard]] static const Swap_Chain_Support_Details
+			S_Query_Swap_Chain_Support_Details(
+				const VkPhysicalDevice Physical_Device,
+				VkSurfaceKHR Suraface
+			);
+
+		[[nodiscard]] static const VkSurfaceFormatKHR S_Choose_SwapChain_Surface_Format(const vector<VkSurfaceFormatKHR>& Available_Formats);
+
+		[[nodiscard]] static const VkPresentModeKHR S_Choose_SwapChain_Present_Mode(const vector<VkPresentModeKHR>& Available_Present_Modes);
+
+		[[nodiscard]] static const VkExtent2D S_Choose_SwapChain_Extent(const shared_ptr<Window_System>& Window, const VkSurfaceCapabilitiesKHR& Capabilities);
+
+
 
 		//NOTE :Parser RHI Struct To Vulkan Struct
 		[[nodiscard]] static const optional<VkWriteDescriptorSet>
@@ -311,10 +325,26 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VmaAllocator m_VMA_Allocator{ nullptr };
 
 		//Deleter
-		function<void(VkInstance)> m_VK_Instance_Deleter{ nullptr };
-		function<void(VkSurfaceKHR)> m_VK_Surface_Deleter{ nullptr };
-		function<void(VkDevice)> m_VK_Device_Deleter{ nullptr };
-		function<void(VkCommandPool)> m_VK_Command_Pool_Deleter{ nullptr };
+		function<void(VkInstance)>				m_VK_Instance_Deleter{ nullptr };
+		function<void(VkSurfaceKHR)>			m_VK_Surface_Deleter{ nullptr };
+		function<void(VkDevice)>				m_VK_Device_Deleter{ nullptr };
+		function<void(VkCommandPool)>			m_VK_Command_Pool_Deleter{ nullptr };
+		function<void(VkDescriptorPool)>		m_VK_Descriptor_Pool_Deleter{ nullptr };
+		function<void(VkSemaphore)>				m_VK_Semaphore_Deleter{ nullptr };
+		function<void(VkFence)>					m_VK_Fence_Deleter{ nullptr };
+		function<void(VkSwapchainKHR)>			m_VK_SwapChain_Deleter{ nullptr };
+		function<void(VkImageView)>				m_VK_Image_View_Deleter{ nullptr };
+		function<void(VkSampler)>				m_VK_Sampler_Deleter{ nullptr };
+		function<void(VkShaderModule)>			m_VK_Shader_Module_Deleter{ nullptr };
+		function<void(VkBuffer)>				m_VK_Buffer_Deleter{ nullptr };
+		function<void(VkImage)>					m_VK_Image_Deleter{ nullptr };
+		function<void(VkDeviceMemory)>			m_VK_Device_Memory_Deleter{ nullptr };
+		function<void(VkDescriptorSetLayout)>	m_VK_Descriptor_Set_Layout_Deleter{ nullptr };
+		function<void(VkFramebuffer)>			m_VK_Frame_Buffer_Deleter{ nullptr };
+		function<void(VkRenderPass)>			m_VK_Render_Pass_Deleter{ nullptr };
+		function<void(VkPipeline)>				m_VK_Pipeline_Deleter{ nullptr };
+		function<void(VkPipelineCache)>			m_VK_Pipeline_Cache_Deleter{ nullptr };
+		function<void(VkPipelineLayout)>		m_VK_Pipeline_Layout_Deleter{ nullptr };
 
 
 		//Class Resource
@@ -347,6 +377,21 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		unique_ptr<RHI_Sampler> m_Nearest_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
 		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
+		Swap_Chain_Support_Details m_Swap_Chain_Support_Details{};
+
+		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_available_For_Render_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
+		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Finished_For_Present_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
+		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Available_For_TeCopy_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
+		array<unique_ptr<RHI_Fence>, s_Frames_In_Flight> m_InFlight_RHI_Fences{ std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>() };
+
+		unique_ptr<VkSwapchainKHR_T, decltype(m_VK_SwapChain_Deleter)> m_Vk_SwapChain{ nullptr };
+		vector<unique_ptr<VkImageView_T, decltype(m_VK_Image_View_Deleter)>> m_SwapChain_Image_Views{};
+
+		//TODO: Sync Window Fields
+		vector<VkImage> m_SwapChain_VK_Images{};
+		VkFormat m_SwapChain_Image_Format{};
+		VkExtent2D m_SwapChain_Extent{};
+
 		//TODO : Override Func
 	public:
 		void Create_Instance(void) override;//NOTE : Instance Life Time Is The Same As The Application
@@ -366,6 +411,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Create_Command_Pool(
 				const RHI_Command_Pool_Create_Info* Create_Info) override;
 
+		void Create_Default_Command_Pool(void) override;
+
 		[[nodiscard]] RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const override;
 
 		[[nodiscard]] vector<unique_ptr<RHI_Command_Buffer>>
@@ -373,9 +420,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) override;
 
+		void Allocate_Default_Command_Buffers(void) override;
+
 		[[nodiscard]] unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Command(void) override;
 
 		void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) override;
+
+		void Create_SwapChain(void) override;
+		void Create_SwapChhain_Image_Views(void) override;
 
 		[[nodiscard]] tuple<
 			unique_ptr<RHI_Buffer>,
@@ -479,6 +531,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Sampler_Create_Info* Create_Info
 			) override;
 
+		void Create_Default_Sampler(void) override;
+
 		[[nodiscard]] RHI_Sampler* Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) override;
 
 		[[nodiscard]] RHI_Sampler*
@@ -500,6 +554,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Create_Descriptor_Pool(
 				const RHI_Descriptor_Pool_Create_Info* Create_Info
 			) override;
+
+		void Create_Default_Descriptor_Pool(void) override;
 
 		[[nodiscard]] unique_ptr<RHI_Descriptor_Set_Layout>
 			Create_Descriptor_Set_Layout(
@@ -527,39 +583,34 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Pipeline_Layout_Create_Info* Create_Info
 			) override;
 
-
-
 		[[nodiscard]] unique_ptr<RHI_Pipeline>
 			Create_Graphics_Pipeline(
 				const RHI_Graphics_Pipeline_Create_Info* Create_Info,
 				RHI_Pipeline_Cache* Pipeline_Cache = nullptr
 			) override;
 
+		[[nodiscard]] virtual unique_ptr<RHI_Semaphore>
+			Create_Semaphore(
+				const RHI_Semaphore_Create_Info* Create_Info
+			) override;
+
+		[[nodiscard]] unique_ptr<RHI_Fence>
+			Create_Fence(
+				const RHI_Fence_Create_Info* Create_Info
+			) override;
+
+		void Create_Sync_Primitices(void)override;
+
+
+
 
 		void Run(void) override;
-
-
-	private:
-
-
-
-
-		void Create_Descriptor_Pool(void);
-
-		void Create_Sync_Primitices(void);
-
-		void Create_SwapChain(void) override;
-
-		void Create_SwapChhain_Image_Views(void) override;
-
-		//TODO : Set Func 
-
-		void Create_Resource_Allocator(void);
-		void CleanUp_SwapChain(void) override;
 
 		void Re_Create_SwapChain(void) override;
 
 	private:
+
+
 
 
 		bool Re_Set_Command_Pool_PFN(void);
@@ -568,25 +619,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 	private:
-
-
-
-	private:
-
-
-
-
-
-		[[nodiscard]] static const Swap_Chain_Support_Details Query_Swap_Chain_Support_Details(const VkPhysicalDevice& Physical_Device, VkSurfaceKHR Suraface);
-
-		[[nodiscard]] static const VkSurfaceFormatKHR Choose_SwapChain_Surface_Format(const vector<VkSurfaceFormatKHR>& Available_Formats);
-
-		[[nodiscard]] static const VkPresentModeKHR Choose_SwapChain_Present_Mode(const vector<VkPresentModeKHR>& Available_Present_Modes);
-
-		[[nodiscard]] static const VkExtent2D Choose_SwapChain_Extent(const shared_ptr<Window_System>& Window, const VkSurfaceCapabilitiesKHR& Capabilities);
-
-
-
 
 
 		[[nodiscard]] static const optional<VkClearValue>
@@ -606,59 +638,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 	private:
 
-		//NOTE : Deleter
-		function<void(VkDescriptorPool)> m_VK_Descriptor_Pool_Deleter;
-		function<void(VkSemaphore)> m_VK_Semaphore_Deleter;
-		function<void(VkFence)> m_VK_Fence_Deleter;
-		function<void(VkSwapchainKHR)> m_VK_SwapChain_Deleter;
-		function<void(VkImageView)> m_VK_Image_View_Deleter;
-		function<void(VkSampler)> m_VK_Sampler_Deleter;
-		function<void(VkShaderModule)> m_VK_Shader_Module_Deleter;
-		function<void(VkBuffer)> m_VK_Buffer_Deleter;
-		function<void(VkImage)> m_VK_Image_Deleter;
-		function<void(VkDeviceMemory)> m_VK_Device_Memory_Deleter;
-		function<void(VkDescriptorSetLayout)> m_VK_Descriptor_Set_Layout_Deleter;
-		function<void(VkFramebuffer)> m_VK_Frame_Buffer_Deleter;
-		function<void(VkRenderPass)> m_VK_Render_Pass_Deleter;
-		function<void(VkPipeline)> m_VK_Pipeline_Deleter;
-		function<void(VkPipelineCache)> m_VK_Pipeline_Cache_Deleter;
-		function<void(VkPipelineLayout)> m_VK_Pipeline_Layout_Deleter;
-
-		//NOTE : Resource
-		//unique_ptr<VkInstance_T, decltype(m_VK_Instance_Deleter)> m_VK_Instance{ nullptr };
-
-
-
-		unique_ptr<RHI_Descriptor_Pool> m_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
-
-		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_available_For_Render_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
-		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Finished_For_Present_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
-		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Available_For_TeCopy_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
-		array<unique_ptr<RHI_Fence>, s_Frames_In_Flight> m_InFlight_RHI_Fences{ std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>() };
-
-		Swap_Chain_Support_Details m_Swap_Chain_Support_Details{};
-		unique_ptr<VkSwapchainKHR_T, decltype(m_VK_SwapChain_Deleter)> m_Vk_SwapChain{ nullptr };
-
-		vector<VkImage> m_SwapChain_VK_Images{};
-		VkFormat m_SwapChain_Image_Format{};
-		VkExtent2D m_SwapChain_Extent{};
-
-		vector<unique_ptr<VkImageView_T, decltype(m_VK_Image_View_Deleter)>> m_SwapChain_Image_Views{};
-
-		//TODO : Add Dlelter In Resource
-		//VmaAllocator m_Vma_Allocator{ nullptr };
-
-
-
-
-		//virtual void prepareContext() override final;
-
-
-
-
-
-
-
 
 
 		bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) override;
@@ -671,8 +650,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//	VmaAllocation* pAllocation,
 		//	VmaAllocationInfo* pAllocationInfo) override;
 
-		[[nodiscard]] unique_ptr<RHI_Fence>
-			Create_Fence(const RHI_Fence_Create_Info pCreateInfo) override;
 
 		[[nodiscard]] unique_ptr<RHI_Pipeline>
 			Create_Compute_Pipeline(
@@ -681,9 +658,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			) override;
 
 
-		[[nodiscard]] virtual unique_ptr<RHI_Semaphore>
-			Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info
-			) override;
 
 		bool
 			Wait_For_Fences_PFN(

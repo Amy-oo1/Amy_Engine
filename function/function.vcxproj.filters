@@ -267,6 +267,12 @@
     <ClInclude Include="include\render\render_pass\Color_Grading_Pass.h">
       <Filter>include\render\render_pass</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_pass\Particle_Pass.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\particle\Particle_Manager.h">
+      <Filter>include\particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -397,6 +403,12 @@
     </ClCompile>
     <ClCompile Include="src\render\render_pass\Color_Grading_Pass.cpp">
       <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Particle_Pass.cpp">
+      <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\particle\Particle_Manager.cpp">
+      <Filter>src\particle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

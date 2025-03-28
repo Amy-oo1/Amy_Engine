@@ -2,10 +2,6 @@
 
 namespace NameSpace_Function::NameSpace_Animation {
 
-	Animation_Loader::Animation_Loader(Resource_Manager& Ref_Resource_Manager)
-		:m_Ref_Resource_Manager{ Ref_Resource_Manager } {
-	}
-
 	shared_ptr<Skeleton_Data> Animation_Loader::Load_Skeleton_Data(const path& Skeleton_Data_URL) {
 		return this->Load_Resource<Skeleton_Data>(Skeleton_Data_URL);
 	}
@@ -22,8 +18,8 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return this->Load_Resource<Animation_Clip>(Animation_Clip_URL);
 	}
 
-	Animation_Loader& Animation_Loader::Get_Instance(Resource_Manager& Ref_Resource_Manager) {
-		static Animation_Loader Instance{ Ref_Resource_Manager };
+	Animation_Loader& Animation_Loader::Get_Instance(void) {
+		static Animation_Loader Instance{};
 
 		return Instance;
 	}

@@ -25,7 +25,7 @@ namespace NameSpace_Resource::NameSpace_Config {
 		const path Get_Root_Directory(void) const;
 
 	public:
-		static Resource_Configer& Get_Instance(const path& Confige_file);
+		static Resource_Configer& Get_Instance(void);
 
 	private:
 		path m_Root_Directory{};

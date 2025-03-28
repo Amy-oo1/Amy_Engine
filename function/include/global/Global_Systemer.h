@@ -39,21 +39,19 @@ namespace NameSpace_Function::Namespace_Global {
 
 	class Global_Systemer final {
 	private:
-		Global_Systemer(void) = delete;
-
 		Global_Systemer(const Global_Systemer&) = delete;
 		Global_Systemer(Global_Systemer&&) = delete;
 
 		Global_Systemer& operator=(const Global_Systemer&) = delete;
 		Global_Systemer& operator=(Global_Systemer&&) = delete;
 
-		Global_Systemer(const vector<string>& Arguments);
+		Global_Systemer(void);
 
 	public:
 		~Global_Systemer(void);
 
 	public:
-		static Global_Systemer& Get_Instance(const vector<string>& Arguments);
+		static void Initialize(const vector<string>& Arguments);
 
 		static Global_Systemer& Get_Instance(void);
 
@@ -71,7 +69,7 @@ namespace NameSpace_Function::Namespace_Global {
 
 
 	private:
-		static inline vector<string> g_Arguments{};
+		static inline vector<string> s_Arguments{};
 
 	};
 
