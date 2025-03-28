@@ -24,11 +24,26 @@ namespace NameSpace_Resource::NameSpace_Config {
 	public:
 		const path Get_Root_Directory(void) const;
 
+		const path Get_Global_Particle_Resource_URL(void)const;
+
 	public:
 		static Resource_Configer& Get_Instance(void);
 
 	private:
+		static constexpr const char* Config_File_Name{ "Amy_Engine_Config.ini" };
+
+	private:
 		path m_Root_Directory{};
+		path m_Engine_Resource_Directory{};
+		path m_User_Resource_Directory{};
+
+		path m_Engine_Big_Icon_URL{};
+		path m_Engine_Small_Icon_URL{};
+
+		path m_Editor_Font_URL;
+
+		path m_Global_Render_Resource_URL{};
+		path m_Global_Particle_Resource_URL{};
 
 	};
 

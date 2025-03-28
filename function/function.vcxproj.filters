@@ -103,6 +103,30 @@
     <Filter Include="src\render\render_system">
       <UniqueIdentifier>{74fda54d-1290-421e-8c9f-7c1fc9bf3ec6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\frame\world">
+      <UniqueIdentifier>{3735406f-8eab-4d1f-81b7-d4a69736e5d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\world">
+      <UniqueIdentifier>{b4be3aa3-a530-47e4-9224-9163eb843d8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\level">
+      <UniqueIdentifier>{cdf8ba94-0f07-4707-b620-b9fbe17c851b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\level">
+      <UniqueIdentifier>{e267f95e-86f8-47c3-9491-cbbe3f4ac132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\character">
+      <UniqueIdentifier>{b52026b6-987e-434c-878f-15cb301c77b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\character">
+      <UniqueIdentifier>{b7513084-dd5b-43a0-b9c5-d381fee47ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\compoents\camera">
+      <UniqueIdentifier>{258bbae5-f5e8-4cc1-9670-585520fa4854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\compoents\camera">
+      <UniqueIdentifier>{ff411138-4708-48d3-b2ff-47090a21dbc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation\Bone.h">
@@ -273,6 +297,24 @@
     <ClInclude Include="include\particle\Particle_Manager.h">
       <Filter>include\particle</Filter>
     </ClInclude>
+    <ClInclude Include="include\Engine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\Physics_Manager.h">
+      <Filter>include\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\world\World_Manager.h">
+      <Filter>include\frame\world</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\level\Level.h">
+      <Filter>include\frame\level</Filter>
+    </ClInclude>
+    <ClInclude Include="include\character\Character.h">
+      <Filter>include\character</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\compoents\camera\Camera_Component.h">
+      <Filter>include\frame\compoents\camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -359,9 +401,6 @@
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_RHI.cpp">
       <Filter>src\render\rhi\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\rhi\vulkan\Vulkan_Test.cpp">
-      <Filter>src\render\rhi\vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="src\render\rhi\vulkan\Vulkan_Utilities.cpp">
       <Filter>src\render\rhi\vulkan</Filter>
     </ClCompile>
@@ -409,6 +448,24 @@
     </ClCompile>
     <ClCompile Include="src\particle\Particle_Manager.cpp">
       <Filter>src\particle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\Physics_Manager.cpp">
+      <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\world\World_Manager.cpp">
+      <Filter>src\frame\world</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\level\Level.cpp">
+      <Filter>src\frame\level</Filter>
+    </ClCompile>
+    <ClCompile Include="src\character\Character.cpp">
+      <Filter>src\character</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\compoents\camera\Camera_Component.cpp">
+      <Filter>src\frame\compoents\camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

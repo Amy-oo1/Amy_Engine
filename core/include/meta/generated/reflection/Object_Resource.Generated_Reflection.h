@@ -7,7 +7,7 @@
 
 #include "meta/Reflection/Reflection_Instance.h"
 
-#include "D:/Amy_Engine/resource/include/common/Object.h"
+#include "D:/Amy_Engine/resource/include/common/Object_Resource.h"
 
 namespace NameSpace_Resource::NameSpace_Common{
 

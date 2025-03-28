@@ -4,6 +4,7 @@
 #include<string>
 #include<fstream>
 #include<sstream>
+#include<memory>
 
 #include "file/File_System.h"
 #include "logger/System_Logger.h"
@@ -14,6 +15,7 @@
 namespace NameSpace_Resource::NameSpace_Manage {
 
 	using std::optional;
+	using std::shared_ptr;
 
 	using NameSpace_Platform::NameSpace_File::File_System;
 	using NameSpace_Platform::NameSpace_File::path;
@@ -39,27 +41,27 @@ namespace NameSpace_Resource::NameSpace_Manage {
 
 	public:
 		template<typename Resource_Type>
-		const  optional<Resource_Type> Load(const path& Resource_URL) {
+		const  shared_ptr<Resource_Type> Load(const path& Resource_URL) {
 			if (Resource_URL.empty()) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} is empty", Resource_URL.generic_string());
-				return std::nullopt;
+				return nullptr;
 			}
 			else if (!File_System::Is_File(Resource_URL)) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} is not a file ", Resource_URL.generic_string());
-				return std::nullopt;
+				return nullptr;
 			}
 
 			path Resource_Path = this->Get_Resource_Path(Resource_URL);
 			std::ifstream Resource_IFStream{ Resource_Path };
 			if (!Resource_IFStream) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} failed open ", Resource_Path.generic_string());
-				return std::nullopt;
+				return nullptr;
 			}
 
 			JSON Resource_JSON{ JSON::parse(Resource_IFStream) };
 			Resource_IFStream.close();
 
-			return std::nullopt;
+			return nullptr;
 			//TODO ::
 			//return Serializer::Read<Resource_Type>(Resource_JSON);
 		}

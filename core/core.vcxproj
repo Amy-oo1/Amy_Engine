@@ -73,10 +73,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)$(ProjectName)\intermediate\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)$(ProjectName)\lib\$(Configuration)\</OutDir>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(ProjectName)\lib\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)$(ProjectName)\intermediate\$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -115,11 +117,15 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)meta_parser\bin\$(Configuration)\meta_parser.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -132,6 +138,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +146,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)meta_parser\bin\$(Configuration)\meta_parser.exe</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\bounding\Bounding_Box_AxisAligned.h" />
@@ -171,12 +181,12 @@
     <ClInclude Include="include\meta\generated\reflection\Compoent.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Particle.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h" />
-    <ClInclude Include="include\meta\generated\reflection\Level.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h" />
-    <ClInclude Include="include\meta\generated\reflection\Object.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Object_Resource.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Particle.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Render_Obejct.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Rigid_Body.Generated_Reflection.h" />
@@ -184,7 +194,7 @@
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h" />
-    <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\World_Resource.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\Reflection_Header.h" />
     <ClInclude Include="include\meta\generated\Serializer_Header.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

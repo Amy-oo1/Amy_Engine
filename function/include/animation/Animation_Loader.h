@@ -52,15 +52,17 @@ namespace NameSpace_Function::NameSpace_Animation {
 	private:
 		template<typename Resource_Type>
 		shared_ptr<Resource_Type> Load_Resource(const path& Resource_URL) {
-			std::optional<Resource_Type> Resource{ Resource_Manager::Get_Instance().Load<Resource_Type>(Resource_URL) };
+			//std::optional<Resource_Type> Resource{ Resource_Manager::Get_Instance().Load<Resource_Type>(Resource_URL) };
 
-			if (!Resource.has_value()) {
-				//TODO : Logg Repeat
-				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failure Load File :{} ", Resource_URL.string());
-				return nullptr;
-			}
+			//if (!Resource.has_value()) {
+			//	//TODO : Logg Repeat
+			//	System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failure Load File :{} ", Resource_URL.string());
+			//	return nullptr;
+			//}
 
-			return std::make_shared<Resource_Type>(std::move(Resource.value()));
+			//return std::make_shared<Resource_Type>(std::move(Resource.value()));
+
+			return nullptr;
 		}
 
 	};

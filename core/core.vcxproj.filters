@@ -201,15 +201,6 @@
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Object.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Level.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\World.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Compoent.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
@@ -227,6 +218,15 @@
     </ClInclude>
     <ClInclude Include="include\meta\generated\Serializer_Header.h">
       <Filter>include\meta\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Object_Resource.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\World_Resource.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -141,13 +141,13 @@
     <ClInclude Include="include\global\Global_Rendering.h">
       <Filter>include\global</Filter>
     </ClInclude>
-    <ClInclude Include="include\common\Object.h">
+    <ClInclude Include="include\common\Object_Resource.h">
       <Filter>include\common</Filter>
     </ClInclude>
-    <ClInclude Include="include\common\Level.h">
+    <ClInclude Include="include\common\Level_Resource.h">
       <Filter>include\common</Filter>
     </ClInclude>
-    <ClInclude Include="include\common\World.h">
+    <ClInclude Include="include\common\World_Resource.h">
       <Filter>include\common</Filter>
     </ClInclude>
     <ClInclude Include="include\components\skeleton\Skeleton_Node.h">
@@ -209,13 +209,13 @@
     <ClCompile Include="src\global\Global_Rendering.cpp">
       <Filter>src\global</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\Object.cpp">
+    <ClCompile Include="src\common\Object_Resource.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\Level.cpp">
+    <ClCompile Include="src\common\Level_Resource.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="src\common\World.cpp">
+    <ClCompile Include="src\common\World_Resource.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="src\components\skeleton\Skeleton_Node.cpp">

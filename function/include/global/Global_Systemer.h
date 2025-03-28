@@ -15,6 +15,9 @@
 
 #include "animation/Animation_Loader.h"
 
+#include "physics/Physics_Manager.h"
+#include "frame/world/World_Manager.h"
+
 #include "render/render_system/Render_Obejct.h"
 #include "render/render_system/Render_GUID_Allocator.h"
 
@@ -31,6 +34,9 @@ namespace NameSpace_Function::Namespace_Global {
 
 	using NameSpace_Resource::NameSpace_Config::Resource_Configer;
 	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
+
+	using Namespace_Physics::Physics_Manager;
+	using Namespace_Frame::NameSpace_World::World_Manager;
 
 	using NameSpace_Animation::Animation_Loader;
 
@@ -60,6 +66,9 @@ namespace NameSpace_Function::Namespace_Global {
 
 		Resource_Configer& Resource_Configer;
 		Resource_Manager& Resource_Manager;
+
+		Physics_Manager& Physics_Manager;
+		World_Manager& World_Manager;
 
 		Animation_Loader& Animation_Loader;
 

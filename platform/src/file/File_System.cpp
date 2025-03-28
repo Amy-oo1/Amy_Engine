@@ -12,6 +12,10 @@ namespace NameSpace_Platform::NameSpace_File {
 		return std::filesystem::is_regular_file(File);
 	}
 
+	void File_System::Set_Lexically_Normal(path& Path){
+		Path = Path.lexically_normal();
+	}
+
 	const vector<path> File_System::Get_Sub_Files(const path& Directory) {
 		assert(Is_Directory(Directory));
 

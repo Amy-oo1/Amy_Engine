@@ -6,7 +6,7 @@
 #include "meta/reflection/Reflection_Macro.h"
 
 #include "math/Vector3.h"
-#include "common/Object.h"
+#include "common/Object_Resource.h"
 
 namespace NameSpace_Resource::NameSpace_Common {
 
@@ -15,14 +15,14 @@ namespace NameSpace_Resource::NameSpace_Common {
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 
-	REFLECTION_HEADER(Level);
-	REFLECTION_CLASS(Level, All) final
+	REFLECTION_HEADER(Level_Resource);
+	REFLECTION_CLASS(Level_Resource, All) final
 	{
-		REFLECTION_BODY(Level);
+		REFLECTION_BODY(Level_Resource);
 	public:
-		Level(void) = default;
+		Level_Resource(void) = default;
 
-		~Level(void) = default;
+		~Level_Resource(void) = default;
 
 	private:
 		Vector3 m_Gravity{ 0.f, 0.f, -9.8f };

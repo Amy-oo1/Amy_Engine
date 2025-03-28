@@ -336,18 +336,18 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-    class Reflection_Camera_Operator {
+    class Reflection_Camera_Resource_Operator {
     public:
         static const string Get_Spelling(void){
-            return string{"Camera"};
+            return string{"Camera_Resource"};
         }
 
         static const string Get_Displaying_Name(void){
-            return string{"Camera"};            
+            return string{"Camera_Resource"};            
         }
 
-            static const vector<Reflection_Instance<Camera>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera> Instance){
-                vector<Reflection_Instance<Camera>> Table;
+            static const vector<Reflection_Instance<Camera_Resource>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Resource> Instance){
+                vector<Reflection_Instance<Camera_Resource>> Table;
 
                     
 
@@ -367,11 +367,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Camera"};
             }
 
-            static const Reflection_Instance<Camera_Base>& Get_Camera_Attribute(shared_ptr<Camera> Instance){
+            static const Reflection_Instance<Camera_Base>& Get_Camera_Attribute(shared_ptr<Camera_Resource> Instance){
                 return Instance->m_Camera;
             }
 
-            static void Set_Field_Camera_Attribute(shared_ptr<Camera> Instance, const Reflection_Instance<Camera_Base>& Value){
+            static void Set_Field_Camera_Attribute(shared_ptr<Camera_Resource> Instance, const Reflection_Instance<Camera_Base>& Value){
                 Instance->m_Camera=Value;
             }
 

@@ -68,4 +68,5 @@ namespace NameSpace_Resource::NameSpace_Common {
 
 		vector<Reflection_Instance<Component>> m_Instanced_Components;
 	};
+
 } // NameSpace_Resource::NameSpace_Common

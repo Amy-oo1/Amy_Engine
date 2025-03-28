@@ -3,7 +3,7 @@
 #include<optional>
 
 #include "logger/System_Logger.h"
-#include "meta/generated/reflection/Object.Generated_Reflection.h"
+#include "meta/generated/reflection/Object_Resource.Generated_Reflection.h"
 
 #include "global/Global_Systemer.h"
 
@@ -73,13 +73,13 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
 
 	bool GObject::Load_Definition(void) {
 		auto Temp_Definition = Global_Systemer::Get_Instance().Resource_Manager.Load<Object_Definition>(this->m_Definition_URL);
-		if (!Temp_Definition.has_value()) {
+		if (nullptr == Temp_Definition) {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failed to Load Definition :{} ", this->m_Definition_URL.generic_string());
 
 			return false;
 		}
 
-		for (auto& Temp_Component : Reflection_Object_Definition_Operator::Get_Components_Attribute(std::make_shared<Object_Definition>(Temp_Definition.value())))
+		for (auto& Temp_Component : Reflection_Object_Definition_Operator::Get_Components_Attribute(Temp_Definition))
 			if (!this->Has_Component(Temp_Component.Get_Type_Spelling())) {
 				this->m_Components.push_back(Temp_Component);
 

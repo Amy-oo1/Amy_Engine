@@ -16,7 +16,7 @@ namespace NameSpace_Function::NameSpace_Particle {
 
 	struct Particle_Config final {
 		static constexpr int Max_Particle_Size{ 300000 };
-		static constexpr int Default_Particle_Emitter_gap{ 10 };
+		static constexpr int Default_Particle_Emitter_Gap{ 10 };
 		static constexpr int Default_Particle_Emitter_Count{ 100000 };
 		static constexpr int Default_Particle_Life_Time{ 10 };
 		static constexpr float Default_Particle_Time_Step{ 0.004f };
@@ -28,8 +28,7 @@ namespace NameSpace_Function::NameSpace_Particle {
 		static inline const Vector2 Default_Emitter_Life{ 1.2f, 0.f };
 	};
 
-	enum class EMITTER_TYPE :uint8_t
-	{
+	enum class EMITTER_TYPE :uint32_t {
 		POINT = 0,
 		MESH,
 		INVALID

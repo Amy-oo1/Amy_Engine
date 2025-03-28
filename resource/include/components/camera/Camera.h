@@ -75,17 +75,17 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	};
 
-	REFLECTION_HEADER(Camera);
-	REFLECTION_CLASS(Camera, All) final
+	REFLECTION_HEADER(Camera_Resource);
+	REFLECTION_CLASS(Camera_Resource, All) final
 	{
-		REFLECTION_BODY(Camera);
+		REFLECTION_BODY(Camera_Resource);
 	public:
-		Camera(void) = default;
+		Camera_Resource(void) = default;
 
-		Camera(const Camera&) = default;
-		Camera(Camera&&) = default;
+		Camera_Resource(const Camera_Resource&) = default;
+		Camera_Resource(Camera_Resource&&) = default;
 
-		~Camera(void) = default;
+		~Camera_Resource(void) = default;
 
 	private:
 		Reflection_Instance<Camera_Base> m_Camera{ string{"Camera_Base"} };

@@ -9,7 +9,7 @@
 
 #include "meta/reflection/Reflection_Instance.h"
 
-#include "common/Object.h"
+#include "common/Object_Resource.h"
 
 #include "frame/compoents/Compoent.h"
 #include "frame/object/GObject_ID_Allocator.h"

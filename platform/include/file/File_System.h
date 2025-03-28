@@ -25,11 +25,12 @@ namespace NameSpace_Platform::NameSpace_File {
 		File_System& operator=(const File_System&) = delete;
 		File_System& operator=(File_System&&) = delete;
 
-		~File_System(void) = delete;
+		~File_System(void) = default;
 	public:
-
 		static  bool Is_Directory(const path& Directory);
 		static  bool Is_File(const path& File);
+
+		static void Set_Lexically_Normal(path& Path);
 		static const vector<path> Get_Sub_Files(const path& Directory);
 		static const vector<path> Get_Sub_Directories(const path& Directory);
 		static const tuple<optional<string>, optional<string>, optional<string>> Extensions(const path& Path);

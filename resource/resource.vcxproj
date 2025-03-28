@@ -115,6 +115,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,6 +133,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,9 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\common\Level.h" />
-    <ClInclude Include="include\common\Object.h" />
-    <ClInclude Include="include\common\World.h" />
+    <ClInclude Include="include\common\Level_Resource.h" />
+    <ClInclude Include="include\common\Object_Resource.h" />
+    <ClInclude Include="include\common\World_Resource.h" />
     <ClInclude Include="include\components\animation\Animation.h" />
     <ClInclude Include="include\components\animation\Animation_Clip.h" />
     <ClInclude Include="include\components\animation\Blend_State.h" />
@@ -165,9 +167,9 @@
     <ClInclude Include="include\manage\Resource_Manager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\common\Level.cpp" />
-    <ClCompile Include="src\common\Object.cpp" />
-    <ClCompile Include="src\common\World.cpp" />
+    <ClCompile Include="src\common\Level_Resource.cpp" />
+    <ClCompile Include="src\common\Object_Resource.cpp" />
+    <ClCompile Include="src\common\World_Resource.cpp" />
     <ClCompile Include="src\components\animation\Animation.cpp" />
     <ClCompile Include="src\components\animation\Animation_Clip.cpp" />
     <ClCompile Include="src\components\animation\Blend_State.cpp" />

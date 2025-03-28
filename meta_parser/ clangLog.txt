@@ -176,9 +176,9 @@ Parser_Header.o: \
   D:\Amy_Engine\resource\include\components\mesh\Mesh_Data.h \
   D:\Amy_Engine\resource\include\global\Global_Particle.h \
   D:\Amy_Engine\resource\include\global\Global_Rendering.h \
-  D:\Amy_Engine\resource\include\common\Object.h \
-  D:\Amy_Engine\resource\include\common\Level.h \
-  D:\Amy_Engine\resource\include\common\World.h \
+  D:\Amy_Engine\resource\include\common\Object_Resource.h \
+  D:\Amy_Engine\resource\include\common\Level_Resource.h \
+  D:\Amy_Engine\resource\include\common\World_Resource.h \
   D:\Amy_Engine\function\include\frame\compoents\Compoent.h \
   D:\Amy_Engine\function\include\frame\compoents\transform\Transform_Component.h \
   D:\Amy_Engine\function\include\frame\object\GObject.h \

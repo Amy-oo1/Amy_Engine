@@ -6,7 +6,7 @@
 #include "meta/reflection/Reflection_Macro.h"
 
 #include "file/File_System.h"
-#include "common/Level.h"
+#include "common/Level_Resource.h"
 
 namespace NameSpace_Resource::NameSpace_Common {
 
@@ -15,14 +15,14 @@ namespace NameSpace_Resource::NameSpace_Common {
 
 	using NameSpace_Platform::NameSpace_File::path;
 
-	REFLECTION_HEADER(World);
-	REFLECTION_CLASS(World, All) final
+	REFLECTION_HEADER(World_Resource);
+	REFLECTION_CLASS(World_Resource, All) final
 	{
-		REFLECTION_BODY(World);
+		REFLECTION_BODY(World_Resource);
 	public:
-		World(void) = default;
+		World_Resource(void) = default;
 
-		~World(void) = default;
+		~World_Resource(void) = default;
 
 	private:
 		string m_Name;
