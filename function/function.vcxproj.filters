@@ -264,6 +264,9 @@
     <ClInclude Include="include\render\render_pass\Combine_UI_Pass.h">
       <Filter>include\render\render_pass</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_pass\Color_Grading_Pass.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -390,6 +393,9 @@
       <Filter>src\render\render_pass</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_pass\Combine_UI_Pass.cpp">
+      <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Color_Grading_Pass.cpp">
       <Filter>src\render\render_pass</Filter>
     </ClCompile>
   </ItemGroup>
