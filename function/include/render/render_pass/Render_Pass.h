@@ -37,20 +37,33 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Global_Render_Resource;
 
-	enum class RENDER_PASS_TYPE :uint32_t {
-		RENDER_PASS_TYPE_SHADOW = 0,
-		RENDER_PASS_TYPE_G_BUFFER,
-		RENDER_PASS_TYPE_LIGHTING,
-		RENDER_PASS_TYPE_COMPOSITE,
-		RENDER_PASS_TYPE_COUNT
+	enum
+	{
+		_main_camera_pass_gbuffer_a = 0,
+		_main_camera_pass_gbuffer_b = 1,
+		_main_camera_pass_gbuffer_c = 2,
+		_main_camera_pass_backup_buffer_odd = 3,
+		_main_camera_pass_backup_buffer_even = 4,
+		_main_camera_pass_post_process_buffer_odd = 5,
+		_main_camera_pass_post_process_buffer_even = 6,
+		_main_camera_pass_depth = 7,
+		_main_camera_pass_swap_chain_image = 8,
+		_main_camera_pass_custom_attachment_count = 5,
+		_main_camera_pass_post_process_attachment_count = 2,
+		_main_camera_pass_attachment_count = 9,
 	};
 
-	enum class _RENDER_SUBPASS_TYPE :uint32_t {
-		RENDER_SUBPASS_TYPE_SHADOW = 0,
-		RENDER_SUBPASS_TYPE_G_BUFFER,
-		RENDER_SUBPASS_TYPE_LIGHTING,
-		RENDER_SUBPASS_TYPE_COMPOSITE,
-		RENDER_SUBPASS_TYPE_COUNT
+	enum
+	{
+		_main_camera_subpass_basepass = 0,
+		_main_camera_subpass_deferred_lighting,
+		_main_camera_subpass_forward_lighting,
+		_main_camera_subpass_tone_mapping,
+		_main_camera_subpass_color_grading,
+		_main_camera_subpass_fxaa,
+		_main_camera_subpass_ui,
+		_main_camera_subpass_combine_ui,
+		_main_camera_subpass_count
 	};
 
 	struct Visiable_Node final {

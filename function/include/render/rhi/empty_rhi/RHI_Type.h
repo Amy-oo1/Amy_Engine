@@ -324,6 +324,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	constexpr RHI_Buffer_Usage_Flags operator|(RHI_BUFFER_USAGE_FLAG_BITS lhs, RHI_BUFFER_USAGE_FLAG_BITS rhs) {
 		return static_cast<RHI_Buffer_Usage_Flags>(static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
 	}
+	constexpr RHI_Buffer_Usage_Flags operator|(RHI_Buffer_Usage_Flags lhs, RHI_BUFFER_USAGE_FLAG_BITS rhs) {
+		return static_cast<RHI_Buffer_Usage_Flags>(lhs | static_cast<RHI_Buffer_Usage_Flags>(rhs));
+	}
 
 	enum class RHI_PHYSICAL_DEVICE_TYPE : uint32_t {
 		RHI_PHYSICAL_DEVICE_TYPE_OTHER = 0,

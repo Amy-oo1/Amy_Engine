@@ -60,7 +60,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VkDeviceMemory& Memory
 	);
 
-	[[nodiscard]] const VkImageView
+	[[nodiscard]] VkImageView
 		Create_Image_View(
 			VkDevice Logical_Device,
 			const VkAllocationCallbacks* Allocator,
@@ -72,15 +72,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			uint32_t Layout_Count
 		);
 
-	[[nodiscard]] const VkCommandBuffer Begin_SingleTime_Commands(VkDevice Logical_Device, VkCommandPool Command_Pool);
+	[[nodiscard]] VkCommandBuffer Begin_SingleTime_Command(VkDevice Logical_Device, VkCommandPool Command_Pool);
 
 	void
-		End_SingleTIme_Commands(
+		End_SingleTime_Command(
 			VkDevice Logical_Device,
 			VkCommandPool Command_Pool,
 			VkQueue Graphics_Queue,
 			VkCommandBuffer Command_Buffer
-
 		);
 
 	void

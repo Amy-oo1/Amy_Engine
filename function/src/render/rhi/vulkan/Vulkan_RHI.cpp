@@ -240,8 +240,24 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
+	size_t Vulkan_RHI::Get_API_Version(void) const {
+		return NameSpace_Config::API_Verssion;
+	}
+
+	VkAllocationCallbacks* Vulkan_RHI::Get_Allocator(void) const {
+		return this->m_Allocator.get();
+	}
+
 	VmaAllocator Vulkan_RHI::Get_VMA_Allocator(void) const {
 		return this->m_VMA_Allocator;
+	}
+
+	GLFWwindow* Vulkan_RHI::Get_GLFW_Window(void) const {
+		return this->m_Window->Get_Window();
+	}
+
+	uint32_t Vulkan_RHI::Get_Graphics_Queue_Family(void) const {
+		return this->m_Queue_Family_Indices.Graphics_Family;
 	}
 
 	//Private Func
@@ -1351,7 +1367,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return this->m_Default_RHI_Descriptor_Pool.get();
 	}
 
-	const vector<unique_ptr<RHI_Command_Buffer>> Vulkan_RHI::Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info* Allocate_Info) {
+	vector<unique_ptr<RHI_Command_Buffer>> Vulkan_RHI::Allocate_Command_Buffers(const RHI_Command_Buffer_Allocate_Info* Allocate_Info) {
 		VkCommandBufferAllocateInfo Command_Buffer_Allocate_Info{};
 		{
 			Command_Buffer_Allocate_Info.sType = static_cast<VkStructureType>(Allocate_Info->sType);
@@ -1373,6 +1389,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 
 		return RHI_Command_Buffers;
+	}
+
+	unique_ptr<RHI_Command_Buffer> Vulkan_RHI::Begin_SingleTime_Command(void) {
+		VkCommandBuffer vk_Command_Buffer{ NameSpace_Utilities::Begin_SingleTime_Command(this->m_Logical_VK_Device,this->m_Default_VK_Command_Pool) };
+		unique_ptr<RHI_Command_Buffer> RHI_Command_Buffer{ std::make_unique<Vulkan_Command_Buffer>() };
+		static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffer.get())->Reset(vk_Command_Buffer);
+
+		return RHI_Command_Buffer;
+	}
+
+	void Vulkan_RHI::End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) {
+		NameSpace_Utilities::End_SingleTime_Command(
+			this->m_Logical_VK_Device,
+			this->m_Default_VK_Command_Pool,
+			this->m_Queues.Graphic_Queue,
+			static_cast<Vulkan_Command_Buffer*>(Command_Buffer.get())->Get()
+		);
 	}
 
 	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usage, RHI_Memory_Property_Flags Properties) {
@@ -1448,7 +1481,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	void Vulkan_RHI::Copy_Buffer(RHI_Buffer* Src_Buffer, RHI_Buffer* Dst_Buffer, RHI_Device_Size Src_Offset, RHI_Device_Size Dst_Offset, RHI_Device_Size Size) {
-		unique_ptr<RHI_Command_Buffer> Command_Buffer{ this->Begin_SingleTime_Commands() };
+		unique_ptr<RHI_Command_Buffer> Command_Buffer{ this->Begin_SingleTime_Command() };
 
 		VkBufferCopy Copy_Region{};
 		{
@@ -1458,7 +1491,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 
 		vkCmdCopyBuffer(static_cast<Vulkan_Command_Buffer*>(Command_Buffer.get())->Get(), static_cast<Vulkan_Buffer*>(Src_Buffer)->Get(), static_cast<Vulkan_Buffer*>(Dst_Buffer)->Get(), 1, &Copy_Region);
-		this->End_SingleTime_Commands(std::move(Command_Buffer));
+		this->End_SingleTime_Command(std::move(Command_Buffer));
 	}
 
 	tuple<unique_ptr<RHI_Image>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Image(RHI_Extent_2D Image_Extent, RHI_FORMAT Image_Format, uint32_t Array_Layers, uint32_t Mip_levels, RHI_IMAGE_TILING Image_Tiling, RHI_Image_Usage_Flags Image_Usage_Flags, RHI_Memory_Property_Flags Memory_Property_Flags, RHI_Image_Create_Flags Image_Create_Flags) {
@@ -1831,7 +1864,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		return Descriptor_Pool;
 	}
-
 
 	unique_ptr<RHI_Descriptor_Set_Layout> Vulkan_RHI::Create_Descriptor_Set_Layout(const RHI_Descriptor_Set_Layout_Create_Info* Create_Info) {
 		if (nullptr == Create_Info)
@@ -2491,52 +2523,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		return true;
 	}
-
-	unique_ptr<RHI_Command_Buffer> Vulkan_RHI::Begin_SingleTime_Commands(void) {
-		VkCommandBufferAllocateInfo Allocate_Info{};
-		{
-			Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-			Allocate_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			Allocate_Info.commandPool = static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Get();
-			Allocate_Info.commandBufferCount = 1;
-		}
-
-		VkCommandBuffer Command_Buffer{ nullptr };
-		THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Allocate_Info, &Command_Buffer));
-
-		VkCommandBufferBeginInfo Begin_Info{};
-		{
-			Begin_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-			Begin_Info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-		}
-
-		THROW_IF_VK_FAILED(this->F_vkBeginCommandBuffer(Command_Buffer, &Begin_Info));
-		unique_ptr<RHI_Command_Buffer> RHI_Command_Buffer{ std::make_unique<Vulkan_Command_Buffer>() };
-		static_cast<Vulkan_Command_Buffer*>(RHI_Command_Buffer.get())->Reset(Command_Buffer);
-
-		return RHI_Command_Buffer;
-	}
-
-	void Vulkan_RHI::End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) {
-		VkCommandBuffer VK_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer.get())->Get() };
-
-		THROW_IF_VK_FAILED(this->F_vkEndCommandBuffer(VK_Command_Buffer));
-
-		VkSubmitInfo Submit_Info{};
-		{
-			Submit_Info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			Submit_Info.commandBufferCount = 1;
-			Submit_Info.pCommandBuffers = &VK_Command_Buffer;
-		}
-
-		THROW_IF_VK_FAILED(vkQueueSubmit(this->m_Queues.Graphic_Queue, 1, &Submit_Info, VK_NULL_HANDLE));
-		THROW_IF_VK_FAILED(vkQueueWaitIdle(this->m_Queues.Graphic_Queue));
-
-		vkFreeCommandBuffers(this->m_Logical_VK_Device, static_cast<Vulkan_Command_Pool*>(this->m_Default_RHI_Command_Pool.get())->Get(), 1, &VK_Command_Buffer);
-	}
-
-
-
 
 
 

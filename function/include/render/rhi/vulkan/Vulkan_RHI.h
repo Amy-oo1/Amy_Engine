@@ -114,7 +114,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Allocate_Default_Command_Buffers(void);
 
 		//TODO Get Func
+		[[nodiscard]] size_t Get_API_Version(void)const;
+		[[nodiscard]] VkAllocationCallbacks* Get_Allocator(void)const;
 		[[nodiscard]] VmaAllocator Get_VMA_Allocator(void) const;
+		[[nodiscard]] GLFWwindow* Get_GLFW_Window(void)const;
+		[[nodiscard]] uint32_t Get_Graphics_Queue_Family(void)const;
 
 
 		//TODO : Private Member Func
@@ -359,10 +363,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		[[nodiscard]] RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const override;
 
-		[[nodiscard]] const vector<unique_ptr<RHI_Command_Buffer>>
+		[[nodiscard]] vector<unique_ptr<RHI_Command_Buffer>>
 			Allocate_Command_Buffers(
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) override;
+
+		[[nodiscard]] unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Command(void) override;
+
+		void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) override;
 
 		[[nodiscard]] tuple<
 			unique_ptr<RHI_Buffer>,
@@ -573,9 +581,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		[[nodiscard]] static const VkExtent2D Choose_SwapChain_Extent(const shared_ptr<Window_System>& Window, const VkSurfaceCapabilitiesKHR& Capabilities);
 
-	
-		
-		
+
+
+
 
 		[[nodiscard]] static const optional<VkClearValue>
 			Parser_RHI_Clear_Value(
@@ -664,11 +672,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//	RHI_Device_Size Min_Alignment,
 		//	VmaAllocation* pAllocation,
 		//	VmaAllocationInfo* pAllocationInfo) override;
-
-
-		[[nodiscard]] unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) override;
-		void End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) override;
-
 
 		[[nodiscard]] unique_ptr<RHI_Fence>
 			Create_Fence(const RHI_Fence_Create_Info pCreateInfo) override;

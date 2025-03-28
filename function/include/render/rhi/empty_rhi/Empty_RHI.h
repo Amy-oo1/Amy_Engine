@@ -62,10 +62,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		[[nodiscard]] virtual RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const = 0;
 
-		[[nodiscard]] virtual const vector<unique_ptr<RHI_Command_Buffer>>
+		[[nodiscard]] virtual vector<unique_ptr<RHI_Command_Buffer>>
 			Allocate_Command_Buffers(
 				const RHI_Command_Buffer_Allocate_Info* Allocate_Info
 			) = 0;
+
+		[[nodiscard]] virtual unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Command(void) = 0;
+
+		virtual void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
 
 		[[nodiscard]] virtual tuple<
 			unique_ptr<RHI_Buffer>,
@@ -248,11 +252,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		[[nodiscard]] virtual const unique_ptr<RHI_Sampler>& Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE Type) = 0;
 
 		virtual bool Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) = 0;
-
-		[[nodiscard]] virtual unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Commands(void) = 0;
-		virtual void End_SingleTime_Commands(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
-
-
 
 		//TODO : 
 

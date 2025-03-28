@@ -118,7 +118,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkBindImageMemory(Logical_Device, Image, Memory, 0));
 	}
 
-	const VkImageView Create_Image_View(VkDevice Logical_Device, const VkAllocationCallbacks* Allocator, VkImage Image, VkFormat Format, uint32_t Mip_Levels, VkImageAspectFlags Image_Aspect_Flags, VkImageViewType View_Type, uint32_t Layout_Count) {
+	VkImageView Create_Image_View(VkDevice Logical_Device, const VkAllocationCallbacks* Allocator, VkImage Image, VkFormat Format, uint32_t Mip_Levels, VkImageAspectFlags Image_Aspect_Flags, VkImageViewType View_Type, uint32_t Layout_Count) {
 		VkComponentMapping Component_Mapping{};
 		{
 			Component_Mapping.r = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -152,7 +152,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Image_View;
 	}
 
-	const VkCommandBuffer Begin_SingleTime_Commands(VkDevice Logical_Device, VkCommandPool Command_Pool) {
+	VkCommandBuffer Begin_SingleTime_Command(VkDevice Logical_Device, VkCommandPool Command_Pool) {
 		VkCommandBufferAllocateInfo Allocate_Info{};
 		{
 			Allocate_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -175,7 +175,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Command_Buffer;
 	}
 
-	void End_SingleTIme_Commands(VkDevice Logical_Device, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VkCommandBuffer Command_Buffer) {
+	void End_SingleTime_Command(VkDevice Logical_Device, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VkCommandBuffer Command_Buffer) {
 		THROW_IF_VK_FAILED(vkEndCommandBuffer(Command_Buffer));
 
 		VkSubmitInfo Submit_Info{};
@@ -193,7 +193,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	void Transition_Image_Layout(VkDevice Logical_Device, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VkImage Image, uint32_t Mip_Levels, VkFormat Format, VkImageAspectFlagBits Aspect_Flags, VkImageLayout Old_Layout, VkImageLayout New_Layout, uint32_t Layer_Count) {
-		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Commands(Logical_Device, Command_Pool) };
+		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Command(Logical_Device, Command_Pool) };
 
 		VkAccessFlags Source_Access_Mask{}, Destination_Access_Mask{};
 		VkPipelineStageFlags Source_Stage{}, Destination_Stage{};
@@ -246,11 +246,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			1, &Barrier
 		);
 
-		End_SingleTIme_Commands(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
+		End_SingleTime_Command(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
 	}
 
 	void Copy_Buffer_To_Image(VkDevice Logical_Device, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VkBuffer Buffer, VkImage Image, VkExtent2D Image_ExTent_2D, uint32_t Layer_Count) {
-		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Commands(Logical_Device, Command_Pool) };
+		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Command(Logical_Device, Command_Pool) };
 
 		VkImageSubresourceLayers Subresource{};
 		{
@@ -279,7 +279,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			&Region
 		);
 
-		End_SingleTIme_Commands(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
+		End_SingleTime_Command(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
 	}
 
 	void Generate_Mipmaps(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VkImage Image, VkExtent2D Image_ExTent_2D, VkFormat Image_Format, uint32_t Mip_Levels, uint32_t Layer_Count) {
@@ -290,7 +290,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		if (!(Format_Properties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT))
 			throw runtime_error("Texture image format does not support linear blitting!");
 
-		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Commands(Logical_Device, Command_Pool) };
+		VkCommandBuffer Command_Buffer{ Begin_SingleTime_Command(Logical_Device, Command_Pool) };
 
 		VkImageSubresourceRange Image_Sub_Resource_Range{};
 		{
@@ -400,7 +400,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			1, &Barrier
 		);
 
-		End_SingleTIme_Commands(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
+		End_SingleTime_Command(Logical_Device, Command_Pool, Graphics_Queue, Command_Buffer);
 	}
 
 	void Create_Global_Image(VkPhysicalDevice Physical_Device, VkDevice Logical_Device, const VkAllocationCallbacks* VK_Allocator, VkCommandPool Command_Pool, VkQueue Graphics_Queue, VmaAllocator VMA_Allocator, VkExtent2D Image_Extent, VkFormat Format, uint32_t Mip_levels, void* Image_Pixels, VkImage& Image, VkImageView& Image_View, VmaAllocation& Image_Allocation) {
@@ -614,7 +614,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			6
 		);
 	}
-
 
 	VkShaderModule Create_Shader_Module(VkDevice Logical_Device, const VkAllocationCallbacks* VK_Allocator, const vector<unsigned char>* Shader_Code) {
 		VkShaderModuleCreateInfo Create_Info{};

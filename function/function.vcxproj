@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -178,6 +178,7 @@
     <ClInclude Include="include\render\render_pass\Point_Light_Paass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h" />
+    <ClInclude Include="include\render\render_pass\UI_Pass.h" />
     <ClInclude Include="include\render\render_system\Light.h" />
     <ClInclude Include="include\render\render_system\Render_Camera.h" />
     <ClInclude Include="include\render\render_system\Render_Commmon.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="src\render\render_pass\Point_Light_Paass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp" />
+    <ClCompile Include="src\render\render_pass\UI_Pass.cpp" />
     <ClCompile Include="src\render\render_system\Render_GUID_Allocator.cpp" />
     <ClCompile Include="src\render\render_system\Render_Pipeline.cpp" />
     <ClCompile Include="src\render\render_system\Render_Pipeline_Base.h.cpp" />
