@@ -9,6 +9,8 @@
 #include "file/File_System.h"
 #include "logger/System_Logger.h"
 #include "meta/serializer/Serializer.h"
+#include "meta/generated/Serializer_Header.h"
+
 #include "config/Resource_Configer.h"
 
 
@@ -21,8 +23,9 @@ namespace NameSpace_Resource::NameSpace_Manage {
 	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
-	using NameSpace_Core::NameSpace_Meta::NameSpacce_Serializer::JSON;
-	using NameSpace_Core::NameSpace_Meta::NameSpacce_Serializer::Serializer;
+
+	using NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::JSON;
+	using NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer;
 
 	using NameSpace_Config::Resource_Configer;
 
@@ -41,40 +44,71 @@ namespace NameSpace_Resource::NameSpace_Manage {
 
 	public:
 		template<typename Resource_Type>
-		const  shared_ptr<Resource_Type> Load(const path& Resource_URL) {
+		static shared_ptr<Resource_Type> Load(const path& Resource_URL) {
 			if (Resource_URL.empty()) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} is empty", Resource_URL.generic_string());
+
 				return nullptr;
 			}
 			else if (!File_System::Is_File(Resource_URL)) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} is not a file ", Resource_URL.generic_string());
+
 				return nullptr;
 			}
 
-			path Resource_Path = this->Get_Resource_Path(Resource_URL);
+			const char* Resource_Path = this->URL_To_File_Full_Path(Resource_URL);
 			std::ifstream Resource_IFStream{ Resource_Path };
 			if (!Resource_IFStream) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} failed open ", Resource_Path.generic_string());
+
 				return nullptr;
 			}
 
 			JSON Resource_JSON{ JSON::parse(Resource_IFStream) };
 			Resource_IFStream.close();
 
-			return nullptr;
-			//TODO ::
-			//return Serializer::Read<Resource_Type>(Resource_JSON);
+			shared_ptr<Resource_Type> Resource{};
+			return Serializer::Read(Resource_JSON, Resource);
 		}
 
-		bool Save(const path& Resource_URL, const JSON& Resource_JSON);
+		template<typename Resource_Type>
+		static bool Save(const shared_ptr<Resource_Type>& Resource, const path& Resource_URL) {
+			if (Resource_URL.empty()) {
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is empty", Resource_URL.generic_string());
+
+				return false;
+			}
+			else if (!File_System::Is_File(Resource_URL)) {
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} is not a file ", Resource_URL.generic_string());
+
+				return false;
+			}
+
+			JSON Resource_JSON{ Serializer::Write(Resource) };
+			if (Resource_JSON.empty()) {
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} failed to serialize ", Resource_URL.generic_string());
+
+				return false;
+			}
+
+			path Resource_Path = this->URL_To_File_Full_Path(Resource_URL);
+			std::ofstream Resource_OFStream{ Resource_Path };
+			if (!Resource_OFStream) {
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} failed open ", Resource_Path.generic_string());
+
+				return false;
+			}
+			Resource_OFStream << Resource_JSON.dump();
+			Resource_OFStream.close();
+
+			return true;
+		}
+
+	public:
+		static const char* URL_To_File_Full_Path(const path& Resource_URL);
 
 	public:
 		static Resource_Manager& Get_Instance(void);
-
-		const char* URL_To_File_Full_Path(const path& Resource_URL);
-
-	private:
-		const path Get_Resource_Path(const path& Resource_URL);
 
 	};
 

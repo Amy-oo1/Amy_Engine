@@ -19,12 +19,6 @@
     <Filter Include="src\frame">
       <UniqueIdentifier>{acb4b59f-dcc9-4fb1-b2ae-c23c7ee6652c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\frame\compoents">
-      <UniqueIdentifier>{bd79508f-ef89-4817-82fd-dc5d6dacb929}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\frame\compoents">
-      <UniqueIdentifier>{c95e9b82-84e9-49e6-ad27-2758d08415f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\frame\object">
       <UniqueIdentifier>{ad951436-dc40-4fd3-bd97-db47500ca6b7}</UniqueIdentifier>
     </Filter>
@@ -36,12 +30,6 @@
     </Filter>
     <Filter Include="src\global">
       <UniqueIdentifier>{e418edc5-08ec-4a35-b081-e36ff20f6932}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\frame\compoents\transform">
-      <UniqueIdentifier>{bd71be09-b351-4100-be3c-3e377d502620}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\frame\compoents\transform">
-      <UniqueIdentifier>{1e68cc3b-a7c2-4f30-8a6b-0a817c4ee169}</UniqueIdentifier>
     </Filter>
     <Filter Include="include\physics">
       <UniqueIdentifier>{6cdb0af0-43d9-4fd5-9518-43db3876ab2d}</UniqueIdentifier>
@@ -121,10 +109,28 @@
     <Filter Include="src\character">
       <UniqueIdentifier>{b7513084-dd5b-43a0-b9c5-d381fee47ddd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\frame\compoents\camera">
+    <Filter Include="include\input">
+      <UniqueIdentifier>{cd799df6-f996-40cb-a023-c7e35bd61c5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\input">
+      <UniqueIdentifier>{1a0110ab-b23e-4fa0-8f82-bad1be5b7f45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\component​s">
+      <UniqueIdentifier>{bd79508f-ef89-4817-82fd-dc5d6dacb929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\component​s\transform">
+      <UniqueIdentifier>{1e68cc3b-a7c2-4f30-8a6b-0a817c4ee169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\component​s\camera">
       <UniqueIdentifier>{258bbae5-f5e8-4cc1-9670-585520fa4854}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\frame\compoents\camera">
+    <Filter Include="src\frame\components">
+      <UniqueIdentifier>{c95e9b82-84e9-49e6-ad27-2758d08415f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\components\transform">
+      <UniqueIdentifier>{bd71be09-b351-4100-be3c-3e377d502620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\components\camera">
       <UniqueIdentifier>{ff411138-4708-48d3-b2ff-47090a21dbc4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -144,9 +150,6 @@
     <ClInclude Include="include\animation\Animation_Loader.h">
       <Filter>include\animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\frame\compoents\Compoent.h">
-      <Filter>include\frame\compoents</Filter>
-    </ClInclude>
     <ClInclude Include="include\frame\object\GObject.h">
       <Filter>include\frame\object</Filter>
     </ClInclude>
@@ -155,9 +158,6 @@
     </ClInclude>
     <ClInclude Include="include\global\Global_Systemer.h">
       <Filter>include\global</Filter>
-    </ClInclude>
-    <ClInclude Include="include\frame\compoents\transform\Transform_Component.h">
-      <Filter>include\frame\compoents\transform</Filter>
     </ClInclude>
     <ClInclude Include="include\physics\Physics_Scene.h">
       <Filter>include\physics</Filter>
@@ -312,8 +312,20 @@
     <ClInclude Include="include\character\Character.h">
       <Filter>include\character</Filter>
     </ClInclude>
-    <ClInclude Include="include\frame\compoents\camera\Camera_Component.h">
-      <Filter>include\frame\compoents\camera</Filter>
+    <ClInclude Include="include\input\Input_System.h">
+      <Filter>include\input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\global\Global_Config.h">
+      <Filter>include\global</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\components\Component.h">
+      <Filter>include\frame\component​s</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\components\camera\Camera_Component.h">
+      <Filter>include\frame\component​s\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\components\transform\Transform_Component.h">
+      <Filter>include\frame\component​s\transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,9 +344,6 @@
     <ClCompile Include="src\animation\Animation_Loader.cpp">
       <Filter>src\animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\frame\compoents\Compoent.cpp">
-      <Filter>src\frame\compoents</Filter>
-    </ClCompile>
     <ClCompile Include="src\frame\object\GObject.cpp">
       <Filter>src\frame\object</Filter>
     </ClCompile>
@@ -343,9 +352,6 @@
     </ClCompile>
     <ClCompile Include="src\global\Global_Systemer.cpp">
       <Filter>src\global</Filter>
-    </ClCompile>
-    <ClCompile Include="src\frame\compoents\transform\Transform_Component.cpp">
-      <Filter>src\frame\compoents\transform</Filter>
     </ClCompile>
     <ClCompile Include="src\physics\Physics_Scene.cpp">
       <Filter>src\physics</Filter>
@@ -464,8 +470,17 @@
     <ClCompile Include="src\character\Character.cpp">
       <Filter>src\character</Filter>
     </ClCompile>
-    <ClCompile Include="src\frame\compoents\camera\Camera_Component.cpp">
-      <Filter>src\frame\compoents\camera</Filter>
+    <ClCompile Include="src\input\Input_System.cpp">
+      <Filter>src\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\components\Component.cpp">
+      <Filter>src\frame\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\components\camera\Camera_Component.cpp">
+      <Filter>src\frame\components\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\components\transform\Transform_Component.cpp">
+      <Filter>src\frame\components\transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

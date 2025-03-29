@@ -18,13 +18,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		this->m_Width = init_info.Width;
 		this->m_Height = init_info.Height;
 
-		glfwSetInputMode(this->m_Window.get(), GLFW_STICKY_KEYS, GLFW_FALSE);
-		glfwSetInputMode(this->m_Window.get(), GLFW_STICKY_MOUSE_BUTTONS, GLFW_FALSE);
+		//glfwSetInputMode(this->m_Window.get(), GLFW_STICKY_KEYS, GLFW_FALSE);
+		//glfwSetInputMode(this->m_Window.get(), GLFW_STICKY_MOUSE_BUTTONS, GLFW_FALSE);
 		glfwSetInputMode(this->m_Window.get(), GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
 
 		//Set The Callback
 		{
-			//TODO : 
 			glfwSetWindowUserPointer(this->m_Window.get(), this);
 			glfwSetKeyCallback(this->m_Window.get(), Window_System::Key_Call_Back);
 			glfwSetCharModsCallback(this->m_Window.get(), Window_System::CharMods_Call_Back);
@@ -39,7 +38,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		}
 	}
 
-	GLFWwindow* NameSpace_Window::Window_System::Get_Window(void) {
+	GLFWwindow* Window_System::Get_Window(void) {
 		return this->m_Window.get();
 	}
 
@@ -59,15 +58,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		return { this->m_Width,this->m_Height };
 	}
 
-	const uint32_t NameSpace_Window::Window_System::Get_Window_Width(void) const {
+	const uint32_t Window_System::Get_Window_Width(void) const {
 		return this->m_Width;
 	}
 
-	const uint32_t NameSpace_Window::Window_System::Get_Window_Height(void) const {
+	const uint32_t Window_System::Get_Window_Height(void) const {
 		return this->m_Height;
 	}
 
-	void NameSpace_Window::Window_System::Register_On_Reset_Func(const On_Reset_Func& Func) {
+	void Window_System::Set_Focus_Mode(bool Is_Focus) {
+		glfwSetInputMode(this->m_Window.get(), GLFW_CURSOR, Is_Focus ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+	}
+
+	void Window_System::Register_On_Reset_Func(const On_Reset_Func& Func) {
 		this->m_Reset_Call_Backs.push_back(Func);
 	}
 
@@ -103,7 +106,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		this->m_Drop_Call_Backs.push_back(Func);
 	}
 
-	void NameSpace_Window::Window_System::On_Reset(void) {
+	void Window_System::On_Reset(void) {
 		for (const auto& Func : this->m_Reset_Call_Backs)
 			Func();
 	}
@@ -156,7 +159,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	}
 
-	void NameSpace_Window::Window_System::Reset_Call_Back(GLFWwindow* Window) {
+	void Window_System::Reset_Call_Back(GLFWwindow* Window) {
 		const auto& App{ static_cast<Window_System*>(glfwGetWindowUserPointer(Window)) };
 		if (nullptr == App)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "App is nullptr");

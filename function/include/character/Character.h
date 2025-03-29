@@ -8,7 +8,7 @@
 #include "transform/Affine_Transform.h"
 
 #include "frame/object/GObject.h"
-#include "frame/compoents/camera/Camera_Component.h"
+#include "frame/components/Component.h"
 
 namespace NameSpace_Function::Namespace_Character {
 

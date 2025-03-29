@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             return string{"Level_Resource"};            
         }
 
-            static const vector<Reflection_Instance<Level_Resource>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Level_Resource> Instance){
-                vector<Reflection_Instance<Level_Resource>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Gravity_Type_Spelling(void){
                 return string{"Vector3"};

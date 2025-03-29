@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Bone_Raw"};            
         }
 
-            static const vector<Reflection_Instance<Bone_Raw>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Bone_Raw> Instance){
-                vector<Reflection_Instance<Bone_Raw>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Name_Type_Spelling(void){
                 return string{"string"};
@@ -196,13 +190,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Skeleton_Data"};            
         }
 
-            static const vector<Reflection_Instance<Skeleton_Data>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Skeleton_Data> Instance){
-                vector<Reflection_Instance<Skeleton_Data>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Bones_Type_Spelling(void){
                 return string{"vector<shared_ptr<Bone_Raw>>"};

@@ -34,7 +34,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Meta_Parser {
 		Reflection_Header << R"(#pragma once)" << std::endl;
 		Serializer_Header << R"(#pragma once)" << std::endl;
 
-		for (const auto& [Src_Path, Classes] : this->m_Class_Modules) {
+		for (const auto& Src_Path : this->m_Inout_File_List) {
 			Reflection_Header << R"(#include ")" << this->m_Generator_Reflection->Process_Dst_File_Path(Src_Path).generic_string() << R"(")" << std::endl;
 			Serializer_Header << R"(#include ")" << this->m_Generator_Serializer->Process_Dst_File_Path(Src_Path).generic_string() << R"(")" << std::endl;
 		}
@@ -57,6 +57,9 @@ namespace NameSpace_Meta_Parser::NameSpace_Meta_Parser {
 				if (Temp_Class->Should_Compile()) {
 					path Temp_Source_File_Path = Temp_Class->Get_Source_File_Path();
 					this->m_Type_Table[Temp_Class->Get_Class_Spelling()] = Temp_Source_File_Path;
+
+					if (this->m_Class_Modules.end() == this->m_Class_Modules.find(Temp_Source_File_Path))
+						this->m_Inout_File_List.push_back(Temp_Source_File_Path);
 
 					this->m_Class_Modules[Temp_Source_File_Path].emplace_back(std::move(Temp_Class));
 				}

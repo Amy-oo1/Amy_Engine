@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             return string{"SkyBox_Irradiance_Map"};            
         }
 
-            static const vector<Reflection_Instance<SkyBox_Irradiance_Map>> Get_Base_Class_Reflection_Instance_List(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                vector<Reflection_Instance<SkyBox_Irradiance_Map>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Positive_X_Map_URL_Type_Spelling(void){
                 return string{"path"};
@@ -223,13 +217,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             return string{"SkyBox_Specular_Map"};            
         }
 
-            static const vector<Reflection_Instance<SkyBox_Specular_Map>> Get_Base_Class_Reflection_Instance_List(shared_ptr<SkyBox_Specular_Map> Instance){
-                vector<Reflection_Instance<SkyBox_Specular_Map>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Positive_X_Map_URL_Type_Spelling(void){
                 return string{"path"};
@@ -417,13 +405,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             return string{"Directional_Light"};            
         }
 
-            static const vector<Reflection_Instance<Directional_Light>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Directional_Light> Instance){
-                vector<Reflection_Instance<Directional_Light>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Direction_List_Type_Spelling(void){
                 return string{"Vector3"};
@@ -503,13 +485,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             return string{"Global_Rendering"};            
         }
 
-            static const vector<Reflection_Instance<Global_Rendering>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Global_Rendering> Instance){
-                vector<Reflection_Instance<Global_Rendering>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Enable_FXAA_Type_Spelling(void){
                 return string{"bool"};

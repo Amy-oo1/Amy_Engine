@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\imgui-1.91.9b</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\imgui-1.91.9b</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>

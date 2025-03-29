@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Material"};            
         }
 
-            static const vector<Reflection_Instance<Material>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Material> Instance){
-                vector<Reflection_Instance<Material>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Base_Colour_Texture_File_Path_Type_Spelling(void){
                 return string{"path"};

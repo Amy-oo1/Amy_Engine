@@ -59,19 +59,20 @@ namespace NameSpace_Meta_Parser::NameSpace_Generator {
 
 		mustache::data Class_Base_Class_Defines_List{ mustache::data::type::list };
 
-		mustache::data Base_Class_Name{ mustache::data::type::list };
+		for (const auto& Temp_Base_Class : Current_Class->Get_Base_Classes()) {
+			mustache::data Base_Class_Define{ mustache::data::type::object };
 
-		for (const auto& Temp_Base_Class : Current_Class->Get_Base_Classes())
-			Base_Class_Name.push_back(mustache::data{ NameSpace_Generator_Config::Parameter_Class_Base_Class_Spelling, Temp_Base_Class->Base_Class_Spelling() });
+			Base_Class_Define.set(NameSpace_Generator_Config::Parameter_Class_Base_Class_Spelling, Temp_Base_Class->Base_Class_Spelling());
+			Base_Class_Define.set(NameSpace_Generator_Config::Parameter_Class_Base_Class_NameSpace, NameSpace_Generator_Utils::Connect_String(Temp_Base_Class->Type_Info::Get_Current_NameSpace(), std::string{ "::" }));
 
-		Class_Base_Class_Defines_List.push_back(mustache::data{ NameSpace_Generator_Config::Parameter_Class_Base_Spelling_List ,Base_Class_Name });
+			Class_Base_Class_Defines_List.push_back(mustache::data{ NameSpace_Generator_Config::Parameter_Class_Base_Spelling_List ,Base_Class_Define });
+		}
 
 		Class_Define.set(NameSpace_Generator_Config::Parameter_Class_Base_Class_Define_List, Class_Base_Class_Defines_List);
 		Class_Define.set(NameSpace_Generator_Config::Parameter_Field_Define_List, Generator_Interface::Generate_Class_Field_RenderData(Current_Class));
 		Class_Define.set(NameSpace_Generator_Config::Parameter_Method_Define_List, Generator_Interface::Generate_Class_Method_RenderData(Current_Class));
 
 		return Class_Define;
-
 	}
 
 }// namespace NameSpace_Meta_Parser::NameSpace_Generator

@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             return string{"Component_Definition"};            
         }
 
-            static const vector<Reflection_Instance<Component_Definition>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Component_Definition> Instance){
-                vector<Reflection_Instance<Component_Definition>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Type_Name_Type_Spelling(void){
                 return string{"string"};
@@ -115,13 +109,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             return string{"Object_Definition"};            
         }
 
-            static const vector<Reflection_Instance<Object_Definition>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Object_Definition> Instance){
-                vector<Reflection_Instance<Object_Definition>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Seplling_Type_Spelling(void){
                 return string{"string"};
@@ -227,13 +215,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             return string{"Object_Instance"};            
         }
 
-            static const vector<Reflection_Instance<Object_Instance>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Object_Instance> Instance){
-                vector<Reflection_Instance<Object_Instance>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Name_Type_Spelling(void){
                 return string{"string"};

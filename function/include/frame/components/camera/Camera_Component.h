@@ -9,7 +9,7 @@
 
 #include "components/camera/Camera.h"
 
-#include "frame/compoents/Compoent.h"
+#include "frame/components/Component.h"
 
 namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Camera {
 
@@ -42,6 +42,7 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_C
 		void Tick(float Delta_Time)override;
 
 	private:
+		META(Disable)
 		CAMERA_MODE m_Camera_Mode{ CAMERA_MODE::INVALID };
 		shared_ptr<Camera_Resource> m_Camera_Resource{};
 

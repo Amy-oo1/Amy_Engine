@@ -56,7 +56,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Language_Type {
 		for (const auto& Child : Class_Cursor.Get_Children())
 			switch (Child.Get_Cursor_Kind()) {
 			case Cursor::Cursor_Kind::CURSOR_CXXBASESPECIFIER:
-				this->m_Base_Classes.emplace_back(Class::Create_Class(Child, this->Type_Info::Get_Current_NameSpace()));
+				this->m_Base_Classes.emplace_back(Class::Create_Class(Child, Class::Class_NameSpace[Child.Get_Cursor_Spelling()]));
 				break;
 			case Cursor::Cursor_Kind::CURSOR_FIELDDECL:
 				this->m_Fields.emplace_back(std::make_shared<Field>(Child, this->Type_Info::Get_Current_NameSpace(), this->std::enable_shared_from_this<Class>::shared_from_this()));
@@ -71,6 +71,8 @@ namespace NameSpace_Meta_Parser::NameSpace_Language_Type {
 
 	const shared_ptr<Class> Class::Create_Class(const Cursor& Class_Cursor, const vector<string>& Current_Namespace) {
 		shared_ptr<Class>  Object = std::make_shared<Class>(Class_Cursor, Current_Namespace);
+		Class::Class_NameSpace[Object->Get_Class_Spelling()] = Current_Namespace;
+
 		Object->Initialize(Class_Cursor);
 		return Object;
 	}

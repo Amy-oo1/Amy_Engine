@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Skeleton_Node_Map"};            
         }
 
-            static const vector<Reflection_Instance<Skeleton_Node_Map>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Skeleton_Node_Map> Instance){
-                vector<Reflection_Instance<Skeleton_Node_Map>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Convert_Type_Spelling(void){
                 return string{"vector<size_t>"};

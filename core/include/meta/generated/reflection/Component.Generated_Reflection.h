@@ -7,7 +7,7 @@
 
 #include "meta/Reflection/Reflection_Instance.h"
 
-#include "D:/Amy_Engine/function/include/frame/compoents/Compoent.h"
+#include "D:/Amy_Engine/function/include/frame/components/Component.h"
 
 namespace NameSpace_Function::Namespace_Frame::NameSpace_Components{
 
@@ -29,13 +29,7 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components{
             return string{"Component"};            
         }
 
-            static const vector<Reflection_Instance<Component>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Component> Instance){
-                vector<Reflection_Instance<Component>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Parent_GObject_Type_Spelling(void){
                 return string{"weak_ptr<GObject>"};

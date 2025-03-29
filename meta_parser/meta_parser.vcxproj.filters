@@ -189,5 +189,8 @@
     <None Include="template\reflection\Common_Class_Reflection.mustache">
       <Filter>template\reflection</Filter>
     </None>
+    <None Include="template\serializer\Common_Class_Serializer.mustache">
+      <Filter>template\serializer</Filter>
+    </None>
   </ItemGroup>
 </Project>

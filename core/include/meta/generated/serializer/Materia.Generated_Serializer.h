@@ -1,0 +1,51 @@
+#include<cstdint>
+#include<string>
+#include<vector>
+#include<memory>
+
+#include "meta/serializer/Serializer.h"
+#include "meta/Reflection/Reflection_Instance.h"
+
+
+#include "D:/Amy_Engine/resource/include/components/material/Materia.h"
+
+    namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+
+        using std::string;
+        using std::vector;
+        using std::shared_ptr;
+        using std::make_shared;
+        using std::static_pointer_cast;
+
+        using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
+
+        using NameSpace_Resource::NameSpace_Components::Material;
+
+        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Material>(const Material& Instance){
+            JSON Json_Context { JSON::object() };
+
+            
+
+                Json_Context["Base_Colour_Texture_File_Path"] = Serializer::Write(Instance.m_Base_Colour_Texture_File_Path);
+                Json_Context["Metallic_Roughness_Texture_File_Path"] = Serializer::Write(Instance.m_Metallic_Roughness_Texture_File_Path);
+                Json_Context["Normal_Texture_File_Path"] = Serializer::Write(Instance.m_Normal_Texture_File_Path);
+                Json_Context["Occlusion_Texture_File_Path"] = Serializer::Write(Instance.m_Occlusion_Texture_File_Path);
+                Json_Context["Emissive_Texture_File_Path"] = Serializer::Write(Instance.m_Emissive_Texture_File_Path);
+
+            return Json_Context;
+        }
+
+        template<> inline Material& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Material>(const JSON& Json_Context, Material &Instance){
+            
+
+                Serializer::Read(Json_Context["Base_Colour_Texture_File_Path"],Instance.m_Base_Colour_Texture_File_Path);
+                Serializer::Read(Json_Context["Metallic_Roughness_Texture_File_Path"],Instance.m_Metallic_Roughness_Texture_File_Path);
+                Serializer::Read(Json_Context["Normal_Texture_File_Path"],Instance.m_Normal_Texture_File_Path);
+                Serializer::Read(Json_Context["Occlusion_Texture_File_Path"],Instance.m_Occlusion_Texture_File_Path);
+                Serializer::Read(Json_Context["Emissive_Texture_File_Path"],Instance.m_Emissive_Texture_File_Path);
+
+            return Instance;
+        }
+
+    }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+

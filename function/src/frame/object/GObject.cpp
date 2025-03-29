@@ -72,7 +72,7 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
 	}
 
 	bool GObject::Load_Definition(void) {
-		auto Temp_Definition = Global_Systemer::Get_Instance().Resource_Manager.Load<Object_Definition>(this->m_Definition_URL);
+		shared_ptr< Object_Definition> Temp_Definition = nullptr; //Global_Systemer::Get_Instance().Resource_Manager.Load<Object_Definition>(this->m_Definition_URL);
 		if (nullptr == Temp_Definition) {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failed to Load Definition :{} ", this->m_Definition_URL.generic_string());
 

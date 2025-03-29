@@ -25,12 +25,13 @@ namespace NameSpace_Resource::NameSpace_Config {
 		const path Get_Root_Directory(void) const;
 
 		const path Get_Global_Particle_Resource_URL(void)const;
+		const path Get_Global_Render_Resource_URL(void)const;
 
 	public:
 		static Resource_Configer& Get_Instance(void);
 
-	private:
-		static constexpr const char* Config_File_Name{ "Amy_Engine_Config.ini" };
+	public:
+		static inline path s_Config_File_Name{ "Amy_Engine_Config.ini" };//TODO : Set Default Path
 
 	private:
 		path m_Root_Directory{};

@@ -2,7 +2,9 @@
 
 #include<string>
 #include<vector>
+#include<unordered_map>
 #include<memory>
+#include<filesystem>
 #include<utility>
 
 #include "cursor/Cursor.h"
@@ -15,6 +17,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Language_Type {
 
 	using std::string;
 	using std::vector;
+	using std::unordered_map;
 	using std::shared_ptr;
 
 	using NameSpace_Cursor::Cursor;
@@ -56,8 +59,9 @@ namespace NameSpace_Meta_Parser::NameSpace_Language_Type {
 	public:
 		static const shared_ptr<Class> Create_Class(const Cursor& Temp_Cursor, const vector<string>& Current_Namespace);
 
-	private:
+		static inline unordered_map<string, vector<string>> Class_NameSpace{};//TODO Global Class Name Not Be Same
 
+	private:
 		string m_Class_Display_Name{};
 		string m_Class_Spelling{};
 

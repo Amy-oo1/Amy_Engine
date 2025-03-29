@@ -1,4 +1,4 @@
-#include "frame/compoents/camera/Camera_Component.h"
+#include "frame/components/camera/Camera_Component.h"
 
 namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Camera {
 

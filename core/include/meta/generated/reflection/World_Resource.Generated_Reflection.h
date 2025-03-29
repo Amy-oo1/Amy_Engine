@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             return string{"World_Resource"};            
         }
 
-            static const vector<Reflection_Instance<World_Resource>> Get_Base_Class_Reflection_Instance_List(shared_ptr<World_Resource> Instance){
-                vector<Reflection_Instance<World_Resource>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Name_Type_Spelling(void){
                 return string{"string"};

@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Effect_Element"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Effect_Element>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Effect_Element> Instance){
-                vector<Reflection_Instance<Animation_Effect_Element>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Index_Type_Spelling(void){
                 return string{"size_t"};
@@ -115,13 +109,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Effect"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Effect>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Effect> Instance){
-                vector<Reflection_Instance<Animation_Effect>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Effects_Type_Spelling(void){
                 return string{"vector<shared_ptr<Animation_Effect_Element>>"};
@@ -200,13 +188,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Component_Res"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Component_Res>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Component_Res> Instance){
-                vector<Reflection_Instance<Animation_Component_Res>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_skeleton_File_Path_Type_Spelling(void){
                 return string{"path"};

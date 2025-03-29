@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Physics_Controller_Config"};            
         }
 
-            static const vector<Reflection_Instance<Physics_Controller_Config>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Physics_Controller_Config> Instance){
-                vector<Reflection_Instance<Physics_Controller_Config>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Cylinder_Type_Spelling(void){
                 return string{"Geometry_Cylinder"};
@@ -88,13 +82,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Motor"};            
         }
 
-            static const vector<Reflection_Instance<Motor>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Motor> Instance){
-                vector<Reflection_Instance<Motor>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Physics_Controller_Config_Type_Spelling(void){
                 return string{"Reflection_Instance<Physics_Controller_Config>"};

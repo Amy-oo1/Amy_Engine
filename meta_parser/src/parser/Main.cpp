@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 	Parser.Generator_Files(
 		Work_Directory,
 		std::filesystem::path{ "D:/Amy_Engine/meta_parser/template/reflection/Common_Class_Reflection.mustache",std::filesystem::path::generic_format },
-		std::filesystem::path{ "",std::filesystem::path::generic_format });
+		std::filesystem::path{ "D:/Amy_Engine/meta_parser/template/serializer/Common_Class_Serializer.mustache",std::filesystem::path::generic_format });
 
 	////---------------------------Meta_parser_Finish_Generator---------------------------------------------------------------
 

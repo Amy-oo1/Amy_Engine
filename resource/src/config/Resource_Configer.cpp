@@ -11,7 +11,7 @@ namespace NameSpace_Resource::NameSpace_Config {
 
 	Resource_Configer::Resource_Configer(const path& Confige_file_path) {
 
-		std::ifstream Configs{ Confige_file_path };
+		std::ifstream Configs{ path(Confige_file_path) };
 		std::string Config_Line{};
 		while (std::getline(Configs, Config_Line)) {
 			size_t Seperate_Pos{ Config_Line.find('=') };
@@ -25,7 +25,7 @@ namespace NameSpace_Resource::NameSpace_Config {
 				File_System::Set_Lexically_Normal(this->m_Root_Directory = Confige_file_path.parent_path() / Config_Value);
 			else if ("Engine_Resource_Directory" == Config_Name)
 				File_System::Set_Lexically_Normal(this->m_Engine_Resource_Directory = this->m_Root_Directory / Config_Value);
-			else if ("user_resource" == Config_Name)
+			else if ("User_Resource_Directory" == Config_Name)
 				File_System::Set_Lexically_Normal(this->m_User_Resource_Directory = this->m_Root_Directory / Config_Value);
 			else if ("Engine_Big_Icon_URL" == Config_Name)
 				File_System::Set_Lexically_Normal(this->m_Engine_Big_Icon_URL = Config_Value);
@@ -45,11 +45,15 @@ namespace NameSpace_Resource::NameSpace_Config {
 	}
 
 	const path Resource_Configer::Get_Global_Particle_Resource_URL(void) const {
-		return path();//TODO 
+		return this->m_Global_Particle_Resource_URL;
+	}
+
+	const path Resource_Configer::Get_Global_Render_Resource_URL(void) const{
+		return this->m_Global_Render_Resource_URL;
 	}
 
 	Resource_Configer& Resource_Configer::Get_Instance(void) {
-		static Resource_Configer Instance{ "resource" };//TODO : change this to a config file
+		static Resource_Configer Instance{ s_Config_File_Name };//TODO : change this to a config file
 
 		return Instance;
 	}

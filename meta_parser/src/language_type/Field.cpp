@@ -40,9 +40,11 @@ namespace NameSpace_Meta_Parser::NameSpace_Language_Type {
 
 	const bool Field::Is_Accessable(void) const {
 		return
-			m_Parent->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_Fields) ||
-			m_Parent->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_All) ||
-			m_Parent->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_Fileds_CPPVector);
+			(m_Parent->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_Fields) ||
+				m_Parent->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_All) ||
+				m_Parent->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_Fileds_CPPVector))
+			&&
+			(!this->Get_Meta_Data().Get_Flag(NameSpace_Language_Type_Config::Property_Filed_Disable));
 	}
 
 }// namespace NameSpace_Meta_Parser::NameSpace_Language_Type

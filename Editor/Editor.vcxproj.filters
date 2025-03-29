@@ -16,9 +16,4 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\bin\Amy_Engine_Config.ini">
-      <Filter>bin</Filter>
-    </None>
-  </ItemGroup>
 </Project>

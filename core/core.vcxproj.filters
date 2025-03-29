@@ -52,17 +52,17 @@
     <Filter Include="src\meta\serializer">
       <UniqueIdentifier>{d45ddba1-64e6-49bb-b3f9-c5fb7e3b7ca2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\meta\generated\reflection">
-      <UniqueIdentifier>{152a9395-7d4d-4f41-a5e6-c1b9c042fa96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\meta\generated\serializer">
-      <UniqueIdentifier>{805e6217-d07b-4e49-88b3-4776dcc3c6fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\color">
       <UniqueIdentifier>{7f194d3f-c787-49b3-92e2-7f03372eab08}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\color">
       <UniqueIdentifier>{3ed81a37-a355-47e6-9cb5-88704a5719cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\generated\reflection">
+      <UniqueIdentifier>{b3e044a6-e3e7-4ab8-aecc-c51a10e88022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\meta\generated\serializer">
+      <UniqueIdentifier>{28da7472-c9b1-46b8-b97b-97430d677e64}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -150,14 +150,14 @@
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h">
       <Filter>include\meta\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
+    <ClInclude Include="include\color\Color.h">
+      <Filter>include\color</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
+    <ClInclude Include="include\meta\generated\Reflection_Header.h">
+      <Filter>include\meta\generated</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
+    <ClInclude Include="include\meta\generated\Serializer_Header.h">
+      <Filter>include\meta\generated</Filter>
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Animation.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
@@ -165,34 +165,22 @@
     <ClInclude Include="include\meta\generated\reflection\Animation_Clip.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Blend_State.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="include\color\Color.h">
-      <Filter>include\color</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Basic_Shape.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Blend_State.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Rigid_Body.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Camera_Component.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Skeleton_Data.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Component.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Global_Particle.Generated_Reflection.h">
@@ -201,10 +189,22 @@
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Compoent.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Object_Resource.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Particle.Generated_Reflection.h">
@@ -213,20 +213,95 @@
     <ClInclude Include="include\meta\generated\reflection\Render_Obejct.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\Reflection_Header.h">
-      <Filter>include\meta\generated</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\generated\Serializer_Header.h">
-      <Filter>include\meta\generated</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Rigid_Body.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\Object_Resource.Generated_Reflection.h">
+    <ClInclude Include="include\meta\generated\reflection\Skeleton_Data.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Skeleton_Mask.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Skeleton_Node.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\World_Resource.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Animation.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Animation_Clip.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Basic_Shape.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Blend_State.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Camera.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Camera_Component.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Camera_Controller.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Component.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Global_Particle.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Global_Rendering.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Level_Resource.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Materia.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\mesh.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Mesh_Data.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Motor.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Object_Resource.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Particle.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Render_Obejct.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Rigid_Body.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Skeleton_Data.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Skeleton_Mask.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Skeleton_Node.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Transform_Component.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\World_Resource.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

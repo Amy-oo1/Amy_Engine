@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -164,14 +164,16 @@
     <ClInclude Include="include\animation\Bone.h" />
     <ClInclude Include="include\character\Character.h" />
     <ClInclude Include="include\Engine.h" />
-    <ClInclude Include="include\frame\compoents\camera\Camera_Component.h" />
-    <ClInclude Include="include\frame\compoents\Compoent.h" />
-    <ClInclude Include="include\frame\compoents\transform\Transform_Component.h" />
+    <ClInclude Include="include\frame\components\camera\Camera_Component.h" />
+    <ClInclude Include="include\frame\components\Component.h" />
+    <ClInclude Include="include\frame\components\transform\Transform_Component.h" />
     <ClInclude Include="include\frame\level\Level.h" />
     <ClInclude Include="include\frame\object\GObject.h" />
     <ClInclude Include="include\frame\object\GObject_ID_Allocator.h" />
     <ClInclude Include="include\frame\world\World_Manager.h" />
+    <ClInclude Include="include\global\Global_Config.h" />
     <ClInclude Include="include\global\Global_Systemer.h" />
+    <ClInclude Include="include\input\Input_System.h" />
     <ClInclude Include="include\particle\Emitter_ID_Allocator.h" />
     <ClInclude Include="include\particle\Particle_Config.h" />
     <ClInclude Include="include\particle\Particle_Desc.h" />
@@ -224,9 +226,12 @@
   <ItemGroup>
     <ClCompile Include="src\character\Character.cpp" />
     <ClCompile Include="src\Engine.cpp" />
-    <ClCompile Include="src\frame\compoents\camera\Camera_Component.cpp" />
+    <ClCompile Include="src\frame\components\camera\Camera_Component.cpp" />
+    <ClCompile Include="src\frame\components\Component.cpp" />
+    <ClCompile Include="src\frame\components\transform\Transform_Component.cpp" />
     <ClCompile Include="src\frame\level\Level.cpp" />
     <ClCompile Include="src\frame\world\World_Manager.cpp" />
+    <ClCompile Include="src\input\Input_System.cpp" />
     <ClCompile Include="src\particle\Particle_Manager.cpp" />
     <ClCompile Include="src\physics\Physics_Manager.cpp" />
     <ClCompile Include="src\render\render_pass\Color_Grading_Pass.cpp" />
@@ -256,8 +261,6 @@
     <ClCompile Include="src\animation\Bone.cpp" />
     <ClCompile Include="src\animation\Skeleton.cpp" />
     <ClCompile Include="src\animation\Utilities_Animation.cpp" />
-    <ClCompile Include="src\frame\compoents\Compoent.cpp" />
-    <ClCompile Include="src\frame\compoents\transform\Transform_Component.cpp" />
     <ClCompile Include="src\frame\object\GObject.cpp" />
     <ClCompile Include="src\frame\object\GObject_ID_Allocator.cpp" />
     <ClCompile Include="src\global\Global_Systemer.cpp" />

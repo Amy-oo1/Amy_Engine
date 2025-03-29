@@ -7,7 +7,7 @@
 
 #include "meta/reflection/Reflection_Macro.h"
 
-#include "frame/compoents/Compoent.h"
+#include "frame/components/Component.h"
 #include "frame/object/GObject.h"
 
 namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform {

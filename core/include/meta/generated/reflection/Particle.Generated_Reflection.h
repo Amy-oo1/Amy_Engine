@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Particle_Res"};            
         }
 
-            static const vector<Reflection_Instance<Particle_Res>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Particle_Res> Instance){
-                vector<Reflection_Instance<Particle_Res>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Local_Transform_Type_Spelling(void){
                 return string{"Orthogonal_Transform"};

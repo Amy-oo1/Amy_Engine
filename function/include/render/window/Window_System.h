@@ -45,13 +45,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		using On_Drop_Func = std::function<void(int, const char**)>;
 
 	private:
-		Window_System(void) = delete;
+		//Window_System(void) = delete;
 
 		Window_System(const Window_System&) = delete;
 		Window_System& operator=(const Window_System&) = delete;
 
 	public:
-		Window_System(const Window_System_Initialization_Info& init_info);
+		Window_System(const Window_System_Initialization_Info& init_info = {});
 
 		~Window_System() = default;
 
@@ -65,6 +65,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		const tuple<uint32_t, uint32_t> Get_Window_Size(void) const;
 		const uint32_t Get_Window_Width(void)const;
 		const uint32_t Get_Window_Height(void)const;
+
+		void Set_Focus_Mode(bool Is_Focus);
 
 		void Register_On_Reset_Func(const On_Reset_Func& Func);
 		void Register_On_Key_Func(const On_Key_Func& Func);

@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Camera_Base"};            
         }
 
-            static const vector<Reflection_Instance<Camera_Base>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Base> Instance){
-                vector<Reflection_Instance<Camera_Base>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_FOV_Type_Spelling(void){
                 return string{"float"};
@@ -346,13 +340,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Camera_Resource"};            
         }
 
-            static const vector<Reflection_Instance<Camera_Resource>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Resource> Instance){
-                vector<Reflection_Instance<Camera_Resource>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Camera_Type_Spelling(void){
                 return string{"Reflection_Instance<Camera_Base>"};

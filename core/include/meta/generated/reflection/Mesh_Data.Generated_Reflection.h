@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Mesh_Vertex"};            
         }
 
-            static const vector<Reflection_Instance<Mesh_Vertex>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Mesh_Vertex> Instance){
-                vector<Reflection_Instance<Mesh_Vertex>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Position_Type_Spelling(void){
                 return string{"Vector3"};
@@ -196,13 +190,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Meah_SkeletonBinding"};            
         }
 
-            static const vector<Reflection_Instance<Meah_SkeletonBinding>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Meah_SkeletonBinding> Instance){
-                vector<Reflection_Instance<Meah_SkeletonBinding>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Bone_Indices_Type_Spelling(void){
                 return string{"vector<int>"};
@@ -308,13 +296,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Mesh_Data"};            
         }
 
-            static const vector<Reflection_Instance<Mesh_Data>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Mesh_Data> Instance){
-                vector<Reflection_Instance<Mesh_Data>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Vertices_buffer_Type_Spelling(void){
                 return string{"vector<Mesh_Vertex>"};

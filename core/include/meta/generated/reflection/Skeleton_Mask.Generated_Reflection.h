@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Bone_Blend_Mask"};            
         }
 
-            static const vector<Reflection_Instance<Bone_Blend_Mask>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Bone_Blend_Mask> Instance){
-                vector<Reflection_Instance<Bone_Blend_Mask>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Skeleton_Data_URL_Type_Spelling(void){
                 return string{"path"};

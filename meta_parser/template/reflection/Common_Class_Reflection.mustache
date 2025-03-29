@@ -34,7 +34,7 @@ namespace {{Class_NameSpace}}{
 
         {{#Class_Base_Class_Define_List}}
             static const vector<Reflection_Instance<{{& Class_Spelling}}>> Get_Base_Class_Reflection_Instance_List(shared_ptr<{{Class_Spelling}}> Instance){
-                vector<Reflection_Instance<{{Class_Spelling}}>> Table;
+                vector<Reflection_Instance<{{& Class_Spelling}}>> Table;
 
                     {{#Class_Base_Spelling_List}}
                         Table.emplace_back(string{"{{& Class_Base_Class_Spelling}}"},static_pointer_cast<{{& Class_Spelling}}>(Instance));

@@ -165,9 +165,6 @@
       <Project>{1e8c58f6-ebe8-44f5-aa04-2026784a70f2}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\bin\Amy_Engine_Config.ini" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

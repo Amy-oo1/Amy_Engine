@@ -5,6 +5,10 @@
 #include<string>
 #include<cassert>
 
+namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
+	class Serializer;
+}// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+
 namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 
 	using std::string;
@@ -14,6 +18,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 	class Reflection_Instance final {
 		template<typename U>
 		friend class Reflection_Instance;
+		friend  NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer;
 
 	public:
 		Reflection_Instance(void) = default;

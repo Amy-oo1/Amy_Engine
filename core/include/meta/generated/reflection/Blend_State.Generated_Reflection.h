@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Bone_Blend_Weight"};            
         }
 
-            static const vector<Reflection_Instance<Bone_Blend_Weight>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Bone_Blend_Weight> Instance){
-                vector<Reflection_Instance<Bone_Blend_Weight>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Blend_Weights_Type_Spelling(void){
                 return string{"vector<float>"};
@@ -114,13 +108,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"BlendState_With_Clip_Data"};            
         }
 
-            static const vector<Reflection_Instance<BlendState_With_Clip_Data>> Get_Base_Class_Reflection_Instance_List(shared_ptr<BlendState_With_Clip_Data> Instance){
-                vector<Reflection_Instance<BlendState_With_Clip_Data>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Blend_Clip_Type_Spelling(void){
                 return string{"vector<shared_ptr<Animation_Clip>>"};
@@ -358,13 +346,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Blend_State"};            
         }
 
-            static const vector<Reflection_Instance<Blend_State>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Blend_State> Instance){
-                vector<Reflection_Instance<Blend_State>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Blend_Clip_URL_Type_Spelling(void){
                 return string{"vector<path>"};

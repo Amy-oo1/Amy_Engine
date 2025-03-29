@@ -115,7 +115,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\function\include;D:\Amy_Engine\Editor\include;D:\Amy_Engine\resource\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -136,7 +136,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\function\include;D:\Amy_Engine\Editor\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -177,8 +177,9 @@
     <ClInclude Include="include\meta\generated\reflection\Basic_Shape.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Blend_State.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Camera_Component.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Camera_Controller.Generated_Reflection.h" />
-    <ClInclude Include="include\meta\generated\reflection\Compoent.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Component.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Particle.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h" />
@@ -196,8 +197,32 @@
     <ClInclude Include="include\meta\generated\reflection\Transform_Component.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\World_Resource.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\Reflection_Header.h" />
+    <ClInclude Include="include\meta\generated\serializer\Animation.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Animation_Clip.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Basic_Shape.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Blend_State.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Camera.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Camera_Component.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Camera_Controller.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Component.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Global_Particle.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Global_Rendering.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Level_Resource.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Materia.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\mesh.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Mesh_Data.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Motor.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Object_Resource.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Particle.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Render_Obejct.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Rigid_Body.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Skeleton_Data.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Skeleton_Mask.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Skeleton_Node.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Transform_Component.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\World_Resource.Generated_Serializer.h" />
     <ClInclude Include="include\meta\generated\Serializer_Header.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="include\meta\reflection\Reflection_Instance.h" />
     <ClInclude Include="include\meta\reflection\Reflection_Macro.h" />

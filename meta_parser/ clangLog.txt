@@ -179,8 +179,8 @@ Parser_Header.o: \
   D:\Amy_Engine\resource\include\common\Object_Resource.h \
   D:\Amy_Engine\resource\include\common\Level_Resource.h \
   D:\Amy_Engine\resource\include\common\World_Resource.h \
-  D:\Amy_Engine\function\include\frame\compoents\Compoent.h \
-  D:\Amy_Engine\function\include\frame\compoents\transform\Transform_Component.h \
+  D:\Amy_Engine\function\include\frame\components\Component.h \
+  D:\Amy_Engine\function\include\frame\components\transform\Transform_Component.h \
   D:\Amy_Engine\function\include\frame\object\GObject.h \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\unordered_set \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xhash \
@@ -188,4 +188,5 @@ Parser_Header.o: \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xbit_ops.h \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xnode_handle.h \
   D:\Amy_Engine\function\include\frame\object\GObject_ID_Allocator.h \
-  D:\Amy_Engine\function\include\render\render_system\Render_Obejct.h
+  D:\Amy_Engine\function\include\render\render_system\Render_Obejct.h \
+  D:\Amy_Engine\function\include\frame\components\camera\Camera_Component.h

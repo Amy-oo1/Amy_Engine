@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Camera_Pose"};            
         }
 
-            static const vector<Reflection_Instance<Camera_Pose>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Pose> Instance){
-                vector<Reflection_Instance<Camera_Pose>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Position_Type_Spelling(void){
                 return string{"Vector3"};
@@ -142,13 +136,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Camera_Config"};            
         }
 
-            static const vector<Reflection_Instance<Camera_Config>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Camera_Config> Instance){
-                vector<Reflection_Instance<Camera_Config>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_M_Pose_Type_Spelling(void){
                 return string{"Camera_Pose"};

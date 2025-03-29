@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             return string{"Global_Particle"};            
         }
 
-            static const vector<Reflection_Instance<Global_Particle>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Global_Particle> Instance){
-                vector<Reflection_Instance<Global_Particle>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Emit_Gap_Type_Spelling(void){
                 return string{"int"};
@@ -172,55 +166,55 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Particle_Billboard_Texture_File_Path_Type_Spelling(void){
+            static const string Get_Particle_Billboard_Image_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Particle_Billboard_Texture_File_Path_Spelling(void){
-                return string{"m_Particle_Billboard_Texture_File_Path"};
+            static const string Get_Particle_Billboard_Image_URL_Spelling(void){
+                return string{"m_Particle_Billboard_Image_URL"};
             }
 
 
-            static const string Get_Particle_Billboard_Texture_File_Path_Display_Name(void){
-                return string{"Particle_Billboard_Texture_File_Path"};
+            static const string Get_Particle_Billboard_Image_URL_Display_Name(void){
+                return string{"Particle_Billboard_Image_URL"};
             }
 
-            static const path& Get_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
-                return Instance->m_Particle_Billboard_Texture_File_Path;
+            static const path& Get_Particle_Billboard_Image_URL_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Particle_Billboard_Image_URL;
             }
 
-            static void Set_Field_Particle_Billboard_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance, const path& Value){
-                Instance->m_Particle_Billboard_Texture_File_Path=Value;
+            static void Set_Field_Particle_Billboard_Image_URL_Attribute(shared_ptr<Global_Particle> Instance, const path& Value){
+                Instance->m_Particle_Billboard_Image_URL=Value;
             }
 
-            static const bool Is_Filed_Particle_Billboard_Texture_File_Path_CPPVector(void){
+            static const bool Is_Filed_Particle_Billboard_Image_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Logo_Texture_File_Path_Type_Spelling(void){
+            static const string Get_Logo_Image_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Logo_Texture_File_Path_Spelling(void){
-                return string{"m_Logo_Texture_File_Path"};
+            static const string Get_Logo_Image_URL_Spelling(void){
+                return string{"m_Logo_Image_URL"};
             }
 
 
-            static const string Get_Logo_Texture_File_Path_Display_Name(void){
-                return string{"Logo_Texture_File_Path"};
+            static const string Get_Logo_Image_URL_Display_Name(void){
+                return string{"Logo_Image_URL"};
             }
 
-            static const path& Get_Logo_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance){
-                return Instance->m_Logo_Texture_File_Path;
+            static const path& Get_Logo_Image_URL_Attribute(shared_ptr<Global_Particle> Instance){
+                return Instance->m_Logo_Image_URL;
             }
 
-            static void Set_Field_Logo_Texture_File_Path_Attribute(shared_ptr<Global_Particle> Instance, const path& Value){
-                Instance->m_Logo_Texture_File_Path=Value;
+            static void Set_Field_Logo_Image_URL_Attribute(shared_ptr<Global_Particle> Instance, const path& Value){
+                Instance->m_Logo_Image_URL=Value;
             }
 
-            static const bool Is_Filed_Logo_Texture_File_Path_CPPVector(void){
+            static const bool Is_Filed_Logo_Image_URL_CPPVector(void){
                 return  false;
             }
 

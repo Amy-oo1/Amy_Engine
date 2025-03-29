@@ -25,6 +25,8 @@ namespace NameSpace_Meta_Parser::NameSpace_Generator::NameSpace_Generator_Config
 
 	constexpr const char* Parameter_Class_Base_Class_Spelling{ "Class_Base_Class_Spelling" };
 
+	constexpr const char* Parameter_Class_Base_Class_NameSpace{ "Class_Base_Class_NameSpace" };
+
 	//Field
 	constexpr const char* Parameter_Field_Define_List{ "Field_Define_List" };
 

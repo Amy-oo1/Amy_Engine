@@ -55,6 +55,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Meta_Parser {
 		TranslationUnit_Cursor m_Handle;
 
 		std::unordered_map<path, vector<shared_ptr<Class>>> m_Class_Modules{};
+		vector<path> m_Inout_File_List{};
 		std::unordered_map<string, path> m_Type_Table{};
 
 		std::unique_ptr<Generator_Interface> m_Generator_Reflection{ nullptr };

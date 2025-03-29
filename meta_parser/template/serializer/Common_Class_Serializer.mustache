@@ -1,0 +1,58 @@
+#include<cstdint>
+#include<string>
+#include<vector>
+#include<memory>
+
+#include "meta/serializer/Serializer.h"
+#include "meta/Reflection/Reflection_Instance.h"
+
+
+{{#Include_Define_List}}
+#include "{{& Src_File_Path}}"
+{{/Include_Define_List}}
+
+{{#Class_Define_List}}
+    namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+
+        using std::string;
+        using std::vector;
+        using std::shared_ptr;
+        using std::make_shared;
+        using std::static_pointer_cast;
+
+        using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
+
+        using {{& Class_NameSpace}}::{{& Class_Spelling}};
+
+        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<{{& Class_Spelling}}>(const {{& Class_Spelling}}& Instance){
+            JSON Json_Context { JSON::object() };
+
+            {{#Class_Base_Class_Define_List}}
+                {{#Class_Base_Spelling_List}}
+                  // Json_Context["{{& Class_Base_Class_Spelling}}"]=Serializer::Write<{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}>(*static_cast<const {{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}*>(&Instance));
+                {{/Class_Base_Spelling_List}}
+            {{/Class_Base_Class_Define_List}}
+
+            {{#Field_Define_List}}
+                Json_Context["{{& Field_Display_Name}}"] = Serializer::Write(Instance.{{& Field_Spelling}});
+            {{/Field_Define_List}}
+
+            return Json_Context;
+        }
+
+        template<> inline {{& Class_Spelling}}& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<{{& Class_Spelling}}>(const JSON& Json_Context, {{& Class_Spelling}} &Instance){
+            {{#Class_Base_Class_Define_List}}
+                {{#Class_Base_Spelling_List}}
+                  //  Serializer::Read(Json_Context["{{& Class_Base_Class_Spelling}}"],*static_cast<const {{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}*>(&Instance));
+                {{/Class_Base_Spelling_List}}
+            {{/Class_Base_Class_Define_List}}
+
+            {{#Field_Define_List}}
+                Serializer::Read(Json_Context["{{& Field_Display_Name}}"],Instance.{{& Field_Spelling}});
+            {{/Field_Define_List}}
+
+            return Instance;
+        }
+
+    }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+{{/Class_Define_List}}

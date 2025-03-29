@@ -1,6 +1,7 @@
 #pragma once
 
 #include<cstdint>
+#include<type_traits>
 
 //NOTE : cpp23 : std::to_underlying is a new function in C++23
 template <typename Enum>

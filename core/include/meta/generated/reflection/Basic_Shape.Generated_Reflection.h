@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Geometry_Base"};            
         }
 
-            static const vector<Reflection_Instance<Geometry_Base>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Geometry_Base> Instance){
-                vector<Reflection_Instance<Geometry_Base>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
         
 

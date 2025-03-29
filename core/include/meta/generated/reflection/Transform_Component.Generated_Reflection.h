@@ -7,7 +7,7 @@
 
 #include "meta/Reflection/Reflection_Instance.h"
 
-#include "D:/Amy_Engine/function/include/frame/compoents/transform/Transform_Component.h"
+#include "D:/Amy_Engine/function/include/frame/components/transform/Transform_Component.h"
 
 namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform{
 

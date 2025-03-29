@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Rigid_Body_Shape"};            
         }
 
-            static const vector<Reflection_Instance<Rigid_Body_Shape>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Rigid_Body_Shape> Instance){
-                vector<Reflection_Instance<Rigid_Body_Shape>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Global_Transform_Type_Spelling(void){
                 return string{"Affine_Transform"};
@@ -196,13 +190,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Rigid_Body_Res"};            
         }
 
-            static const vector<Reflection_Instance<Rigid_Body_Res>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Rigid_Body_Res> Instance){
-                vector<Reflection_Instance<Rigid_Body_Res>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Shapes_Type_Spelling(void){
                 return string{"vector<shared_ptr<Rigid_Body_Shape>>"};

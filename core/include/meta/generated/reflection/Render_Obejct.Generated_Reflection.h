@@ -29,13 +29,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Game_Object_Mesh_Desc"};            
         }
 
-            static const vector<Reflection_Instance<Game_Object_Mesh_Desc>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Game_Object_Mesh_Desc> Instance){
-                vector<Reflection_Instance<Game_Object_Mesh_Desc>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Mesh_URL_Type_Spelling(void){
                 return string{"path"};
@@ -88,13 +82,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Skeleton_Binding_Desc"};            
         }
 
-            static const vector<Reflection_Instance<Skeleton_Binding_Desc>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Skeleton_Binding_Desc> Instance){
-                vector<Reflection_Instance<Skeleton_Binding_Desc>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Skeleton_Binding_URL_Type_Spelling(void){
                 return string{"path"};
@@ -147,13 +135,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Skeleton_Animation_Result_Transform"};            
         }
 
-            static const vector<Reflection_Instance<Skeleton_Animation_Result_Transform>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Skeleton_Animation_Result_Transform> Instance){
-                vector<Reflection_Instance<Skeleton_Animation_Result_Transform>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Matrix_Type_Spelling(void){
                 return string{"Matrix4x4"};
@@ -206,13 +188,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Skeleton_Animation_Result"};            
         }
 
-            static const vector<Reflection_Instance<Skeleton_Animation_Result>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Skeleton_Animation_Result> Instance){
-                vector<Reflection_Instance<Skeleton_Animation_Result>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Transforms_Type_Spelling(void){
                 return string{"vector<shared_ptr<Skeleton_Animation_Result_Transform>>"};
@@ -291,13 +267,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Game_Object_Material_Desc"};            
         }
 
-            static const vector<Reflection_Instance<Game_Object_Material_Desc>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Game_Object_Material_Desc> Instance){
-                vector<Reflection_Instance<Game_Object_Material_Desc>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Base_Color_Texture_URL_Type_Spelling(void){
                 return string{"path"};
@@ -485,13 +455,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Game_Object_Transform_Desc"};            
         }
 
-            static const vector<Reflection_Instance<Game_Object_Transform_Desc>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Game_Object_Transform_Desc> Instance){
-                vector<Reflection_Instance<Game_Object_Transform_Desc>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Transform_Type_Spelling(void){
                 return string{"Matrix4x4"};
@@ -544,13 +508,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             return string{"Game_Object_Part_Desc"};            
         }
 
-            static const vector<Reflection_Instance<Game_Object_Part_Desc>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Game_Object_Part_Desc> Instance){
-                vector<Reflection_Instance<Game_Object_Part_Desc>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Mesh_Desc_Type_Spelling(void){
                 return string{"shared_ptr<Game_Object_Mesh_Desc>"};

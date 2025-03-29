@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Mesh_Sub"};            
         }
 
-            static const vector<Reflection_Instance<Mesh_Sub>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Mesh_Sub> Instance){
-                vector<Reflection_Instance<Mesh_Sub>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Object_Path_Type_Spelling(void){
                 return string{"path"};
@@ -142,13 +136,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Mesh"};            
         }
 
-            static const vector<Reflection_Instance<Mesh>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Mesh> Instance){
-                vector<Reflection_Instance<Mesh>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Meshes_Type_Spelling(void){
                 return string{"vector<Mesh_Sub>"};

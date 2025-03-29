@@ -17,6 +17,33 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "function", "function\functi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Editor.vcxproj", "{013A9164-2D12-4E23-A118-AA10B5EED6CA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bin", "bin", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		bin\Amy_Engine_Config.ini = bin\Amy_Engine_Config.ini
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "engine_resource", "engine_resource", "{6F6113A3-4DFC-40B0-8F81-BFE701CC26D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user_resource", "user_resource", "{8655E517-9D6D-4E78-99D2-CB821A8A8305}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "font", "font", "{3AAE391B-3C41-494E-BFD8-7E9D447C9F74}"
+	ProjectSection(SolutionItems) = preProject
+		bin\engine_resource\font\Editor_Font.TTF = bin\engine_resource\font\Editor_Font.TTF
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "image", "image", "{1FF8E011-B84C-4845-8338-EE595A7B7CAA}"
+	ProjectSection(SolutionItems) = preProject
+		bin\engine_resource\image\Amy_Engine_Big_Icon.jpg = bin\engine_resource\image\Amy_Engine_Big_Icon.jpg
+		bin\engine_resource\image\Amy_Engine_Samall_Icon.jpg = bin\engine_resource\image\Amy_Engine_Samall_Icon.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "word", "word", "{7A10BD43-9201-4835-975C-1EF660269173}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{6CB178E8-794C-4C37-95E5-6D5E7D6BE107}"
+	ProjectSection(SolutionItems) = preProject
+		bin\user_resource\global\Default_Global_Particle.json = bin\user_resource\global\Default_Global_Particle.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -84,6 +111,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F6113A3-4DFC-40B0-8F81-BFE701CC26D4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{8655E517-9D6D-4E78-99D2-CB821A8A8305} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3AAE391B-3C41-494E-BFD8-7E9D447C9F74} = {6F6113A3-4DFC-40B0-8F81-BFE701CC26D4}
+		{1FF8E011-B84C-4845-8338-EE595A7B7CAA} = {6F6113A3-4DFC-40B0-8F81-BFE701CC26D4}
+		{7A10BD43-9201-4835-975C-1EF660269173} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
+		{6CB178E8-794C-4C37-95E5-6D5E7D6BE107} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B07C124-2F8B-4152-A037-6C7DED513854}

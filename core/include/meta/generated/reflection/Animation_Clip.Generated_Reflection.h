@@ -29,13 +29,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Node_Map"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Node_Map>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Node_Map> Instance){
-                vector<Reflection_Instance<Animation_Node_Map>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Convert_Type_Spelling(void){
                 return string{"vector<string>"};
@@ -114,13 +108,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Channel"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Channel>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Channel> Instance){
-                vector<Reflection_Instance<Animation_Channel>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Name_Type_Spelling(void){
                 return string{"string"};
@@ -332,13 +320,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Clip"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Clip>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Clip> Instance){
-                vector<Reflection_Instance<Animation_Clip>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Total_Frame_Type_Spelling(void){
                 return string{"size_t"};
@@ -444,13 +426,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             return string{"Animation_Data"};            
         }
 
-            static const vector<Reflection_Instance<Animation_Data>> Get_Base_Class_Reflection_Instance_List(shared_ptr<Animation_Data> Instance){
-                vector<Reflection_Instance<Animation_Data>> Table;
-
-                    
-
-                return Table;
-            }
+        
 
             static const string Get_Skeleton_Data_URL_Type_Spelling(void){
                 return string{"path"};

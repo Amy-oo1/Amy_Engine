@@ -1,4 +1,4 @@
-#include "frame/compoents/transform/Transform_Component.h"
+#include "frame/components/transform/Transform_Component.h"
 
 #include<utility>
 

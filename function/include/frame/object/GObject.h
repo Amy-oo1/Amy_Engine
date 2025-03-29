@@ -11,7 +11,7 @@
 
 #include "common/Object_Resource.h"
 
-#include "frame/compoents/Compoent.h"
+#include "frame/components/Component.h"
 #include "frame/object/GObject_ID_Allocator.h"
 
 namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
