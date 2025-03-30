@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Bone_Blend_Mask;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Bone_Blend_Mask>(const Bone_Blend_Mask& Instance){
+        template<> inline const JSON Serializer::Write<Bone_Blend_Mask>(const Bone_Blend_Mask& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -32,7 +32,7 @@
             return Json_Context;
         }
 
-        template<> inline Bone_Blend_Mask& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Bone_Blend_Mask>(const JSON& Json_Context, Bone_Blend_Mask &Instance){
+        template<> inline Bone_Blend_Mask& Serializer::Read<Bone_Blend_Mask>(const JSON& Json_Context, Bone_Blend_Mask &Instance){
             
 
                 Serializer::Read(Json_Context["Skeleton_Data_URL"],Instance.m_Skeleton_Data_URL);

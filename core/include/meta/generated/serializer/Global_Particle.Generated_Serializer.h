@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Global::Global_Particle;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Global_Particle>(const Global_Particle& Instance){
+        template<> inline const JSON Serializer::Write<Global_Particle>(const Global_Particle& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -37,7 +37,7 @@
             return Json_Context;
         }
 
-        template<> inline Global_Particle& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Global_Particle>(const JSON& Json_Context, Global_Particle &Instance){
+        template<> inline Global_Particle& Serializer::Read<Global_Particle>(const JSON& Json_Context, Global_Particle &Instance){
             
 
                 Serializer::Read(Json_Context["Emit_Gap"],Instance.m_Emit_Gap);

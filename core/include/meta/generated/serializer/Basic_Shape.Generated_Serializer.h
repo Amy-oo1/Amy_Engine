@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Geometry_Base;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Geometry_Base>(const Geometry_Base& Instance){
+        template<> inline const JSON Serializer::Write<Geometry_Base>(const Geometry_Base& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -31,7 +31,7 @@
             return Json_Context;
         }
 
-        template<> inline Geometry_Base& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Geometry_Base>(const JSON& Json_Context, Geometry_Base &Instance){
+        template<> inline Geometry_Base& Serializer::Read<Geometry_Base>(const JSON& Json_Context, Geometry_Base &Instance){
             
 
             
@@ -52,18 +52,18 @@
 
         using NameSpace_Resource::NameSpace_Components::Geometry_Box;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Geometry_Box>(const Geometry_Box& Instance){
+        template<> inline const JSON Serializer::Write<Geometry_Box>(const Geometry_Box& Instance){
             JSON Json_Context { JSON::object() };
 
-                  // Json_Context["Geometry_Base"]=Serializer::Write<NameSpace_Resource::NameSpace_Components::Geometry_Base>(*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
+                    Json_Context["Geometry_Base"]=Serializer::Write<NameSpace_Resource::NameSpace_Components::Geometry_Base>(*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
 
                 Json_Context["Half_Extents"] = Serializer::Write(Instance.m_Half_Extents);
 
             return Json_Context;
         }
 
-        template<> inline Geometry_Box& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Geometry_Box>(const JSON& Json_Context, Geometry_Box &Instance){
-                  //  Serializer::Read(Json_Context["Geometry_Base"],*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
+        template<> inline Geometry_Box& Serializer::Read<Geometry_Box>(const JSON& Json_Context, Geometry_Box &Instance){
+                    Serializer::Read<NameSpace_Resource::NameSpace_Components::Geometry_Base>(Json_Context["Geometry_Base"],*static_cast<NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
 
                 Serializer::Read(Json_Context["Half_Extents"],Instance.m_Half_Extents);
 
@@ -83,18 +83,18 @@
 
         using NameSpace_Resource::NameSpace_Components::Geometry_Sphere;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Geometry_Sphere>(const Geometry_Sphere& Instance){
+        template<> inline const JSON Serializer::Write<Geometry_Sphere>(const Geometry_Sphere& Instance){
             JSON Json_Context { JSON::object() };
 
-                  // Json_Context["Geometry_Base"]=Serializer::Write<NameSpace_Resource::NameSpace_Components::Geometry_Base>(*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
+                    Json_Context["Geometry_Base"]=Serializer::Write<NameSpace_Resource::NameSpace_Components::Geometry_Base>(*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
 
                 Json_Context["radius"] = Serializer::Write(Instance.m_radius);
 
             return Json_Context;
         }
 
-        template<> inline Geometry_Sphere& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Geometry_Sphere>(const JSON& Json_Context, Geometry_Sphere &Instance){
-                  //  Serializer::Read(Json_Context["Geometry_Base"],*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
+        template<> inline Geometry_Sphere& Serializer::Read<Geometry_Sphere>(const JSON& Json_Context, Geometry_Sphere &Instance){
+                    Serializer::Read<NameSpace_Resource::NameSpace_Components::Geometry_Base>(Json_Context["Geometry_Base"],*static_cast<NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
 
                 Serializer::Read(Json_Context["radius"],Instance.m_radius);
 
@@ -114,10 +114,10 @@
 
         using NameSpace_Resource::NameSpace_Components::Geometry_Cylinder;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Geometry_Cylinder>(const Geometry_Cylinder& Instance){
+        template<> inline const JSON Serializer::Write<Geometry_Cylinder>(const Geometry_Cylinder& Instance){
             JSON Json_Context { JSON::object() };
 
-                  // Json_Context["Geometry_Base"]=Serializer::Write<NameSpace_Resource::NameSpace_Components::Geometry_Base>(*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
+                    Json_Context["Geometry_Base"]=Serializer::Write<NameSpace_Resource::NameSpace_Components::Geometry_Base>(*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
 
                 Json_Context["Radius"] = Serializer::Write(Instance.m_Radius);
                 Json_Context["Half_Height"] = Serializer::Write(Instance.m_Half_Height);
@@ -125,8 +125,8 @@
             return Json_Context;
         }
 
-        template<> inline Geometry_Cylinder& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Geometry_Cylinder>(const JSON& Json_Context, Geometry_Cylinder &Instance){
-                  //  Serializer::Read(Json_Context["Geometry_Base"],*static_cast<const NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
+        template<> inline Geometry_Cylinder& Serializer::Read<Geometry_Cylinder>(const JSON& Json_Context, Geometry_Cylinder &Instance){
+                    Serializer::Read<NameSpace_Resource::NameSpace_Components::Geometry_Base>(Json_Context["Geometry_Base"],*static_cast<NameSpace_Resource::NameSpace_Components::Geometry_Base*>(&Instance));
 
                 Serializer::Read(Json_Context["Radius"],Instance.m_Radius);
                 Serializer::Read(Json_Context["Half_Height"],Instance.m_Half_Height);

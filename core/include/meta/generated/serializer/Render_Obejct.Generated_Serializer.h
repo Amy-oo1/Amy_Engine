@@ -21,7 +21,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Game_Object_Mesh_Desc;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Game_Object_Mesh_Desc>(const Game_Object_Mesh_Desc& Instance){
+        template<> inline const JSON Serializer::Write<Game_Object_Mesh_Desc>(const Game_Object_Mesh_Desc& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -31,7 +31,7 @@
             return Json_Context;
         }
 
-        template<> inline Game_Object_Mesh_Desc& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Game_Object_Mesh_Desc>(const JSON& Json_Context, Game_Object_Mesh_Desc &Instance){
+        template<> inline Game_Object_Mesh_Desc& Serializer::Read<Game_Object_Mesh_Desc>(const JSON& Json_Context, Game_Object_Mesh_Desc &Instance){
             
 
                 Serializer::Read(Json_Context["Mesh_URL"],Instance.m_Mesh_URL);
@@ -52,7 +52,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Skeleton_Binding_Desc;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Skeleton_Binding_Desc>(const Skeleton_Binding_Desc& Instance){
+        template<> inline const JSON Serializer::Write<Skeleton_Binding_Desc>(const Skeleton_Binding_Desc& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -62,7 +62,7 @@
             return Json_Context;
         }
 
-        template<> inline Skeleton_Binding_Desc& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Skeleton_Binding_Desc>(const JSON& Json_Context, Skeleton_Binding_Desc &Instance){
+        template<> inline Skeleton_Binding_Desc& Serializer::Read<Skeleton_Binding_Desc>(const JSON& Json_Context, Skeleton_Binding_Desc &Instance){
             
 
                 Serializer::Read(Json_Context["Skeleton_Binding_URL"],Instance.m_Skeleton_Binding_URL);
@@ -83,7 +83,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Skeleton_Animation_Result_Transform;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Skeleton_Animation_Result_Transform>(const Skeleton_Animation_Result_Transform& Instance){
+        template<> inline const JSON Serializer::Write<Skeleton_Animation_Result_Transform>(const Skeleton_Animation_Result_Transform& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -93,7 +93,7 @@
             return Json_Context;
         }
 
-        template<> inline Skeleton_Animation_Result_Transform& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Skeleton_Animation_Result_Transform>(const JSON& Json_Context, Skeleton_Animation_Result_Transform &Instance){
+        template<> inline Skeleton_Animation_Result_Transform& Serializer::Read<Skeleton_Animation_Result_Transform>(const JSON& Json_Context, Skeleton_Animation_Result_Transform &Instance){
             
 
                 Serializer::Read(Json_Context["Matrix"],Instance.m_Matrix);
@@ -114,7 +114,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Skeleton_Animation_Result;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Skeleton_Animation_Result>(const Skeleton_Animation_Result& Instance){
+        template<> inline const JSON Serializer::Write<Skeleton_Animation_Result>(const Skeleton_Animation_Result& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -124,7 +124,7 @@
             return Json_Context;
         }
 
-        template<> inline Skeleton_Animation_Result& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Skeleton_Animation_Result>(const JSON& Json_Context, Skeleton_Animation_Result &Instance){
+        template<> inline Skeleton_Animation_Result& Serializer::Read<Skeleton_Animation_Result>(const JSON& Json_Context, Skeleton_Animation_Result &Instance){
             
 
                 Serializer::Read(Json_Context["Transforms"],Instance.m_Transforms);
@@ -145,7 +145,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Game_Object_Material_Desc;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Game_Object_Material_Desc>(const Game_Object_Material_Desc& Instance){
+        template<> inline const JSON Serializer::Write<Game_Object_Material_Desc>(const Game_Object_Material_Desc& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -160,7 +160,7 @@
             return Json_Context;
         }
 
-        template<> inline Game_Object_Material_Desc& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Game_Object_Material_Desc>(const JSON& Json_Context, Game_Object_Material_Desc &Instance){
+        template<> inline Game_Object_Material_Desc& Serializer::Read<Game_Object_Material_Desc>(const JSON& Json_Context, Game_Object_Material_Desc &Instance){
             
 
                 Serializer::Read(Json_Context["Base_Color_Texture_URL"],Instance.m_Base_Color_Texture_URL);
@@ -186,7 +186,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Game_Object_Transform_Desc;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Game_Object_Transform_Desc>(const Game_Object_Transform_Desc& Instance){
+        template<> inline const JSON Serializer::Write<Game_Object_Transform_Desc>(const Game_Object_Transform_Desc& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -196,7 +196,7 @@
             return Json_Context;
         }
 
-        template<> inline Game_Object_Transform_Desc& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Game_Object_Transform_Desc>(const JSON& Json_Context, Game_Object_Transform_Desc &Instance){
+        template<> inline Game_Object_Transform_Desc& Serializer::Read<Game_Object_Transform_Desc>(const JSON& Json_Context, Game_Object_Transform_Desc &Instance){
             
 
                 Serializer::Read(Json_Context["Transform"],Instance.m_Transform);
@@ -217,7 +217,7 @@
 
         using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Game_Object_Part_Desc;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Game_Object_Part_Desc>(const Game_Object_Part_Desc& Instance){
+        template<> inline const JSON Serializer::Write<Game_Object_Part_Desc>(const Game_Object_Part_Desc& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -232,7 +232,7 @@
             return Json_Context;
         }
 
-        template<> inline Game_Object_Part_Desc& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Game_Object_Part_Desc>(const JSON& Json_Context, Game_Object_Part_Desc &Instance){
+        template<> inline Game_Object_Part_Desc& Serializer::Read<Game_Object_Part_Desc>(const JSON& Json_Context, Game_Object_Part_Desc &Instance){
             
 
                 Serializer::Read(Json_Context["Mesh_Desc"],Instance.m_Mesh_Desc);

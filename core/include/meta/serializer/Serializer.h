@@ -19,7 +19,12 @@
 
 namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 
+	using std::string;
+	using std::vector;
 	using std::shared_ptr;
+	using std::weak_ptr;
+	using std::unique_ptr;
+
 
 	using JSON = nlohmann::json;
 
@@ -52,29 +57,56 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 		}
 
 		template<typename Type>
-		static const JSON Write(const shared_ptr<Type>& Instance) {
-			if (Instance)
-				return Serializer::Write(*Instance);
-			else
-				return JSON();
+		static const JSON Write(const unique_ptr<Type>& Instance) {
+			return Instance ? Write(*Instance) : JSON();
 		}
 
 		template<typename Type>
-		static const JSON Write(const std::vector<Type>& Instance) {
-			JSON Temp_JSON{ JSON::array() };
-			for (const auto& Temp_Instance : Instance)
-				Temp_JSON.push_back(Serializer::Write(Temp_Instance));
-
-			return Temp_JSON;
+		static const JSON Write(const shared_ptr<Type>& Instance) {
+			return Instance ? Write(*Instance) : JSON();
 		}
 
 		template<typename Type>
 		static const JSON Write(const Reflection_Instance<Type>& Instance) {
 			return JSON{
-				{"Type_Spelling", Serializer::Write(Instance.Get_Type_Spelling())},
-				{"Instance", Serializer::Write(Instance.Get_Instance())}
+				{"Type_Spelling", Serializer::Write(Instance.m_Type_Spelling)},
+				{"Instance", Serializer::Write(*Instance.m_Instance)}
 			};
 		}
+
+		template<typename Type>
+		static const JSON Write(const std::vector<Type>& Instances) {
+			JSON Json_Context{ JSON::array() };
+			for (const auto& Instance : Instances)
+				Json_Context.push_back(Serializer::Write(Instance));
+
+			return Json_Context;
+		}
+
+		template<typename Type>
+		static const JSON Write(const std::vector<unique_ptr<Type>>& Instances) {
+			JSON Json_Context{ JSON::array() };
+			for (const auto& Instance : Instances)
+				Json_Context.push_back(Serializer::Write(Instance));
+			return Json_Context;
+		}
+
+		template<typename Type>
+		static const JSON Write(const std::vector<shared_ptr<Type>>& Instances) {
+			JSON Json_Context{ JSON::array() };
+			for (const auto& Instance : Instances)
+				Json_Context.push_back(Serializer::Write(Instance));
+			return Json_Context;
+		}
+
+		template<typename Type>
+		static const JSON Write(const std::vector<Reflection_Instance<Type>>& Instances) {
+			JSON Json_Context{ JSON::array() };
+			for (const auto& Instance : Instances)
+				Json_Context.push_back(Serializer::Write(Instance));
+			return Json_Context;
+		}
+	
 
 		template<typename Type>
 		static Type& Read(const JSON& Json_Context, Type& Instance) {
@@ -88,30 +120,81 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 		static  shared_ptr<Type>& Read(const JSON& Json_Context, shared_ptr<Type>& Instance) {
 			if (Json_Context.is_null())
 				return Instance;
-			else
-
+			else {
+				Instance = std::make_shared<Type>();
+				Serializer::Read<Type>(Json_Context, *Instance);
+				return Instance;
+			}
 		}
 
 		template<typename Type>
-		static std::vector<Type>& Read(const JSON& Json_Context, std::vector<Type>& Instance) {
-			if (!Json_Context.is_null()) {
-				Instance.clear();
-				Type Temp_Element{};
-				for (const auto& Temp_Instance : Json_Context)
-					Instance.push_back(Serializer::Read<Type>(Temp_Instance, Temp_Element));
+		static  unique_ptr<Type>& Read(const JSON& Json_Context, unique_ptr<Type>& Instance) {
+			if (Json_Context.is_null())
+				return Instance;
+			else {
+				Instance = std::make_unique<Type>();
+				Serializer::Read<Type>(Json_Context, *Instance);
+				return Instance;
 			}
-
-			return Instance;
 		}
 
 		template<typename Type>
 		static Reflection_Instance<Type>& Read(const JSON& Json_Context, Reflection_Instance<Type>& Instance) {
 			if (Json_Context.is_null()) {
+				Instance.m_Instance = std::make_shared<Type>();
 				Serializer::Read<std::string>(Json_Context["Type_Spelling"], Instance.m_Type_Spelling);
-				Serializer::Read<Type>(Json_Context["Instance"], Instance.m_Instance);
+				Serializer::Read<Type>(Json_Context["Instance"], *Instance.m_Instance);
 			}
 			return Instance;
 		}
+
+		template<typename Type>
+		static std::vector<Type>& Read(const JSON& Json_Contexts, std::vector<Type>& Instances) {
+			if (!Json_Contexts.is_null()) {
+				Instances.clear();
+
+				Type Instance{};
+				for (const auto& Json_Context : Json_Contexts)
+					Instances.push_back(Serializer::Read<Type>(Json_Context, Instance));
+			}
+
+			return Instances;
+		}
+
+		template<typename Type>
+		static std::vector<unique_ptr<Type>>& Read(const JSON& Json_Contexts, std::vector<unique_ptr<Type>>& Instances) {
+			if (!Json_Contexts.is_null()) {
+				Instances.clear();
+				unique_ptr<Type> Instance{};
+				for (const auto& Json_Context : Json_Contexts)
+					Instances.push_back(Serializer::Read(Json_Context, Instance));
+			}
+			return Instances;
+		}
+
+		template<typename Type>
+		static std::vector<shared_ptr<Type>>& Read(const JSON& Json_Contexts, std::vector<shared_ptr<Type>>& Instances) {
+			if (!Json_Contexts.is_null()) {
+				Instances.clear();
+
+				shared_ptr<Type> Instance{};
+				for (const auto& Json_Context : Json_Contexts)
+					Instances.push_back(Serializer::Read(Json_Context, Instance));
+			}
+			return Instances;
+		}
+
+		template<typename Type>
+		static std::vector<Reflection_Instance<Type>>& Read(const JSON& Json_Contexts, std::vector<Reflection_Instance<Type>>& Instances) {
+			if (!Json_Contexts.is_null()) {
+				Instances.clear();
+				Reflection_Instance<Type> Instance{};
+				for (const auto& Json_Context : Json_Contexts)
+					Instances.push_back(Serializer::Read(Json_Context, Instance));
+			}
+			return Instances;
+		}
+
 	};
 
 	//NOTE : Implement Base Type
@@ -166,7 +249,9 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 
 	//NOTE: My Type
 	template<> inline const JSON Serializer::Write<Radian>(const Radian& Instance) {
-		return JSON(Instance.Get_Radian());
+		return JSON{
+			"Radian", Serializer::Write<float>(Instance.Get_Radian())
+		};
 	}
 
 	template<> inline const JSON Serializer::Write<Degree>(const Degree& Instance) {
@@ -174,103 +259,117 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 	}
 
 	template<> inline const JSON Serializer::Write<Vector2>(const Vector2& Instance) {
-		return JSON{ {"X", Instance.Get_X()}, {"Y", Instance.Get_Y()} };
+		return JSON{
+			"X",Serializer::Write<float>(Instance.Get_X()),
+			"Y",Serializer::Write<float>(Instance.Get_Y())
+		};
 	}
 
 	template<> inline const JSON Serializer::Write<Vector3>(const Vector3& Instance) {
-		return JSON{ {"X", Instance.Get_X()}, {"Y", Instance.Get_Y()}, {"Z", Instance.Get_Z()} };
+		return JSON{
+			"X",Serializer::Write<float>(Instance.Get_X()),
+			"Y",Serializer::Write<float>(Instance.Get_Y()),
+			"Z",Serializer::Write<float>(Instance.Get_Z())
+		};
 	}
 
 	template<> inline const JSON Serializer::Write<Vector4>(const Vector4& Instance) {
-		return JSON{ {"X", Instance.Get_X()}, {"Y", Instance.Get_Y()}, {"Z", Instance.Get_Z()}, {"W", Instance.Get_W()} };
+		return JSON{
+			"X",Serializer::Write<float>(Instance.Get_X()),
+			"Y",Serializer::Write<float>(Instance.Get_Y()),
+			"Z",Serializer::Write<float>(Instance.Get_Z()),
+			"W",Serializer::Write<float>(Instance.Get_W())
+		};
 	}
 
 	template<> inline const JSON Serializer::Write<Matrix3x3>(const Matrix3x3& Instance) {
 		return JSON{
-			{"M11", Instance[0][0]}, {"M12", Instance[0][1]}, {"M13",Instance[0][2]},
-			{"M21", Instance[1][0]}, {"M22", Instance[1][1]}, {"M23",Instance[1][2]},
-			{"M31", Instance[2][0]}, {"M32", Instance[2][1]}, {"M33",Instance[2][2]}
+			{"M11", Serializer::Write<float>(Instance[0][0])}, {"M12", Serializer::Write<float>(Instance[0][1])}, {"M13",Serializer::Write<float>(Instance[0][2])},
+			{"M21", Serializer::Write<float>(Instance[1][0])}, {"M22", Serializer::Write<float>(Instance[1][1])}, {"M23",Serializer::Write<float>(Instance[1][2])},
+			{"M31", Serializer::Write<float>(Instance[2][0])}, {"M32", Serializer::Write<float>(Instance[2][1])}, {"M33",Serializer::Write<float>(Instance[2][2])}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Matrix4x4>(const Matrix4x4& Instance) {
 		return JSON{
-			{"M11", Instance[0][0]}, {"M12", Instance[0][1]}, {"M13",Instance[0][2]}, {"M14",Instance[0][3]},
-			{"M21", Instance[1][0]}, {"M22", Instance[1][1]}, {"M23",Instance[1][2]}, {"M24",Instance[1][3]},
-			{"M31", Instance[2][0]}, {"M32", Instance[2][1]}, {"M33",Instance[2][2]}, {"M34",Instance[2][3]},
-			{"M41", Instance[3][0]}, {"M42", Instance[3][1]}, {"M43",Instance[3][2]}, {"M44",Instance[3][3]}
+			{"M11", Serializer::Write<float>(Instance[0][0])}, {"M12", Serializer::Write<float>(Instance[0][1])}, {"M13",Serializer::Write<float>(Instance[0][2])}, {"M14",Serializer::Write<float>(Instance[0][3])},
+			{"M21", Serializer::Write<float>(Instance[1][0])}, {"M22", Serializer::Write<float>(Instance[1][1])}, {"M23",Serializer::Write<float>(Instance[1][2])}, {"M24",Serializer::Write<float>(Instance[1][3])},
+			{"M31", Serializer::Write<float>(Instance[2][0])}, {"M32", Serializer::Write<float>(Instance[2][1])}, {"M33",Serializer::Write<float>(Instance[2][2])}, {"M34",Serializer::Write<float>(Instance[2][3])},
+			{"M41", Serializer::Write<float>(Instance[3][0])}, {"M42", Serializer::Write<float>(Instance[3][1])}, {"M43",Serializer::Write<float>(Instance[3][2])}, {"M44",Serializer::Write<float>(Instance[3][3])}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Quaternion>(const Quaternion& Instance) {
 		return JSON{
-			{"S", Instance.Get_S()} ,{"X", Instance.Get_X()}, {"Y", Instance.Get_Y()}, {"Z", Instance.Get_Z()}
+			{"S", Serializer::Write<float>(Instance.Get_S())},
+			{"X", Serializer::Write<float>(Instance.Get_X())},
+			{"Y", Serializer::Write<float>(Instance.Get_Y())},
+			{"Z", Serializer::Write<float>(Instance.Get_Z())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Orthogonal_Transform>(const Orthogonal_Transform& Instance) {
 		return JSON{
-			{"Rotation", Serializer::Write(Instance.Get_Rotation())},
-			{"Scale", Serializer::Write(Instance.Get_Translation())}
+			{"Rotation", Serializer::Write<Quaternion>(Instance.Get_Rotation())},
+			{"Translation", Serializer::Write<Vector3>(Instance.Get_Translation())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<ScaleTranslation_Transform>(const ScaleTranslation_Transform& Instance) {
 		return JSON{
-			{"Scale", Serializer::Write(Instance.Get_Scale())},
-			{"Translation", Serializer::Write(Instance.Get_Translation())}
+			{"Scale", Serializer::Write<float>(Instance.Get_Scale())},
+			{"Translation", Serializer::Write<Vector3>(Instance.Get_Translation())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Uniform_Transform>(const Uniform_Transform& Instance) {
 		return JSON{
-			{"Rotation", Serializer::Write(Instance.Get_Rotation())},
-			{"Scale", Serializer::Write(Instance.Get_Scale())},
-			{"Translation", Serializer::Write(Instance.Get_Translation())}
+			{"Rotation", Serializer::Write<Quaternion>(Instance.Get_Rotation())},
+			{"Scale", Serializer::Write<float>(Instance.Get_Scale())},
+			{"Translation", Serializer::Write<Vector3>(Instance.Get_Translation())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Affine_Transform>(const Affine_Transform& Instance) {
 		return JSON{
-			{"Translation", Serializer::Write(Instance.Get_Translation())}
+			{"Basis", Serializer::Write<Matrix3x3>(Instance.Get_Basis())},
+			{"Translation", Serializer::Write<Vector3>(Instance.Get_Translation())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<AxisAligned_Bounding_Box>(const AxisAligned_Bounding_Box& Instance) {
 		return JSON{
-			{"Min", Serializer::Write(Instance.Get_Min())},
-			{"Max", Serializer::Write(Instance.Get_Max())}
+			{"Min", Serializer::Write<Vector3>(Instance.Get_Min())},
+			{"Max", Serializer::Write<Vector3>(Instance.Get_Max())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Oriented_Bounding_Box>(const Oriented_Bounding_Box& Instance) {
 		return JSON{
-			{"Center", Serializer::Write(Instance.Get_Center())},
-			{"Dimensions", Serializer::Write(Instance.Get_Dimensions())},
-			{"Transform", Serializer::Write(Instance.Get_Transform())}
+			{"Transform", Serializer::Write<Affine_Transform>(Instance.Get_Transform())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Bounding_Plane>(const Bounding_Plane& Instance) {
 		return JSON{
-			{"Normal", Serializer::Write(Instance.Get_Normal())},
-			{"Point", Serializer::Write(Instance.Get_Point_On_Plane())}
+			{"Normal", Serializer::Write<Vector3>(Instance.Get_Normal())},
+			{"Point", Serializer::Write<Vector3>(Instance.Get_Point_On_Plane())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Bounding_Sphere>(const Bounding_Sphere& Instance) {
 		return JSON{
-			{"Center", Serializer::Write(Instance.Get_Center())},
-			{"Radius", Serializer::Write(Instance.Get_Radius())}
+			{"Center", Serializer::Write<Vector3>(Instance.Get_Center())},
+			{"Radius", Serializer::Write<float>(Instance.Get_Radius())}
 		};
 	}
 
 	template<> inline const JSON Serializer::Write<Color>(const Color& Instance) {
 		return JSON{
-			{"Red", Serializer::Write(Instance.Get_R())},
-			{"Green", Serializer::Write(Instance.Get_G())},
-			{"Blue", Serializer::Write(Instance.Get_B())},
-			{"Alpha", Serializer::Write(Instance.Get_A())}
+			{"Red", Serializer::Write<float>(Instance.Get_R()) },
+			{"Green", Serializer::Write<float>(Instance.Get_G()) },
+			{"Blue", Serializer::Write<float>(Instance.Get_B()) },
+			{"Alpha", Serializer::Write<float>(Instance.Get_A())}
 		};
 	}
 
@@ -357,7 +456,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 		if (Json_Context.is_null())
 			return Instance;
 		else
-			return Instance = path{ Json_Context.get<std::string>() };
+			return Instance = path{ Json_Context.get<std::string>(),path::generic_format };
 	}
 
 	//NOTE: My Type
@@ -448,11 +547,11 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 			return Instance;
 		else {
 			Quaternion Temp_Rotation{};
-			Vector3 Temp_Scale{};
+			Vector3 Temp_Translation{};
 
 			return Instance = Orthogonal_Transform{
 				Serializer::Read<Quaternion>(Json_Context["Rotation"], Temp_Rotation),
-				Serializer::Read<Vector3>(Json_Context["Scale"], Temp_Scale)
+				Serializer::Read<Vector3>(Json_Context["Translation"], Temp_Translation)
 			};
 		}
 	}
@@ -489,12 +588,10 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 		if (Json_Context.is_null())
 			return Instance;
 		else {
-			Quaternion Temp_Rotation{};
-			Vector3 Temp_Scale{};
+			Matrix3x3 Temp_Basis{};
 			Vector3 Temp_Translation{};
 			return Instance = Affine_Transform{
-				Serializer::Read<Vector3>(Json_Context["Scale"], Temp_Scale),
-				Serializer::Read<Quaternion>(Json_Context["Rotation"], Temp_Rotation),
+				Serializer::Read<Matrix3x3>(Json_Context["Basis"], Temp_Basis),
 				Serializer::Read<Vector3>(Json_Context["Translation"], Temp_Translation)
 			};
 		}
@@ -519,8 +616,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 		else {
 			Affine_Transform Temp_Transform{};
 			return Instance = Oriented_Bounding_Box{
-				Affine_Transform{
-				Serializer::Read<Affine_Transform>(Json_Context["Transform"], Temp_Transform)}
+				Serializer::Read<Affine_Transform>(Json_Context["Transform"], Temp_Transform)
 			};
 		}
 	}

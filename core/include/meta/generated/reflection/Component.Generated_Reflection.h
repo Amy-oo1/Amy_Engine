@@ -9,7 +9,7 @@
 
 #include "D:/Amy_Engine/function/include/frame/components/Component.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components{
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components{
 
     using std::string;
     using std::vector;
@@ -30,33 +30,6 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components{
         }
 
         
-
-            static const string Get_Parent_GObject_Type_Spelling(void){
-                return string{"weak_ptr<GObject>"};
-            }
-
-            static const string Get_Parent_GObject_Spelling(void){
-                return string{"m_Parent_GObject"};
-            }
-
-
-            static const string Get_Parent_GObject_Display_Name(void){
-                return string{"Parent_GObject"};
-            }
-
-            static const weak_ptr<GObject>& Get_Parent_GObject_Attribute(shared_ptr<Component> Instance){
-                return Instance->m_Parent_GObject;
-            }
-
-            static void Set_Field_Parent_GObject_Attribute(shared_ptr<Component> Instance, const weak_ptr<GObject>& Value){
-                Instance->m_Parent_GObject=Value;
-            }
-
-            static const bool Is_Filed_Parent_GObject_CPPVector(void){
-                return  false;
-            }
-
-            
 
             static const string Get_Is_Dirty_Type_Spelling(void){
                 return string{"bool"};

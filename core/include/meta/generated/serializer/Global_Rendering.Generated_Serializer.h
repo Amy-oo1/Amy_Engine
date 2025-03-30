@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Global::SkyBox_Irradiance_Map;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<SkyBox_Irradiance_Map>(const SkyBox_Irradiance_Map& Instance){
+        template<> inline const JSON Serializer::Write<SkyBox_Irradiance_Map>(const SkyBox_Irradiance_Map& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -36,7 +36,7 @@
             return Json_Context;
         }
 
-        template<> inline SkyBox_Irradiance_Map& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<SkyBox_Irradiance_Map>(const JSON& Json_Context, SkyBox_Irradiance_Map &Instance){
+        template<> inline SkyBox_Irradiance_Map& Serializer::Read<SkyBox_Irradiance_Map>(const JSON& Json_Context, SkyBox_Irradiance_Map &Instance){
             
 
                 Serializer::Read(Json_Context["Positive_X_Map_URL"],Instance.m_Positive_X_Map_URL);
@@ -62,7 +62,7 @@
 
         using NameSpace_Resource::NameSpace_Global::SkyBox_Specular_Map;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<SkyBox_Specular_Map>(const SkyBox_Specular_Map& Instance){
+        template<> inline const JSON Serializer::Write<SkyBox_Specular_Map>(const SkyBox_Specular_Map& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -77,7 +77,7 @@
             return Json_Context;
         }
 
-        template<> inline SkyBox_Specular_Map& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<SkyBox_Specular_Map>(const JSON& Json_Context, SkyBox_Specular_Map &Instance){
+        template<> inline SkyBox_Specular_Map& Serializer::Read<SkyBox_Specular_Map>(const JSON& Json_Context, SkyBox_Specular_Map &Instance){
             
 
                 Serializer::Read(Json_Context["Positive_X_Map_URL"],Instance.m_Positive_X_Map_URL);
@@ -103,7 +103,7 @@
 
         using NameSpace_Resource::NameSpace_Global::Directional_Light;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Directional_Light>(const Directional_Light& Instance){
+        template<> inline const JSON Serializer::Write<Directional_Light>(const Directional_Light& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -114,7 +114,7 @@
             return Json_Context;
         }
 
-        template<> inline Directional_Light& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Directional_Light>(const JSON& Json_Context, Directional_Light &Instance){
+        template<> inline Directional_Light& Serializer::Read<Directional_Light>(const JSON& Json_Context, Directional_Light &Instance){
             
 
                 Serializer::Read(Json_Context["Direction_List"],Instance.m_Direction_List);
@@ -136,7 +136,7 @@
 
         using NameSpace_Resource::NameSpace_Global::Global_Rendering;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Global_Rendering>(const Global_Rendering& Instance){
+        template<> inline const JSON Serializer::Write<Global_Rendering>(const Global_Rendering& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -154,7 +154,7 @@
             return Json_Context;
         }
 
-        template<> inline Global_Rendering& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Global_Rendering>(const JSON& Json_Context, Global_Rendering &Instance){
+        template<> inline Global_Rendering& Serializer::Read<Global_Rendering>(const JSON& Json_Context, Global_Rendering &Instance){
             
 
                 Serializer::Read(Json_Context["Enable_FXAA"],Instance.m_Enable_FXAA);

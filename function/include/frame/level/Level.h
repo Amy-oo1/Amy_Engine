@@ -11,7 +11,7 @@
 #include "physics/Physics_Scene.h"
 #include "character/Character.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Level {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level {
 
 	using NameSpace_Platform::NameSpace_File::path;
 
@@ -52,4 +52,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Level {
 
 	};
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_Level
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level

@@ -4,16 +4,16 @@
 
 #include "meta/reflection/Reflection_Macro.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 	class GObject;
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject
 
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components {
 
 	using std::weak_ptr;
 
-	using Namespace_Frame::NameSpace_GObject::GObject;
+	using NameSpace_Frame::NameSpace_GObject::GObject;
 
 	REFLECTION_HEADER(Component);
 	REFLECTION_CLASS(Component, All)
@@ -34,7 +34,7 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components {
 		void Set_Dirty_Flag(bool Flag);
 
 	protected:
-		weak_ptr<GObject> m_Parent_GObject{};
+		META(Disable) weak_ptr<GObject> m_Parent_GObject{};
 
 		bool m_Is_Dirty{ false };
 		bool m_Is_Scale_Dirty{ false };
@@ -44,4 +44,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components {
 	};
 
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_Components
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components

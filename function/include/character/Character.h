@@ -9,6 +9,7 @@
 
 #include "frame/object/GObject.h"
 #include "frame/components/Component.h"
+#include "frame/components/camera/Camera_Component.h"
 
 namespace NameSpace_Function::Namespace_Character {
 
@@ -20,10 +21,10 @@ namespace NameSpace_Function::Namespace_Character {
 	using NameSpace_Core::NameSpace_Math::Quaternion;
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
 
-	using Namespace_Frame::NameSpace_GObject::GObject;
+	using NameSpace_Frame::NameSpace_GObject::GObject;
 
-	using Namespace_Frame::NameSpace_Components::NameSpace_Camera::CAMERA_MODE;
-	using Namespace_Frame::NameSpace_Components::NameSpace_Camera::Camera_Component;
+	using NameSpace_Frame::NameSpace_Components::NameSpace_Camera::CAMERA_MODE;
+	using NameSpace_Frame::NameSpace_Components::NameSpace_Camera::Camera_Component;
 
 	class Character final {
 	private:

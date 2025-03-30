@@ -10,7 +10,12 @@ namespace NameSpace_Meta_Parser::NameSpace_Generator {
 	const mustache::data Generator_Interface::Generate_Class_Field_RenderData(shared_ptr<Class> Current_Class) {
 		mustache::data Field_Define_List{ mustache::data::type::list };
 
-		for (const auto& Temp_Field : Current_Class->Get_Fields())
+		for (const auto& Temp_Field : Current_Class->Get_Fields()) {
+
+			if (Temp_Field->Get_Field_Spelling() == "m_Parent_GObject") {
+				int aa = 1;
+			}
+
 			if (Temp_Field->Should_Compile()) {
 				mustache::data Field_Define{ mustache::data::type::object };
 
@@ -32,6 +37,7 @@ namespace NameSpace_Meta_Parser::NameSpace_Generator {
 				Field_Define_List.push_back(Field_Define);
 			}
 
+		}
 		return Field_Define_List;
 	}
 

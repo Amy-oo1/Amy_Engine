@@ -1,6 +1,6 @@
 #include "frame/components/camera/Camera_Component.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Camera {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Camera {
 
 	void Camera_Component::Post_Load_Resource(weak_ptr<GObject> Parent_Object) {
 		//TODO : 
@@ -10,4 +10,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_C
 		//TODO :
 	}
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform

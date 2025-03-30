@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Bone_Raw;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Bone_Raw>(const Bone_Raw& Instance){
+        template<> inline const JSON Serializer::Write<Bone_Raw>(const Bone_Raw& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -35,7 +35,7 @@
             return Json_Context;
         }
 
-        template<> inline Bone_Raw& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Bone_Raw>(const JSON& Json_Context, Bone_Raw &Instance){
+        template<> inline Bone_Raw& Serializer::Read<Bone_Raw>(const JSON& Json_Context, Bone_Raw &Instance){
             
 
                 Serializer::Read(Json_Context["Name"],Instance.m_Name);
@@ -60,7 +60,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Skeleton_Data;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Skeleton_Data>(const Skeleton_Data& Instance){
+        template<> inline const JSON Serializer::Write<Skeleton_Data>(const Skeleton_Data& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -73,7 +73,7 @@
             return Json_Context;
         }
 
-        template<> inline Skeleton_Data& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Skeleton_Data>(const JSON& Json_Context, Skeleton_Data &Instance){
+        template<> inline Skeleton_Data& Serializer::Read<Skeleton_Data>(const JSON& Json_Context, Skeleton_Data &Instance){
             
 
                 Serializer::Read(Json_Context["Bones"],Instance.m_Bones);

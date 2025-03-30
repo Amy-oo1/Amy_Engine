@@ -40,7 +40,7 @@ namespace NameSpace_Function::Namespace_Global {
 	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
 
 	using Namespace_Physics::Physics_Manager;
-	using Namespace_Frame::NameSpace_World::World_Manager;
+	using NameSpace_Frame::NameSpace_World::World_Manager;
 
 	using NameSpace_Animation::Animation_Loader;
 

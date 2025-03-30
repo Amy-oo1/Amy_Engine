@@ -2,7 +2,7 @@
 
 #include<utility>
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform {
 
 	void Transform_Component::Post_Load_Resource(weak_ptr<GObject> Parent_Object) {
 		this->Component::m_Parent_GObject = Parent_Object;
@@ -33,4 +33,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_T
 		this->Component::m_Is_Dirty = true;
 	}
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_Com
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Com

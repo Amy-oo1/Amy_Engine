@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Common::Component_Definition;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Component_Definition>(const Component_Definition& Instance){
+        template<> inline const JSON Serializer::Write<Component_Definition>(const Component_Definition& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -32,7 +32,7 @@
             return Json_Context;
         }
 
-        template<> inline Component_Definition& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Component_Definition>(const JSON& Json_Context, Component_Definition &Instance){
+        template<> inline Component_Definition& Serializer::Read<Component_Definition>(const JSON& Json_Context, Component_Definition &Instance){
             
 
                 Serializer::Read(Json_Context["Type_Name"],Instance.m_Type_Name);
@@ -54,7 +54,7 @@
 
         using NameSpace_Resource::NameSpace_Common::Object_Definition;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Object_Definition>(const Object_Definition& Instance){
+        template<> inline const JSON Serializer::Write<Object_Definition>(const Object_Definition& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -65,7 +65,7 @@
             return Json_Context;
         }
 
-        template<> inline Object_Definition& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Object_Definition>(const JSON& Json_Context, Object_Definition &Instance){
+        template<> inline Object_Definition& Serializer::Read<Object_Definition>(const JSON& Json_Context, Object_Definition &Instance){
             
 
                 Serializer::Read(Json_Context["Seplling"],Instance.m_Seplling);
@@ -87,7 +87,7 @@
 
         using NameSpace_Resource::NameSpace_Common::Object_Instance;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Object_Instance>(const Object_Instance& Instance){
+        template<> inline const JSON Serializer::Write<Object_Instance>(const Object_Instance& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -99,7 +99,7 @@
             return Json_Context;
         }
 
-        template<> inline Object_Instance& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Object_Instance>(const JSON& Json_Context, Object_Instance &Instance){
+        template<> inline Object_Instance& Serializer::Read<Object_Instance>(const JSON& Json_Context, Object_Instance &Instance){
             
 
                 Serializer::Read(Json_Context["Name"],Instance.m_Name);

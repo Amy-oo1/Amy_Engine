@@ -21,8 +21,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_Platform::NameSpace_File::path;
 
-	using Namespace_Frame::NameSpace_GObject::GObject_ID;
-	using Namespace_Frame::NameSpace_GObject::GObject_ID_Allocator;
+	using NameSpace_Frame::NameSpace_GObject::GObject_ID;
+	using NameSpace_Frame::NameSpace_GObject::GObject_ID_Allocator;
 
 	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 

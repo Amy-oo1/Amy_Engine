@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Common::Level_Resource;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Level_Resource>(const Level_Resource& Instance){
+        template<> inline const JSON Serializer::Write<Level_Resource>(const Level_Resource& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -33,7 +33,7 @@
             return Json_Context;
         }
 
-        template<> inline Level_Resource& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Level_Resource>(const JSON& Json_Context, Level_Resource &Instance){
+        template<> inline Level_Resource& Serializer::Read<Level_Resource>(const JSON& Json_Context, Level_Resource &Instance){
             
 
                 Serializer::Read(Json_Context["Gravity"],Instance.m_Gravity);

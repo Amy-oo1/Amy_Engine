@@ -10,7 +10,7 @@
 #include "frame/components/Component.h"
 #include "frame/object/GObject.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform {
 
 	using std::vector;
 
@@ -45,4 +45,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_T
 
 	};
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_Com
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Com

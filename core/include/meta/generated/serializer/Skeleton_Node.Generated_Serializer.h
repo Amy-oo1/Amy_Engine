@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Skeleton_Node_Map;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Skeleton_Node_Map>(const Skeleton_Node_Map& Instance){
+        template<> inline const JSON Serializer::Write<Skeleton_Node_Map>(const Skeleton_Node_Map& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -31,7 +31,7 @@
             return Json_Context;
         }
 
-        template<> inline Skeleton_Node_Map& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Skeleton_Node_Map>(const JSON& Json_Context, Skeleton_Node_Map &Instance){
+        template<> inline Skeleton_Node_Map& Serializer::Read<Skeleton_Node_Map>(const JSON& Json_Context, Skeleton_Node_Map &Instance){
             
 
                 Serializer::Read(Json_Context["Convert"],Instance.m_Convert);

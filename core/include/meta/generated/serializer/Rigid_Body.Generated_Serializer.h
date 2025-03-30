@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Rigid_Body_Shape;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Rigid_Body_Shape>(const Rigid_Body_Shape& Instance){
+        template<> inline const JSON Serializer::Write<Rigid_Body_Shape>(const Rigid_Body_Shape& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -35,7 +35,7 @@
             return Json_Context;
         }
 
-        template<> inline Rigid_Body_Shape& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Rigid_Body_Shape>(const JSON& Json_Context, Rigid_Body_Shape &Instance){
+        template<> inline Rigid_Body_Shape& Serializer::Read<Rigid_Body_Shape>(const JSON& Json_Context, Rigid_Body_Shape &Instance){
             
 
                 Serializer::Read(Json_Context["Global_Transform"],Instance.m_Global_Transform);
@@ -60,7 +60,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Rigid_Body_Res;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Rigid_Body_Res>(const Rigid_Body_Res& Instance){
+        template<> inline const JSON Serializer::Write<Rigid_Body_Res>(const Rigid_Body_Res& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -72,7 +72,7 @@
             return Json_Context;
         }
 
-        template<> inline Rigid_Body_Res& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Rigid_Body_Res>(const JSON& Json_Context, Rigid_Body_Res &Instance){
+        template<> inline Rigid_Body_Res& Serializer::Read<Rigid_Body_Res>(const JSON& Json_Context, Rigid_Body_Res &Instance){
             
 
                 Serializer::Read(Json_Context["Shapes"],Instance.m_Shapes);

@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Material;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Material>(const Material& Instance){
+        template<> inline const JSON Serializer::Write<Material>(const Material& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -35,7 +35,7 @@
             return Json_Context;
         }
 
-        template<> inline Material& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Material>(const JSON& Json_Context, Material &Instance){
+        template<> inline Material& Serializer::Read<Material>(const JSON& Json_Context, Material &Instance){
             
 
                 Serializer::Read(Json_Context["Base_Colour_Texture_File_Path"],Instance.m_Base_Colour_Texture_File_Path);

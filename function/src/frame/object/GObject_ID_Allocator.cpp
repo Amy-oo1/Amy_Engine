@@ -2,7 +2,7 @@
 
 #include "logger/System_Logger.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
@@ -14,4 +14,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
 		return m_Next_ID.fetch_add(1);
 	}
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject

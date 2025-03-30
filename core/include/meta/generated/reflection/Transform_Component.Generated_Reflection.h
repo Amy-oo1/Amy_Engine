@@ -9,7 +9,7 @@
 
 #include "D:/Amy_Engine/function/include/frame/components/transform/Transform_Component.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform{
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform{
 
     using std::string;
     using std::vector;

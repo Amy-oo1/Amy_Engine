@@ -9,7 +9,7 @@
 
 #include "meta/reflection/Reflection_Instance.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components {
 	class Component;
 }
 
@@ -21,7 +21,7 @@ namespace NameSpace_Resource::NameSpace_Common {
 	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
-	using NameSpace_Function::Namespace_Frame::NameSpace_Components::Component;
+	using NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component;
 
 	REFLECTION_HEADER(Component_Definition);
 	REFLECTION_CLASS(Component_Definition, All) final

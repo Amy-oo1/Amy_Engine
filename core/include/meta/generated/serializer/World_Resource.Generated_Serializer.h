@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Common::World_Resource;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<World_Resource>(const World_Resource& Instance){
+        template<> inline const JSON Serializer::Write<World_Resource>(const World_Resource& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -33,7 +33,7 @@
             return Json_Context;
         }
 
-        template<> inline World_Resource& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<World_Resource>(const JSON& Json_Context, World_Resource &Instance){
+        template<> inline World_Resource& Serializer::Read<World_Resource>(const JSON& Json_Context, World_Resource &Instance){
             
 
                 Serializer::Read(Json_Context["Name"],Instance.m_Name);

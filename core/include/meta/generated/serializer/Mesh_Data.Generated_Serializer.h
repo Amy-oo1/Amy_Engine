@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Mesh_Vertex;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Mesh_Vertex>(const Mesh_Vertex& Instance){
+        template<> inline const JSON Serializer::Write<Mesh_Vertex>(const Mesh_Vertex& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -35,7 +35,7 @@
             return Json_Context;
         }
 
-        template<> inline Mesh_Vertex& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Mesh_Vertex>(const JSON& Json_Context, Mesh_Vertex &Instance){
+        template<> inline Mesh_Vertex& Serializer::Read<Mesh_Vertex>(const JSON& Json_Context, Mesh_Vertex &Instance){
             
 
                 Serializer::Read(Json_Context["Position"],Instance.m_Position);
@@ -60,7 +60,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Meah_SkeletonBinding;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Meah_SkeletonBinding>(const Meah_SkeletonBinding& Instance){
+        template<> inline const JSON Serializer::Write<Meah_SkeletonBinding>(const Meah_SkeletonBinding& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -71,7 +71,7 @@
             return Json_Context;
         }
 
-        template<> inline Meah_SkeletonBinding& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Meah_SkeletonBinding>(const JSON& Json_Context, Meah_SkeletonBinding &Instance){
+        template<> inline Meah_SkeletonBinding& Serializer::Read<Meah_SkeletonBinding>(const JSON& Json_Context, Meah_SkeletonBinding &Instance){
             
 
                 Serializer::Read(Json_Context["Bone_Indices"],Instance.m_Bone_Indices);
@@ -93,7 +93,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Mesh_Data;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Mesh_Data>(const Mesh_Data& Instance){
+        template<> inline const JSON Serializer::Write<Mesh_Data>(const Mesh_Data& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -105,7 +105,7 @@
             return Json_Context;
         }
 
-        template<> inline Mesh_Data& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Mesh_Data>(const JSON& Json_Context, Mesh_Data &Instance){
+        template<> inline Mesh_Data& Serializer::Read<Mesh_Data>(const JSON& Json_Context, Mesh_Data &Instance){
             
 
                 Serializer::Read(Json_Context["Vertices_buffer"],Instance.m_Vertices_buffer);

@@ -11,7 +11,7 @@
 
 #include "frame/components/Component.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Camera {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Camera {
 
 	using std::shared_ptr;
 	using std::weak_ptr;
@@ -42,8 +42,7 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_C
 		void Tick(float Delta_Time)override;
 
 	private:
-		META(Disable)
-		CAMERA_MODE m_Camera_Mode{ CAMERA_MODE::INVALID };
+		META(Disable) CAMERA_MODE m_Camera_Mode { CAMERA_MODE::INVALID };
 		shared_ptr<Camera_Resource> m_Camera_Resource{};
 
 		Vector3 m_Position{ Vector3::ZERO };
@@ -55,4 +54,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_C
 	};
 
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform

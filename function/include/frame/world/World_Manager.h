@@ -10,7 +10,7 @@
 #include "physics/Physics_Scene.h"
 #include "frame/level/Level.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_World {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_World {
 
 	using std::unordered_map;
 	using std::shared_ptr;
@@ -47,4 +47,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_World {
 		weak_ptr<Level> m_Current_Level;
 	};
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject

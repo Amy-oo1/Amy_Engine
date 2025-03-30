@@ -24,12 +24,12 @@
 
         using {{& Class_NameSpace}}::{{& Class_Spelling}};
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<{{& Class_Spelling}}>(const {{& Class_Spelling}}& Instance){
+        template<> inline const JSON Serializer::Write<{{& Class_Spelling}}>(const {{& Class_Spelling}}& Instance){
             JSON Json_Context { JSON::object() };
 
             {{#Class_Base_Class_Define_List}}
                 {{#Class_Base_Spelling_List}}
-                  // Json_Context["{{& Class_Base_Class_Spelling}}"]=Serializer::Write<{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}>(*static_cast<const {{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}*>(&Instance));
+                    Json_Context["{{& Class_Base_Class_Spelling}}"]=Serializer::Write<{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}>(*static_cast<const {{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}*>(&Instance));
                 {{/Class_Base_Spelling_List}}
             {{/Class_Base_Class_Define_List}}
 
@@ -40,10 +40,10 @@
             return Json_Context;
         }
 
-        template<> inline {{& Class_Spelling}}& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<{{& Class_Spelling}}>(const JSON& Json_Context, {{& Class_Spelling}} &Instance){
+        template<> inline {{& Class_Spelling}}& Serializer::Read<{{& Class_Spelling}}>(const JSON& Json_Context, {{& Class_Spelling}} &Instance){
             {{#Class_Base_Class_Define_List}}
                 {{#Class_Base_Spelling_List}}
-                  //  Serializer::Read(Json_Context["{{& Class_Base_Class_Spelling}}"],*static_cast<const {{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}*>(&Instance));
+                    Serializer::Read<{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}>(Json_Context["{{& Class_Base_Class_Spelling}}"],*static_cast<{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}}*>(&Instance));
                 {{/Class_Base_Spelling_List}}
             {{/Class_Base_Class_Define_List}}
 

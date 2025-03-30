@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Particle_Res;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Particle_Res>(const Particle_Res& Instance){
+        template<> inline const JSON Serializer::Write<Particle_Res>(const Particle_Res& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -37,7 +37,7 @@
             return Json_Context;
         }
 
-        template<> inline Particle_Res& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Particle_Res>(const JSON& Json_Context, Particle_Res &Instance){
+        template<> inline Particle_Res& Serializer::Read<Particle_Res>(const JSON& Json_Context, Particle_Res &Instance){
             
 
                 Serializer::Read(Json_Context["Local_Transform"],Instance.m_Local_Transform);

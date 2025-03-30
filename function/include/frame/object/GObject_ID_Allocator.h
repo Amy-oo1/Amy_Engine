@@ -4,7 +4,7 @@
 #include<limits>
 #include<atomic>
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	using GObject_ID = std::size_t;
 
@@ -26,4 +26,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
 
 	};
 
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject

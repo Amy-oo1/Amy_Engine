@@ -19,12 +19,12 @@
 
         using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-        using NameSpace_Function::Namespace_Frame::NameSpace_Components::NameSpace_Transform::Transform_Component;
+        using NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform::Transform_Component;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Transform_Component>(const Transform_Component& Instance){
+        template<> inline const JSON Serializer::Write<Transform_Component>(const Transform_Component& Instance){
             JSON Json_Context { JSON::object() };
 
-                  // Json_Context["Component"]=Serializer::Write<NameSpace_Function::Namespace_Frame::NameSpace_Components::Component>(*static_cast<const NameSpace_Function::Namespace_Frame::NameSpace_Components::Component*>(&Instance));
+                    Json_Context["Component"]=Serializer::Write<NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component>(*static_cast<const NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component*>(&Instance));
 
                 Json_Context["Transform"] = Serializer::Write(Instance.m_Transform);
                 Json_Context["Transform_Buffer"] = Serializer::Write(Instance.m_Transform_Buffer);
@@ -34,8 +34,8 @@
             return Json_Context;
         }
 
-        template<> inline Transform_Component& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Transform_Component>(const JSON& Json_Context, Transform_Component &Instance){
-                  //  Serializer::Read(Json_Context["Component"],*static_cast<const NameSpace_Function::Namespace_Frame::NameSpace_Components::Component*>(&Instance));
+        template<> inline Transform_Component& Serializer::Read<Transform_Component>(const JSON& Json_Context, Transform_Component &Instance){
+                    Serializer::Read<NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component>(Json_Context["Component"],*static_cast<NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component*>(&Instance));
 
                 Serializer::Read(Json_Context["Transform"],Instance.m_Transform);
                 Serializer::Read(Json_Context["Transform_Buffer"],Instance.m_Transform_Buffer);

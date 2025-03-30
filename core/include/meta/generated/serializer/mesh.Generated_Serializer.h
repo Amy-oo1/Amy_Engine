@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Mesh_Sub;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Mesh_Sub>(const Mesh_Sub& Instance){
+        template<> inline const JSON Serializer::Write<Mesh_Sub>(const Mesh_Sub& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -33,7 +33,7 @@
             return Json_Context;
         }
 
-        template<> inline Mesh_Sub& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Mesh_Sub>(const JSON& Json_Context, Mesh_Sub &Instance){
+        template<> inline Mesh_Sub& Serializer::Read<Mesh_Sub>(const JSON& Json_Context, Mesh_Sub &Instance){
             
 
                 Serializer::Read(Json_Context["Object_Path"],Instance.m_Object_Path);
@@ -56,7 +56,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Mesh;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Mesh>(const Mesh& Instance){
+        template<> inline const JSON Serializer::Write<Mesh>(const Mesh& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -66,7 +66,7 @@
             return Json_Context;
         }
 
-        template<> inline Mesh& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Mesh>(const JSON& Json_Context, Mesh &Instance){
+        template<> inline Mesh& Serializer::Read<Mesh>(const JSON& Json_Context, Mesh &Instance){
             
 
                 Serializer::Read(Json_Context["Meshes"],Instance.m_Meshes);

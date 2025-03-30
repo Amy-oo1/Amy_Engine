@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Bone_Blend_Weight;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Bone_Blend_Weight>(const Bone_Blend_Weight& Instance){
+        template<> inline const JSON Serializer::Write<Bone_Blend_Weight>(const Bone_Blend_Weight& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -31,7 +31,7 @@
             return Json_Context;
         }
 
-        template<> inline Bone_Blend_Weight& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Bone_Blend_Weight>(const JSON& Json_Context, Bone_Blend_Weight &Instance){
+        template<> inline Bone_Blend_Weight& Serializer::Read<Bone_Blend_Weight>(const JSON& Json_Context, Bone_Blend_Weight &Instance){
             
 
                 Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
@@ -52,7 +52,7 @@
 
         using NameSpace_Resource::NameSpace_Components::BlendState_With_Clip_Data;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<BlendState_With_Clip_Data>(const BlendState_With_Clip_Data& Instance){
+        template<> inline const JSON Serializer::Write<BlendState_With_Clip_Data>(const BlendState_With_Clip_Data& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -65,7 +65,7 @@
             return Json_Context;
         }
 
-        template<> inline BlendState_With_Clip_Data& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<BlendState_With_Clip_Data>(const JSON& Json_Context, BlendState_With_Clip_Data &Instance){
+        template<> inline BlendState_With_Clip_Data& Serializer::Read<BlendState_With_Clip_Data>(const JSON& Json_Context, BlendState_With_Clip_Data &Instance){
             
 
                 Serializer::Read(Json_Context["Blend_Clip"],Instance.m_Blend_Clip);
@@ -89,7 +89,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Blend_State;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Blend_State>(const Blend_State& Instance){
+        template<> inline const JSON Serializer::Write<Blend_State>(const Blend_State& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -104,7 +104,7 @@
             return Json_Context;
         }
 
-        template<> inline Blend_State& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Blend_State>(const JSON& Json_Context, Blend_State &Instance){
+        template<> inline Blend_State& Serializer::Read<Blend_State>(const JSON& Json_Context, Blend_State &Instance){
             
 
                 Serializer::Read(Json_Context["Blend_Clip_URL"],Instance.m_Blend_Clip_URL);

@@ -7,7 +7,7 @@
 
 #include "global/Global_Systemer.h"
 
-namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
+namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 	using NameSpace_Resource::NameSpace_Common::Reflection_Object_Definition_Operator;
@@ -88,4 +88,4 @@ namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject {
 
 		return true;
 	}
-}// namespace NameSpace_Function::Namespace_Frame::NameSpace_GObject
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject

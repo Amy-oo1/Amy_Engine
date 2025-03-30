@@ -21,7 +21,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Camera_Pose;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Camera_Pose>(const Camera_Pose& Instance){
+        template<> inline const JSON Serializer::Write<Camera_Pose>(const Camera_Pose& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -33,7 +33,7 @@
             return Json_Context;
         }
 
-        template<> inline Camera_Pose& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Camera_Pose>(const JSON& Json_Context, Camera_Pose &Instance){
+        template<> inline Camera_Pose& Serializer::Read<Camera_Pose>(const JSON& Json_Context, Camera_Pose &Instance){
             
 
                 Serializer::Read(Json_Context["Position"],Instance.m_Position);
@@ -56,7 +56,7 @@
 
         using NameSpace_Resource::NameSpace_Components::Camera_Config;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Camera_Config>(const Camera_Config& Instance){
+        template<> inline const JSON Serializer::Write<Camera_Config>(const Camera_Config& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -69,7 +69,7 @@
             return Json_Context;
         }
 
-        template<> inline Camera_Config& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Camera_Config>(const JSON& Json_Context, Camera_Config &Instance){
+        template<> inline Camera_Config& Serializer::Read<Camera_Config>(const JSON& Json_Context, Camera_Config &Instance){
             
 
                 Serializer::Read(Json_Context["M_Pose"],Instance.M_Pose);

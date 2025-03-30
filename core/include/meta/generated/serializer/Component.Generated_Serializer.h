@@ -19,14 +19,13 @@
 
         using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-        using NameSpace_Function::Namespace_Frame::NameSpace_Components::Component;
+        using NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component;
 
-        template<> inline const JSON NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Write<Component>(const Component& Instance){
+        template<> inline const JSON Serializer::Write<Component>(const Component& Instance){
             JSON Json_Context { JSON::object() };
 
             
 
-                Json_Context["Parent_GObject"] = Serializer::Write(Instance.m_Parent_GObject);
                 Json_Context["Is_Dirty"] = Serializer::Write(Instance.m_Is_Dirty);
                 Json_Context["Is_Scale_Dirty"] = Serializer::Write(Instance.m_Is_Scale_Dirty);
                 Json_Context["Tick_In_Editor_Mode"] = Serializer::Write(Instance.m_Tick_In_Editor_Mode);
@@ -34,10 +33,9 @@
             return Json_Context;
         }
 
-        template<> inline Component& NameSpace_Core::NameSpace_Meta::NameSpace_Serializer::Serializer::Read<Component>(const JSON& Json_Context, Component &Instance){
+        template<> inline Component& Serializer::Read<Component>(const JSON& Json_Context, Component &Instance){
             
 
-                Serializer::Read(Json_Context["Parent_GObject"],Instance.m_Parent_GObject);
                 Serializer::Read(Json_Context["Is_Dirty"],Instance.m_Is_Dirty);
                 Serializer::Read(Json_Context["Is_Scale_Dirty"],Instance.m_Is_Scale_Dirty);
                 Serializer::Read(Json_Context["Tick_In_Editor_Mode"],Instance.m_Tick_In_Editor_Mode);
