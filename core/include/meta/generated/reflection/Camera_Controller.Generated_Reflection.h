@@ -138,28 +138,28 @@ namespace NameSpace_Resource::NameSpace_Components{
 
         
 
-            static const string Get_M_Pose_Type_Spelling(void){
-                return string{"Camera_Pose"};
+            static const string Get_Pose_Type_Spelling(void){
+                return string{"shared_ptr<Camera_Pose>"};
             }
 
-            static const string Get_M_Pose_Spelling(void){
-                return string{"M_Pose"};
+            static const string Get_Pose_Spelling(void){
+                return string{"m_Pose"};
             }
 
 
-            static const string Get_M_Pose_Display_Name(void){
-                return string{"M_Pose"};
+            static const string Get_Pose_Display_Name(void){
+                return string{"Pose"};
             }
 
-            static const Camera_Pose& Get_M_Pose_Attribute(shared_ptr<Camera_Config> Instance){
-                return Instance->M_Pose;
+            static const shared_ptr<Camera_Pose>& Get_Pose_Attribute(shared_ptr<Camera_Config> Instance){
+                return Instance->m_Pose;
             }
 
-            static void Set_Field_M_Pose_Attribute(shared_ptr<Camera_Config> Instance, const Camera_Pose& Value){
-                Instance->M_Pose=Value;
+            static void Set_Field_Pose_Attribute(shared_ptr<Camera_Config> Instance, const shared_ptr<Camera_Pose>& Value){
+                Instance->m_Pose=Value;
             }
 
-            static const bool Is_Filed_M_Pose_CPPVector(void){
+            static const bool Is_Filed_Pose_CPPVector(void){
                 return  false;
             }
 

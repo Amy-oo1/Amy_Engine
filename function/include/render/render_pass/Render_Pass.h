@@ -116,7 +116,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		virtual ~Render_Pass(void) = default;
 
 	public:
-		static Visiable_Node s_Visable_Node;
+		static inline Visiable_Node s_Visable_Node{};
 
 
 	public://TODO : 

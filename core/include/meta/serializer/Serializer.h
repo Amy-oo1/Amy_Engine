@@ -366,10 +366,10 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 
 	template<> inline const JSON Serializer::Write<Color>(const Color& Instance) {
 		return JSON{
-			{"Red", Serializer::Write<float>(Instance.Get_R()) },
-			{"Green", Serializer::Write<float>(Instance.Get_G()) },
-			{"Blue", Serializer::Write<float>(Instance.Get_B()) },
-			{"Alpha", Serializer::Write<float>(Instance.Get_A())}
+			{"R", Serializer::Write<float>(Instance.Get_R()) },
+			{"Gr", Serializer::Write<float>(Instance.Get_G()) },
+			{"B", Serializer::Write<float>(Instance.Get_B()) },
+			{"A", Serializer::Write<float>(Instance.Get_A())}
 		};
 	}
 
@@ -656,10 +656,10 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 			float Temp_B{};
 			float Temp_A{};
 			return Instance = Color{
-				Serializer::Read<float>(Json_Context["Red"], Temp_R),
-				Serializer::Read<float>(Json_Context["Green"], Temp_G),
-				Serializer::Read<float>(Json_Context["Blue"], Temp_B),
-				Serializer::Read<float>(Json_Context["Alpha"], Temp_A)
+				Serializer::Read<float>(Json_Context["R"], Temp_R),
+				Serializer::Read<float>(Json_Context["G"], Temp_G),
+				Serializer::Read<float>(Json_Context["B"], Temp_B),
+				Serializer::Read<float>(Json_Context["A"], Temp_A)
 			};
 		}
 	}

@@ -61,7 +61,7 @@
 
             
 
-                Json_Context["M_Pose"] = Serializer::Write(Instance.M_Pose);
+                Json_Context["Pose"] = Serializer::Write(Instance.m_Pose);
                 Json_Context["Aspect"] = Serializer::Write(Instance.m_Aspect);
                 Json_Context["Z_Near"] = Serializer::Write(Instance.m_Z_Near);
                 Json_Context["Z_Far"] = Serializer::Write(Instance.m_Z_Far);
@@ -72,7 +72,7 @@
         template<> inline Camera_Config& Serializer::Read<Camera_Config>(const JSON& Json_Context, Camera_Config &Instance){
             
 
-                Serializer::Read(Json_Context["M_Pose"],Instance.M_Pose);
+                Serializer::Read(Json_Context["Pose"],Instance.m_Pose);
                 Serializer::Read(Json_Context["Aspect"],Instance.m_Aspect);
                 Serializer::Read(Json_Context["Z_Near"],Instance.m_Z_Near);
                 Serializer::Read(Json_Context["Z_Far"],Instance.m_Z_Far);

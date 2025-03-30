@@ -18,7 +18,7 @@ namespace NameSpace_Function::NameSpace_Particle {
 	using NameSpace_Resource::NameSpace_Global::Reflection_Global_Particle_Operator;
 
 	Particle_Manager::Particle_Manager(void)
-		/*:m_Global_Particle{ Resource_Manager::Get_Instance().Load<Global_Particle>(Resource_Configer::Get_Instance().Get_Global_Particle_Resource_URL()) }*/ {
+		:m_Global_Particle{ Resource_Manager::Load<Global_Particle>(Resource_Configer::Get_Instance().Get_Global_Particle_Resource_URL()) } {
 
 		if (0 > Reflection_Global_Particle_Operator::Get_Emit_Count_Attribute(this->m_Global_Particle)) {
 			Reflection_Global_Particle_Operator::Set_Field_Emit_Count_Attribute(this->m_Global_Particle, Particle_Config::Default_Particle_Emitter_Count);
@@ -52,7 +52,7 @@ namespace NameSpace_Function::NameSpace_Particle {
 	}
 
 	Particle_Manager& Particle_Manager::Get_Instance(void) {
-		static Particle_Manager Instance;
+		static Particle_Manager Instance{};
 
 		return Instance;
 	}

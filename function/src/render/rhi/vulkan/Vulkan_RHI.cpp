@@ -97,15 +97,29 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 	Vulkan_RHI::~Vulkan_RHI() {
 		//TODO : Destroy All Vulkan Resource
-
+		for (auto& Fence : this->m_InFlight_RHI_Fences)
+			Fence.reset();
+		for (auto& Sem : this->m_Image_Available_For_TeCopy_RHI_Semaphores)
+			Sem.reset();
+		for (auto& Sem : this->m_Image_Finished_For_Present_RHI_Semaphores)
+			Sem.reset();
+		for (auto& Sem : this->m_Image_available_For_Render_RHI_Semaphores)
+			Sem.reset();
+		this->m_Linear_RHI_Sampler.reset();
+		this->m_Nearest_RHI_Sampler.reset();
+		this->m_Default_RHI_Descriptor_Pool.reset();
+		for (auto& Command_Buffer : this->m_RHI_Command_Buffers)
+			Command_Buffer.reset();
 		for (auto& Command_Pool : this->m_RHI_Command_Pools)
 			Command_Pool.reset();
 		this->m_Default_RHI_Command_Pool.reset();
-
+		vmaDestroyAllocator(this->m_VMA_Allocator);
 		this->m_RHI_Logical_Device.reset();
-
+		this->m_RHI_Physical_Device.reset();
 		this->m_VK_Surface.reset();
-
+#ifdef _DEBUG
+		vkDestroyDebugUtilsMessengerEXT(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), this->m_Debug_Messenger, this->m_Allocator.get());
+#endif // _DEBUG
 		this->m_RHI_Instance.reset();
 	}
 
@@ -194,12 +208,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->m_VK_Surface.reset(Surface);
 	}
 
-
-
-
-
-
-
 	size_t Vulkan_RHI::Get_API_Version(void) const {
 		return NameSpace_Config::API_Verssion;
 	}
@@ -283,7 +291,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 			this->m_VK_Pipeline_Cache_Deleter = [Device, pAllocator](VkPipelineCache Pipeline_Cache) {if (nullptr != Pipeline_Cache) vkDestroyPipelineCache(Device, Pipeline_Cache, pAllocator); };
 
-
 			this->m_VK_Pipeline_Layout_Deleter = [Device, pAllocator](VkPipelineLayout Pipeline_Layout) {if (nullptr != Pipeline_Layout) vkDestroyPipelineLayout(Device, Pipeline_Layout, pAllocator); };
 
 		}
@@ -304,14 +311,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 			this->m_Vk_SwapChain.get_deleter() = this->m_VK_SwapChain_Deleter;
 
-			for (auto& Image_View : this->m_SwapChain_Image_Views)
-				Image_View.get_deleter() = this->m_VK_Image_View_Deleter;
-
 			{
 				static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
 				static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
 			}
 
+			static_cast<Vulkan_Image*>(this->m_SwapChain_Depth_RHI_Image.get())->Set_Deleter(this->m_VK_Image_Deleter);
+			static_cast<Vulkan_Device_Memory*>(this->m_SwapChain_Depth_RHI_Device_Memory.get())->Set_Deleter(this->m_VK_Device_Memory_Deleter);
+			static_cast<Vulkan_Image_View*>(this->m_SwapChain_Depth_RHI_Image_View.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
 		}
 	}
 
@@ -416,6 +423,48 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkCreateSampler(this->m_Logical_VK_Device, &Sampler_Create_Info, this->m_Allocator.get(), &Sampler));
 		//static_cast<Vulkan_Sampler*>(this->m_Linear_RHI_Sampler.get())->Set_Deleter(this->m_VK_Sampler_Deleter);
 		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
+	}
+
+	void Vulkan_RHI::Create_SwapChain_Depth_Image(void) {
+		VkImage VK_Image{};
+		VkDeviceMemory VK_Device_Memory{};
+		NameSpace_Utilities::Create_Image(
+			this->m_VK_Physical_Device,
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			VkExtent2D{ this->m_SwapChain_Extent.width,this->m_SwapChain_Extent.height },
+			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
+			1,
+			1,
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+			0,
+			VK_Image,
+			VK_Device_Memory
+		);
+
+		static_cast<Vulkan_Image*>(this->m_SwapChain_Depth_RHI_Image.get())->Reset(VK_Image);
+		static_cast<Vulkan_Device_Memory*>(this->m_SwapChain_Depth_RHI_Device_Memory.get())->Reset(VK_Device_Memory);
+
+		static_cast<Vulkan_Image_View*>(this->m_SwapChain_Depth_RHI_Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			VK_Image,
+			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
+			1,
+			VK_IMAGE_ASPECT_DEPTH_BIT,
+			VK_IMAGE_VIEW_TYPE_2D,
+			1
+		));
+	}
+
+	void Vulkan_RHI::Clear_SwapChain(void) {
+		this->m_Vk_SwapChain.reset();
+		this->m_SwapChain_RHI_Images.clear();
+		this->m_SwapChain_Depth_RHI_Image.reset();
+		this->m_SwapChain_Depth_RHI_Device_Memory.reset();
+		this->m_SwapChain_Depth_RHI_Image_View.reset();
 	}
 
 	//Static Func
@@ -657,7 +706,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			return Actual_Extent;
 		}
 	}
-
 
 	const optional<VkWriteDescriptorSet> Vulkan_RHI::S_Parser_RHI_Write_Descriptor_Set(const RHI_Write_Descriptor_Set* Write_Descriptor_Set, optional<vector<VkDescriptorImageInfo>>& Image_Infos, optional<vector<VkDescriptorBufferInfo>>& Buffer_Infos, optional<vector<VkBufferView>>& vk_Buffer_Views) {
 		if (nullptr == Write_Descriptor_Set)
@@ -1135,7 +1183,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_optional(vk_Pipeline_Dynamic_State_Create_Info);
 	}
 
-
 	//NOTE : Override Func
 	void Vulkan_RHI::Create_Instance(void) {
 		if (nullptr != static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get())
@@ -1596,9 +1643,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkCreateSwapchainKHR(this->m_Logical_VK_Device, &Swap_Chain_Create_Info, nullptr, &SwapChain));
 		this->m_Vk_SwapChain.reset(SwapChain);
 
-		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device, this->m_Vk_SwapChain.get(), &Image_Count, nullptr));
-		this->m_SwapChain_VK_Images.resize(Image_Count);
-		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device, this->m_Vk_SwapChain.get(), &Image_Count, this->m_SwapChain_VK_Images.data()));
+		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device, this->m_Vk_SwapChain.get(), &this->m_SwapChain_Image_Count, nullptr));
+		if (Image_Count != this->m_SwapChain_Image_Count)
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "Image Creat Count has bug");
+
+		this->m_SwapChain_VK_Images.resize(m_SwapChain_Image_Count);
+		THROW_IF_VK_FAILED(vkGetSwapchainImagesKHR(this->m_Logical_VK_Device, this->m_Vk_SwapChain.get(), &this->m_SwapChain_Image_Count, this->m_SwapChain_VK_Images.data()));
+		for (auto& SwapChain_VK_Image : this->m_SwapChain_VK_Images) {
+			this->m_SwapChain_RHI_Images.emplace_back(std::make_unique<Vulkan_Image>());
+			auto& Current_It = this->m_SwapChain_RHI_Images.back();
+			static_cast<Vulkan_Image*>(Current_It.get())->Set_Deleter(this->m_VK_Image_Deleter);
+			static_cast<Vulkan_Image*>(Current_It.get())->Reset(SwapChain_VK_Image);
+		}
 
 		//NOTE : Refence SwapChain Info
 		{
@@ -1609,21 +1665,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	void Vulkan_RHI::Create_SwapChhain_Image_Views(void) {
-		this->m_SwapChain_Image_Views.resize(this->m_SwapChain_VK_Images.size());
-		for (size_t Index = 0; Index < this->m_SwapChain_VK_Images.size(); ++Index) {
-
-			VkImageView Image_View{ NameSpace_Utilities::Create_Image_View(
+		this->m_SwapChain_VK_Image_Views.resize(this->m_SwapChain_Image_Count);
+		for (size_t Index = 0; Index < this->m_SwapChain_Image_Count; ++Index) {
+			this->m_SwapChain_VK_Image_Views[Index] = NameSpace_Utilities::Create_Image_View(
 				this->m_Logical_VK_Device,
 				this->m_Allocator.get(),
 				this->m_SwapChain_VK_Images[Index],
 				this->m_SwapChain_Image_Format,
 				1,
-					VK_IMAGE_ASPECT_COLOR_BIT,
+				VK_IMAGE_ASPECT_COLOR_BIT,
 				VK_IMAGE_VIEW_TYPE_2D,
-				1)
-			};
+				1
+			);
 
-			this->m_SwapChain_Image_Views[Index].reset(Image_View);
+			this->m_SwapChain_RHI_Image_Views.emplace_back(std::make_unique<Vulkan_Image_View>());
+			auto& Current_It = this->m_SwapChain_RHI_Image_Views.back();
+			static_cast<Vulkan_Image_View*>(Current_It.get())->Set_Deleter(this->m_VK_Image_View_Deleter);
+			static_cast<Vulkan_Image_View*>(Current_It.get())->Reset(this->m_SwapChain_VK_Image_Views[Index]);
 		}
 	}
 
@@ -2509,9 +2567,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
-
-
-	void Vulkan_RHI::Run(void) {
+	void Vulkan_RHI::Initialize(void) {
 		this->Create_Allocator();
 		this->Create_Instance();
 		this->Create_Surface();
@@ -2525,18 +2581,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->Create_Sync_Primitices();
 		this->Create_SwapChain();
 		this->Create_SwapChhain_Image_Views();
-		//TODO : Add SwapChain Image Depth Image View
+		this->Create_SwapChain_Depth_Image();
 	}
 
 	void Vulkan_RHI::Re_Create_SwapChain(void)
 	{
 	}
-
-
-
-
-
-
 
 
 	bool Vulkan_RHI::Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) {
@@ -2552,18 +2602,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		return true;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 	const optional<VkClearValue> Vulkan_RHI::Parser_RHI_Clear_Value(const RHI_Clear_Value* Clear_Value) {
 		if (nullptr == Clear_Value)
@@ -2603,11 +2641,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_optional(vk_Clear_Value);
 	}
 
-
-
-
-
-
 	unique_ptr<RHI_Pipeline> Vulkan_RHI::Create_Compute_Pipeline(optional<RHI_Pipeline_Cache*> Pipeline_Cache, const RHI_Compute_Pipeline_Create_Info* pCreateInfos) {
 		vector<optional<vector<VkSpecializationMapEntry>>> vk_Specialization_Map_Entryss{};
 		vector<optional<VkSpecializationInfo>> vk_Specialization_Infos{};
@@ -2636,10 +2669,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		return Pipeline;
 	}
-
-
-
-
 
 
 	bool Vulkan_RHI::Wait_For_Fences_PFN(const vector<RHI_Fence*> Fences, RHI_Bool32 Wait_All, uint64_t Time_Out) {

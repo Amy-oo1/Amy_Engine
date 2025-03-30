@@ -132,6 +132,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Create_Nearest_Sampler(void);
 		void Create_Linear_Sampler(void);
 
+		void Create_SwapChain_Depth_Image(void);
+		void Clear_SwapChain(void);
+
 		//TODO : Static Public Func
 	public:
 		[[nodiscard]] static const vector<const char*> S_Get_Instance_Extensions_Require(void);
@@ -379,18 +382,27 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		Swap_Chain_Support_Details m_Swap_Chain_Support_Details{};
 
+		//TODO: Sync Window Fields
+		VkFormat m_SwapChain_Image_Format{};
+		VkExtent2D m_SwapChain_Extent{};
+		uint32_t m_SwapChain_Image_Count{ std::numeric_limits<uint32_t>::max() };
+
+		unique_ptr<VkSwapchainKHR_T, decltype(m_VK_SwapChain_Deleter)> m_Vk_SwapChain{ nullptr };
+
+		vector<VkImage> m_SwapChain_VK_Images{};
+		vector<unique_ptr<RHI_Image>> m_SwapChain_RHI_Images{};
+		
+		vector<VkImageView> m_SwapChain_VK_Image_Views{};
+		vector<unique_ptr<RHI_Image_View>> m_SwapChain_RHI_Image_Views{};
+
+		unique_ptr<RHI_Image> m_SwapChain_Depth_RHI_Image{ std::make_unique<Vulkan_Image>() };
+		unique_ptr<RHI_Device_Memory> m_SwapChain_Depth_RHI_Device_Memory{ std::make_unique<Vulkan_Device_Memory>() };
+		unique_ptr<RHI_Image_View> m_SwapChain_Depth_RHI_Image_View{ std::make_unique<Vulkan_Image_View>() };
+
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_available_For_Render_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Finished_For_Present_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Available_For_TeCopy_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Fence>, s_Frames_In_Flight> m_InFlight_RHI_Fences{ std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>() };
-
-		unique_ptr<VkSwapchainKHR_T, decltype(m_VK_SwapChain_Deleter)> m_Vk_SwapChain{ nullptr };
-		vector<unique_ptr<VkImageView_T, decltype(m_VK_Image_View_Deleter)>> m_SwapChain_Image_Views{};
-
-		//TODO: Sync Window Fields
-		vector<VkImage> m_SwapChain_VK_Images{};
-		VkFormat m_SwapChain_Image_Format{};
-		VkExtent2D m_SwapChain_Extent{};
 
 		//TODO : Override Func
 	public:
@@ -601,10 +613,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Create_Sync_Primitices(void)override;
 
-
-
-
-		void Run(void) override;
+		void Initialize(void) override;
 
 		void Re_Create_SwapChain(void) override;
 

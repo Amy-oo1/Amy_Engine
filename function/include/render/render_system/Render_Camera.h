@@ -24,6 +24,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	struct Render_Camera {
+	private:
+		Render_Camera(const Render_Camera&) = delete;
+		Render_Camera& operator=(const Render_Camera&) = delete;
+
+	public:
+		Render_Camera(void) = default;
+
+		~Render_Camera(void) = default;
+
 	public:
 		RENDER_CAMERA_TYPE m_Camera_Type{ RENDER_CAMERA_TYPE::EDITOR };
 
@@ -54,7 +63,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		void Zoom(float Offset);
 		void Look_At(const Vector3& Postion, const Vector3& Target, const Vector3& Up);
 
-		void Set_Aspect(float Aspect);
+		void Set_Z_Near(float Z_Near);
+		void Set_Z_Far(float Z_Far);
+
+		void Set_Aspect(const Vector2& Aspect);
 		void Set_FOV_X(float FOV);
 
 		const Vector3 Get_Position(void) const;
@@ -68,6 +80,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		const Matrix4x4 Get_Look_At_Matrix(void) const;
 		float Get_FOV_Deprecated(void) const;
 
+		
 	protected:
 		float m_Aspect{ 0.f };
 		float m_FOV_X{ 89.f };

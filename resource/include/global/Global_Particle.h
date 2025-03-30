@@ -20,15 +20,15 @@ namespace NameSpace_Resource::NameSpace_Global {
 		~Global_Particle(void) = default;
 
 	private:
-		int  m_Emit_Gap;
-		int m_Emit_Count;
-		int m_Time_Step;
-		float m_Max_Life;
+		int m_Emit_Gap{};
+		int m_Emit_Count{};
+		int m_Time_Step{};
+		float m_Max_Life{};
 
 		Vector3 m_Gravity{ 0.0f, -9.8f, 0.0f };
 
-		path m_Particle_Billboard_Image_URL;
-		path m_Logo_Image_URL;
+		path m_Particle_Billboard_Image_URL{};
+		path m_Logo_Image_URL{};
 
 	};
 

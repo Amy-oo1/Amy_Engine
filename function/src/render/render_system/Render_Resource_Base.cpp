@@ -10,7 +10,7 @@
 
 #include "logger/System_Logger.h"
 
-#include "global/Global_Systemer.h"
+#include "manage/Resource_Manager.h"
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
 
@@ -20,7 +20,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
-	using Namespace_Global::Global_Systemer;
+	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
 
 	using NameSpace_RHI::RHI_FORMAT;
 
@@ -31,8 +31,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		void* Pixels = nullptr;
 		int width{}, height{}, channels{};
-		Pixels = stbi_loadf(Global_Systemer::Get_Instance().Resource_Manager.URL_To_File_Full_Path(Texture_URL), &width, &height, &channels, desired_Channels);
-		if (nullptr == Texture->Pixels)
+		Pixels = stbi_loadf(Resource_Manager::URL_To_File_Full_Path(Texture_URL).generic_string().c_str(), &width, &height, &channels, desired_Channels);
+		if (nullptr == Pixels)
 			return nullptr;
 
 		Texture->Pixels.reset(Pixels);
@@ -54,9 +54,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			break;
 		}
 
-		Texture->Depth = 1;
+		//NOTE : Default
+		/*Texture->Depth = 1;
 		Texture->Array_Layes = 1;
-		Texture->Mip_Levels = 1;
+		Texture->Mip_Levels = 1;*/
 
 		return Texture;
 	}
@@ -68,7 +69,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		void* Pixels = nullptr;
 		int width{}, height{}, channels{};
-		Pixels = stbi_load(Global_Systemer::Get_Instance().Resource_Manager.URL_To_File_Full_Path(Texture_URL), &width, &height, &channels, 4);
+		Pixels = stbi_load(Resource_Manager::URL_To_File_Full_Path(Texture_URL).generic_string().c_str(), &width, &height, &channels, 4);
 
 		if (nullptr == Texture->Pixels)
 			return nullptr;
@@ -105,7 +106,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		tinyobj::ObjReaderConfig Reader_Config{};
 		Reader_Config.vertex_color = false;
 
-		if (false == Reader.ParseFromFile(Global_Systemer::Get_Instance().Resource_Manager.URL_To_File_Full_Path(Mesh_URL), Reader_Config)) {
+		if (false == Reader.ParseFromFile(Resource_Manager::URL_To_File_Full_Path(Mesh_URL).generic_string().c_str(), Reader_Config)) {
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failed to load mesh: " + Mesh_URL.string());
 
 			throw runtime_error("Failed to load mesh");

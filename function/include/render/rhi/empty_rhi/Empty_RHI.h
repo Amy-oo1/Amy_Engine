@@ -251,7 +251,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void Create_Sync_Primitices(void) = 0;
 
-		virtual void Run(void) = 0;
+		virtual void Initialize(void) = 0;
 
 		virtual void Re_Create_SwapChain(void) = 0;
 

@@ -1,6 +1,7 @@
 #include "render/render_system/Render_Resource.h"
 
 #include<tuple>
+#include<cmath>
 #include<utility>
 
 #include "logger/System_Logger.h"
@@ -54,28 +55,26 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		auto PhySical_Device_ProPerties{ Ref_Vulkan_RHI->Get_Physical_Device_Properties() };
 
-		uint32_t Frames_In_Flight{ Vulkan_RHI::s_Frames_In_Flight };
-
 		//NOTE : Global_Upload Storage Buffer
 		auto& Ref_Stroage_Buffer{ this->m_Global_Render_Resource.Storage_Buffer };
 
 		Ref_Stroage_Buffer.Min_Uniform_Buffer_Offset_Alignment = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.minUniformBufferOffsetAlignment);
 		Ref_Stroage_Buffer.Min_Storage_Buffer_Offset_Alignment = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.minStorageBufferOffsetAlignment);
-		Ref_Stroage_Buffer.Max_Storage_Buffer_Range = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.maxStorageBufferRange);
+		//Ref_Stroage_Buffer.Max_Storage_Buffer_Range = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.maxStorageBufferRange);
 		Ref_Stroage_Buffer.Non_Coherent_Atom_Size = static_cast<uint32_t>(PhySical_Device_ProPerties.Limits.nonCoherentAtomSize);
 
 		std::tie(Ref_Stroage_Buffer.Global_Upload_Ring_Buffer, Ref_Stroage_Buffer.Global_Upload_Ring_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
-			Ref_Stroage_Buffer.Max_Storage_Buffer_Range,//NOTE : Set Max Size
-			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT),
+			1024 * 1024 * 128,//Ref_Stroage_Buffer.Max_Storage_Buffer_Range,//Do NOTE : Set Max Size
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT),
 			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 
-		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin.resize(Ref_Stroage_Buffer.Max_Storage_Buffer_Range);
-		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_End.resize(Ref_Stroage_Buffer.Max_Storage_Buffer_Range);
-		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Size.resize(Ref_Stroage_Buffer.Max_Storage_Buffer_Range);
-		for (uint32_t Index = 0; Index < Frames_In_Flight; ++Index) {
-			Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin[Index] = (Ref_Stroage_Buffer.Max_Storage_Buffer_Range * Index) / Ref_Stroage_Buffer.Max_Storage_Buffer_Range;
-			Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_End[Index] = (Ref_Stroage_Buffer.Max_Storage_Buffer_Range * (Index + 1)) / Ref_Stroage_Buffer.Max_Storage_Buffer_Range;
+		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin.resize(Vulkan_RHI::s_Frames_In_Flight);
+		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_End.resize(Vulkan_RHI::s_Frames_In_Flight);
+		Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Size.resize(Vulkan_RHI::s_Frames_In_Flight);
+		for (uint32_t Index = 0; Index < Vulkan_RHI::s_Frames_In_Flight; ++Index) {
+			Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin[Index] = (Ref_Stroage_Buffer.Max_Storage_Buffer_Range * Index) / Vulkan_RHI::s_Frames_In_Flight;
+			Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_End[Index] = (Ref_Stroage_Buffer.Max_Storage_Buffer_Range * (Index + 1)) / Vulkan_RHI::s_Frames_In_Flight;
 			Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Size[Index] = Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_End[Index] - Ref_Stroage_Buffer.Global_Upload_Ring_Buffers_Begin[Index];
 		}
 
@@ -89,7 +88,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		//NOTE : Null Descriptor Storage Buffer
 		std::tie(Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer, Ref_Stroage_Buffer.Global_Null_Descriptor_Storage_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Global_Null_Descriptor_Buffer_Size,
-			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT),
+			RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 	}
@@ -144,7 +143,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Sampler_Create_Info.Compare_Enable = RHI_FALSE;
 			Sampler_Create_Info.Compare_Op = RHI_COMPARE_OP::RHI_COMPARE_OP_ALWAYS;
 			Sampler_Create_Info.Min_Lod = 0.f;
-			Sampler_Create_Info.Max_Lod = 0.f;
+			Sampler_Create_Info.Max_Lod = RHI_WHOLE_SIZE;
 			Sampler_Create_Info.Border_Color = RHI_BORDER_COLOR::RHI_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
 			Sampler_Create_Info.Unnormalized_Coordinates = RHI_FALSE;
 		}
@@ -170,17 +169,21 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
 		auto& Ref_IBL_Resource{ this->m_Global_Render_Resource.IBL_Resource };
 
+		const uint32_t Irradiance_Mip_Levels{ static_cast<uint32_t>(std::floor(log2(std::max(Irradiance_Maps[0]->Width, Irradiance_Maps[0]->Height)))) + 1 };
+
 		std::tie(Ref_IBL_Resource.Irradiance_Map_Image, Ref_IBL_Resource.Irradiance_Map_Image_View, Ref_IBL_Resource.Irradiance_Map_Image_Allocation) = Ref_Vulkan_RHI->Create_Cube_Map(
 			{ Irradiance_Maps[0]->Width, Irradiance_Maps[0]->Height },
 			Irradiance_Maps[0]->Format,
-			Irradiance_Maps[0]->Mip_Levels,
+			Irradiance_Mip_Levels,
 			{ Irradiance_Maps[0]->Pixels.get(), Irradiance_Maps[1]->Pixels.get(), Irradiance_Maps[2]->Pixels.get(), Irradiance_Maps[3]->Pixels.get(), Irradiance_Maps[4]->Pixels.get(), Irradiance_Maps[5]->Pixels.get() }
 		);
+
+		const uint32_t Specular_Mip_Levels{ static_cast<uint32_t>(std::floor(log2(std::max(Specular_Maps[0]->Width, Specular_Maps[0]->Height)))) + 1 };
 
 		std::tie(Ref_IBL_Resource.Specular_Map_Image, Ref_IBL_Resource.Specular_Map_Image_View, Ref_IBL_Resource.Specular_Map_Image_Allocation) = Ref_Vulkan_RHI->Create_Cube_Map(
 			{ Specular_Maps[0]->Width, Specular_Maps[0]->Height },
 			Specular_Maps[0]->Format,
-			Specular_Maps[0]->Mip_Levels,
+			Specular_Mip_Levels,
 			{ Specular_Maps[0]->Pixels.get(), Specular_Maps[1]->Pixels.get(), Specular_Maps[2]->Pixels.get(), Specular_Maps[3]->Pixels.get(), Specular_Maps[4]->Pixels.get(), Specular_Maps[5]->Pixels.get() }
 		);
 
@@ -1043,7 +1046,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		std::tie(this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image, this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_View, this->m_Global_Render_Resource.IBL_Resource.BUDF_LUT_Image_Allocation) = RHI->Create_Global_Image(
 			{ Ref_BDRF_LUT->Width,Ref_BDRF_LUT->Height },
 			Ref_BDRF_LUT->Format,
-			0,
+			Ref_BDRF_LUT->Mip_Levels,
 			Ref_BDRF_LUT->Pixels.get()
 		);
 
@@ -1056,7 +1059,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		std::tie(this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image, this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_View, this->m_Global_Render_Resource.Color_Grading_Resource.Color_Grading_Image_Allocation) = RHI->Create_Global_Image(
 			{ Ref_Color_Grading_Map->Width,Ref_Color_Grading_Map->Height },
 			Ref_Color_Grading_Map->Format,
-			0,
+			Ref_Color_Grading_Map->Mip_Levels,
 			Ref_Color_Grading_Map->Pixels.get()
 		);
 	}

@@ -104,10 +104,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	struct Storage_Buffer final {
-		uint32_t Min_Uniform_Buffer_Offset_Alignment{ 256 };
-		uint32_t Min_Storage_Buffer_Offset_Alignment{ 256 };
+		uint32_t Min_Uniform_Buffer_Offset_Alignment{ 256 };//NOTE : HOST 64
+		uint32_t Min_Storage_Buffer_Offset_Alignment{ 256 };//NOTE : HOST 16
 		uint32_t Max_Storage_Buffer_Range{ 1 << 27 };//NOTE : Default 128MB
-		uint32_t Non_Coherent_Atom_Size{ 256 };
+		uint32_t Non_Coherent_Atom_Size{ 256 };//NOTE : HOST  64
 
 		unique_ptr<RHI_Buffer> Global_Upload_Ring_Buffer;
 		unique_ptr<RHI_Device_Memory> Global_Upload_Ring_Buffer_Memory;
@@ -116,11 +116,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		vector<uint32_t> Global_Upload_Ring_Buffers_End;
 		vector<uint32_t> Global_Upload_Ring_Buffers_Size;
 
-		static constexpr uint32_t Global_Null_Descriptor_Buffer_Size{ sizeof(Axis_Storage_Buffer_Object) };//NOTE : 256B
+		static constexpr uint32_t Global_Null_Descriptor_Buffer_Size{ 64 };//NOTE : 256B
 		unique_ptr<RHI_Buffer> Global_Null_Descriptor_Storage_Buffer;
 		unique_ptr<RHI_Device_Memory> Global_Null_Descriptor_Storage_Buffer_Memory;
 
-		static constexpr uint32_t Axis_Storage_Buffer_Size{ 64 };//NOTE : 256B
+		static constexpr uint32_t Axis_Storage_Buffer_Size{ sizeof(Axis_Storage_Buffer_Object) };//NOTE : 256B
 		unique_ptr<RHI_Buffer> Axis_Inefficient_Strogae_Buffer;
 		unique_ptr<RHI_Device_Memory> Axis_Inefficient_Strogae_Buffer_Memory;
 		void* Axis_Inefficient_Strogae_Buffer_Mapped_Memory;
@@ -135,6 +135,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	class Render_Resource final :public Render_Resource_Base {
+	private:
+		Render_Resource(const Render_Resource&) = delete;
+		Render_Resource& operator=(const Render_Resource&) = delete;
+
+	public:
+		Render_Resource(void) = default;
+
+		~Render_Resource(void) = default;
+
+
 	private:
 		void Create_Storge_Buffer(shared_ptr<Empty_RHI> RHI);
 

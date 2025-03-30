@@ -1,8 +1,17 @@
 #pragma once
 
+#include<cstdint>
 #include<memory>
 
+#include "render/rhi/empty_rhi/Empty_RHI.h"
 #include "render/window/Window_System.h"
+
+#include "render/render_system/Render_Swap_Context.h"
+
+#include "render/render_system/Render_Resource_Base.h"
+#include "render/render_system/Render_Camera.h"
+#include "render/render_system/Render_Scene.h"
+#include "render/render_system/Render_Pipeline_Base.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
@@ -16,9 +25,36 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 
 	class Render_System final {
+	public:
+		enum class RENDER_PIPELINE_TYPE :uint32_t {
+			FORWARD_PIPELINE = 0,
+			DEFERRED_PIPELINE,
+			PIPELINE_TYPE_COUNT
+		};
+
+
 	private:
+		Render_System(void) = delete;
+
 		Render_System(const Render_System&) = delete;
 		Render_System& operator=(const Render_System&) = delete;
+
+	public:
+		Render_System(const Render_System_Initialization_Info& Initialization_Info);
+
+		~Render_System(void) = default;
+		void Render(void);
+
+
+	private:
+		//NOTE: WIndow_Sync RHI Window
+		shared_ptr<Window_System> m_Window_System{ nullptr };
+		shared_ptr<NameSpace_RHI::Empty_RHI> m_RHI{ nullptr };
+
+		shared_ptr<Render_Resource_Base> m_Render_Resource{ nullptr };
+		shared_ptr<Render_Camera> m_Render_Camera{ nullptr };
+		shared_ptr<Render_Scene> m_Render_Scene{ nullptr };
+		shared_ptr<Render_Pipeline_Base> m_Render_Pipeline{ nullptr };
 
 	};
 

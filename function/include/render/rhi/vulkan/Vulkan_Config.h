@@ -2,6 +2,9 @@
 
 #include<cstdint>
 
+#define VMA_IMPLEMENTATION
+#include "vma/vk_mem_alloc.h"
+
 namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_RHI::NameSpace_Config {
 
 	constexpr const char* Vulkan_Layer_Path{ "D:/Amy_Engine/third_party/VulkanSDK/1.4.309.0/Bin" };

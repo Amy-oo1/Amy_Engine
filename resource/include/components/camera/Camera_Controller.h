@@ -1,11 +1,15 @@
 #pragma once
 
+#include<memory>
+
 #include "meta/reflection/Reflection_Macro.h"
 
 #include "math/Vector2.h"
 #include "math/Vector3.h"
 
 namespace NameSpace_Resource::NameSpace_Components {
+
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Math::Vector2;
 	using NameSpace_Core::NameSpace_Math::Vector3;
@@ -37,10 +41,10 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Camera_Config(void) = default;
 
 	private:
-		Camera_Pose M_Pose{};
+		shared_ptr<Camera_Pose> m_Pose{};
 		Vector2 m_Aspect{ Vector2::ONE };
 		float m_Z_Near{ 0.1f };
-		float m_Z_Far{100.f};
+		float m_Z_Far{1000.f};
 
 	};
 

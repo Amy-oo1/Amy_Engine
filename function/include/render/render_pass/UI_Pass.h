@@ -40,6 +40,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	public:
 		void Draw(void)override;
+		void Post_Inittialize(void) override;
+		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
+
 	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

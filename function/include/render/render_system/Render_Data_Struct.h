@@ -63,10 +63,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	public:
 		uint32_t Width;
 		uint32_t Height;
-		uint32_t Depth;
-		RHI_FORMAT Format;
-		uint32_t Mip_Levels{ 0 };
-		uint32_t Array_Layes{ 0 };
+		uint32_t Depth{ 1 };
+		RHI_FORMAT Format{ RHI_FORMAT::RHI_FORMAT_UNDEFINED };
+		uint32_t Mip_Levels{ 1 };
+		uint32_t Array_Layes{ 1 };
 		unique_ptr<void, function<void(void*)>> Pixels{ nullptr };
 
 	};

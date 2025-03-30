@@ -422,7 +422,7 @@
     <ClCompile Include="src\render\render_pass\Render_Pass.cpp">
       <Filter>src\render\render_pass</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\render_system\Render_Pipeline_Base.h.cpp">
+    <ClCompile Include="src\render\render_system\Render_Pipeline_Base.cpp">
       <Filter>src\render\render_system</Filter>
     </ClCompile>
     <ClCompile Include="src\render\render_system\Render_Pipeline.cpp">

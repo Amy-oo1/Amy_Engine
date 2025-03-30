@@ -8,8 +8,8 @@ namespace NameSpace_Resource::NameSpace_Manage {
 		return Instance;
 	}
 
-	const char* Resource_Manager::URL_To_File_Full_Path(const path& Resource_URL) {
-		return nullptr;
+	const path Resource_Manager::URL_To_File_Full_Path(const path& Resource_URL) {
+		return Resource_Configer::Get_Instance().Get_Root_Directory() / Resource_URL;
 	}
 
 }// namespace NameSpace_Resource::NameSpace_Manage

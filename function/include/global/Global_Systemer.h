@@ -18,11 +18,15 @@
 #include "physics/Physics_Manager.h"
 #include "frame/world/World_Manager.h"
 
+#include "particle/Particle_Manager.h"
+
 #include "render/window/Window_System.h"
 #include "input/Input_System.h"
 
 #include "render/render_system/Render_Obejct.h"
 #include "render/render_system/Render_GUID_Allocator.h"
+
+#include "render/render_system/Render_System.h"
 
 namespace NameSpace_Function::Namespace_Global {
 
@@ -42,6 +46,8 @@ namespace NameSpace_Function::Namespace_Global {
 	using Namespace_Physics::Physics_Manager;
 	using NameSpace_Frame::NameSpace_World::World_Manager;
 
+	using NameSpace_Particle::Particle_Manager;
+
 	using NameSpace_Animation::Animation_Loader;
 
 	using NameSpace_Render::NameSpace_Window::Window_System;
@@ -49,6 +55,8 @@ namespace NameSpace_Function::Namespace_Global {
 
 	using NameSpace_Render::NameSpace_Render_System::Render_GUID_Allocator;
 	using NameSpace_Render::NameSpace_Render_System::Game_Object_Part_ID;
+
+	using NameSpace_Render::NameSpace_Render_System::Render_System;
 
 	class Global_Systemer final {
 	private:
@@ -77,6 +85,8 @@ namespace NameSpace_Function::Namespace_Global {
 		Physics_Manager& Physics_Manager;
 		World_Manager& World_Manager;
 
+		Particle_Manager& Particle_Manager;
+
 		//Animation_Loader& Animation_Loader;
 
 		//Factory*& Factory_Instance;
@@ -85,6 +95,8 @@ namespace NameSpace_Function::Namespace_Global {
 		shared_ptr<Input_System> Main_Input{ nullptr };
 
 		//Render_GUID_Allocator<Game_Object_Part_ID>& Render_GUID_Allocator;
+
+		shared_ptr<Render_System> Main_Render_System{ nullptr };
 
 
 	private:

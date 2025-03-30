@@ -4,6 +4,8 @@
 #include<vector>
 #include<memory>
 
+#include "color/Color.h"
+
 #include "frame/object/GObject_ID_Allocator.h"
 #include "render/render_system/Render_Commmon.h"
 #include "render/render_system/Light.h"
@@ -20,10 +22,33 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::shared_ptr;
 
+	using NameSpace_Core::NameSpace_Color::Color;
+
 	using NameSpace_Pass::Render_Pass;
 
 	class Render_Scene final {
+	private:
+		Render_Scene(const Render_Scene&) = delete;
+		Render_Scene& operator=(const Render_Scene&) = delete;
+
 	public:
+
+		Render_Scene(void) = default;
+
+		~Render_Scene(void) = default;
+
+
+
+	public:
+		void Set_Ambient_Light(const Color& Ambient_Light);
+		void Set_Directional_Light(const Directional_Light& Directional_Light);
+
+
+
+
+	public:
+
+
 		void Updata_Visiable_Objects(
 			shared_ptr<Render_Resource> Resource,
 			shared_ptr<Render_Camera> Camera);
@@ -55,7 +80,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	public://TODO : 
 		//NOTE : Light
-		Ambient_Light m_Ambient_Light;
+		Color m_Ambient_Light;
 		Directional_Light m_Directional_Light;
 		Point_Light_List m_Point_Light_List;
 

@@ -42,6 +42,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{6CB178E8-794C-4C37-95E5-6D5E7D6BE107}"
 	ProjectSection(SolutionItems) = preProject
 		bin\user_resource\global\Default_Global_Particle.json = bin\user_resource\global\Default_Global_Particle.json
+		bin\user_resource\global\Default_Global_Render.json = bin\user_resource\global\Default_Global_Render.json
 	EndProjectSection
 EndProject
 Global

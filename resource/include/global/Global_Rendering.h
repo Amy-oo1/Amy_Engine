@@ -1,5 +1,9 @@
 #pragma once
 
+#include<cstdint>
+#include<vector>
+#include<memory>
+
 #include "file/File_System.h"
 
 #include "meta/reflection/Reflection_Macro.h"
@@ -10,6 +14,10 @@
 #include "components/camera/Camera_Controller.h"
 
 namespace NameSpace_Resource::NameSpace_Global {
+
+	using std::string;
+	using std::vector;
+	using std::shared_ptr;
 
 	using NameSpace_Platform::NameSpace_File::path;
 
@@ -27,12 +35,12 @@ namespace NameSpace_Resource::NameSpace_Global {
 		~SkyBox_Irradiance_Map(void) = default;
 
 	private:
-		path m_Positive_X_Map_URL;
 		path m_Negative_X_Map_URL;
-		path m_Positive_Y_Map_URL;
+		path m_Positive_X_Map_URL;
 		path m_Negative_Y_Map_URL;
-		path m_Positive_Z_Map_URL;
+		path m_Positive_Y_Map_URL;
 		path m_Negative_Z_Map_URL;
+		path m_Positive_Z_Map_URL;
 
 	};
 
@@ -46,12 +54,12 @@ namespace NameSpace_Resource::NameSpace_Global {
 		~SkyBox_Specular_Map(void) = default;
 
 	private:
-		path m_Positive_X_Map_URL;
 		path m_Negative_X_Map_URL;
-		path m_Positive_Y_Map_URL;
+		path m_Positive_X_Map_URL;
 		path m_Negative_Y_Map_URL;
-		path m_Positive_Z_Map_URL;
+		path m_Positive_Y_Map_URL;
 		path m_Negative_Z_Map_URL;
+		path m_Positive_Z_Map_URL;
 
 	};
 
@@ -65,7 +73,7 @@ namespace NameSpace_Resource::NameSpace_Global {
 		~Directional_Light(void) = default;
 
 	private:
-		Vector3 m_Direction_List{ 0.0f, -1.0f, 0.0f };
+		Vector3 m_Direction{ 0.0f, -1.0f, 0.0f };
 		Color m_Color{ 0.0f, 0.0f, 0.0f, 1.0f };
 
 	};
@@ -82,16 +90,17 @@ namespace NameSpace_Resource::NameSpace_Global {
 	private:
 		bool m_Enable_FXAA{ false };
 
-		SkyBox_Irradiance_Map m_Skybox_Irradiance_Map;
-		SkyBox_Specular_Map   m_Skybox_Specular_Map;
+		shared_ptr<SkyBox_Irradiance_Map> m_Skybox_Irradiance_Map;
+		shared_ptr<SkyBox_Specular_Map> m_Skybox_Specular_Map;
 
 		path m_BRDF_Map_URL;
 		path m_Color_Grading_Map_URL;
 
 		Color m_Sky_Color;
 		Color m_Ambient_Light;
-		Camera_Config m_Camera_Config;
-		Directional_Light m_Directional_Light;
+		shared_ptr<Directional_Light> m_Directional_Light;
+
+		shared_ptr<Camera_Config> m_Camera_Config;
 
 	};
 

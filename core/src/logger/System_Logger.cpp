@@ -25,8 +25,9 @@ namespace NameSpace_Core::NameSpace_Logger {
 	}
 
 	System_Logger& System_Logger::Get_Instance(void) {
-		static System_Logger Get_Instance{};
-		return Get_Instance;
+		static System_Logger Instance{};
+
+		return Instance;
 	}
 
 }// namespace NameSpace_Core::NameSpace_Logger

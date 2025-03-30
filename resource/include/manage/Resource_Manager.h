@@ -4,6 +4,7 @@
 #include<string>
 #include<fstream>
 #include<sstream>
+#include<exception>
 #include<memory>
 
 #include "file/File_System.h"
@@ -12,7 +13,6 @@
 #include "meta/generated/Serializer_Header.h"
 
 #include "config/Resource_Configer.h"
-
 
 namespace NameSpace_Resource::NameSpace_Manage {
 
@@ -50,16 +50,10 @@ namespace NameSpace_Resource::NameSpace_Manage {
 
 				return nullptr;
 			}
-			else if (!File_System::Is_File(Resource_URL)) {
-				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} is not a file ", Resource_URL.generic_string());
 
-				return nullptr;
-			}
-
-			const char* Resource_Path = this->URL_To_File_Full_Path(Resource_URL);
-			std::ifstream Resource_IFStream{ Resource_Path };
+			std::ifstream Resource_IFStream{ Resource_Manager::URL_To_File_Full_Path(Resource_URL).generic_string().c_str() };
 			if (!Resource_IFStream) {
-				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL {} failed open ", Resource_Path.generic_string());
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Load: Resource URL  failed open ");
 
 				return nullptr;
 			}
@@ -91,7 +85,7 @@ namespace NameSpace_Resource::NameSpace_Manage {
 				return false;
 			}
 
-			path Resource_Path = this->URL_To_File_Full_Path(Resource_URL);
+			path Resource_Path = Resource_Manager::URL_To_File_Full_Path(Resource_URL);
 			std::ofstream Resource_OFStream{ Resource_Path };
 			if (!Resource_OFStream) {
 				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Resource_Manager::Save: Resource URL {} failed open ", Resource_Path.generic_string());
@@ -105,7 +99,7 @@ namespace NameSpace_Resource::NameSpace_Manage {
 		}
 
 	public:
-		static const char* URL_To_File_Full_Path(const path& Resource_URL);
+		static const path URL_To_File_Full_Path(const path& Resource_URL);
 
 	public:
 		static Resource_Manager& Get_Instance(void);

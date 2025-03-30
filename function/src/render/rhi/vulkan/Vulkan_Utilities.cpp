@@ -25,6 +25,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VkBufferCreateInfo Buffer_Info{};
 		{
 			Buffer_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			Buffer_Info.pNext = nullptr;
 			Buffer_Info.size = Size;
 			Buffer_Info.usage = Usage;
 			Buffer_Info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -547,7 +548,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		Create_Buffer(
 			Physical_Device,
 			Logical_Device,
-			Image_Byte_Size,
+			Cube_Byte_Size,
 			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			VK_Allocator,

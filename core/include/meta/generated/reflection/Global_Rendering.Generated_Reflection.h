@@ -31,33 +31,6 @@ namespace NameSpace_Resource::NameSpace_Global{
 
         
 
-            static const string Get_Positive_X_Map_URL_Type_Spelling(void){
-                return string{"path"};
-            }
-
-            static const string Get_Positive_X_Map_URL_Spelling(void){
-                return string{"m_Positive_X_Map_URL"};
-            }
-
-
-            static const string Get_Positive_X_Map_URL_Display_Name(void){
-                return string{"Positive_X_Map_URL"};
-            }
-
-            static const path& Get_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Positive_X_Map_URL;
-            }
-
-            static void Set_Field_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
-                Instance->m_Positive_X_Map_URL=Value;
-            }
-
-            static const bool Is_Filed_Positive_X_Map_URL_CPPVector(void){
-                return  false;
-            }
-
-            
-
             static const string Get_Negative_X_Map_URL_Type_Spelling(void){
                 return string{"path"};
             }
@@ -85,28 +58,28 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Positive_Y_Map_URL_Type_Spelling(void){
+            static const string Get_Positive_X_Map_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Positive_Y_Map_URL_Spelling(void){
-                return string{"m_Positive_Y_Map_URL"};
+            static const string Get_Positive_X_Map_URL_Spelling(void){
+                return string{"m_Positive_X_Map_URL"};
             }
 
 
-            static const string Get_Positive_Y_Map_URL_Display_Name(void){
-                return string{"Positive_Y_Map_URL"};
+            static const string Get_Positive_X_Map_URL_Display_Name(void){
+                return string{"Positive_X_Map_URL"};
             }
 
-            static const path& Get_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Positive_Y_Map_URL;
+            static const path& Get_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Positive_X_Map_URL;
             }
 
-            static void Set_Field_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
-                Instance->m_Positive_Y_Map_URL=Value;
+            static void Set_Field_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Positive_X_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Y_Map_URL_CPPVector(void){
+            static const bool Is_Filed_Positive_X_Map_URL_CPPVector(void){
                 return  false;
             }
 
@@ -139,28 +112,28 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Positive_Z_Map_URL_Type_Spelling(void){
+            static const string Get_Positive_Y_Map_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Positive_Z_Map_URL_Spelling(void){
-                return string{"m_Positive_Z_Map_URL"};
+            static const string Get_Positive_Y_Map_URL_Spelling(void){
+                return string{"m_Positive_Y_Map_URL"};
             }
 
 
-            static const string Get_Positive_Z_Map_URL_Display_Name(void){
-                return string{"Positive_Z_Map_URL"};
+            static const string Get_Positive_Y_Map_URL_Display_Name(void){
+                return string{"Positive_Y_Map_URL"};
             }
 
-            static const path& Get_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
-                return Instance->m_Positive_Z_Map_URL;
+            static const path& Get_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Positive_Y_Map_URL;
             }
 
-            static void Set_Field_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
-                Instance->m_Positive_Z_Map_URL=Value;
+            static void Set_Field_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Positive_Y_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Z_Map_URL_CPPVector(void){
+            static const bool Is_Filed_Positive_Y_Map_URL_CPPVector(void){
                 return  false;
             }
 
@@ -193,6 +166,33 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
+            static const string Get_Positive_Z_Map_URL_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Positive_Z_Map_URL_Spelling(void){
+                return string{"m_Positive_Z_Map_URL"};
+            }
+
+
+            static const string Get_Positive_Z_Map_URL_Display_Name(void){
+                return string{"Positive_Z_Map_URL"};
+            }
+
+            static const path& Get_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance){
+                return Instance->m_Positive_Z_Map_URL;
+            }
+
+            static void Set_Field_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Irradiance_Map> Instance, const path& Value){
+                Instance->m_Positive_Z_Map_URL=Value;
+            }
+
+            static const bool Is_Filed_Positive_Z_Map_URL_CPPVector(void){
+                return  false;
+            }
+
+            
+
 
     };
    
@@ -218,33 +218,6 @@ namespace NameSpace_Resource::NameSpace_Global{
         }
 
         
-
-            static const string Get_Positive_X_Map_URL_Type_Spelling(void){
-                return string{"path"};
-            }
-
-            static const string Get_Positive_X_Map_URL_Spelling(void){
-                return string{"m_Positive_X_Map_URL"};
-            }
-
-
-            static const string Get_Positive_X_Map_URL_Display_Name(void){
-                return string{"Positive_X_Map_URL"};
-            }
-
-            static const path& Get_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Positive_X_Map_URL;
-            }
-
-            static void Set_Field_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
-                Instance->m_Positive_X_Map_URL=Value;
-            }
-
-            static const bool Is_Filed_Positive_X_Map_URL_CPPVector(void){
-                return  false;
-            }
-
-            
 
             static const string Get_Negative_X_Map_URL_Type_Spelling(void){
                 return string{"path"};
@@ -273,28 +246,28 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Positive_Y_Map_URL_Type_Spelling(void){
+            static const string Get_Positive_X_Map_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Positive_Y_Map_URL_Spelling(void){
-                return string{"m_Positive_Y_Map_URL"};
+            static const string Get_Positive_X_Map_URL_Spelling(void){
+                return string{"m_Positive_X_Map_URL"};
             }
 
 
-            static const string Get_Positive_Y_Map_URL_Display_Name(void){
-                return string{"Positive_Y_Map_URL"};
+            static const string Get_Positive_X_Map_URL_Display_Name(void){
+                return string{"Positive_X_Map_URL"};
             }
 
-            static const path& Get_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Positive_Y_Map_URL;
+            static const path& Get_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Positive_X_Map_URL;
             }
 
-            static void Set_Field_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
-                Instance->m_Positive_Y_Map_URL=Value;
+            static void Set_Field_Positive_X_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Positive_X_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Y_Map_URL_CPPVector(void){
+            static const bool Is_Filed_Positive_X_Map_URL_CPPVector(void){
                 return  false;
             }
 
@@ -327,28 +300,28 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Positive_Z_Map_URL_Type_Spelling(void){
+            static const string Get_Positive_Y_Map_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Positive_Z_Map_URL_Spelling(void){
-                return string{"m_Positive_Z_Map_URL"};
+            static const string Get_Positive_Y_Map_URL_Spelling(void){
+                return string{"m_Positive_Y_Map_URL"};
             }
 
 
-            static const string Get_Positive_Z_Map_URL_Display_Name(void){
-                return string{"Positive_Z_Map_URL"};
+            static const string Get_Positive_Y_Map_URL_Display_Name(void){
+                return string{"Positive_Y_Map_URL"};
             }
 
-            static const path& Get_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
-                return Instance->m_Positive_Z_Map_URL;
+            static const path& Get_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Positive_Y_Map_URL;
             }
 
-            static void Set_Field_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
-                Instance->m_Positive_Z_Map_URL=Value;
+            static void Set_Field_Positive_Y_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Positive_Y_Map_URL=Value;
             }
 
-            static const bool Is_Filed_Positive_Z_Map_URL_CPPVector(void){
+            static const bool Is_Filed_Positive_Y_Map_URL_CPPVector(void){
                 return  false;
             }
 
@@ -381,6 +354,33 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
+            static const string Get_Positive_Z_Map_URL_Type_Spelling(void){
+                return string{"path"};
+            }
+
+            static const string Get_Positive_Z_Map_URL_Spelling(void){
+                return string{"m_Positive_Z_Map_URL"};
+            }
+
+
+            static const string Get_Positive_Z_Map_URL_Display_Name(void){
+                return string{"Positive_Z_Map_URL"};
+            }
+
+            static const path& Get_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance){
+                return Instance->m_Positive_Z_Map_URL;
+            }
+
+            static void Set_Field_Positive_Z_Map_URL_Attribute(shared_ptr<SkyBox_Specular_Map> Instance, const path& Value){
+                Instance->m_Positive_Z_Map_URL=Value;
+            }
+
+            static const bool Is_Filed_Positive_Z_Map_URL_CPPVector(void){
+                return  false;
+            }
+
+            
+
 
     };
    
@@ -407,28 +407,28 @@ namespace NameSpace_Resource::NameSpace_Global{
 
         
 
-            static const string Get_Direction_List_Type_Spelling(void){
+            static const string Get_Direction_Type_Spelling(void){
                 return string{"Vector3"};
             }
 
-            static const string Get_Direction_List_Spelling(void){
-                return string{"m_Direction_List"};
+            static const string Get_Direction_Spelling(void){
+                return string{"m_Direction"};
             }
 
 
-            static const string Get_Direction_List_Display_Name(void){
-                return string{"Direction_List"};
+            static const string Get_Direction_Display_Name(void){
+                return string{"Direction"};
             }
 
-            static const Vector3& Get_Direction_List_Attribute(shared_ptr<Directional_Light> Instance){
-                return Instance->m_Direction_List;
+            static const Vector3& Get_Direction_Attribute(shared_ptr<Directional_Light> Instance){
+                return Instance->m_Direction;
             }
 
-            static void Set_Field_Direction_List_Attribute(shared_ptr<Directional_Light> Instance, const Vector3& Value){
-                Instance->m_Direction_List=Value;
+            static void Set_Field_Direction_Attribute(shared_ptr<Directional_Light> Instance, const Vector3& Value){
+                Instance->m_Direction=Value;
             }
 
-            static const bool Is_Filed_Direction_List_CPPVector(void){
+            static const bool Is_Filed_Direction_CPPVector(void){
                 return  false;
             }
 
@@ -515,7 +515,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             
 
             static const string Get_Skybox_Irradiance_Map_Type_Spelling(void){
-                return string{"SkyBox_Irradiance_Map"};
+                return string{"shared_ptr<SkyBox_Irradiance_Map>"};
             }
 
             static const string Get_Skybox_Irradiance_Map_Spelling(void){
@@ -527,11 +527,11 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Skybox_Irradiance_Map"};
             }
 
-            static const SkyBox_Irradiance_Map& Get_Skybox_Irradiance_Map_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const shared_ptr<SkyBox_Irradiance_Map>& Get_Skybox_Irradiance_Map_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Skybox_Irradiance_Map;
             }
 
-            static void Set_Field_Skybox_Irradiance_Map_Attribute(shared_ptr<Global_Rendering> Instance, const SkyBox_Irradiance_Map& Value){
+            static void Set_Field_Skybox_Irradiance_Map_Attribute(shared_ptr<Global_Rendering> Instance, const shared_ptr<SkyBox_Irradiance_Map>& Value){
                 Instance->m_Skybox_Irradiance_Map=Value;
             }
 
@@ -542,7 +542,7 @@ namespace NameSpace_Resource::NameSpace_Global{
             
 
             static const string Get_Skybox_Specular_Map_Type_Spelling(void){
-                return string{"SkyBox_Specular_Map"};
+                return string{"shared_ptr<SkyBox_Specular_Map>"};
             }
 
             static const string Get_Skybox_Specular_Map_Spelling(void){
@@ -554,11 +554,11 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Skybox_Specular_Map"};
             }
 
-            static const SkyBox_Specular_Map& Get_Skybox_Specular_Map_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const shared_ptr<SkyBox_Specular_Map>& Get_Skybox_Specular_Map_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Skybox_Specular_Map;
             }
 
-            static void Set_Field_Skybox_Specular_Map_Attribute(shared_ptr<Global_Rendering> Instance, const SkyBox_Specular_Map& Value){
+            static void Set_Field_Skybox_Specular_Map_Attribute(shared_ptr<Global_Rendering> Instance, const shared_ptr<SkyBox_Specular_Map>& Value){
                 Instance->m_Skybox_Specular_Map=Value;
             }
 
@@ -676,35 +676,8 @@ namespace NameSpace_Resource::NameSpace_Global{
 
             
 
-            static const string Get_Camera_Config_Type_Spelling(void){
-                return string{"Camera_Config"};
-            }
-
-            static const string Get_Camera_Config_Spelling(void){
-                return string{"m_Camera_Config"};
-            }
-
-
-            static const string Get_Camera_Config_Display_Name(void){
-                return string{"Camera_Config"};
-            }
-
-            static const Camera_Config& Get_Camera_Config_Attribute(shared_ptr<Global_Rendering> Instance){
-                return Instance->m_Camera_Config;
-            }
-
-            static void Set_Field_Camera_Config_Attribute(shared_ptr<Global_Rendering> Instance, const Camera_Config& Value){
-                Instance->m_Camera_Config=Value;
-            }
-
-            static const bool Is_Filed_Camera_Config_CPPVector(void){
-                return  false;
-            }
-
-            
-
             static const string Get_Directional_Light_Type_Spelling(void){
-                return string{"Directional_Light"};
+                return string{"shared_ptr<Directional_Light>"};
             }
 
             static const string Get_Directional_Light_Spelling(void){
@@ -716,15 +689,42 @@ namespace NameSpace_Resource::NameSpace_Global{
                 return string{"Directional_Light"};
             }
 
-            static const Directional_Light& Get_Directional_Light_Attribute(shared_ptr<Global_Rendering> Instance){
+            static const shared_ptr<Directional_Light>& Get_Directional_Light_Attribute(shared_ptr<Global_Rendering> Instance){
                 return Instance->m_Directional_Light;
             }
 
-            static void Set_Field_Directional_Light_Attribute(shared_ptr<Global_Rendering> Instance, const Directional_Light& Value){
+            static void Set_Field_Directional_Light_Attribute(shared_ptr<Global_Rendering> Instance, const shared_ptr<Directional_Light>& Value){
                 Instance->m_Directional_Light=Value;
             }
 
             static const bool Is_Filed_Directional_Light_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Camera_Config_Type_Spelling(void){
+                return string{"shared_ptr<Camera_Config>"};
+            }
+
+            static const string Get_Camera_Config_Spelling(void){
+                return string{"m_Camera_Config"};
+            }
+
+
+            static const string Get_Camera_Config_Display_Name(void){
+                return string{"Camera_Config"};
+            }
+
+            static const shared_ptr<Camera_Config>& Get_Camera_Config_Attribute(shared_ptr<Global_Rendering> Instance){
+                return Instance->m_Camera_Config;
+            }
+
+            static void Set_Field_Camera_Config_Attribute(shared_ptr<Global_Rendering> Instance, const shared_ptr<Camera_Config>& Value){
+                Instance->m_Camera_Config=Value;
+            }
+
+            static const bool Is_Filed_Camera_Config_CPPVector(void){
                 return  false;
             }
 

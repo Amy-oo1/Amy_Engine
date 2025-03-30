@@ -419,4 +419,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		//TODO : Implement
 	}
 
+	void Tone_Mapping::Post_Inittialize(void)
+	{
+	}
+
+	void Tone_Mapping::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
+	{
+	}
+
+	
+
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

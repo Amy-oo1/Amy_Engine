@@ -38,7 +38,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		//TODO
 	}
 
-	void Render_Camera::Set_Aspect(float Aspect) {
+	void Render_Camera::Set_Z_Near(float Z_Near){
+		this->m_Z_Near = Z_Near;
+	}
+
+	void Render_Camera::Set_Z_Far(float Z_Far){
+		this->m_Z_Far = Z_Far;
+	}
+
+	void Render_Camera::Set_Aspect(const Vector2& Aspect) {
 		//TODO
 	}
 

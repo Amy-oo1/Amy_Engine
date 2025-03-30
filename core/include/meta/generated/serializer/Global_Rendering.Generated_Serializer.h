@@ -26,12 +26,12 @@
 
             
 
-                Json_Context["Positive_X_Map_URL"] = Serializer::Write(Instance.m_Positive_X_Map_URL);
                 Json_Context["Negative_X_Map_URL"] = Serializer::Write(Instance.m_Negative_X_Map_URL);
-                Json_Context["Positive_Y_Map_URL"] = Serializer::Write(Instance.m_Positive_Y_Map_URL);
+                Json_Context["Positive_X_Map_URL"] = Serializer::Write(Instance.m_Positive_X_Map_URL);
                 Json_Context["Negative_Y_Map_URL"] = Serializer::Write(Instance.m_Negative_Y_Map_URL);
-                Json_Context["Positive_Z_Map_URL"] = Serializer::Write(Instance.m_Positive_Z_Map_URL);
+                Json_Context["Positive_Y_Map_URL"] = Serializer::Write(Instance.m_Positive_Y_Map_URL);
                 Json_Context["Negative_Z_Map_URL"] = Serializer::Write(Instance.m_Negative_Z_Map_URL);
+                Json_Context["Positive_Z_Map_URL"] = Serializer::Write(Instance.m_Positive_Z_Map_URL);
 
             return Json_Context;
         }
@@ -39,12 +39,12 @@
         template<> inline SkyBox_Irradiance_Map& Serializer::Read<SkyBox_Irradiance_Map>(const JSON& Json_Context, SkyBox_Irradiance_Map &Instance){
             
 
-                Serializer::Read(Json_Context["Positive_X_Map_URL"],Instance.m_Positive_X_Map_URL);
                 Serializer::Read(Json_Context["Negative_X_Map_URL"],Instance.m_Negative_X_Map_URL);
-                Serializer::Read(Json_Context["Positive_Y_Map_URL"],Instance.m_Positive_Y_Map_URL);
+                Serializer::Read(Json_Context["Positive_X_Map_URL"],Instance.m_Positive_X_Map_URL);
                 Serializer::Read(Json_Context["Negative_Y_Map_URL"],Instance.m_Negative_Y_Map_URL);
-                Serializer::Read(Json_Context["Positive_Z_Map_URL"],Instance.m_Positive_Z_Map_URL);
+                Serializer::Read(Json_Context["Positive_Y_Map_URL"],Instance.m_Positive_Y_Map_URL);
                 Serializer::Read(Json_Context["Negative_Z_Map_URL"],Instance.m_Negative_Z_Map_URL);
+                Serializer::Read(Json_Context["Positive_Z_Map_URL"],Instance.m_Positive_Z_Map_URL);
 
             return Instance;
         }
@@ -67,12 +67,12 @@
 
             
 
-                Json_Context["Positive_X_Map_URL"] = Serializer::Write(Instance.m_Positive_X_Map_URL);
                 Json_Context["Negative_X_Map_URL"] = Serializer::Write(Instance.m_Negative_X_Map_URL);
-                Json_Context["Positive_Y_Map_URL"] = Serializer::Write(Instance.m_Positive_Y_Map_URL);
+                Json_Context["Positive_X_Map_URL"] = Serializer::Write(Instance.m_Positive_X_Map_URL);
                 Json_Context["Negative_Y_Map_URL"] = Serializer::Write(Instance.m_Negative_Y_Map_URL);
-                Json_Context["Positive_Z_Map_URL"] = Serializer::Write(Instance.m_Positive_Z_Map_URL);
+                Json_Context["Positive_Y_Map_URL"] = Serializer::Write(Instance.m_Positive_Y_Map_URL);
                 Json_Context["Negative_Z_Map_URL"] = Serializer::Write(Instance.m_Negative_Z_Map_URL);
+                Json_Context["Positive_Z_Map_URL"] = Serializer::Write(Instance.m_Positive_Z_Map_URL);
 
             return Json_Context;
         }
@@ -80,12 +80,12 @@
         template<> inline SkyBox_Specular_Map& Serializer::Read<SkyBox_Specular_Map>(const JSON& Json_Context, SkyBox_Specular_Map &Instance){
             
 
-                Serializer::Read(Json_Context["Positive_X_Map_URL"],Instance.m_Positive_X_Map_URL);
                 Serializer::Read(Json_Context["Negative_X_Map_URL"],Instance.m_Negative_X_Map_URL);
-                Serializer::Read(Json_Context["Positive_Y_Map_URL"],Instance.m_Positive_Y_Map_URL);
+                Serializer::Read(Json_Context["Positive_X_Map_URL"],Instance.m_Positive_X_Map_URL);
                 Serializer::Read(Json_Context["Negative_Y_Map_URL"],Instance.m_Negative_Y_Map_URL);
-                Serializer::Read(Json_Context["Positive_Z_Map_URL"],Instance.m_Positive_Z_Map_URL);
+                Serializer::Read(Json_Context["Positive_Y_Map_URL"],Instance.m_Positive_Y_Map_URL);
                 Serializer::Read(Json_Context["Negative_Z_Map_URL"],Instance.m_Negative_Z_Map_URL);
+                Serializer::Read(Json_Context["Positive_Z_Map_URL"],Instance.m_Positive_Z_Map_URL);
 
             return Instance;
         }
@@ -108,7 +108,7 @@
 
             
 
-                Json_Context["Direction_List"] = Serializer::Write(Instance.m_Direction_List);
+                Json_Context["Direction"] = Serializer::Write(Instance.m_Direction);
                 Json_Context["Color"] = Serializer::Write(Instance.m_Color);
 
             return Json_Context;
@@ -117,7 +117,7 @@
         template<> inline Directional_Light& Serializer::Read<Directional_Light>(const JSON& Json_Context, Directional_Light &Instance){
             
 
-                Serializer::Read(Json_Context["Direction_List"],Instance.m_Direction_List);
+                Serializer::Read(Json_Context["Direction"],Instance.m_Direction);
                 Serializer::Read(Json_Context["Color"],Instance.m_Color);
 
             return Instance;
@@ -148,8 +148,8 @@
                 Json_Context["Color_Grading_Map_URL"] = Serializer::Write(Instance.m_Color_Grading_Map_URL);
                 Json_Context["Sky_Color"] = Serializer::Write(Instance.m_Sky_Color);
                 Json_Context["Ambient_Light"] = Serializer::Write(Instance.m_Ambient_Light);
-                Json_Context["Camera_Config"] = Serializer::Write(Instance.m_Camera_Config);
                 Json_Context["Directional_Light"] = Serializer::Write(Instance.m_Directional_Light);
+                Json_Context["Camera_Config"] = Serializer::Write(Instance.m_Camera_Config);
 
             return Json_Context;
         }
@@ -164,8 +164,8 @@
                 Serializer::Read(Json_Context["Color_Grading_Map_URL"],Instance.m_Color_Grading_Map_URL);
                 Serializer::Read(Json_Context["Sky_Color"],Instance.m_Sky_Color);
                 Serializer::Read(Json_Context["Ambient_Light"],Instance.m_Ambient_Light);
-                Serializer::Read(Json_Context["Camera_Config"],Instance.m_Camera_Config);
                 Serializer::Read(Json_Context["Directional_Light"],Instance.m_Directional_Light);
+                Serializer::Read(Json_Context["Camera_Config"],Instance.m_Camera_Config);
 
             return Instance;
         }
