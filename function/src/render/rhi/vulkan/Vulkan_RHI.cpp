@@ -432,7 +432,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			this->m_VK_Physical_Device,
 			this->m_Logical_VK_Device,
 			this->m_Allocator.get(),
-			VkExtent2D{ this->m_SwapChain_Extent.width,this->m_SwapChain_Extent.height },
+			VkExtent2D{ this->m_SwapChain_Extent.Width,this->m_SwapChain_Extent.Height },
 			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
 			1,
 			1,
@@ -1163,12 +1163,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			vk_Dynamic_States = std::make_optional<vector<VkDynamicState>>();
 			vk_Dynamic_States->reserve(vk_Dynamic_State_Create_Info->Dynamic_States->size());
 
-			for (size_t Index = 0; Index < vk_Dynamic_State_Create_Info->Dynamic_States->size(); ++Index) {
-				if (nullptr == vk_Dynamic_State_Create_Info->Dynamic_States->at(Index))
-					throw runtime_error("Dynamic State is nullptr!");
-
-				vk_Dynamic_States->push_back(static_cast<VkDynamicState>(*vk_Dynamic_State_Create_Info->Dynamic_States->at(Index)));
-			}
+			for (auto Dynamic_State : *vk_Dynamic_State_Create_Info->Dynamic_States)
+				vk_Dynamic_States->emplace_back(static_cast<VkDynamicState>(Dynamic_State));
 		}
 
 		VkPipelineDynamicStateCreateInfo vk_Pipeline_Dynamic_State_Create_Info{};
@@ -1540,6 +1536,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
+	RHI_Command_Pool* Vulkan_RHI::Get_Default_Command_Pool(void) const {
+		return this->m_Default_RHI_Command_Pool.get();
+	}
+
+
+
 	RHI_Descriptor_Pool* Vulkan_RHI::Get_Default_Descriptor_Pool(void) const {
 		return this->m_Default_RHI_Descriptor_Pool.get();
 	}
@@ -1659,7 +1661,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//NOTE : Refence SwapChain Info
 		{
 			this->m_SwapChain_Image_Format = Surface_Format.format;
-			this->m_SwapChain_Extent = Swap_Chain_Extent;
+			this->m_SwapChain_Extent = { Swap_Chain_Extent.width,Swap_Chain_Extent.height };
 			this->m_Scissor = { {0,0},{Swap_Chain_Extent.width,Swap_Chain_Extent.height} };
 		}
 	}
@@ -1684,6 +1686,28 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			static_cast<Vulkan_Image_View*>(Current_It.get())->Reset(this->m_SwapChain_VK_Image_Views[Index]);
 		}
 	}
+
+	uint32_t Vulkan_RHI::Get_Current_Frame_Index(void) const {
+		return this->m_Current_Frame_Index;
+	}
+
+	RHI_Viewport Vulkan_RHI::Get_SwapChain_Viewport(void) const {
+		return this->m_Viewport;
+	}
+
+	RHI_Rect_2D Vulkan_RHI::Get_SwapChain_Scissor(void) const {
+		return this->m_Scissor;
+	}
+
+	RHI_Extent_2D Vulkan_RHI::Get_SwapChain_Extent(void) const {
+		return this->m_SwapChain_Extent;
+	}
+
+	RHI_FORMAT Vulkan_RHI::Get_SwapChain_Image_Foramt(void) const {
+		return static_cast<RHI_FORMAT>(this->m_SwapChain_Image_Format);
+	}
+
+
 
 	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usage, RHI_Memory_Property_Flags Properties) {
 		VkBuffer  Temp_Buffer{ nullptr };
@@ -2488,6 +2512,36 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Pipeline;
 	}
 
+	unique_ptr<RHI_Pipeline> Vulkan_RHI::Create_Compute_Pipeline(const RHI_Compute_Pipeline_Create_Info* Create_Info, RHI_Pipeline_Cache* Pipeline_Cache) {
+		vector<optional<vector<VkSpecializationMapEntry>>> vk_Specialization_Map_Entryss{};
+		vector<optional<VkSpecializationInfo>> vk_Specialization_Infos{};
+		vector<const RHI_Pipeline_Shader_Stage_Create_Info*> Stages{ Create_Info->Stage };
+		auto vk_Pipeline_Shader_Stage_Create_Infos{ Vulkan_RHI::S_Parse_RHI_Pipeline_Shader_Stage_Create_Info(&Stages, vk_Specialization_Map_Entryss, vk_Specialization_Infos) };
+		if (!vk_Pipeline_Shader_Stage_Create_Infos.has_value() || vk_Pipeline_Shader_Stage_Create_Infos->empty())
+			throw runtime_error("Compute Pipeline Shader Stage Create Info is nullptr or empty!");
+
+		VkComputePipelineCreateInfo vk_Compute_Pipeline_Create_Info{};
+		{
+			vk_Compute_Pipeline_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
+			vk_Compute_Pipeline_Create_Info.pNext = Create_Info->pNext;
+			vk_Compute_Pipeline_Create_Info.flags = static_cast<VkPipelineCreateFlags>(Create_Info->Flags);
+			vk_Compute_Pipeline_Create_Info.stage = vk_Pipeline_Shader_Stage_Create_Infos->front();
+			vk_Compute_Pipeline_Create_Info.layout = static_cast<Vulkan_Pipeline_Layout*>(Create_Info->Layout)->Get();
+			vk_Compute_Pipeline_Create_Info.basePipelineHandle = static_cast<Vulkan_Pipeline*>(Create_Info->Base_Pipeline_Handle)->Get();
+			vk_Compute_Pipeline_Create_Info.basePipelineIndex = Create_Info->Base_Pipeline_Index;
+		}
+
+		VkPipelineCache vk_Pipeline_Cache{ Pipeline_Cache ? static_cast<Vulkan_Pieline_Cache*>(Pipeline_Cache)->Get() : nullptr };
+		VkPipeline vk_Pipeline{};
+		THROW_IF_VK_FAILED(vkCreateComputePipelines(this->m_Logical_VK_Device, vk_Pipeline_Cache, 1, &vk_Compute_Pipeline_Create_Info, this->m_Allocator.get(), &vk_Pipeline));
+		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
+		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
+		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
+
+		return Pipeline;
+	}
+
+
 	unique_ptr<RHI_Semaphore> Vulkan_RHI::Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info) {
 		VkSemaphoreCreateInfo vk_Semaphore_Create_Info{};
 		{
@@ -2639,35 +2693,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
 
 		return std::make_optional(vk_Clear_Value);
-	}
-
-	unique_ptr<RHI_Pipeline> Vulkan_RHI::Create_Compute_Pipeline(optional<RHI_Pipeline_Cache*> Pipeline_Cache, const RHI_Compute_Pipeline_Create_Info* pCreateInfos) {
-		vector<optional<vector<VkSpecializationMapEntry>>> vk_Specialization_Map_Entryss{};
-		vector<optional<VkSpecializationInfo>> vk_Specialization_Infos{};
-		vector<const RHI_Pipeline_Shader_Stage_Create_Info*> Stages{ pCreateInfos->Stage };
-		auto vk_Pipeline_Shader_Stage_Create_Infos{ Vulkan_RHI::S_Parse_RHI_Pipeline_Shader_Stage_Create_Info(&Stages, vk_Specialization_Map_Entryss, vk_Specialization_Infos) };
-		if (!vk_Pipeline_Shader_Stage_Create_Infos.has_value() || vk_Pipeline_Shader_Stage_Create_Infos->empty())
-			throw runtime_error("Compute Pipeline Shader Stage Create Info is nullptr or empty!");
-
-		VkComputePipelineCreateInfo vk_Compute_Pipeline_Create_Info{};
-		{
-			vk_Compute_Pipeline_Create_Info.sType = static_cast<VkStructureType>(pCreateInfos->sType);
-			vk_Compute_Pipeline_Create_Info.pNext = pCreateInfos->pNext;
-			vk_Compute_Pipeline_Create_Info.flags = static_cast<VkPipelineCreateFlags>(pCreateInfos->Flags);
-			vk_Compute_Pipeline_Create_Info.stage = vk_Pipeline_Shader_Stage_Create_Infos->front();
-			vk_Compute_Pipeline_Create_Info.layout = static_cast<Vulkan_Pipeline_Layout*>(pCreateInfos->Layout)->Get();
-			vk_Compute_Pipeline_Create_Info.basePipelineHandle = static_cast<Vulkan_Pipeline*>(pCreateInfos->Base_Pipeline_Handle)->Get();
-			vk_Compute_Pipeline_Create_Info.basePipelineIndex = pCreateInfos->Base_Pipeline_Index;
-		}
-
-		VkPipelineCache vk_Pipeline_Cache{ Pipeline_Cache.has_value() ? static_cast<Vulkan_Pieline_Cache*>(Pipeline_Cache.value())->Get() : nullptr };
-		VkPipeline vk_Pipeline{};
-		THROW_IF_VK_FAILED(vkCreateComputePipelines(this->m_Logical_VK_Device, vk_Pipeline_Cache, 1, &vk_Compute_Pipeline_Create_Info, this->m_Allocator.get(), &vk_Pipeline));
-		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
-		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
-		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);
-
-		return Pipeline;
 	}
 
 

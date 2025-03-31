@@ -327,6 +327,12 @@
     <ClInclude Include="include\frame\components\transform\Transform_Component.h">
       <Filter>include\frame\component​s\transform</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_pass\Main_Camera_Pass.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\render_pass\Pick_Pass.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -481,6 +487,12 @@
     </ClCompile>
     <ClCompile Include="src\frame\components\transform\Transform_Component.cpp">
       <Filter>src\frame\components\transform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Main_Camera_Pass.cpp">
+      <Filter>src\render\render_pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\render_pass\Pick_Pass.cpp">
+      <Filter>src\render\render_pass</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

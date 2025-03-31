@@ -21,6 +21,8 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 
 	float Pow(float Value, float Index);
 
+	float Tan(float Value);
+	float Tan(const Radian& Value);
 	float Cos(float Value);
 	float Cos(const Radian& Value);
 	float Sin(float Value);

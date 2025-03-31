@@ -26,6 +26,14 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 		return std::powf(Value, Index);
 	}
 
+	 float Tan(float Value){
+		 return std::tan(Value);
+	 }
+
+	 float Tan(const Radian& Value) {
+		 return Tan(Value.Get_Radian());
+	 }
+
 	 float Cos(float Value) {
 		return std::cosf(Value);
 	}

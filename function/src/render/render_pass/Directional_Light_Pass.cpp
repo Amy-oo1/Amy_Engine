@@ -67,16 +67,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	Directional_Light_Pass::Directional_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
 		Render_Pass{ Command_Info } {
-		this->Setup_Attachments();
-		this->Setup_Render_Pass();
-		this->Setup_Frame_Buffer();
 
-		this->m_Descriptors.resize(1);
-		this->Setup_Descriptor_Set_Layout();
-	}
-
-	void Directional_Light_Pass::Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout) {
-		this->m_Per_Mesh_Set_Layout = Set_Layout;
 	}
 
 	void Directional_Light_Pass::Setup_Attachments(void) {
@@ -94,7 +85,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			std::tie(Ref_Attachments[0].Image, Ref_Attachments[0].Image_Memory) = this->m_RHI->Create_Image(
 				{ this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height },
 				Ref_Attachments[0].Format,
-				1,
+				this->m_Frame_Buffer.Layers,
 				1,
 				RHI_IMAGE_TILING::RHI_IMAGE_TILING_OPTIMAL,
 				RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_SAMPLED_BIT,
@@ -106,7 +97,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 				Ref_Attachments[0].Image.get(),
 				Ref_Attachments[0].Format,
 				1,
-				1,
+				this->m_Frame_Buffer.Layers,
 				RHI_IMAGE_VIEW_TYPE::RHI_IMAGE_VIEW_TYPE_2D,
 				to_underlying(RHI_IMAGE_ASPECT_FLAG_BITS::RHI_IMAGE_ASPECT_COLOR_BIT)
 			);
@@ -118,7 +109,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			std::tie(Ref_Attachments[1].Image, Ref_Attachments[1].Image_Memory) = this->m_RHI->Create_Image(
 				{ this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height },
 				Ref_Attachments[1].Format,
-				1,
+				this->m_Frame_Buffer.Layers,
 				1,
 				RHI_IMAGE_TILING::RHI_IMAGE_TILING_OPTIMAL,
 				RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
@@ -129,7 +120,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 				Ref_Attachments[1].Image.get(),
 				Ref_Attachments[1].Format,
 				1,
-				1,
+				this->m_Frame_Buffer.Layers,
 				RHI_IMAGE_VIEW_TYPE::RHI_IMAGE_VIEW_TYPE_2D,
 				to_underlying(RHI_IMAGE_ASPECT_FLAG_BITS::RHI_IMAGE_ASPECT_DEPTH_BIT)
 			);
@@ -162,6 +153,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Depth_Attachment_Description.Initial_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_UNDEFINED;
 			Depth_Attachment_Description.Final_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		}
+
 		const vector<const RHI_Attachment_Description*> Attachments_Descriptions{
 			&Color_Attachment_Description,
 			&Depth_Attachment_Description
@@ -190,6 +182,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Sub_Pass.Depth_Stencil_Attachment = &Depth_Attachment_Reference;
 			Sub_Pass.Preserve_Attachments = nullptr;
 		}
+
 		const vector<const RHI_Subpass_Description*> Subpasses{ &Sub_Pass };
 
 		RHI_Subpass_Dependency Sub_Pass_Dependency{};
@@ -202,6 +195,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Sub_Pass_Dependency.Dst_Access_Mask = 0;// RHI_ACCESS_FLAG_BITS::RHI_ACCESS_COLOR_ATTACHMENT_READ_BIT | RHI_ACCESS_FLAG_BITS::RHI_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 			Sub_Pass_Dependency.Dependency_Flags = 0;
 		}
+
 		const vector<const RHI_Subpass_Dependency*> Subpass_Dependencies{ &Sub_Pass_Dependency };
 
 		RHI_Render_Pass_Create_Info Render_Pass_Create_Info{};
@@ -365,6 +359,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Pipeline_Layout_Create_Info.Set_Layouts = &Descriptor_Set_Layouts;
 			Pipeline_Layout_Create_Info.Push_Constant_Ranges = nullptr;
 		}
+
 		this->m_Render_Pipelines[0].Pipeline_Layout = this->m_RHI->Create_Pipeline_Layout(&Pipeline_Layout_Create_Info);
 
 
@@ -555,6 +550,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
+	}
+
+	void Directional_Light_Pass::Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) {
+		this->m_Per_Mesh_Set_Layout = static_cast<const Directioal_Light_Inittialize_Info*>(Init_Info)->m_Per_Mesh_Set_Layout;
+
+
+		this->Setup_Attachments();
+		this->Setup_Render_Pass();
+		this->Setup_Frame_Buffer();
+
+		this->m_Descriptors.resize(1);
+		this->Setup_Descriptor_Set_Layout();
 	}
 
 	void Directional_Light_Pass::Post_Inittialize(void) {

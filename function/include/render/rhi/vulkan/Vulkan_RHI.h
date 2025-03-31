@@ -114,11 +114,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		//TODO Get Func
 		[[nodiscard]] size_t Get_API_Version(void)const;
-		[[nodiscard]] VkAllocationCallbacks* Get_Allocator(void)const;
-		[[nodiscard]] VmaAllocator Get_VMA_Allocator(void) const;
-		[[nodiscard]] GLFWwindow* Get_GLFW_Window(void)const;
-		[[nodiscard]] uint32_t Get_Graphics_Queue_Family(void)const;
 
+		[[nodiscard]] VkAllocationCallbacks* Get_Allocator(void)const;
+
+		[[nodiscard]] VmaAllocator Get_VMA_Allocator(void) const;
+
+		[[nodiscard]] GLFWwindow* Get_GLFW_Window(void)const;
+
+		[[nodiscard]] uint32_t Get_Graphics_Queue_Family(void)const;
+		
 
 		//TODO : Private Member Func
 	private:
@@ -371,7 +375,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		array<unique_ptr<RHI_Command_Buffer>, s_Frames_In_Flight> m_RHI_Command_Buffers{ std::make_unique<Vulkan_Command_Buffer>(),std::make_unique<Vulkan_Command_Buffer>() ,std::make_unique<Vulkan_Command_Buffer>() };
 		array<VkCommandBuffer, s_Frames_In_Flight> m_VK_Command_Buffers{ nullptr,nullptr,nullptr };
-		uint8_t m_Current_Frame{ 0 };
+		uint32_t m_Current_Frame_Index{ 0 };
 
 		unique_ptr<RHI_Descriptor_Pool> m_Default_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 		VkDescriptorPool m_Default_VK_Descriptor_Pool{ nullptr };
@@ -384,14 +388,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		//TODO: Sync Window Fields
 		VkFormat m_SwapChain_Image_Format{};
-		VkExtent2D m_SwapChain_Extent{};
+		RHI_Extent_2D m_SwapChain_Extent{};
 		uint32_t m_SwapChain_Image_Count{ std::numeric_limits<uint32_t>::max() };
 
 		unique_ptr<VkSwapchainKHR_T, decltype(m_VK_SwapChain_Deleter)> m_Vk_SwapChain{ nullptr };
 
 		vector<VkImage> m_SwapChain_VK_Images{};
 		vector<unique_ptr<RHI_Image>> m_SwapChain_RHI_Images{};
-		
+
 		vector<VkImageView> m_SwapChain_VK_Image_Views{};
 		vector<unique_ptr<RHI_Image_View>> m_SwapChain_RHI_Image_Views{};
 
@@ -425,6 +429,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Create_Default_Command_Pool(void) override;
 
+		[[nodiscard]] RHI_Command_Pool* Get_Default_Command_Pool(void)const override;
+
 		[[nodiscard]] RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const override;
 
 		[[nodiscard]] vector<unique_ptr<RHI_Command_Buffer>>
@@ -439,7 +445,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) override;
 
 		void Create_SwapChain(void) override;
+
 		void Create_SwapChhain_Image_Views(void) override;
+
+		[[nodiscard]] uint32_t Get_Current_Frame_Index(void)const override;
+
+		[[nodiscard]] RHI_Viewport Get_SwapChain_Viewport(void)const override;
+
+		[[nodiscard]] RHI_Rect_2D Get_SwapChain_Scissor(void)const override;
+
+		[[nodiscard]] RHI_Extent_2D Get_SwapChain_Extent(void)const override;
+
+		[[nodiscard]]  RHI_FORMAT Get_SwapChain_Image_Foramt(void)const override;
 
 		[[nodiscard]] tuple<
 			unique_ptr<RHI_Buffer>,
@@ -601,6 +618,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				RHI_Pipeline_Cache* Pipeline_Cache = nullptr
 			) override;
 
+		[[nodiscard]] unique_ptr<RHI_Pipeline>
+			Create_Compute_Pipeline(
+				const RHI_Compute_Pipeline_Create_Info* Create_Info,
+				RHI_Pipeline_Cache* Pipeline_Cache = nullptr
+			) override;
+
 		[[nodiscard]] virtual unique_ptr<RHI_Semaphore>
 			Create_Semaphore(
 				const RHI_Semaphore_Create_Info* Create_Info
@@ -660,11 +683,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//	VmaAllocationInfo* pAllocationInfo) override;
 
 
-		[[nodiscard]] unique_ptr<RHI_Pipeline>
-			Create_Compute_Pipeline(
-				optional<RHI_Pipeline_Cache*> Pipeline_Cache,
-				const RHI_Compute_Pipeline_Create_Info* pCreateInfos
-			) override;
+
 
 
 

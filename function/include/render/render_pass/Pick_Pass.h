@@ -1,34 +1,29 @@
 #pragma once
 
 #include<vector>
+#include<memory>
 
-#include "render/rhi/empty_rhi/RHI_Type.h"
-#include "render/rhi/empty_rhi/RHI_Class.h"
+#include "math/Vector2.h"
+
+#include "render/rhi/empty_rhi/Empty_RHI.h"
 #include "render/render_system/Render_Resource.h"
+
 #include "render/render_pass/Render_Pass.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
-	using std::vector;
-
-	struct Directioal_Light_Inittialize_Info final :public Render_Pass_Inittialize_Info {
-		NameSpace_RHI::RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout;
-	};
-
-	class Directional_Light_Pass final :public Render_Pass {
+	class Pick_Pass final :public Render_Pass {
 	private:
-		Directional_Light_Pass(const Directional_Light_Pass&) = delete;
+		Pick_Pass(const Pick_Pass&) = delete;
 
-		Directional_Light_Pass& operator=(const Directional_Light_Pass&) = delete;
+		Pick_Pass& operator=(const Pick_Pass&) = delete;
 	public:
-		Directional_Light_Pass(const Render_Pass_Command_Info& Command_Info);
+		Pick_Pass(const Render_Pass_Command_Info& Command_Info);
 
-		~Directional_Light_Pass(void) = default;
+		~Pick_Pass(void) = default;
 
 	public:
 		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
-
-
 
 
 	private:
@@ -50,6 +45,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Post_Inittialize(void) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 		void Draw(void) override;
+
 	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

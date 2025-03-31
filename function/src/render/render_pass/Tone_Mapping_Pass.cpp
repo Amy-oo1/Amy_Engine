@@ -59,7 +59,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_Render_System::Mesh_Vertex;
 
 
-	Tone_Mapping::Tone_Mapping(const Render_Pass_Command_Info& Command_Info, RHI_Render_Pass* Render_Pass) :
+	Tone_Mapping_Pass::Tone_Mapping_Pass(const Render_Pass_Command_Info& Command_Info, RHI_Render_Pass* Render_Pass) :
 		Render_Pass{ Command_Info },
 		m_Render_Pass{ Render_Pass } {
 
@@ -70,7 +70,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Pipeline();
 	}
 
-	void Tone_Mapping::Setup_Descriptor_Set_Layout(void) {
+	void Tone_Mapping_Pass::Setup_Descriptor_Set_Layout(void) {
 		RHI_Descriptor_Set_Layout_Binding Per_Frame_Storage_Buffer_Binding{};
 		{
 			Per_Frame_Storage_Buffer_Binding.Binding = 0;
@@ -113,7 +113,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Descriptors[0].Descriptor_Set_Layout = this->m_RHI->Create_Descriptor_Set_Layout(&Descriptor_Set_Layout_Create_Info);
 	}
 
-	void Tone_Mapping::Setup_Descriptor_Set(void) {
+	void Tone_Mapping_Pass::Setup_Descriptor_Set(void) {
 		const vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{ this->m_Descriptors[0].Descriptor_Set_Layout.get() };
 
 		RHI_Descriptor_Set_Allocate_Info Descriptor_Set_Allocate_Info{};
@@ -188,7 +188,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_RHI->Update_Descriptor_Sets(&Writes, nullptr);
 	}
 
-	void Tone_Mapping::Setup_Pipeline(void) {
+	void Tone_Mapping_Pass::Setup_Pipeline(void) {
 		RHI_Pipeline_Layout_Create_Info Pipeline_Layout_Create_Info{};
 		{
 			vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
@@ -392,7 +392,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
 	}
 
-	void Tone_Mapping::Updata_After_Frame_Buffer_ReCreate(RHI_Image_View* Image_View) {
+	void Tone_Mapping_Pass::Updata_After_Frame_Buffer_ReCreate(RHI_Image_View* Image_View) {
 		RHI_Descriptor_Image_Info Image_Info{};
 		{
 			Image_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
@@ -415,15 +415,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_RHI->Update_Descriptor_Sets(&Writes, nullptr);
 	}
 
-	void Tone_Mapping::Draw(void) {
+	void Tone_Mapping_Pass::Draw(void) {
 		//TODO : Implement
 	}
 
-	void Tone_Mapping::Post_Inittialize(void)
+	void Tone_Mapping_Pass::Post_Inittialize(void)
 	{
 	}
 
-	void Tone_Mapping::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
+	void Tone_Mapping_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
 	{
 	}
 

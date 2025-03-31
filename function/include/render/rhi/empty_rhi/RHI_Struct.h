@@ -290,7 +290,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Pipeline_Dynamic_State_Create_Flags Flags;
-		const vector<const RHI_DYNAMIC_STATE*>* Dynamic_States;
+		const vector<RHI_DYNAMIC_STATE>* Dynamic_States;
 	};
 
 	struct RHI_Graphics_Pipeline_Create_Info {

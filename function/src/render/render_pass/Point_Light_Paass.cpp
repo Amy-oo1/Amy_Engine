@@ -68,22 +68,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	Point_Light_Pass::Point_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
 		Render_Pass{ Command_Info } {
-		this->Setup_Attachments();
-		this->Setup_Render_Pass();
-		this->Setup_Frame_Buffer();
 
-		this->m_Descriptors.resize(1);
-		this->Setup_Descriptor_Set_Layout();
 	}
 
-	void Point_Light_Pass::Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout){
+	void Point_Light_Pass::Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout) {
 		this->m_Per_Mesh_Set_Layout = Set_Layout;
 	}
 
 	void Point_Light_Pass::Setup_Attachments(void) {
 		this->m_Frame_Buffer.Width = NameSpace_Render_System::g_Point_Light_Shadow_map_Dimension;
 		this->m_Frame_Buffer.Height = NameSpace_Render_System::g_Point_Light_Shadow_map_Dimension;
-		this->m_Frame_Buffer.Layers = NameSpace_Render_System::g_Max_Point_Light_Count;
+		this->m_Frame_Buffer.Layers = 2 * NameSpace_Render_System::g_Max_Point_Light_Count;//TODO :Way to get the max point light count
 
 		auto& Ref_Attachments{ this->Render_Pass::m_Frame_Buffer.Attachments };
 
@@ -95,7 +90,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			std::tie(Ref_Attachments[0].Image, Ref_Attachments[0].Image_Memory) = this->m_RHI->Create_Image(
 				{ this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height },
 				Ref_Attachments[0].Format,
-				1,
+				this->m_Frame_Buffer.Layers,
 				1,
 				RHI_IMAGE_TILING::RHI_IMAGE_TILING_OPTIMAL,
 				RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_SAMPLED_BIT,
@@ -107,8 +102,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 				Ref_Attachments[0].Image.get(),
 				Ref_Attachments[0].Format,
 				1,
-				1,
-				RHI_IMAGE_VIEW_TYPE::RHI_IMAGE_VIEW_TYPE_2D,
+				this->m_Frame_Buffer.Layers,
+				RHI_IMAGE_VIEW_TYPE::RHI_IMAGE_VIEW_TYPE_2D_ARRAY,
 				to_underlying(RHI_IMAGE_ASPECT_FLAG_BITS::RHI_IMAGE_ASPECT_COLOR_BIT)
 			);
 		}
@@ -119,7 +114,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			std::tie(Ref_Attachments[1].Image, Ref_Attachments[1].Image_Memory) = this->m_RHI->Create_Image(
 				{ this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height },
 				Ref_Attachments[1].Format,
-				1,
+				this->m_Frame_Buffer.Layers,
 				1,
 				RHI_IMAGE_TILING::RHI_IMAGE_TILING_OPTIMAL,
 				RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | RHI_IMAGE_USAGE_FLAG_BITS::RHI_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT,
@@ -130,8 +125,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 				Ref_Attachments[1].Image.get(),
 				Ref_Attachments[1].Format,
 				1,
-				1,
-				RHI_IMAGE_VIEW_TYPE::RHI_IMAGE_VIEW_TYPE_2D,
+				this->m_Frame_Buffer.Layers,
+				RHI_IMAGE_VIEW_TYPE::RHI_IMAGE_VIEW_TYPE_2D_ARRAY,
 				to_underlying(RHI_IMAGE_ASPECT_FLAG_BITS::RHI_IMAGE_ASPECT_DEPTH_BIT)
 			);
 		}
@@ -163,6 +158,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Depth_Attachment_Description.Initial_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_UNDEFINED;
 			Depth_Attachment_Description.Final_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		}
+
 		const vector<const RHI_Attachment_Description*> Attachments_Descriptions{
 			&Color_Attachment_Description,
 			&Depth_Attachment_Description
@@ -173,6 +169,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Color_Attachment_Reference.Attachment = 0;
 			Color_Attachment_Reference.Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		}
+
 		const vector<const RHI_Attachment_Reference*> Color_Attachments_References{ &Color_Attachment_Reference };
 
 		RHI_Attachment_Reference Depth_Attachment_Reference{};
@@ -191,6 +188,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Sub_Pass.Depth_Stencil_Attachment = &Depth_Attachment_Reference;
 			Sub_Pass.Preserve_Attachments = nullptr;
 		}
+
 		const vector<const RHI_Subpass_Description*> Subpasses{ &Sub_Pass };
 
 		RHI_Subpass_Dependency Sub_Pass_Dependency{};
@@ -203,6 +201,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Sub_Pass_Dependency.Dst_Access_Mask = 0;// RHI_ACCESS_FLAG_BITS::RHI_ACCESS_COLOR_ATTACHMENT_READ_BIT | RHI_ACCESS_FLAG_BITS::RHI_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 			Sub_Pass_Dependency.Dependency_Flags = 0;
 		}
+
 		const vector<const RHI_Subpass_Dependency*> Subpass_Dependencies{ &Sub_Pass_Dependency };
 
 		RHI_Render_Pass_Create_Info Render_Pass_Create_Info{};
@@ -241,7 +240,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Per_Frame_Storage_Buffer_Binding.Binding = 0;
 			Per_Frame_Storage_Buffer_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
 			Per_Frame_Storage_Buffer_Binding.Descriptor_Count = 1;
-			Per_Frame_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
+			Per_Frame_Storage_Buffer_Binding.Stage_Flags = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT | RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT;
 			Per_Frame_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
 		}
 
@@ -262,6 +261,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
 			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
 		}
+
 		const vector<const RHI_Descriptor_Set_Layout_Binding*> Bindings{
 			&Per_Frame_Storage_Buffer_Binding,
 			&Per_Draw_Call_Storage_Buffer_Binding,
@@ -556,6 +556,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
+	}
+
+	void Point_Light_Pass::Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) {
+		this->Setup_Attachments();
+		this->Setup_Render_Pass();
+		this->Setup_Frame_Buffer();
+
+		this->m_Descriptors.resize(1);
+		this->Setup_Descriptor_Set_Layout();
 	}
 
 	void Point_Light_Pass::Post_Inittialize(void) {

@@ -14,15 +14,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_RHI::RHI_Render_Pass;
 	using NameSpace_RHI::RHI_Image_View;
 
-	class Tone_Mapping final :public Render_Pass {
+	class Tone_Mapping_Pass final :public Render_Pass {
 	private:
-		Tone_Mapping(const Tone_Mapping&) = delete;
+		Tone_Mapping_Pass(const Tone_Mapping_Pass&) = delete;
 
-		Tone_Mapping& operator=(const Tone_Mapping&) = delete;
+		Tone_Mapping_Pass& operator=(const Tone_Mapping_Pass&) = delete;
 	public:
-		Tone_Mapping(const Render_Pass_Command_Info& Command_Info, RHI_Render_Pass* Render_Pass);
+		Tone_Mapping_Pass(const Render_Pass_Command_Info& Command_Info, RHI_Render_Pass* Render_Pass);
 
-		~Tone_Mapping(void) = default;
+		~Tone_Mapping_Pass(void) = default;
 
 	public:
 

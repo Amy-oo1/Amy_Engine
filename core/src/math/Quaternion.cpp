@@ -286,6 +286,28 @@ namespace NameSpace_Core::NameSpace_Math {
 			this->m_Quat.second.Is_NaN();
 	}
 
+	const Quaternion Quaternion::Get_Rotation_TO(const Vector3& Src, const Vector3& Dst, const Vector3& FallBack_Axis){
+		auto T_Src = Src.Normalize(), T_Dst = Dst.Normalize();
+		float Dot = T_Src.Dot_Product(T_Dst);
+		if (Dot >= 1.f)
+			return Quaternion::IDENTITY;
+		else if (Dot < (1e-6f - 1.f)) {
+			if (FallBack_Axis.Length_Square() > 0)
+				return Quaternion{ FallBack_Axis, Radian{Math_PI} };
+			else {
+				Vector3 Axis = Vector3::UNIT_X.Cross_Product(T_Src);
+				if (Axis.Length_Square() < 1e-6f)
+					Axis = Vector3::UNIT_Y.Cross_Product(T_Src);
+				return Quaternion{ Axis, Radian{Math_PI} };
+			}
+		}
+		else {
+			float S = NameSpace_Utilities::Sqrt((1.f + Dot) * 2.f);
+			Vector3 Axis = T_Src.Cross_Product(T_Dst) / S;
+			return Quaternion{ S * 0.5f, Axis };
+		}
+	}
+
 	const Quaternion Quaternion::Generate_By_AxisAngle(const Vector3& Axis, const Radian& Angle) {
 		assert(Axis.Is_Unit() && "Axis Is Not A Unit Vector");
 

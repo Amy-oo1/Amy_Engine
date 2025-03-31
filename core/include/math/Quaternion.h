@@ -104,6 +104,8 @@ namespace NameSpace_Core::NameSpace_Math {
 		const bool Is_NaN(void)const;
 
 	public:
+		static const Quaternion Get_Rotation_TO(const Vector3& Src,const Vector3& Dst, const Vector3& FallBack_Axis = Vector3::ZERO);
+
 		static const Quaternion Generate_By_AxisAngle(const Vector3& Axis, const Radian& Angle);
 
 		static const Quaternion Generate_By_RotationMatrix(const Matrix3x3& Rotation_Matrix3x3);

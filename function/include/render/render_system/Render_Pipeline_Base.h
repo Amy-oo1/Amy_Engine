@@ -6,7 +6,6 @@
 #include "math/Vector2.h"
 
 #include "render/rhi/empty_rhi/Empty_RHI.h"
-#include "render/render_pass/Render_Pass_Base.h"
 #include "render/render_system/Render_Resource.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
@@ -16,12 +15,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_RHI::Empty_RHI;
 
-	using NameSpace_Pass::Render_Pass_Base;
-
 	struct Render_Pipeline_Info final {
-		bool Enbale_FAXX{ false };
 		shared_ptr<Empty_RHI> RHI{ nullptr };
 		shared_ptr<Render_Resource_Base> Resource{ nullptr };
+
+		bool Enbale_FAXX{ false };
 
 	};
 
@@ -45,15 +43,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	protected:
 		shared_ptr<Empty_RHI> m_RHI{ nullptr };
 
-		shared_ptr<Render_Pass_Base> m_Directional_Light_Pass{ nullptr };
-		shared_ptr<Render_Pass_Base> m_Point_Light_Pass{ nullptr };
-		shared_ptr<Render_Pass_Base> m_Main_Camera_Pass{ nullptr };
-		shared_ptr<Render_Pass_Base> m_Color_Grading_Pass{ nullptr };
-		shared_ptr<Render_Pass_Base> m_FXAA_Pass{ nullptr };
-		shared_ptr<Render_Pass_Base> m_Tone_Mapping_Pass{ nullptr };
-		shared_ptr<Render_Pass_Base> m_Pick_Pss{ nullptr };
-		shared_ptr<Render_Pass_Base> m_Particle_Pass{ nullptr };
-
+		shared_ptr<Render_Resource_Base> m_Render_Resource{ nullptr };
 	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

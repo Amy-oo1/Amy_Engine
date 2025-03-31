@@ -37,8 +37,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Global_Render_Resource;
 
-	enum
-	{
+	enum :uint32_t{
 		_main_camera_pass_gbuffer_a = 0,
 		_main_camera_pass_gbuffer_b = 1,
 		_main_camera_pass_gbuffer_c = 2,
@@ -53,8 +52,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		_main_camera_pass_attachment_count = 9,
 	};
 
-	enum
-	{
+	enum :uint32_t{
 		_main_camera_subpass_basepass = 0,
 		_main_camera_subpass_deferred_lighting,
 		_main_camera_subpass_forward_lighting,
@@ -116,6 +114,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		virtual ~Render_Pass(void) = default;
 
 	public:
+		vector<RHI_Image_View*> Get_Frame_Buffer_Image_Views(void)const;
+
 		static inline Visiable_Node s_Visable_Node{};
 
 
@@ -125,7 +125,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		Frame_Buffer m_Frame_Buffer{};
 		vector<Descriptor> m_Descriptors{};
 		vector<Render_Pipeline> m_Render_Pipelines{};
-
+		
 
 		/*virtual void Post_Inittialize(void) = 0;
 		virtual void Draw(void) = 0;*/

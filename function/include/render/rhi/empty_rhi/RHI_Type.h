@@ -284,6 +284,20 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	}
 
 	using RHI_Dependency_Flags = uint32_t;
+	enum class RHI_DEPENDENCY_FLAG_BITS :uint32_t {
+		RHI_DEPENDENCY_BY_REGION_BIT = 0x00000001,
+		RHI_DEPENDENCY_DEVICE_GROUP_BIT = 0x00000004,
+		RHI_DEPENDENCY_VIEW_LOCAL_BIT = 0x00000002,
+		RHI_DEPENDENCY_VIEW_LOCAL_BIT_KHR = RHI_DEPENDENCY_VIEW_LOCAL_BIT,
+		RHI_DEPENDENCY_DEVICE_GROUP_BIT_KHR = RHI_DEPENDENCY_DEVICE_GROUP_BIT,
+		RHI_DEPENDENCY_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+	};
+	constexpr RHI_Dependency_Flags operator|(RHI_DEPENDENCY_FLAG_BITS lhs, RHI_DEPENDENCY_FLAG_BITS rhs) {
+		return static_cast<RHI_Dependency_Flags>(static_cast<RHI_Dependency_Flags>(lhs) | static_cast<RHI_Dependency_Flags>(rhs));
+	}
+	constexpr RHI_Dependency_Flags operator|(RHI_Dependency_Flags lhs, RHI_DEPENDENCY_FLAG_BITS  rhs) {
+		return static_cast<RHI_Dependency_Flags>(lhs | static_cast<RHI_Dependency_Flags>(rhs));
+	}
 
 	using RHI_Sampler_Create_Flags = uint32_t;
 

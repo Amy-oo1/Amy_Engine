@@ -62,6 +62,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void Create_Default_Command_Pool(void) = 0;
 
+		[[nodiscard]] virtual RHI_Command_Pool* Get_Default_Command_Pool(void)const = 0;
+
 		[[nodiscard]] virtual RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const = 0;
 
 		[[nodiscard]] virtual vector<unique_ptr<RHI_Command_Buffer>>
@@ -76,7 +78,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		virtual void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
 
 		virtual void Create_SwapChain(void) = 0;
+
 		virtual void Create_SwapChhain_Image_Views(void) = 0;
+
+		[[nodiscard]] virtual uint32_t Get_Current_Frame_Index(void)const = 0;
+
+		[[nodiscard]] virtual RHI_Viewport Get_SwapChain_Viewport(void)const = 0;
+
+		[[nodiscard]] virtual RHI_Rect_2D Get_SwapChain_Scissor(void)const = 0;
+
+		[[nodiscard]] virtual RHI_Extent_2D Get_SwapChain_Extent(void)const = 0;
+
+		[[nodiscard]] virtual RHI_FORMAT Get_SwapChain_Image_Foramt(void)const = 0;
 
 		[[nodiscard]] virtual tuple<
 			unique_ptr<RHI_Buffer>,
@@ -240,6 +253,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				RHI_Pipeline_Cache* Pipeline_Cache = nullptr
 			) = 0;
 
+		[[nodiscard]] virtual unique_ptr<RHI_Pipeline>
+			Create_Compute_Pipeline(
+				const RHI_Compute_Pipeline_Create_Info* Create_Info,
+				RHI_Pipeline_Cache* Pipeline_Cache = nullptr
+			) = 0;
+
 		[[nodiscard]] virtual unique_ptr<RHI_Semaphore>
 			Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info
 			) = 0;
@@ -270,11 +289,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 
 
-		[[nodiscard]] virtual unique_ptr<RHI_Pipeline>
-			Create_Compute_Pipeline(
-				optional<RHI_Pipeline_Cache*> Pipeline_Cache,
-				const RHI_Compute_Pipeline_Create_Info* pCreateInfos
-			) = 0;
+
 
 
 		virtual bool

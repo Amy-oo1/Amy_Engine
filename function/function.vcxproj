@@ -189,7 +189,9 @@
     <ClInclude Include="include\render\render_pass\Combine_UI_Pass.h" />
     <ClInclude Include="include\render\render_pass\Directional_Light_Pass.h" />
     <ClInclude Include="include\render\render_pass\FXAA_Pass.h" />
+    <ClInclude Include="include\render\render_pass\Main_Camera_Pass.h" />
     <ClInclude Include="include\render\render_pass\Particle_Pass.h" />
+    <ClInclude Include="include\render\render_pass\Pick_Pass.h" />
     <ClInclude Include="include\render\render_pass\Point_Light_Paass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h" />
@@ -238,7 +240,9 @@
     <ClCompile Include="src\render\render_pass\Combine_UI_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Directional_Light_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\FXAA_Pass.cpp" />
+    <ClCompile Include="src\render\render_pass\Main_Camera_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Particle_Pass.cpp" />
+    <ClCompile Include="src\render\render_pass\Pick_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Point_Light_Paass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass.cpp" />
     <ClCompile Include="src\render\render_pass\Render_Pass_Base.cpp" />

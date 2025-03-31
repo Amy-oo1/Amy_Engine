@@ -86,7 +86,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		//NOTE : Pipeline
 		{
 			bool Enbale_FAXX = Reflection_Global_Rendering_Operator::Get_Enable_FXAA_Attribute(Global_Rendering_Resource);
-			Render_Pipeline_Info Pipeline_Info{ Enbale_FAXX,this->m_RHI,this->m_Render_Resource };
+			Render_Pipeline_Info Pipeline_Info{ this->m_RHI,this->m_Render_Resource ,Enbale_FAXX };
 
 			this->m_Render_Pipeline = std::make_shared<Render_Pipeline>(Pipeline_Info);
 
@@ -96,7 +96,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	}
 
-	void Render_System::Render(void){
+	void Render_System::Render(void) {
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

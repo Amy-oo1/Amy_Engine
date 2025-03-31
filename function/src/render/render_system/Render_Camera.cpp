@@ -1,8 +1,19 @@
 #include "render/render_system/Render_Camera.h"
 
+#include "math/Degree.h"
+#include "math/Radian.h"
+#include "math/Utilities.h"
+
 #include <algorithm>
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
+
+	using NameSpace_Core::NameSpace_Math::Degree;
+	using NameSpace_Core::NameSpace_Math::Radian;
+
+	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Tan;
+	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Atan2;
+	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Atan;
 
 	void Render_Camera::Set_Current_Camera_Type(RENDER_CAMERA_TYPE Camera_Type) {
 		std::lock_guard<std::mutex> Lock{ this->m_View_Matrix_Mutex };
@@ -35,19 +46,31 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	}
 
 	void Render_Camera::Look_At(const Vector3& Postion, const Vector3& Target, const Vector3& Up) {
-		//TODO
+		this->m_Position = Postion;
+		Vector3 Forward = (Target - Postion).Normalize();
+
+		this->m_Rotation = Quaternion::Get_Rotation_TO(Forward, Vector3::UNIT_Y);
+
+		Vector3 Right = Forward.Cross_Product(Up.Normalize()).Normalize();
+		Vector3 New_Up = Right.Cross_Product(Forward).Normalize();
+
+		this->m_Rotation = Quaternion::Get_Rotation_TO(Forward, New_Up).Conjugation();
 	}
 
-	void Render_Camera::Set_Z_Near(float Z_Near){
+	void Render_Camera::Set_Z_Near(float Z_Near) {
 		this->m_Z_Near = Z_Near;
 	}
 
-	void Render_Camera::Set_Z_Far(float Z_Far){
+	void Render_Camera::Set_Z_Far(float Z_Far) {
 		this->m_Z_Far = Z_Far;
 	}
 
 	void Render_Camera::Set_Aspect(const Vector2& Aspect) {
-		//TODO
+		this->m_Aspect = Aspect.Get_X() / Aspect.Get_Y();
+
+
+
+		this->m_FOV_Y = Degree(Radian(Atan((Tan(Degree(this->m_FOV_X) * 0.5f) / this->m_Aspect) * 2.f))).Get_Degree();
 	}
 
 	void Render_Camera::Set_FOV_X(float FOV) {

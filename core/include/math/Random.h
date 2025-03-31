@@ -71,4 +71,5 @@ namespace NameSpace_Core::NameSpace_Math {
 
     };
 
+    using Default_RNG = Random_Number_Generator<std::mt19937>;
 } // namespace NameSpace_Core::NameSpace_Math
