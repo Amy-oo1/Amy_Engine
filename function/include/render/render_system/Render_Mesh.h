@@ -91,9 +91,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			offsetof(Vulkan_Mesh_Vertex_Varying, TexCoord)
 		};
 
-		const vector<const RHI_Vertex_Input_Binding_Description*>* Get_Vertex_Input_Binding_Description(void);//NOTE : Return All Of The Binding Description
+		static const vector<const RHI_Vertex_Input_Binding_Description*>* Get_Vertex_Input_Binding_Description(void);//NOTE : Return All Of The Binding Description
 
-		const vector<const RHI_Vertex_Input_Attribute_Description*>* Get_Vertex_Input_Attribute_Description(void);// NOTE : Return All Of The Attribute Description
+		static const vector<const RHI_Vertex_Input_Attribute_Description*>* Get_Vertex_Input_Attribute_Description(void);// NOTE : Return All Of The Attribute Description
 
 	};
 

@@ -122,7 +122,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		[[nodiscard]] GLFWwindow* Get_GLFW_Window(void)const;
 
 		[[nodiscard]] uint32_t Get_Graphics_Queue_Family(void)const;
-		
+
 
 		//TODO : Private Member Func
 	private:
@@ -136,7 +136,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Create_Nearest_Sampler(void);
 		void Create_Linear_Sampler(void);
 
-		void Create_SwapChain_Depth_Image(void);
 		void Clear_SwapChain(void);
 
 		//TODO : Static Public Func
@@ -448,15 +447,25 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Create_SwapChhain_Image_Views(void) override;
 
+		void Create_SwapChain_Depth_Image(void) override;
+
 		[[nodiscard]] uint32_t Get_Current_Frame_Index(void)const override;
 
-		[[nodiscard]] RHI_Viewport Get_SwapChain_Viewport(void)const override;
+		[[nodiscard]] uint32_t Get_SwapChain_Image_Size(void)const override;
 
-		[[nodiscard]] RHI_Rect_2D Get_SwapChain_Scissor(void)const override;
+		[[nodiscard]] const RHI_Viewport& Get_SwapChain_Viewport(void)const override;
 
-		[[nodiscard]] RHI_Extent_2D Get_SwapChain_Extent(void)const override;
+		[[nodiscard]] const RHI_Rect_2D& Get_SwapChain_Scissor(void)const override;
 
-		[[nodiscard]]  RHI_FORMAT Get_SwapChain_Image_Foramt(void)const override;
+		[[nodiscard]] const RHI_Extent_2D& Get_SwapChain_Extent(void)const override;
+
+		[[nodiscard]] RHI_FORMAT Get_SwapChain_Image_Foramt(void)const override;
+
+		[[nodiscard]] RHI_Image_View* Get_SwapChain_Image_View(uint32_t Index)const override;
+
+		[[nodiscard]] RHI_Image* Get_SwapChain_Depth_Image(void)const override;
+
+		[[nodiscard]] RHI_Image_View* Get_SwapChain_Depth_Image_View(void)const override;
 
 		[[nodiscard]] tuple<
 			unique_ptr<RHI_Buffer>,
@@ -576,7 +585,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		[[nodiscard]] unique_ptr<RHI_Frame_Buffer>
 			Create_Frame_Buffer(
-				const RHI_Frame_buffer_Create_Info* Create_Info
+				const RHI_Frame_Buffer_Create_Info* Create_Info
 			) override;
 
 		[[nodiscard]] unique_ptr<RHI_Descriptor_Pool>
@@ -638,7 +647,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Initialize(void) override;
 
-		void Re_Create_SwapChain(void) override;
+		void ReCreate_SwapChain(void) override;
 
 	private:
 

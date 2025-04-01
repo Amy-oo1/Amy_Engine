@@ -102,6 +102,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
 
 
+		void Set_Depth_and_Normal_Image(RHI_Image* Depth_Image, RHI_Image* Normal_Image);
+		void Set_Render_Pass_Handle(RHI_Render_Pass* Render_Pass);
+
 	private:
 		void Setup_Uniform_Buffer(void);
 
@@ -147,6 +150,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		unique_ptr<RHI_Device_Memory> m_Particle_Billbord_Uniform_Memory{ nullptr };
 		void* m_Particle_Billbord_Uniform_Buffer_Mapped{ nullptr };
 
+
+		RHI_Image* m_Src_Depth_Image{ nullptr };
+		RHI_Image* m_Src_Normal_Image{ nullptr };
+		RHI_Render_Pass* m_Render_Pass{ nullptr };
 
 	public:
 		void Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) override;

@@ -135,7 +135,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_Fence_Create_Flags Flags;
 	};
 
-	struct RHI_Frame_buffer_Create_Info final {
+	struct RHI_Frame_Buffer_Create_Info final {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Frame_Buffer_Create_Flags Flags;

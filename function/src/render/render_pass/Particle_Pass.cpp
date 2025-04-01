@@ -51,7 +51,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_RHI::RHI_Pipeline_Color_Blend_Attachment_State;
 
 	using NameSpace_RHI::RHI_Render_Pass_Create_Info;
-	using NameSpace_RHI::RHI_Frame_buffer_Create_Info;
+	using NameSpace_RHI::RHI_Frame_Buffer_Create_Info;
 	using NameSpace_RHI::RHI_Descriptor_Set_Layout_Create_Info;
 	using NameSpace_RHI::RHI_Descriptor_Set_Allocate_Info;
 	using NameSpace_RHI::RHI_Descriptor_Buffer_Info;
@@ -86,6 +86,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		std::seed_seq Seed{ Random_Device()/*,Random_Device(),Random_Device(),Random_Device()*/ };
 
 		this->m_Random_Engine.Seed(Seed);
+	}
+
+	void Particle_Pass::Set_Depth_and_Normal_Image(RHI_Image* Depth_Image, RHI_Image* Normal_Image){
+		this->m_Src_Depth_Image = Depth_Image;
+		this->m_Src_Normal_Image = Normal_Image;
+	}
+
+	void Particle_Pass::Set_Render_Pass_Handle(RHI_Render_Pass* Render_Pass) {
+		this->m_Render_Pass = Render_Pass;
 	}
 
 	void Particle_Pass::Setup_Uniform_Buffer(void) {

@@ -425,40 +425,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		static_cast<Vulkan_Sampler*>(this->m_Nearest_RHI_Sampler.get())->Reset(Sampler);
 	}
 
-	void Vulkan_RHI::Create_SwapChain_Depth_Image(void) {
-		VkImage VK_Image{};
-		VkDeviceMemory VK_Device_Memory{};
-		NameSpace_Utilities::Create_Image(
-			this->m_VK_Physical_Device,
-			this->m_Logical_VK_Device,
-			this->m_Allocator.get(),
-			VkExtent2D{ this->m_SwapChain_Extent.Width,this->m_SwapChain_Extent.Height },
-			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
-			1,
-			1,
-			VK_IMAGE_TILING_OPTIMAL,
-			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-			0,
-			VK_Image,
-			VK_Device_Memory
-		);
-
-		static_cast<Vulkan_Image*>(this->m_SwapChain_Depth_RHI_Image.get())->Reset(VK_Image);
-		static_cast<Vulkan_Device_Memory*>(this->m_SwapChain_Depth_RHI_Device_Memory.get())->Reset(VK_Device_Memory);
-
-		static_cast<Vulkan_Image_View*>(this->m_SwapChain_Depth_RHI_Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
-			this->m_Logical_VK_Device,
-			this->m_Allocator.get(),
-			VK_Image,
-			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
-			1,
-			VK_IMAGE_ASPECT_DEPTH_BIT,
-			VK_IMAGE_VIEW_TYPE_2D,
-			1
-		));
-	}
-
 	void Vulkan_RHI::Clear_SwapChain(void) {
 		this->m_Vk_SwapChain.reset();
 		this->m_SwapChain_RHI_Images.clear();
@@ -1540,8 +1506,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return this->m_Default_RHI_Command_Pool.get();
 	}
 
-
-
 	RHI_Descriptor_Pool* Vulkan_RHI::Get_Default_Descriptor_Pool(void) const {
 		return this->m_Default_RHI_Descriptor_Pool.get();
 	}
@@ -1687,19 +1651,57 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		}
 	}
 
+	void Vulkan_RHI::Create_SwapChain_Depth_Image(void) {
+		VkImage VK_Image{};
+		VkDeviceMemory VK_Device_Memory{};
+		NameSpace_Utilities::Create_Image(
+			this->m_VK_Physical_Device,
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			VkExtent2D{ this->m_SwapChain_Extent.Width,this->m_SwapChain_Extent.Height },
+			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
+			1,
+			1,
+			VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+			0,
+			VK_Image,
+			VK_Device_Memory
+		);
+
+		static_cast<Vulkan_Image*>(this->m_SwapChain_Depth_RHI_Image.get())->Reset(VK_Image);
+		static_cast<Vulkan_Device_Memory*>(this->m_SwapChain_Depth_RHI_Device_Memory.get())->Reset(VK_Device_Memory);
+
+		static_cast<Vulkan_Image_View*>(this->m_SwapChain_Depth_RHI_Image_View.get())->Reset(NameSpace_Utilities::Create_Image_View(
+			this->m_Logical_VK_Device,
+			this->m_Allocator.get(),
+			VK_Image,
+			static_cast<VkFormat>(this->Get_Physical_Depth_Format()),
+			1,
+			VK_IMAGE_ASPECT_DEPTH_BIT,
+			VK_IMAGE_VIEW_TYPE_2D,
+			1
+		));
+	}
+
 	uint32_t Vulkan_RHI::Get_Current_Frame_Index(void) const {
 		return this->m_Current_Frame_Index;
 	}
 
-	RHI_Viewport Vulkan_RHI::Get_SwapChain_Viewport(void) const {
+	uint32_t Vulkan_RHI::Get_SwapChain_Image_Size(void) const {
+		return this->m_SwapChain_Image_Count;
+	}
+
+	const RHI_Viewport& Vulkan_RHI::Get_SwapChain_Viewport(void) const {
 		return this->m_Viewport;
 	}
 
-	RHI_Rect_2D Vulkan_RHI::Get_SwapChain_Scissor(void) const {
+	const RHI_Rect_2D& Vulkan_RHI::Get_SwapChain_Scissor(void) const {
 		return this->m_Scissor;
 	}
 
-	RHI_Extent_2D Vulkan_RHI::Get_SwapChain_Extent(void) const {
+	const RHI_Extent_2D& Vulkan_RHI::Get_SwapChain_Extent(void) const {
 		return this->m_SwapChain_Extent;
 	}
 
@@ -1707,7 +1709,20 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return static_cast<RHI_FORMAT>(this->m_SwapChain_Image_Format);
 	}
 
+	RHI_Image_View* Vulkan_RHI::Get_SwapChain_Image_View(uint32_t Index) const{
+		if (Index >= this->m_SwapChain_RHI_Image_Views.size())
+			throw runtime_error("Index Out Of Range");
 
+		return this->m_SwapChain_RHI_Image_Views[Index].get();
+	}
+
+	RHI_Image* Vulkan_RHI::Get_SwapChain_Depth_Image(void) const{
+		return this->m_SwapChain_Depth_RHI_Image.get();
+	}
+
+	RHI_Image_View* Vulkan_RHI::Get_SwapChain_Depth_Image_View(void) const {
+		return this->m_SwapChain_Depth_RHI_Image_View.get();
+	}
 
 	tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Vulkan_RHI::Create_Buffer(RHI_Device_Size Size, RHI_Buffer_Usage_Flags Usage, RHI_Memory_Property_Flags Properties) {
 		VkBuffer  Temp_Buffer{ nullptr };
@@ -2112,7 +2127,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Render_Pass;
 	}
 
-	unique_ptr<RHI_Frame_Buffer> Vulkan_RHI::Create_Frame_Buffer(const RHI_Frame_buffer_Create_Info* Create_Info) {
+	unique_ptr<RHI_Frame_Buffer> Vulkan_RHI::Create_Frame_Buffer(const RHI_Frame_Buffer_Create_Info* Create_Info) {
 		if (nullptr == Create_Info)
 			throw runtime_error("Create Info is nullptr!");
 
@@ -2541,7 +2556,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return Pipeline;
 	}
 
-
 	unique_ptr<RHI_Semaphore> Vulkan_RHI::Create_Semaphore(const RHI_Semaphore_Create_Info* Create_Info) {
 		VkSemaphoreCreateInfo vk_Semaphore_Create_Info{};
 		{
@@ -2638,7 +2652,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->Create_SwapChain_Depth_Image();
 	}
 
-	void Vulkan_RHI::Re_Create_SwapChain(void)
+	void Vulkan_RHI::ReCreate_SwapChain(void)
 	{
 	}
 

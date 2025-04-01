@@ -36,7 +36,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_RHI::RHI_Pipeline_Color_Blend_Attachment_State;
 
 	using NameSpace_RHI::RHI_Render_Pass_Create_Info;
-	using NameSpace_RHI::RHI_Frame_buffer_Create_Info;
+	using NameSpace_RHI::RHI_Frame_Buffer_Create_Info;
 	using NameSpace_RHI::RHI_Descriptor_Set_Layout_Create_Info;
 	using NameSpace_RHI::RHI_Descriptor_Set_Allocate_Info;
 	using NameSpace_RHI::RHI_Descriptor_Buffer_Info;

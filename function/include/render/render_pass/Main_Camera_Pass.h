@@ -61,6 +61,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Setup_Descriptor_Set(void);
 		void Setup_Pipeline(void);
 
+		void Setup_Model_Global_Descriptor_Set(void);
+		void Setup_Skybox_Descriptor_Set(void);
+		void Setup_Axis_Descriptor_Set(void);
+		void Setup_GBuffer_Light_Descriptor_Set(void);
+		void Setup_Frame_Buffer_Descriptor_Set(void);
+		void Setup_Swapchain_Frame_Buffers(void);
+		void Setup_Particle_Pass(void);
+
 		void Set_Driectional_Light_Shadow_Color_Image_View(RHI_Image_View* Image_View);
 		void Set_Point_Light_Shadow_Color_Image_View(RHI_Image_View* Image_View);
 
@@ -69,12 +77,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		bool m_Enable_FXAA{ false };
 		shared_ptr<Particle_Pass> m_Particle_Pass{ nullptr };
 
-		RHI_Image_View* m_Driectional_Light_Shadow_Color_Image_View{ nullptr };
+		RHI_Image_View* m_Directional_Light_Shadow_Color_Image_View{ nullptr };
 		RHI_Image_View* m_Point_Light_Shadow_Color_Image_View{ nullptr };
 
 		vector<unsigned char> m_Vertex_Shader_Code;
 		vector<unsigned char> m_Fragment_Shader_Code;
 		NameSpace_RHI::RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout{ nullptr };
+
+		vector<unique_ptr<RHI_Frame_Buffer>> m_Swapchain_Frame_Buffers{};
 
 	public:
 		void Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) override;
