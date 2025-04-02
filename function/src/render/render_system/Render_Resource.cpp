@@ -81,7 +81,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		//NOTE :Axis Storage Buffer
 		std::tie(Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer, Ref_Stroage_Buffer.Axis_Inefficient_Strogae_Buffer_Memory) = Ref_Vulkan_RHI->Create_Buffer(
 			Ref_Stroage_Buffer.Axis_Storage_Buffer_Size,
-			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT),
+			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT),
 			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 		);
 

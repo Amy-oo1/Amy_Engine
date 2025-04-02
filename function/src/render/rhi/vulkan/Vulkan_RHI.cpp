@@ -118,7 +118,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		this->m_RHI_Physical_Device.reset();
 		this->m_VK_Surface.reset();
 #ifdef _DEBUG
-		vkDestroyDebugUtilsMessengerEXT(static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(), this->m_Debug_Messenger, this->m_Allocator.get());
+		this->Destroy_DebugUtils_Messenger_EXT(
+			static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get(),
+			this->m_Debug_Messenger,
+			this->m_Allocator.get()
+		);
 #endif // _DEBUG
 		this->m_RHI_Instance.reset();
 	}
@@ -677,6 +681,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		if (nullptr == Write_Descriptor_Set)
 			return std::nullopt;
 
+		uint32_t Descriptor_Count{ 0 };
+
 		if (nullptr == Write_Descriptor_Set->Image_Infos || Write_Descriptor_Set->Image_Infos->empty())
 			Image_Infos = std::nullopt;
 		else {
@@ -692,11 +698,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 				Image_Infos->push_back(vk_Image_Info);
 			}
+
+			Descriptor_Count = static_cast<uint32_t>(Image_Infos->size());
 		}
 
 		if (nullptr == Write_Descriptor_Set->Buffer_Infos || Write_Descriptor_Set->Buffer_Infos->empty())
 			Buffer_Infos = std::nullopt;
 		else {
+			if (0 != Descriptor_Count)
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Descriptor Tyoe Must Be Sign");
+
 			Buffer_Infos = std::make_optional<vector<VkDescriptorBufferInfo>>();
 			Buffer_Infos->reserve(Write_Descriptor_Set->Buffer_Infos->size());
 			for (const auto& Buffer_Info : *Write_Descriptor_Set->Buffer_Infos) {
@@ -709,16 +720,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 				Buffer_Infos->push_back(vk_Buffer_Info);
 			}
+
+			Descriptor_Count = static_cast<uint32_t>(Buffer_Infos->size());
 		}
 
 		if (nullptr == Write_Descriptor_Set->Texel_Buffer_Views || Write_Descriptor_Set->Texel_Buffer_Views->empty())
 			vk_Buffer_Views = std::nullopt;
 		else {
+			if (0 != Descriptor_Count)
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Descriptor Tyoe Must Be Sign");
+
 			vk_Buffer_Views = std::make_optional<vector<VkBufferView>>();
 			vk_Buffer_Views->reserve(Write_Descriptor_Set->Texel_Buffer_Views->size());
 
 			for (const auto& Buffer_View : *Write_Descriptor_Set->Texel_Buffer_Views)
 				vk_Buffer_Views->push_back(static_cast<Vulkan_Buffer_View*>(Buffer_View)->Get());
+
+			Descriptor_Count = static_cast<uint32_t>(vk_Buffer_Views->size());
 		}
 
 		VkWriteDescriptorSet vk_Write_Descriptor_Set{};
@@ -727,7 +745,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			vk_Write_Descriptor_Set.pNext = Write_Descriptor_Set->pNext;
 			vk_Write_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Write_Descriptor_Set->Dst_Set)->Get();
 			vk_Write_Descriptor_Set.dstBinding = Write_Descriptor_Set->Dst_Binding;
-			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;
+			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;//TODO £ºMove To Optional
+			vk_Write_Descriptor_Set.descriptorCount = Descriptor_Count;
 			vk_Write_Descriptor_Set.descriptorType = static_cast<VkDescriptorType>(Write_Descriptor_Set->Descriptor_Type);
 			vk_Write_Descriptor_Set.pImageInfo = Image_Infos.has_value() ? Image_Infos->data() : nullptr;
 			vk_Write_Descriptor_Set.pBufferInfo = Buffer_Infos.has_value() ? Buffer_Infos->data() : nullptr;
@@ -1413,6 +1432,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Physical_Device_Features.samplerAnisotropy = VK_TRUE;
 			Physical_Device_Features.fragmentStoresAndAtomics = VK_TRUE;
 			Physical_Device_Features.independentBlend = VK_TRUE;
+			Physical_Device_Features.geometryShader = VK_TRUE;
 		}
 
 		VkDeviceCreateInfo Device_Create_Info{};
@@ -1709,14 +1729,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return static_cast<RHI_FORMAT>(this->m_SwapChain_Image_Format);
 	}
 
-	RHI_Image_View* Vulkan_RHI::Get_SwapChain_Image_View(uint32_t Index) const{
+	RHI_Image_View* Vulkan_RHI::Get_SwapChain_Image_View(uint32_t Index) const {
 		if (Index >= this->m_SwapChain_RHI_Image_Views.size())
 			throw runtime_error("Index Out Of Range");
 
 		return this->m_SwapChain_RHI_Image_Views[Index].get();
 	}
 
-	RHI_Image* Vulkan_RHI::Get_SwapChain_Depth_Image(void) const{
+	RHI_Image* Vulkan_RHI::Get_SwapChain_Depth_Image(void) const {
 		return this->m_SwapChain_Depth_RHI_Image.get();
 	}
 
@@ -2047,35 +2067,42 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "RHI_Attachment_Descriptions Input Is EMpty");
 
 		vector<VkSubpassDescription> vk_Subpass_Descriptions{};
+
+		vector<optional<vector<VkAttachmentReference>>> vk_Input_Attachments_Table{};
+		vector<optional<vector<VkAttachmentReference>>> vk_Color_Attachments_Table{};
+		vector<optional<vector<VkAttachmentReference>>> vk_Resolve_Attachments_Table{};
+		vector<optional<VkAttachmentReference>> vk_Depth_Stencil_Attachment_Table{};
+
 		if (nullptr != Create_Info->Subpasses && !Create_Info->Subpasses->empty()) {
 			vk_Subpass_Descriptions.reserve(Create_Info->Subpasses->size());
+
+			vk_Input_Attachments_Table.reserve(Create_Info->Subpasses->size());
+			vk_Color_Attachments_Table.reserve(Create_Info->Subpasses->size());
+			vk_Resolve_Attachments_Table.reserve(Create_Info->Subpasses->size());
+			vk_Depth_Stencil_Attachment_Table.reserve(Create_Info->Subpasses->size());
+
 			for (const auto& Subpass : *Create_Info->Subpasses) {
-				const vector<const RHI_Attachment_Reference*> Depth_Stencil_Attachment{ Subpass->Depth_Stencil_Attachment };
-				const auto vk_Input_Attachments{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Input_Attachments) };
-				const auto vk_Color_Attachments{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Color_Attachments) };
-				const auto vk_Resolve_Attachments{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Resolve_Attachments) };
-				const auto vk_Depth_Stencil_Attachment{ Vulkan_RHI::S_Parser_RHI_Attachment_Reference(&Depth_Stencil_Attachment) };
+				vk_Input_Attachments_Table.emplace_back(Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Input_Attachments));
+				vk_Color_Attachments_Table.emplace_back(Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Color_Attachments));
+				vk_Resolve_Attachments_Table.emplace_back(Vulkan_RHI::S_Parser_RHI_Attachment_Reference(Subpass->Resolve_Attachments));
 
-				vector<uint32_t> Preserve_Attachments{};
-				if (nullptr != Subpass->Preserve_Attachments && !Subpass->Preserve_Attachments->empty()) {
-					Preserve_Attachments.reserve(Subpass->Preserve_Attachments->size());
-
-					for (const auto& Preserve_Attachment : *Subpass->Preserve_Attachments)
-						Preserve_Attachments.push_back(Preserve_Attachment);
+				if (nullptr != Subpass->Depth_Stencil_Attachment) {
+					const vector<const RHI_Attachment_Reference*> Depth_Stencil_Attachment{ Subpass->Depth_Stencil_Attachment };
+					vk_Depth_Stencil_Attachment_Table.push_back(Vulkan_RHI::S_Parser_RHI_Attachment_Reference(&Depth_Stencil_Attachment)->front());
 				}
 
 				VkSubpassDescription vk_Subpass_Description{};
 				{
 					vk_Subpass_Description.flags = static_cast<VkSubpassDescriptionFlags>(Subpass->Flags);
 					vk_Subpass_Description.pipelineBindPoint = static_cast<VkPipelineBindPoint>(Subpass->Pipeline_Bind_Point);
-					vk_Subpass_Description.inputAttachmentCount = vk_Input_Attachments.has_value() ? static_cast<uint32_t>(vk_Input_Attachments->size()) : 0;
-					vk_Subpass_Description.pInputAttachments = vk_Input_Attachments.has_value() ? vk_Input_Attachments->data() : nullptr;
-					vk_Subpass_Description.colorAttachmentCount = vk_Color_Attachments.has_value() ? static_cast<uint32_t>(vk_Color_Attachments->size()) : 0;
-					vk_Subpass_Description.pColorAttachments = vk_Color_Attachments.has_value() ? vk_Color_Attachments->data() : nullptr;
-					vk_Subpass_Description.pResolveAttachments = vk_Resolve_Attachments.has_value() ? vk_Resolve_Attachments->data() : nullptr;
-					vk_Subpass_Description.pDepthStencilAttachment = vk_Depth_Stencil_Attachment.has_value() ? &vk_Depth_Stencil_Attachment.value().front() : nullptr;
-					vk_Subpass_Description.preserveAttachmentCount = static_cast<uint32_t>(Preserve_Attachments.size());
-					vk_Subpass_Description.pPreserveAttachments = Preserve_Attachments.data();
+					vk_Subpass_Description.inputAttachmentCount = vk_Input_Attachments_Table.back().has_value() ? static_cast<uint32_t>(vk_Input_Attachments_Table.back()->size()) : 0;
+					vk_Subpass_Description.pInputAttachments = vk_Input_Attachments_Table.back().has_value() ? vk_Input_Attachments_Table.back()->data() : nullptr;
+					vk_Subpass_Description.colorAttachmentCount = vk_Color_Attachments_Table.back().has_value() ? static_cast<uint32_t>(vk_Color_Attachments_Table.back()->size()) : 0;
+					vk_Subpass_Description.pColorAttachments = vk_Color_Attachments_Table.back().has_value() ? vk_Color_Attachments_Table.back()->data() : nullptr;
+					vk_Subpass_Description.pResolveAttachments = vk_Resolve_Attachments_Table.back().has_value() ? vk_Resolve_Attachments_Table.back()->data() : nullptr;
+					vk_Subpass_Description.pDepthStencilAttachment = vk_Depth_Stencil_Attachment_Table.back().has_value() ? &vk_Depth_Stencil_Attachment_Table.back().value() : nullptr;
+					vk_Subpass_Description.preserveAttachmentCount = Subpass->Preserve_Attachments ? static_cast<uint32_t>(Subpass->Preserve_Attachments->size()) : 0;
+					vk_Subpass_Description.pPreserveAttachments = Subpass->Preserve_Attachments ? Subpass->Preserve_Attachments->data() : nullptr;
 				}
 
 				vk_Subpass_Descriptions.emplace_back(vk_Subpass_Description);
@@ -2203,7 +2230,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		{
 			//TODO Erase Magic Number
 			{
-				Pool_Sizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				Pool_Sizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
 				Pool_Sizes[0].descriptorCount = 3 + 2 + 2 + 2 + 1 + 1 + 3 + 3;
 			}
 
@@ -2255,32 +2282,40 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		if (nullptr == Create_Info)
 			throw runtime_error("Create Info is nullptr!");
 
-		vector<VkDescriptorSetLayoutBinding> Bindings{};
+		vector<VkDescriptorSetLayoutBinding> Bindings_Table{};
+		vector<vector<VkSampler>> Samplers_Table{};
+
 		if (nullptr != Create_Info->Bindings && !Create_Info->Bindings->empty()) {
-			Bindings.reserve(Create_Info->Bindings->size());
+			Bindings_Table.reserve(Create_Info->Bindings->size());
+			Samplers_Table.reserve(Create_Info->Bindings->size());
+
 			for (const auto& Binding : *Create_Info->Bindings) {
 				vector<VkSampler> Samplers{};
 
-				if ((!Binding->Immutable_Samplers->empty()) && Binding->Immutable_Samplers->size() != Binding->Descriptor_Count)
+				if ((nullptr != Binding->Immutable_Samplers) && Binding->Immutable_Samplers->size() != Binding->Descriptor_Count)
 					System_Logger::Get_Instance().Log(System_Logger::Level::err, "Immutable_Samplers size is not equal to Descriptor_Count");
 
 				Samplers.reserve(Binding->Descriptor_Count);
 				for (size_t Sampler_Index = 0; Sampler_Index < Binding->Descriptor_Count; ++Sampler_Index) {
-					Samplers.emplace_back(static_cast<Vulkan_Sampler*>(Binding->Immutable_Samplers->at(Sampler_Index))->Get());
+					if (nullptr != Binding->Immutable_Samplers)
+						Samplers.emplace_back(static_cast<Vulkan_Sampler*>(Binding->Immutable_Samplers->at(Sampler_Index))->Get());
 
-					if (nullptr == Samplers[Sampler_Index])
-						System_Logger::Get_Instance().Log(System_Logger::Level::err, "Sampler is nullptr");
+					/*if (nullptr == Samplers[Sampler_Index])
+						System_Logger::Get_Instance().Log(System_Logger::Level::err, "Sampler is nullptr");*/
 				}
+
+				Samplers_Table.emplace_back(Samplers);
+
 				VkDescriptorSetLayoutBinding vk_Binding{};
 				{
 					vk_Binding.binding = Binding->Binding;
 					vk_Binding.descriptorType = static_cast<VkDescriptorType>(Binding->Descriptor_Type);
-					vk_Binding.descriptorCount = static_cast<uint32_t>(Samplers.size());
+					vk_Binding.descriptorCount = Binding->Descriptor_Count;
 					vk_Binding.stageFlags = static_cast<VkShaderStageFlags>(Binding->Stage_Flags);
-					vk_Binding.pImmutableSamplers = Samplers.data();
+					vk_Binding.pImmutableSamplers = Samplers_Table.back().data();
 				}
 
-				Bindings.emplace_back(vk_Binding);
+				Bindings_Table.emplace_back(vk_Binding);
 			}
 		}
 		else
@@ -2291,8 +2326,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Descriptor_Set_Layout_Create_Info.sType = static_cast<VkStructureType>(Create_Info->sType);
 			Descriptor_Set_Layout_Create_Info.pNext = Create_Info->pNext;
 			Descriptor_Set_Layout_Create_Info.flags = static_cast<VkDescriptorSetLayoutCreateFlags>(Create_Info->Flags);
-			Descriptor_Set_Layout_Create_Info.bindingCount = static_cast<uint32_t>(Bindings.size());
-			Descriptor_Set_Layout_Create_Info.pBindings = Bindings.data();
+			Descriptor_Set_Layout_Create_Info.bindingCount = static_cast<uint32_t>(Bindings_Table.size());
+			Descriptor_Set_Layout_Create_Info.pBindings = Bindings_Table.data();
 		}
 
 		VkDescriptorSetLayout VK_Descriptor_Set_Layout{ nullptr };
@@ -2334,68 +2369,64 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	void Vulkan_RHI::Update_Descriptor_Sets(const vector<const RHI_Write_Descriptor_Set*>* Descriptor_Writes, const vector<const RHI_Copy_Descriptor_Set*>* Descriptor_Copies) {
+		if (nullptr == Descriptor_Writes && nullptr == Descriptor_Copies)
+			throw runtime_error("Descriptor Writes and Descriptor Copies are nullptr!");
+
+		vector<optional<vector<VkDescriptorImageInfo>>> Image_Infos{};
+		vector<optional<vector<VkDescriptorBufferInfo>>> Buffer_Infos{};
+		vector<optional<vector<VkBufferView>>> vk_Buffer_Views;
+
 		vector<VkWriteDescriptorSet> vk_Write_Descriptor_Sets{};
 		if (nullptr != Descriptor_Writes && (!Descriptor_Writes->empty())) {
-			vector<optional<vector<VkDescriptorImageInfo>>> Image_Infos{};
-			vector<optional<vector<VkDescriptorBufferInfo>>> Buffer_Infos{};
-			vector<optional<vector<VkBufferView>>> vk_Buffer_Views;
 
 			vk_Write_Descriptor_Sets.reserve(Descriptor_Writes->size());
-			Image_Infos.reserve(Descriptor_Writes->size());
-			Buffer_Infos.reserve(Descriptor_Writes->size());
-			vk_Buffer_Views.reserve(Descriptor_Writes->size());
+			Image_Infos.resize(Descriptor_Writes->size());
+			Buffer_Infos.resize(Descriptor_Writes->size());
+			vk_Buffer_Views.resize(Descriptor_Writes->size());
 
-			for (const auto& Descriptor_Write : *Descriptor_Writes) {
-				if (nullptr == Descriptor_Write)
+			for (size_t Index = 0; Index < Descriptor_Writes->size(); ++Index) {
+				if (nullptr == Descriptor_Writes->at(Index))
 					throw runtime_error("Descriptor Write is nullptr!");
 
-				optional<vector<VkDescriptorImageInfo>> vk_Image_Info{};
-				optional<vector<VkDescriptorBufferInfo>> vk_Buffer_Info{};
-				optional<vector<VkBufferView>> vk_Buffer_View{};
-				const auto vk_Write_Descriptor_Set{ Vulkan_RHI::S_Parser_RHI_Write_Descriptor_Set(Descriptor_Write, vk_Image_Info, vk_Buffer_Info, vk_Buffer_View) };
-
-				Image_Infos.emplace_back(vk_Image_Info);
-				Buffer_Infos.emplace_back(vk_Buffer_Info);
-				vk_Buffer_Views.emplace_back(vk_Buffer_View);
-
-				vk_Write_Descriptor_Sets.emplace_back(vk_Write_Descriptor_Set.value());
-
+				vk_Write_Descriptor_Sets.emplace_back(Vulkan_RHI::S_Parser_RHI_Write_Descriptor_Set(Descriptor_Writes->at(Index), Image_Infos[Index], Buffer_Infos[Index], vk_Buffer_Views[Index]).value());
 			}
-
-			vector<VkCopyDescriptorSet> vk_Copy_Descriptor_Sets{};
-			if (nullptr != Descriptor_Copies && !Descriptor_Copies->empty()) {
-				vk_Copy_Descriptor_Sets.reserve(Descriptor_Copies->size());
-				for (const auto& Descriptor_Copy : *Descriptor_Copies) {
-					if (nullptr == Descriptor_Copy)
-						throw runtime_error("Descriptor Copy is nullptr!");
-
-					VkCopyDescriptorSet vk_Copy_Descriptor_Set{};
-					{
-						vk_Copy_Descriptor_Set.sType = static_cast<VkStructureType>(Descriptor_Copy->sType);
-						vk_Copy_Descriptor_Set.pNext = Descriptor_Copy->pNext;
-						vk_Copy_Descriptor_Set.srcSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Src_Set)->Get();
-						vk_Copy_Descriptor_Set.srcBinding = Descriptor_Copy->Src_Binding;
-						vk_Copy_Descriptor_Set.srcArrayElement = Descriptor_Copy->Src_Array_Element;
-						vk_Copy_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Dst_Set)->Get();
-						vk_Copy_Descriptor_Set.dstBinding = Descriptor_Copy->Dst_Binding;
-						vk_Copy_Descriptor_Set.dstArrayElement = Descriptor_Copy->Dst_Array_Element;
-						vk_Copy_Descriptor_Set.descriptorCount = Descriptor_Copy->Descriptor_Count;
-					}
-
-					vk_Copy_Descriptor_Sets.emplace_back(vk_Copy_Descriptor_Set);
-				}
-			}
-
-			vkUpdateDescriptorSets(
-				this->m_Logical_VK_Device,
-				vk_Write_Descriptor_Sets.size(),
-				vk_Write_Descriptor_Sets.data(),
-				vk_Copy_Descriptor_Sets.size(),
-				vk_Copy_Descriptor_Sets.data()
-			);
 		}
 		else
-			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Empty Input");
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "RHI_Descriptor_Writes Input Is Empty");
+
+		vector<VkCopyDescriptorSet> vk_Copy_Descriptor_Sets{};
+		if (nullptr != Descriptor_Copies && !Descriptor_Copies->empty()) {
+			vk_Copy_Descriptor_Sets.reserve(Descriptor_Copies->size());
+			for (const auto& Descriptor_Copy : *Descriptor_Copies) {
+				if (nullptr == Descriptor_Copy)
+					throw runtime_error("Descriptor Copy is nullptr!");
+
+				VkCopyDescriptorSet vk_Copy_Descriptor_Set{};
+				{
+					vk_Copy_Descriptor_Set.sType = static_cast<VkStructureType>(Descriptor_Copy->sType);
+					vk_Copy_Descriptor_Set.pNext = Descriptor_Copy->pNext;
+					vk_Copy_Descriptor_Set.srcSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Src_Set)->Get();
+					vk_Copy_Descriptor_Set.srcBinding = Descriptor_Copy->Src_Binding;
+					vk_Copy_Descriptor_Set.srcArrayElement = Descriptor_Copy->Src_Array_Element;
+					vk_Copy_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Descriptor_Copy->Dst_Set)->Get();
+					vk_Copy_Descriptor_Set.dstBinding = Descriptor_Copy->Dst_Binding;
+					vk_Copy_Descriptor_Set.dstArrayElement = Descriptor_Copy->Dst_Array_Element;
+					vk_Copy_Descriptor_Set.descriptorCount = Descriptor_Copy->Descriptor_Count;
+				}
+
+				vk_Copy_Descriptor_Sets.emplace_back(std::move(vk_Copy_Descriptor_Set));
+			}
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "vk_Copy_Descriptor_Sets Input Is Empty");
+
+		vkUpdateDescriptorSets(
+			this->m_Logical_VK_Device,
+			static_cast<uint32_t>(vk_Write_Descriptor_Sets.size()),
+			vk_Write_Descriptor_Sets.data(),
+			static_cast<uint32_t>(vk_Copy_Descriptor_Sets.size()),
+			vk_Copy_Descriptor_Sets.data()
+		);
 	}
 
 	unique_ptr<RHI_Shader_Module> Vulkan_RHI::Create_Shader_Module(const vector<unsigned char>* Shader_Code) {
@@ -2514,12 +2545,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			vk_Graphics_Pipeline_Create_Info.layout = static_cast<Vulkan_Pipeline_Layout*>(Create_Info->Layout)->Get();
 			vk_Graphics_Pipeline_Create_Info.renderPass = static_cast<Vulkan_Render_Pass*>(Create_Info->Render_Pass)->Get();
 			vk_Graphics_Pipeline_Create_Info.subpass = Create_Info->Subpass;
-			vk_Graphics_Pipeline_Create_Info.basePipelineHandle = static_cast<Vulkan_Pipeline*>(Create_Info->Base_Pipeline_Handle)->Get();
+			vk_Graphics_Pipeline_Create_Info.basePipelineHandle = Create_Info->Base_Pipeline_Handle ? static_cast<Vulkan_Pipeline*>(Create_Info->Base_Pipeline_Handle)->Get() : nullptr;
 			vk_Graphics_Pipeline_Create_Info.basePipelineIndex = Create_Info->Base_Pipeline_Index;
 		}
 
 		VkPipeline vk_Pipeline{};
-		THROW_IF_VK_FAILED(vkCreateGraphicsPipelines(this->m_Logical_VK_Device, static_cast<Vulkan_Pieline_Cache*>(Pipeline_Cache)->Get(), 1, &vk_Graphics_Pipeline_Create_Info, this->m_Allocator.get(), &vk_Pipeline));
+		THROW_IF_VK_FAILED(vkCreateGraphicsPipelines(
+			this->m_Logical_VK_Device,
+			(Pipeline_Cache ? static_cast<Vulkan_Pieline_Cache*>(Pipeline_Cache)->Get() : nullptr),
+			1,
+			&vk_Graphics_Pipeline_Create_Info,
+			this->m_Allocator.get(),
+			&vk_Pipeline
+		));
 		unique_ptr<RHI_Pipeline> Pipeline{ std::make_unique<Vulkan_Pipeline>() };
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Set_Deleter(this->m_VK_Pipeline_Deleter);
 		static_cast<Vulkan_Pipeline*>(Pipeline.get())->Reset(vk_Pipeline);

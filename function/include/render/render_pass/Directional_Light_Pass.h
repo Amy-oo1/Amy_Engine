@@ -11,8 +11,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using std::vector;
 
-	struct Directioal_Light_Inittialize_Info final :public Render_Pass_Inittialize_Info {
-		NameSpace_RHI::RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout;
+	struct Directioal_Light_Render_Pass_Pre_Initialize_Info final :public Render_Pass_Pre_Initialize_Info {
+		//NOTE : Empty
+	};
+
+	struct Directioal_Light_Render_Pass_Post_Initialize_Info final :public Render_Pass_Post_Initialize_Info {
+		NameSpace_RHI::RHI_Descriptor_Set_Layout* Per_Mesh_Set_Layout;
 	};
 
 	class Directional_Light_Pass final :public Render_Pass {
@@ -26,9 +30,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		~Directional_Light_Pass(void) = default;
 
 	public:
-		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
-
-
 
 
 	private:
@@ -46,8 +47,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		NameSpace_RHI::RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout{ nullptr };
 
 	public:
-		void Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) override;
-		void Post_Inittialize(void) override;
+		void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) override;
+		void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 		void Draw(void) override;
 	};

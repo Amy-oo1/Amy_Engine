@@ -37,7 +37,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Global_Render_Resource;
 
-	enum :uint32_t{
+	enum :uint32_t {
 		_main_camera_pass_gbuffer_a = 0,
 		_main_camera_pass_gbuffer_b = 1,
 		_main_camera_pass_gbuffer_c = 2,
@@ -52,7 +52,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		_main_camera_pass_attachment_count = 9,
 	};
 
-	enum :uint32_t{
+	enum :uint32_t {
 		_main_camera_subpass_basepass = 0,
 		_main_camera_subpass_deferred_lighting,
 		_main_camera_subpass_forward_lighting,
@@ -114,18 +114,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		virtual ~Render_Pass(void) = default;
 
 	public:
-		vector<RHI_Image_View*> Get_Frame_Buffer_Image_Views(void)const;
+		virtual RHI_Image* Get_Frame_Buffer_Image(uint32_t Index)const;
+		virtual	RHI_Image_View* Get_Frame_Buffer_Image_Views(uint32_t Index)const;
+
+		virtual RHI_Descriptor_Set_Layout* Get_Descriptor_Set_Layouts(uint32_t Index)const;
+
+		virtual RHI_Render_Pass* Get_Render_Pass(void)const;
 
 		static inline Visiable_Node s_Visable_Node{};
 
 
 	public://TODO : 
-		shared_ptr<Global_Render_Resource> m_Global_Render_Resource{ nullptr };
+		const Global_Render_Resource* m_Global_Render_Resource{ nullptr };
 
 		Frame_Buffer m_Frame_Buffer{};
 		vector<Descriptor> m_Descriptors{};
 		vector<Render_Pipeline> m_Render_Pipelines{};
-		
+
 
 		/*virtual void Post_Inittialize(void) = 0;
 		virtual void Draw(void) = 0;*/

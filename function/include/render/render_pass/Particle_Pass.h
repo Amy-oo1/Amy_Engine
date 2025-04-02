@@ -73,8 +73,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		unique_ptr<RHI_Device_Memory> Particle_Resource_Memory{ nullptr };
 	};
 
-	struct Particel_Paas_Inittialize_Info final :public Render_Pass_Inittialize_Info {
+	struct Particle_Paas_Render_Pass_Pre_Initialize_Info final :public Render_Pass_Pre_Initialize_Info {
 		shared_ptr<Particle_Emitter_Buffer> Emitter_Buffer{ nullptr };
+		RHI_Render_Pass* Render_Pass{ nullptr };
+		RHI_Image* Depth_Image{ nullptr };
+		RHI_Image* Normal_Image{ nullptr };
+	};
+
+	struct Particle_Paas_Render_Pass_Post_Initialize_Info final :public Render_Pass_Post_Initialize_Info {
+		RHI_Descriptor_Set_Layout* Per_Mesh_Set_Layout{ nullptr };
 	};
 
 	struct alignas(16) Compute_Uniform_Buffer_Object final {
@@ -89,6 +96,27 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	};
 
 	class Particle_Pass final :public Render_Pass {
+	private:
+		enum Attachment_Type :uint32_t {
+			_Attachment_Type_Src_Depth = 0,
+			_Attachment_Type_Src_Normal,
+			_Attachment_Type_Dst_Depth,
+			_Attachment_Type_Dst_Normal,
+			_Attachment_Type_Count
+		};;
+
+		enum Compute_Pipeline_Type :uint32_t {
+			_Compute_Pipeline_Type_Kickoff = 0,
+			_Compute_Pipeline_Type_Emit,
+			_Compute_Pipeline_Type_Simulate,
+			_Compute_Pipeline_Type_Count
+		};
+
+		enum Graphics_Type :uint32_t {
+			_Graphics_Grapics_Type_Particle = 3,
+			_Graphics_Pipeline_Type_Count
+		};
+
 	private:
 		Particle_Pass(const Particle_Pass&) = delete;
 
@@ -121,22 +149,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	private:
 		Default_RNG m_Random_Engine{};
 
-		vector<unsigned char> m_Kickoff_Compute_Shader_Code;
-		vector<unsigned char> m_Emit_Compute_Shader_Code;
-		vector<unsigned char> m_Simulate_Compute_Shader_Code;
 
-		vector<unique_ptr<RHI_Pipeline>> m_Compute_Pipelines{};
+	private:
+		RHI_Render_Pass* m_Render_Pass{ nullptr };
+		RHI_Image* m_Src_Depth_Image{ nullptr };
+		RHI_Image* m_Src_Normal_Image{ nullptr };
 
-		vector<unsigned char> m_Vertex_Shader_Code;
-		vector<unsigned char> m_Fragment_Shader_Code;
-
-		unique_ptr<RHI_Command_Buffer> m_Compute_Command_Buffer{ nullptr };
-		unique_ptr<RHI_Command_Buffer> m_Copy_Command_Buffer{ nullptr };
-		unique_ptr<RHI_Fence> m_Fence{ nullptr };
-
-
-		NameSpace_RHI::RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout{ nullptr };
-
+	private:
 		unique_ptr<RHI_Buffer> m_Scene_Uniform_Buffer{ nullptr };
 		unique_ptr<RHI_Device_Memory> m_Scene_Uniform_Memory{ nullptr };
 		void* m_Scene_Uniform_Buffer_Mapped{ nullptr };
@@ -150,14 +169,25 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		unique_ptr<RHI_Device_Memory> m_Particle_Billbord_Uniform_Memory{ nullptr };
 		void* m_Particle_Billbord_Uniform_Buffer_Mapped{ nullptr };
 
+		unique_ptr<RHI_Image> m_Particle_Billbord_Image{ nullptr };
+		unique_ptr<RHI_Image_View> m_Particle_Billbord_Image_View{ nullptr };
+		VmaAllocation m_Particle_Billbord_Image_Allocation{ nullptr };
 
-		RHI_Image* m_Src_Depth_Image{ nullptr };
-		RHI_Image* m_Src_Normal_Image{ nullptr };
-		RHI_Render_Pass* m_Render_Pass{ nullptr };
+		unique_ptr<RHI_Image> m_Logo_Image{ nullptr };
+		unique_ptr<RHI_Image_View> m_Logo_Image_View{ nullptr };
+		VmaAllocation m_Logo_Image_Allocation{ nullptr };
+
+		unique_ptr<RHI_Command_Buffer> m_Compute_Command_Buffer{ nullptr };
+		unique_ptr<RHI_Command_Buffer> m_Copy_Command_Buffer{ nullptr };
+		unique_ptr<RHI_Fence> m_Fence{ nullptr };
+
+
+
+
 
 	public:
-		void Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) override;
-		void Post_Inittialize(void) override;
+		void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) override;
+		void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 		void Draw(void) override;
 

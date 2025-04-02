@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\shader\generated\cpp;D:\Amy_Engine\Editor\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\glm-1.0.1\include;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -154,6 +154,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\third_party\imgui-1.91.9b\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\third_party\imgui-1.91.9b\backends\imgui_impl_vulkan.h" />
     <ClInclude Include="include\animation\Animation_Loader.h" />
     <ClInclude Include="include\animation\Animation_Manager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -226,6 +228,13 @@
     <ClInclude Include="include\render\window\Window_UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\third_party\imgui-1.91.9b\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\third_party\imgui-1.91.9b\backends\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="..\third_party\imgui-1.91.9b\imgui.cpp" />
+    <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_demo.cpp" />
+    <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_draw.cpp" />
+    <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_tables.cpp" />
+    <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_widgets.cpp" />
     <ClCompile Include="src\character\Character.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\frame\components\camera\Camera_Component.cpp" />

@@ -21,12 +21,21 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_RHI::RHI_Render_Pass;
 
+	struct UI_Render_Pass_Pre_Initialize_Info final :public Render_Pass_Pre_Initialize_Info {
+		RHI_Render_Pass* Render_Pass;
+	};
+
+	struct UI_Render_Pass_Post_Initialize_Info final :public Render_Pass_Post_Initialize_Info {
+		shared_ptr<Window_UI> Window_UI;
+	};
+
+
 	class UI_Pass final :public Render_Pass {
 	private:
 		UI_Pass(const UI_Pass&) = delete;
 		UI_Pass& operator=(const UI_Pass&) = delete;
 	public:
-		UI_Pass(const Render_Pass_Command_Info& Command_Info, shared_ptr<Window_UI> UI, RHI_Render_Pass* Render_Pass);
+		UI_Pass(const Render_Pass_Command_Info& Command_Info);
 		~UI_Pass(void) = default;
 
 	public:
@@ -40,7 +49,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	public:
 		void Draw(void)override;
-		void Post_Inittialize(void) override;
+		void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) override;
+		void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 
 	};

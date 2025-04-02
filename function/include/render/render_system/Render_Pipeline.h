@@ -21,9 +21,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		~Render_Pipeline(void) = default;
 
-
-		shared_ptr<Render_Pass_Base> m_Directional_Light_Pass{ nullptr };
 		shared_ptr<Render_Pass_Base> m_Point_Light_Pass{ nullptr };
+		shared_ptr<Render_Pass_Base> m_Directional_Light_Pass{ nullptr };
+	
 		shared_ptr<Render_Pass_Base> m_Main_Camera_Pass{ nullptr };
 		shared_ptr<Render_Pass_Base> m_Color_Grading_Pass{ nullptr };
 		shared_ptr<Render_Pass_Base> m_FXAA_Pass{ nullptr };

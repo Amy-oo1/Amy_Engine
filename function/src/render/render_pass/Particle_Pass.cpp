@@ -5,11 +5,24 @@
 
 #include "meta/generated/reflection/Global_Particle.Generated_Reflection.h"
 
+#include "config/Resource_Configer.h"
+#include "manage/Resource_Manager.h"
+
 #include "particle/Particle_Manager.h"
+
+
+#include "particle_emit_comp.h"
+#include "particle_kickoff_comp.h"
+#include "particle_simulate_comp.h"
+#include "particlebillboard_vert.h"
+#include "particlebillboard_frag.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Resource::NameSpace_Global::Reflection_Global_Particle_Operator;
+
+	using NameSpace_Resource::NameSpace_Config::Resource_Configer;
+	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
 
 	using NameSpace_Particle::Particle_Manager;
 
@@ -80,17 +93,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_RHI::RHI_Fence_Create_Info;
 
 
+
+	using NameSpace_RHI::RHI_BLEND_FACTOR;
+	using NameSpace_RHI::RHI_BLEND_OP;
+	using NameSpace_RHI::RHI_LOGIC_OP;
+	using NameSpace_RHI::RHI_COMPARE_OP;
+
+
 	Particle_Pass::Particle_Pass(const Render_Pass_Command_Info& Command_Info)
 		:Render_Pass{ Command_Info } {
 		std::random_device Random_Device;;
 		std::seed_seq Seed{ Random_Device()/*,Random_Device(),Random_Device(),Random_Device()*/ };
 
 		this->m_Random_Engine.Seed(Seed);
-	}
-
-	void Particle_Pass::Set_Depth_and_Normal_Image(RHI_Image* Depth_Image, RHI_Image* Normal_Image){
-		this->m_Src_Depth_Image = Depth_Image;
-		this->m_Src_Normal_Image = Normal_Image;
 	}
 
 	void Particle_Pass::Set_Render_Pass_Handle(RHI_Render_Pass* Render_Pass) {
@@ -133,7 +148,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			float rand1 = this->m_Random_Engine.Uniform_Distribution<float>(0, 1000) * 0.001f;
 			float rand2 = this->m_Random_Engine.Uniform_Distribution<float>(0, 1000) * 0.001f;
 
-			this->m_Compute_Uniform_Buffer_Object.Pack = Vector4{ rand0,rand1,rand2,this->m_RHI->Get_Current_Frame_Index() };
+			this->m_Compute_Uniform_Buffer_Object.Pack = Vector4{ rand0,rand1,rand2,static_cast<float>(this->m_RHI->Get_Current_Frame_Index()) };
 		}
 
 		const auto& SwapChain_Viewpot{ this->m_RHI->Get_SwapChain_Viewport() };
@@ -146,12 +161,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Compute_Uniform_Buffer_Object.Extent.Set_W(SwapChain_Viewpot.Max_Depth);
 
 		memcpy(this->m_Scene_Uniform_Buffer_Mapped, &this->m_Compute_Uniform_Buffer_Object, sizeof(Compute_Uniform_Buffer_Object));
-
-
-
 	}
 
 	void Particle_Pass::Setup_Descriptor_Set_Layout(void) {
+		this->m_Descriptors.resize(3);
+
 		//NOTE : Computle_Descroptor_Set
 		{
 			RHI_Descriptor_Set_Layout_Binding Per_Frame_Uniform_Layout_Binding{};
@@ -277,7 +291,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			this->m_Descriptors[0].Descriptor_Set_Layout = this->m_RHI->Create_Descriptor_Set_Layout(&Computle_Descroptor_Set_Layout_Create_Info);
 		}
 
-		//NOTE : Scene NOrmal And Depth Set
+		//NOTE : Scene Depth and NormalSet
 		{
 			RHI_Descriptor_Set_Layout_Binding GBuffer_Normal_Global_Layout_Input_Attachment_Binding{};
 			{
@@ -312,6 +326,48 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			this->m_Descriptors[1].Descriptor_Set_Layout = this->m_RHI->Create_Descriptor_Set_Layout(&GBuffer_Lighting_Global_Set_Layout_Create_Info);
 		}
 
+		//Billboard
+		{
+			RHI_Descriptor_Set_Layout_Binding Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding{};
+			{
+				Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding.Binding = 0;
+				Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding.Descriptor_Count = 1;
+				Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
+				Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
+			}
+
+			RHI_Descriptor_Set_Layout_Binding Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding{};
+			{
+				Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding.Binding = 1;
+				Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding.Descriptor_Count = 1;
+				Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
+				Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
+			}
+
+			RHI_Descriptor_Set_Layout_Binding Particle_Billboard_Global_Layout_Image_Binding{};
+			{
+				Particle_Billboard_Global_Layout_Image_Binding.Binding = 2;
+				Particle_Billboard_Global_Layout_Image_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+				Particle_Billboard_Global_Layout_Image_Binding.Descriptor_Count = 1;
+				Particle_Billboard_Global_Layout_Image_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT);
+				Particle_Billboard_Global_Layout_Image_Binding.Immutable_Samplers = nullptr;
+			}
+
+			const vector<const RHI_Descriptor_Set_Layout_Binding*> Billboard_Set_Layout_Bingds{
+				&Particle_Billboard_Global_Layout_Per_Frame_Storage_Buffer_Binding,
+				&Particle_Billboard_Global_Layout_Per_Draw_Call_Storage_Buffer_Binding
+			};
+
+			RHI_Descriptor_Set_Layout_Create_Info Billboard_Set_Layout_Create_Info{};
+			{
+				Billboard_Set_Layout_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+				Billboard_Set_Layout_Create_Info.Flags = 0;
+				Billboard_Set_Layout_Create_Info.Bindings = &Billboard_Set_Layout_Bingds;
+			}
+			this->m_Descriptors[2].Descriptor_Set_Layout = this->m_RHI->Create_Descriptor_Set_Layout(&Billboard_Set_Layout_Create_Info);
+		}
 	}
 
 	/*void Particle_Pass::Setup_Descriptor_Set(void) {
@@ -390,17 +446,20 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	}*/
 
 	void Particle_Pass::Setup_Pipeline(void) {
+		this->m_Render_Pipelines.resize(static_cast<size_t>(2) + _Compute_Pipeline_Type_Count);
+
 		this->Setup_Graphics_Pipeline();
 		this->Setup_Compute_Pipeline();
 	}
 
-	void Particle_Pass::Setup_Graphics_Pipeline(void) {
+	void Particle_Pass::Setup_Compute_Pipeline(void) {
+		vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
+				this->m_Descriptors[0].Descriptor_Set_Layout.get(),
+				this->m_Descriptors[1].Descriptor_Set_Layout.get(),
+		};
+
 		RHI_Pipeline_Layout_Create_Info Pipeline_Layout_Create_Info{};
 		{
-			vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
-				this->m_Descriptors[2].Descriptor_Set_Layout.get(),
-			};
-
 			Pipeline_Layout_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 			Pipeline_Layout_Create_Info.Flags = 0;
 			Pipeline_Layout_Create_Info.Set_Layouts = &Descriptor_Set_Layouts;
@@ -409,35 +468,143 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		this->m_Render_Pipelines[0].Pipeline_Layout = this->m_RHI->Create_Pipeline_Layout(&Pipeline_Layout_Create_Info);
 
+		/*RHI_Specialization_Map_Entry Specialization_Map_Entry{};
+		{
+			Specialization_Map_Entry.Constant_ID = 0;
+			Specialization_Map_Entry.Offset = 0;
+			Specialization_Map_Entry.Size = sizeof(uint32_t);
+		}
+
+		const vector<const RHI_Specialization_Map_Entry*> Specialization_Map_Entries{
+			&Specialization_Map_Entry
+		};
+
+		uint32_t Buffer_Element_Data{};
+
+		RHI_Specialization_Info Specialization_Info{};
+		{
+			Specialization_Info.Map_Entries = &Specialization_Map_Entries;
+			Specialization_Info.Data_Size = sizeof(uint32_t);
+			Specialization_Info.Data = &Buffer_Element_Data;
+		}*/
+
+		{
+			unique_ptr<RHI_Shader_Module> Kickoff_Compute_Shader_Module{ this->m_RHI->Create_Shader_Module(&PARTICLE_KICKOFF_COMP) };
+
+			RHI_Pipeline_Shader_Stage_Create_Info Kickoff_Compute_Pipeline_Shader_Stage_Create_Info{};
+			{
+				Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+				Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Flags = 0;
+				Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_COMPUTE_BIT;
+				Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Module = Kickoff_Compute_Shader_Module.get();
+				Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Name = "main";
+				Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Specialization_Info = nullptr;
+			}
+
+			RHI_Compute_Pipeline_Create_Info Kickoff_Compute_Pipeline_Create_Info{};
+			{
+				Kickoff_Compute_Pipeline_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+				Kickoff_Compute_Pipeline_Create_Info.Flags = 0;
+				Kickoff_Compute_Pipeline_Create_Info.Stage = &Kickoff_Compute_Pipeline_Shader_Stage_Create_Info;
+				Kickoff_Compute_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
+				Kickoff_Compute_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
+				Kickoff_Compute_Pipeline_Create_Info.Base_Pipeline_Index = 0;
+			}
+
+			this->m_Render_Pipelines[_Compute_Pipeline_Type_Kickoff].Pipeline = this->m_RHI->Create_Compute_Pipeline(&Kickoff_Compute_Pipeline_Create_Info);
+		}
+
+		{
+			unique_ptr<RHI_Shader_Module> Emit_Compute_Shader_Module{ this->m_RHI->Create_Shader_Module(&PARTICLE_EMIT_COMP) };
+
+			RHI_Pipeline_Shader_Stage_Create_Info Emit_Compute_Pipeline_Shader_Stage_Create_Info{};
+			{
+				Emit_Compute_Pipeline_Shader_Stage_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+				Emit_Compute_Pipeline_Shader_Stage_Create_Info.Flags = 0;
+				Emit_Compute_Pipeline_Shader_Stage_Create_Info.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_COMPUTE_BIT;
+				Emit_Compute_Pipeline_Shader_Stage_Create_Info.Module = Emit_Compute_Shader_Module.get();
+				Emit_Compute_Pipeline_Shader_Stage_Create_Info.Name = "main";
+				Emit_Compute_Pipeline_Shader_Stage_Create_Info.Specialization_Info = nullptr;
+			}
+
+			RHI_Compute_Pipeline_Create_Info Emit_Compute_Pipeline_Create_Info{};
+			{
+				Emit_Compute_Pipeline_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+				Emit_Compute_Pipeline_Create_Info.Flags = 0;
+				Emit_Compute_Pipeline_Create_Info.Stage = &Emit_Compute_Pipeline_Shader_Stage_Create_Info;
+				Emit_Compute_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
+				Emit_Compute_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
+				Emit_Compute_Pipeline_Create_Info.Base_Pipeline_Index = 0;
+			}
+
+			this->m_Render_Pipelines[_Compute_Pipeline_Type_Emit].Pipeline = this->m_RHI->Create_Compute_Pipeline(&Emit_Compute_Pipeline_Create_Info);
+		}
+
+		{
+			unique_ptr<RHI_Shader_Module> Simulate_Compute_Shader_Module{ this->m_RHI->Create_Shader_Module(&PARTICLE_SIMULATE_COMP) };
+
+			RHI_Pipeline_Shader_Stage_Create_Info Simulate_Compute_Pipeline_Shader_Stage_Create_Info{};
+			{
+				Simulate_Compute_Pipeline_Shader_Stage_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+				Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Flags = 0;
+				Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_COMPUTE_BIT;
+				Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Module = Simulate_Compute_Shader_Module.get();
+				Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Name = "main";
+				Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Specialization_Info = nullptr;
+			}
+
+			RHI_Compute_Pipeline_Create_Info Simulate_Compute_Pipeline_Create_Info{};
+			{
+				Simulate_Compute_Pipeline_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+				Simulate_Compute_Pipeline_Create_Info.Flags = 0;
+				Simulate_Compute_Pipeline_Create_Info.Stage = &Simulate_Compute_Pipeline_Shader_Stage_Create_Info;
+				Simulate_Compute_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
+				Simulate_Compute_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
+				Simulate_Compute_Pipeline_Create_Info.Base_Pipeline_Index = 0;
+			}
+
+			this->m_Render_Pipelines[_Compute_Pipeline_Type_Simulate].Pipeline = this->m_RHI->Create_Compute_Pipeline(&Simulate_Compute_Pipeline_Create_Info);
+		}
+	}
+
+	void Particle_Pass::Setup_Graphics_Pipeline(void) {
+		const vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
+				this->m_Descriptors[2].Descriptor_Set_Layout.get(),
+		};
+
+		RHI_Pipeline_Layout_Create_Info Pipeline_Layout_Create_Info{};
+		{
+			Pipeline_Layout_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+			Pipeline_Layout_Create_Info.Flags = 0;
+			Pipeline_Layout_Create_Info.Set_Layouts = &Descriptor_Set_Layouts;
+			Pipeline_Layout_Create_Info.Push_Constant_Ranges = nullptr;
+		}
+
+		this->m_Render_Pipelines[_Graphics_Grapics_Type_Particle].Pipeline_Layout = this->m_RHI->Create_Pipeline_Layout(&Pipeline_Layout_Create_Info);
+
+		unique_ptr<RHI_Shader_Module> Vertex_Shader_Module{ this->m_RHI->Create_Shader_Module(&PARTICLEBILLBOARD_VERT) };
 
 		RHI_Pipeline_Shader_Stage_Create_Info Vert_Pipeline_Shader_Stage_Create_Inof{};
 		{
-			//NOTE : Destroyed in the RHI
-			unique_ptr<NameSpace_RHI::RHI_Shader_Module> Vertex_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Vertex_Shader_Code) };
-
-			{
-				Vert_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-				Vert_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
-				Vert_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT;
-				Vert_Pipeline_Shader_Stage_Create_Inof.Module = Vertex_Shader_Module.get();
-				Vert_Pipeline_Shader_Stage_Create_Inof.Name = "main";
-				Vert_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
-			}
+			Vert_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			Vert_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
+			Vert_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT;
+			Vert_Pipeline_Shader_Stage_Create_Inof.Module = Vertex_Shader_Module.get();
+			Vert_Pipeline_Shader_Stage_Create_Inof.Name = "main";
+			Vert_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
 		}
+
+
+		unique_ptr<RHI_Shader_Module> Fragment_Shader_Module{ this->m_RHI->Create_Shader_Module(&PARTICLEBILLBOARD_FRAG) };
 
 		RHI_Pipeline_Shader_Stage_Create_Info Frag_Pipeline_Shader_Stage_Create_Inof{};
 		{
-			//NOTE : Destroyed in the RHI
-			unique_ptr<NameSpace_RHI::RHI_Shader_Module> Fragment_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Fragment_Shader_Code) };
-
-			{
-				Frag_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-				Frag_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
-				Frag_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT;
-				Frag_Pipeline_Shader_Stage_Create_Inof.Module = Fragment_Shader_Module.get();
-				Frag_Pipeline_Shader_Stage_Create_Inof.Name = "main";
-				Frag_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
-			}
+			Frag_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			Frag_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
+			Frag_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT;
+			Frag_Pipeline_Shader_Stage_Create_Inof.Module = Fragment_Shader_Module.get();
+			Frag_Pipeline_Shader_Stage_Create_Inof.Name = "main";
+			Frag_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
 		}
 
 		const vector<const RHI_Pipeline_Shader_Stage_Create_Info*> Shader_Stages{
@@ -461,26 +628,20 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Input_Assembly_State_Create_Info.Primitive_Restart_Enable = RHI_FALSE;
 		}
 
+		const vector<const RHI_Viewport*> Viewports{
+				&this->m_RHI->Get_SwapChain_Viewport()
+		};
+
+		const vector<const RHI_Rect_2D*> Scissors{
+				&this->m_RHI->Get_SwapChain_Scissor()
+		};
+
 		RHI_Pipeline_Viewport_State_Create_Info Viewport_State_Create_Info{};
 		{
-
-			const auto& Viewport{ this->m_RHI->Get_SwapChain_Viewport() };
-			const vector<const RHI_Viewport*> Viewports{
-				&Viewport
-			};
-
-			const auto& Scissor{ this->m_RHI->Get_SwapChain_Scissor() };
-
-			const vector<const RHI_Rect_2D*> Scissors{
-				&Scissor
-			};
-
-			{
-				Viewport_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-				Viewport_State_Create_Info.Flags = 0;
-				Viewport_State_Create_Info.Viewports = &Viewports;
-				Viewport_State_Create_Info.Scissors = &Scissors;
-			}
+			Viewport_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+			Viewport_State_Create_Info.Flags = 0;
+			Viewport_State_Create_Info.Viewports = &Viewports;
+			Viewport_State_Create_Info.Scissors = &Scissors;
 		}
 
 		RHI_Pipeline_Rasterization_State_Create_Info Rasterization_State_Create_Info{};
@@ -491,7 +652,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Rasterization_State_Create_Info.Rasterizer_Discard_Enable = RHI_FALSE;
 			Rasterization_State_Create_Info.Polygon_Mode = NameSpace_RHI::RHI_POLYGON_MODE::RHI_POLYGON_MODE_FILL;
 			Rasterization_State_Create_Info.Cull_Mode = to_underlying(NameSpace_RHI::RHI_CULL_MODE_FLAG_BITS::RHI_CULL_MODE_BACK_BIT);
-			Rasterization_State_Create_Info.Front_Face = NameSpace_RHI::RHI_FRONT_FACE::RHI_FRONT_FACE_COUNTER_CLOCKWISE;
+			Rasterization_State_Create_Info.Front_Face = NameSpace_RHI::RHI_FRONT_FACE::RHI_FRONT_FACE_CLOCKWISE;
 			Rasterization_State_Create_Info.Depth_Bias_Enable = RHI_FALSE;
 			Rasterization_State_Create_Info.Depth_Bias_Constant_Factor = 0.0f;
 			Rasterization_State_Create_Info.Depth_Bias_Clamp = 0.0f;
@@ -513,8 +674,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Depth_Stencil_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 			Depth_Stencil_State_Create_Info.Flags = 0;
 			Depth_Stencil_State_Create_Info.Depth_Test_Enable = RHI_TRUE;
-			Depth_Stencil_State_Create_Info.Depth_Write_Enable = RHI_TRUE;
-			Depth_Stencil_State_Create_Info.Depth_Compare_Op = NameSpace_RHI::RHI_COMPARE_OP::RHI_COMPARE_OP_LESS;
+			Depth_Stencil_State_Create_Info.Depth_Write_Enable = RHI_FALSE;
+			Depth_Stencil_State_Create_Info.Depth_Compare_Op = RHI_COMPARE_OP::RHI_COMPARE_OP_LESS;
 			Depth_Stencil_State_Create_Info.Depth_Bounds_Test_Enable = RHI_FALSE;
 			Depth_Stencil_State_Create_Info.Stencil_Test_Enable = RHI_FALSE;
 			Depth_Stencil_State_Create_Info.Front = {};
@@ -523,43 +684,40 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Depth_Stencil_State_Create_Info.Max_Depth_Bounds = 1.0f;
 		}
 
+		RHI_Pipeline_Color_Blend_Attachment_State Color_Blend_Attachment{};
+		{
+			Color_Blend_Attachment.Blend_Enable = RHI_TRUE;
+			Color_Blend_Attachment.Src_Color_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
+			Color_Blend_Attachment.Dst_Color_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			Color_Blend_Attachment.Color_Blend_Op = RHI_BLEND_OP::RHI_BLEND_OP_ADD;
+			Color_Blend_Attachment.Src_Alpha_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
+			Color_Blend_Attachment.Dst_Alpha_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ZERO;
+			Color_Blend_Attachment.Alpha_Blend_Op = RHI_BLEND_OP::RHI_BLEND_OP_ADD;
+			Color_Blend_Attachment.Color_Write_Mask =
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_R_BIT |
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_G_BIT |
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_B_BIT |
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_A_BIT;
+		}
+		const vector<const RHI_Pipeline_Color_Blend_Attachment_State*> Color_Blend_Attachments{ &Color_Blend_Attachment };
+
 		RHI_Pipeline_Color_Blend_State_Create_Info Color_Blend_State_Create_Info{};
 		{
-			RHI_Pipeline_Color_Blend_Attachment_State Color_Blend_Attachment{};
-			{
-				Color_Blend_Attachment.Blend_Enable = RHI_FALSE;
-				Color_Blend_Attachment.Src_Color_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
-				Color_Blend_Attachment.Dst_Color_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-				Color_Blend_Attachment.Color_Blend_Op = NameSpace_RHI::RHI_BLEND_OP::RHI_BLEND_OP_ADD;
-				Color_Blend_Attachment.Src_Alpha_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
-				Color_Blend_Attachment.Dst_Alpha_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ZERO;
-				Color_Blend_Attachment.Alpha_Blend_Op = NameSpace_RHI::RHI_BLEND_OP::RHI_BLEND_OP_ADD;
-				Color_Blend_Attachment.Color_Write_Mask =
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_R_BIT |
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_G_BIT |
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_B_BIT |
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_A_BIT;
-			}
-
-			const vector<const RHI_Pipeline_Color_Blend_Attachment_State*> Color_Blend_Attachments{ &Color_Blend_Attachment };
-
-			{
-				Color_Blend_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-				Color_Blend_State_Create_Info.Flags = 0;
-				Color_Blend_State_Create_Info.Logic_Op_Enable = RHI_FALSE;
-				Color_Blend_State_Create_Info.Logic_Op = NameSpace_RHI::RHI_LOGIC_OP::RHI_LOGIC_OP_COPY;
-				Color_Blend_State_Create_Info.Attachments = &Color_Blend_Attachments;
-				Color_Blend_State_Create_Info.Blend_Constants = { 0.0f,0.0f,0.0f,0.0f };
-			}
+			Color_Blend_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+			Color_Blend_State_Create_Info.Flags = 0;
+			Color_Blend_State_Create_Info.Logic_Op_Enable = RHI_FALSE;
+			Color_Blend_State_Create_Info.Logic_Op = RHI_LOGIC_OP::RHI_LOGIC_OP_COPY;
+			Color_Blend_State_Create_Info.Attachments = &Color_Blend_Attachments;
+			Color_Blend_State_Create_Info.Blend_Constants = { 0.0f,0.0f,0.0f,0.0f };
 		}
+
+		const vector<RHI_DYNAMIC_STATE> Dynamic_States{
+				RHI_DYNAMIC_STATE::RHI_DYNAMIC_STATE_VIEWPORT,
+				RHI_DYNAMIC_STATE::RHI_DYNAMIC_STATE_SCISSOR
+		};
 
 		RHI_Pipeline_Dynamic_State_Create_Info Dynamic_State_Create_Info{};
 		{
-			const vector<RHI_DYNAMIC_STATE> Dynamic_States{
-				RHI_DYNAMIC_STATE::RHI_DYNAMIC_STATE_VIEWPORT,
-				RHI_DYNAMIC_STATE::RHI_DYNAMIC_STATE_SCISSOR
-			};
-
 			Dynamic_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 			Dynamic_State_Create_Info.Flags = 0;
 			Dynamic_State_Create_Info.Dynamic_States = &Dynamic_States;
@@ -579,137 +737,38 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Graphics_Pipeline_Create_Info.Depth_Stencil_State = &Depth_Stencil_State_Create_Info;
 			Graphics_Pipeline_Create_Info.Color_Blend_State = &Color_Blend_State_Create_Info;
 			Graphics_Pipeline_Create_Info.Dynamic_State = &Dynamic_State_Create_Info;
-			Graphics_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
-			Graphics_Pipeline_Create_Info.Render_Pass = this->m_Frame_Buffer.Render_Pass.get();
+			Graphics_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[_Graphics_Grapics_Type_Particle].Pipeline_Layout.get();
+			Graphics_Pipeline_Create_Info.Render_Pass = this->m_Render_Pass;
 			Graphics_Pipeline_Create_Info.Subpass = _main_camera_subpass_forward_lighting;
 			Graphics_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
 			Graphics_Pipeline_Create_Info.Base_Pipeline_Index = 0;
 		}
 
-		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
-	}
-
-	void Particle_Pass::Setup_Compute_Pipeline(void) {
-		RHI_Pipeline_Layout_Create_Info Pipeline_Layout_Create_Info{};
-		{
-			vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
-				this->m_Descriptors[0].Descriptor_Set_Layout.get(),
-				this->m_Descriptors[1].Descriptor_Set_Layout.get(),
-			};
-
-			Pipeline_Layout_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-			Pipeline_Layout_Create_Info.Flags = 0;
-			Pipeline_Layout_Create_Info.Set_Layouts = &Descriptor_Set_Layouts;
-			Pipeline_Layout_Create_Info.Push_Constant_Ranges = nullptr;
-		}
-
-		this->m_Render_Pipelines[0].Pipeline_Layout = this->m_RHI->Create_Pipeline_Layout(&Pipeline_Layout_Create_Info);
-
-
-		/*RHI_Specialization_Map_Entry Specialization_Map_Entry{};
-		{
-			Specialization_Map_Entry.Constant_ID = 0;
-			Specialization_Map_Entry.Offset = 0;
-			Specialization_Map_Entry.Size = sizeof(uint32_t);
-		}
-
-		const vector<const RHI_Specialization_Map_Entry*> Specialization_Map_Entries{
-			&Specialization_Map_Entry
-		};
-
-		uint32_t Buffer_Element_Data{};
-
-		RHI_Specialization_Info Specialization_Info{};
-		{
-			Specialization_Info.Map_Entries = &Specialization_Map_Entries;
-			Specialization_Info.Data_Size = sizeof(uint32_t);
-			Specialization_Info.Data = &Buffer_Element_Data;
-		}*/
-
-		{
-			RHI_Pipeline_Shader_Stage_Create_Info Kickoff_Compute_Pipeline_Shader_Stage_Create_Info{};
-			{
-				//NOTE : Destroyed in the RHI
-				unique_ptr<RHI_Shader_Module> Kickoff_Compute_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Kickoff_Compute_Shader_Code) };
-				{
-					Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-					Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Flags = 0;
-					Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_COMPUTE_BIT;
-					Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Module = Kickoff_Compute_Shader_Module.get();
-					Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Name = "main";
-					Kickoff_Compute_Pipeline_Shader_Stage_Create_Info.Specialization_Info = nullptr;
-				}
-			}
-
-			RHI_Compute_Pipeline_Create_Info Kickoff_Compute_Pipeline_Create_Info{};
-			{
-				Kickoff_Compute_Pipeline_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-				Kickoff_Compute_Pipeline_Create_Info.Flags = 0;
-				Kickoff_Compute_Pipeline_Create_Info.Stage = &Kickoff_Compute_Pipeline_Shader_Stage_Create_Info;
-				Kickoff_Compute_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
-				Kickoff_Compute_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
-				Kickoff_Compute_Pipeline_Create_Info.Base_Pipeline_Index = 0;
-			}
-
-			this->m_Compute_Pipelines[0] = this->m_RHI->Create_Compute_Pipeline(&Kickoff_Compute_Pipeline_Create_Info);
-		}
-		{
-			RHI_Pipeline_Shader_Stage_Create_Info Emit_Compute_Pipeline_Shader_Stage_Create_Info{};
-			{
-				unique_ptr<RHI_Shader_Module> Emit_Compute_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Emit_Compute_Shader_Code) };
-
-				{
-					Emit_Compute_Pipeline_Shader_Stage_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-					Emit_Compute_Pipeline_Shader_Stage_Create_Info.Flags = 0;
-					Emit_Compute_Pipeline_Shader_Stage_Create_Info.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_COMPUTE_BIT;
-					Emit_Compute_Pipeline_Shader_Stage_Create_Info.Module = Emit_Compute_Shader_Module.get();
-					Emit_Compute_Pipeline_Shader_Stage_Create_Info.Name = "main";
-					Emit_Compute_Pipeline_Shader_Stage_Create_Info.Specialization_Info = nullptr;
-				}
-			}
-
-			RHI_Compute_Pipeline_Create_Info Emit_Compute_Pipeline_Create_Info{};
-			{
-				Emit_Compute_Pipeline_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-				Emit_Compute_Pipeline_Create_Info.Flags = 0;
-				Emit_Compute_Pipeline_Create_Info.Stage = &Emit_Compute_Pipeline_Shader_Stage_Create_Info;
-				Emit_Compute_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
-				Emit_Compute_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
-				Emit_Compute_Pipeline_Create_Info.Base_Pipeline_Index = 0;
-			}
-
-			this->m_Compute_Pipelines[1] = this->m_RHI->Create_Compute_Pipeline(&Emit_Compute_Pipeline_Create_Info);
-
-		}
-
-		{
-			RHI_Pipeline_Shader_Stage_Create_Info Simulate_Compute_Pipeline_Shader_Stage_Create_Info{};
-			{
-				unique_ptr<RHI_Shader_Module> Update_Compute_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Simulate_Compute_Shader_Code) };
-				{
-					Simulate_Compute_Pipeline_Shader_Stage_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-					Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Flags = 0;
-					Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_COMPUTE_BIT;
-					Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Module = Update_Compute_Shader_Module.get();
-					Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Name = "main";
-					Simulate_Compute_Pipeline_Shader_Stage_Create_Info.Specialization_Info = nullptr;
-				}
-			}
-			RHI_Compute_Pipeline_Create_Info Simulate_Compute_Pipeline_Create_Info{};
-			{
-				Simulate_Compute_Pipeline_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-				Simulate_Compute_Pipeline_Create_Info.Flags = 0;
-				Simulate_Compute_Pipeline_Create_Info.Stage = &Simulate_Compute_Pipeline_Shader_Stage_Create_Info;
-				Simulate_Compute_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
-				Simulate_Compute_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
-				Simulate_Compute_Pipeline_Create_Info.Base_Pipeline_Index = 0;
-			}
-
-			this->m_Compute_Pipelines[2] = this->m_RHI->Create_Compute_Pipeline(&Simulate_Compute_Pipeline_Create_Info);
-		}
+		this->m_Render_Pipelines[_Graphics_Grapics_Type_Particle].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
 	}
 
 	void Particle_Pass::Setup_Attachments(void) {
+
+		//NOTE : Billboard Image
+		{
+			const auto& Billboard_Image_Resource{ this->m_Resource->Load_Texture_HDR(Resource_Manager::URL_To_File_Full_Path(Particle_Manager::Get_Instance().Get_Particle_Billboard_Image_URL())) };
+
+			std::tie(this->m_Particle_Billbord_Image, this->m_Particle_Billbord_Image_View, this->m_Particle_Billbord_Image_Allocation) = this->m_RHI->Create_Global_Image(
+				{ Billboard_Image_Resource->Width,Billboard_Image_Resource->Height },
+				Billboard_Image_Resource->Format,
+				Billboard_Image_Resource->Mip_Levels,
+				Billboard_Image_Resource->Pixels.get()
+			);
+
+			const auto& Loge_Image_Resource{ this->m_Resource->Load_Texture_HDR(Resource_Manager::URL_To_File_Full_Path(Particle_Manager::Get_Instance().Get_Particle_Billboard_Image_URL())) };
+
+			std::tie(this->m_Particle_Billbord_Image, this->m_Particle_Billbord_Image_View, this->m_Particle_Billbord_Image_Allocation) = this->m_RHI->Create_Global_Image(
+				{ Loge_Image_Resource->Width,Loge_Image_Resource->Height },
+				Loge_Image_Resource->Format,
+				Loge_Image_Resource->Mip_Levels,
+				Loge_Image_Resource->Pixels.get()
+			);
+		}
 
 		this->m_Frame_Buffer.Width = this->m_RHI->Get_SwapChain_Extent().Width;
 		this->m_Frame_Buffer.Height = this->m_RHI->Get_SwapChain_Extent().Height;
@@ -717,7 +776,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		auto& Ref_Attachments{ this->m_Frame_Buffer.Attachments };
 
-		std::tie(Ref_Attachments[0].Image, Ref_Attachments[0].Image_Memory) = this->m_RHI->Create_Image(
+		Ref_Attachments.resize(_Attachment_Type_Count);
+
+		Ref_Attachments[_Attachment_Type_Src_Depth].Format = this->m_RHI->Get_Physical_Depth_Format();
+		Ref_Attachments[_Attachment_Type_Dst_Depth].Format = this->m_RHI->Get_Physical_Depth_Format();
+
+		Ref_Attachments[_Attachment_Type_Src_Normal].Format = RHI_FORMAT::RHI_FORMAT_R8G8B8A8_UNORM;
+		Ref_Attachments[_Attachment_Type_Dst_Normal].Format = RHI_FORMAT::RHI_FORMAT_R8G8B8A8_UNORM;
+
+
+		std::tie(Ref_Attachments[_Attachment_Type_Dst_Depth].Image, Ref_Attachments[_Attachment_Type_Dst_Depth].Image_Memory) = this->m_RHI->Create_Image(
 			{ this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height },
 			this->m_RHI->Get_Physical_Depth_Format(),
 			this->m_Frame_Buffer.Layers,
@@ -760,7 +828,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	}
 
-	void Particle_Pass::Pre_Inittialize(const Render_Pass_Inittialize_Info* Init_Info) {
+	void Particle_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
+		//const auto Partile_Info{ static_cast<const Particle_Paas_Render_Pass_Pre_Initialize_Info*>(Init_Info) };
+		//{
+		//	this->m_Render_Pass = Partile_Info->Render_Pass;
+		//	this->m_Src_Depth_Image = Partile_Info->Depth_Image;
+		//	this->m_Src_Normal_Image = Partile_Info->Normal_Image;
+		//	//TODO : Add More
+		//}
+
+		//this->Setup_Uniform_Buffer();
+		//this->Setup_Descriptor_Set_Layout();
+		//this->Setup_Pipeline();
+		//this->Setup_Attachments();
+		//this->Setup_Descriptor_Set();
+
+
+
 		RHI_Command_Buffer_Allocate_Info Compute_Command_Buffer_Allocate_Info{};
 		{
 			Compute_Command_Buffer_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -771,7 +855,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		this->m_Compute_Command_Buffer = std::move(this->m_RHI->Allocate_Command_Buffers(&Compute_Command_Buffer_Allocate_Info).front());
 		this->m_Copy_Command_Buffer = std::move(this->m_RHI->Allocate_Command_Buffers(&Compute_Command_Buffer_Allocate_Info).front());
-	
+
 		RHI_Fence_Create_Info Fence_Create_Info{};
 		{
 			Fence_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -779,6 +863,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 
 		this->m_Fence = this->m_RHI->Create_Fence(&Fence_Create_Info);
+	}
+
+	void Particle_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
+	{
+	}
+
+	void Particle_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
+	{
+	}
+
+	void Particle_Pass::Draw(void)
+	{
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

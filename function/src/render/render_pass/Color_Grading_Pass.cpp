@@ -1,5 +1,18 @@
 #include "render/render_pass/Color_Grading_Pass.h"
 
+#include<tuple>
+#include<utility>
+
+#include "render/rhi/empty_rhi/RHI_Class.h"
+#include "render/rhi/empty_rhi/RHI_Type.h"
+#include "render/rhi/empty_rhi/RHI_Struct.h"
+
+#include "render/render_system/Render_Commmon.h"
+#include "render/render_system/Render_Mesh.h"
+
+#include "color_grading_frag.h"
+#include "post_process_vert.h"
+
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
@@ -54,50 +67,49 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_RHI::RHI_Pipeline_Dynamic_State_Create_Info;
 	using NameSpace_RHI::RHI_Graphics_Pipeline_Create_Info;
 
+
+	using NameSpace_RHI::RHI_BLEND_FACTOR;
+	using NameSpace_RHI::RHI_BLEND_OP;
+	using NameSpace_RHI::RHI_LOGIC_OP;
+	using NameSpace_RHI::RHI_COMPARE_OP;
+	using NameSpace_RHI::RHI_Shader_Module;
+	using NameSpace_RHI::RHI_POLYGON_MODE;
+	using NameSpace_RHI::RHI_CULL_MODE_FLAG_BITS;
+	using NameSpace_RHI::RHI_FRONT_FACE;
+	using NameSpace_RHI::RHI_DYNAMIC_STATE;
+
 	using NameSpace_Render_System::Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
 
 	using NameSpace_Render_System::Mesh_Vertex;
 
-	Color_Grading_Pass::Color_Grading_Pass(const Render_Pass_Command_Info& Command_Info, RHI_Render_Pass* Render_Pass) :
-		Render_Pass{ Command_Info },
-		m_Render_Pass{ Render_Pass } {
-
-		this->Setup_Descriptor_Set_Layout();
-		this->Setup_Descriptor_Set();
-		this->Setup_Pipeline();
+	Color_Grading_Pass::Color_Grading_Pass(const Render_Pass_Command_Info& Command_Info) :
+		Render_Pass{ Command_Info } {
 	}
 
 	void Color_Grading_Pass::Setup_Descriptor_Set_Layout(void) {
-		RHI_Descriptor_Set_Layout_Binding Per_Frame_Storage_Buffer_Binding{};
+		this->m_Descriptors.resize(1);
+
+		RHI_Descriptor_Set_Layout_Binding Post_Process_Global_Layout_Input_Attachment_Binding{};
 		{
-			Per_Frame_Storage_Buffer_Binding.Binding = 0;
-			Per_Frame_Storage_Buffer_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
-			Per_Frame_Storage_Buffer_Binding.Descriptor_Count = 1;
-			Per_Frame_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
-			Per_Frame_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
+			Post_Process_Global_Layout_Input_Attachment_Binding.Binding = 0;
+			Post_Process_Global_Layout_Input_Attachment_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+			Post_Process_Global_Layout_Input_Attachment_Binding.Descriptor_Count = 1;
+			Post_Process_Global_Layout_Input_Attachment_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT);
+			Post_Process_Global_Layout_Input_Attachment_Binding.Immutable_Samplers = nullptr;
 		}
 
-		RHI_Descriptor_Set_Layout_Binding Per_Draw_Call_Storage_Buffer_Binding{};
+		RHI_Descriptor_Set_Layout_Binding Post_Process_Global_Layout_LUT_Binding{};
 		{
-			Per_Draw_Call_Storage_Buffer_Binding.Binding = 1;
-			Per_Draw_Call_Storage_Buffer_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
-			Per_Draw_Call_Storage_Buffer_Binding.Descriptor_Count = 1;
-			Per_Draw_Call_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
-			Per_Draw_Call_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
+			Post_Process_Global_Layout_LUT_Binding.Binding = 1;
+			Post_Process_Global_Layout_LUT_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			Post_Process_Global_Layout_LUT_Binding.Descriptor_Count = 1;
+			Post_Process_Global_Layout_LUT_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT);
+			Post_Process_Global_Layout_LUT_Binding.Immutable_Samplers = nullptr;
 		}
 
-		RHI_Descriptor_Set_Layout_Binding Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding{};
-		{
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Binding = 2;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Descriptor_Count = 1;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT);
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding.Immutable_Samplers = nullptr;
-		}
 		const vector<const RHI_Descriptor_Set_Layout_Binding*> Bindings{
-			&Per_Frame_Storage_Buffer_Binding,
-			&Per_Draw_Call_Storage_Buffer_Binding,
-			&Per_Draw_Call_Vertex_Blending_Storage_Buffer_Binding
+			&Post_Process_Global_Layout_Input_Attachment_Binding,
+			&Post_Process_Global_Layout_LUT_Binding,
 		};
 
 		RHI_Descriptor_Set_Layout_Create_Info Descriptor_Set_Layout_Create_Info{};
@@ -122,76 +134,59 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		this->m_Descriptors[0].Descriptor_Set = std::move(this->m_RHI->Allocate_Descriptor_Sets(&Descriptor_Set_Allocate_Info).front());
 
-		RHI_Descriptor_Buffer_Info Per_Frame_Storage_Buffer_Info{};
+		RHI_Descriptor_Image_Info Post_Process_Per_Fame_Input_Attachment_Info{};
 		{
-			Per_Frame_Storage_Buffer_Info.Buffer = this->m_Global_Render_Resource->Storage_Buffer.Global_Upload_Ring_Buffer.get();
-			Per_Frame_Storage_Buffer_Info.Offset = 0;
-			Per_Frame_Storage_Buffer_Info.Range = sizeof(Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object);
+			Post_Process_Per_Fame_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
+			Post_Process_Per_Fame_Input_Attachment_Info.Image_View = this->m_Input_Attachment;
+			Post_Process_Per_Fame_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		}
-		const vector<const RHI_Descriptor_Buffer_Info*> Per_Frame_Storage_Buffer_Infos{ &Per_Frame_Storage_Buffer_Info };
+		const vector<const RHI_Descriptor_Image_Info*> Post_Process_Per_Fame_Input_Attachment_Infos{ &Post_Process_Per_Fame_Input_Attachment_Info };
 
-		RHI_Descriptor_Buffer_Info Per_Draw_Call_Storage_Buffer_Info{};
+		RHI_Descriptor_Image_Info Color_Grading_LUT_Image_Info{};
 		{
-			Per_Draw_Call_Storage_Buffer_Info.Buffer = this->m_Global_Render_Resource->Storage_Buffer.Global_Upload_Ring_Buffer.get();
-			Per_Draw_Call_Storage_Buffer_Info.Offset = 0;
-			Per_Draw_Call_Storage_Buffer_Info.Range = sizeof(Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object);
+			Color_Grading_LUT_Image_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_LINEAR);
+			Color_Grading_LUT_Image_Info.Image_View = this->m_Global_Render_Resource->Color_Grading_Resource.Color_Grading_Image_View.get();
+			Color_Grading_LUT_Image_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		}
-		const vector<const RHI_Descriptor_Buffer_Info*> Per_Draw_Call_Storage_Buffer_Infos{ &Per_Draw_Call_Storage_Buffer_Info };
+		const vector<const RHI_Descriptor_Image_Info*> Color_Grading_LUT_Image_Infos{ &Color_Grading_LUT_Image_Info };
 
-		RHI_Descriptor_Buffer_Info Per_Draw_Call_Vertex_Blending_Storage_Buffer_Info{};
+		RHI_Write_Descriptor_Set Post_Process_Descriptor_Input_Attachment_Write_Set{};
 		{
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Info.Buffer = this->m_Global_Render_Resource->Storage_Buffer.Global_Upload_Ring_Buffer.get();
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Info.Offset = 0;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Info.Range = sizeof(Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object);
-		}
-		const vector<const RHI_Descriptor_Buffer_Info*> Per_Draw_Call_Vertex_Blending_Storage_Buffer_Infos{ &Per_Draw_Call_Vertex_Blending_Storage_Buffer_Info };
-
-		RHI_Write_Descriptor_Set Per_Frame_Storage_Buffer_Write{};
-		{
-			Per_Frame_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Per_Frame_Storage_Buffer_Write.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Per_Frame_Storage_Buffer_Write.Dst_Binding = 0;
-			Per_Frame_Storage_Buffer_Write.Dst_Array_Element = 0;
-			Per_Frame_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
-			Per_Frame_Storage_Buffer_Write.Buffer_Infos = &Per_Frame_Storage_Buffer_Infos;
+			Post_Process_Descriptor_Input_Attachment_Write_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			Post_Process_Descriptor_Input_Attachment_Write_Set.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
+			Post_Process_Descriptor_Input_Attachment_Write_Set.Dst_Binding = 0;
+			Post_Process_Descriptor_Input_Attachment_Write_Set.Dst_Array_Element = 0;
+			Post_Process_Descriptor_Input_Attachment_Write_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+			Post_Process_Descriptor_Input_Attachment_Write_Set.Image_Infos = &Post_Process_Per_Fame_Input_Attachment_Infos;
 		}
 
-		RHI_Write_Descriptor_Set Per_Draw_Call_Storage_Buffer_Write{};
+		RHI_Write_Descriptor_Set Post_Process_Descriptor_LUT_Write_Set{};
 		{
-			Per_Draw_Call_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Per_Draw_Call_Storage_Buffer_Write.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Per_Draw_Call_Storage_Buffer_Write.Dst_Binding = 1;
-			Per_Draw_Call_Storage_Buffer_Write.Dst_Array_Element = 0;
-			Per_Draw_Call_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
-			Per_Draw_Call_Storage_Buffer_Write.Buffer_Infos = &Per_Draw_Call_Storage_Buffer_Infos;
+			Post_Process_Descriptor_LUT_Write_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			Post_Process_Descriptor_LUT_Write_Set.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
+			Post_Process_Descriptor_LUT_Write_Set.Dst_Binding = 1;
+			Post_Process_Descriptor_LUT_Write_Set.Dst_Array_Element = 0;
+			Post_Process_Descriptor_LUT_Write_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			Post_Process_Descriptor_LUT_Write_Set.Image_Infos = &Color_Grading_LUT_Image_Infos;
 		}
 
-		RHI_Write_Descriptor_Set Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write{};
-		{
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write.Dst_Binding = 2;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write.Dst_Array_Element = 0;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
-			Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write.Buffer_Infos = &Per_Draw_Call_Vertex_Blending_Storage_Buffer_Infos;
-		}
-
-		const vector<const RHI_Write_Descriptor_Set*> Writes{
-			&Per_Frame_Storage_Buffer_Write,
-			&Per_Draw_Call_Storage_Buffer_Write,
-			&Per_Draw_Call_Vertex_Blending_Storage_Buffer_Write
+		const vector<const RHI_Write_Descriptor_Set*> Write_Descriptor_Sets{
+			&Post_Process_Descriptor_Input_Attachment_Write_Set,
+			&Post_Process_Descriptor_LUT_Write_Set
 		};
 
-		this->m_RHI->Update_Descriptor_Sets(&Writes, nullptr);
+		this->m_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
 	}
 
 	void Color_Grading_Pass::Setup_Pipeline(void) {
+		this->m_Render_Pipelines.resize(1);
+
+		vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
+				this->m_Descriptors[0].Descriptor_Set_Layout.get()
+		};
+
 		RHI_Pipeline_Layout_Create_Info Pipeline_Layout_Create_Info{};
 		{
-			vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
-				this->m_Descriptors[0].Descriptor_Set_Layout.get()
-			};
-
 			Pipeline_Layout_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 			Pipeline_Layout_Create_Info.Flags = 0;
 			Pipeline_Layout_Create_Info.Set_Layouts = &Descriptor_Set_Layouts;
@@ -200,34 +195,28 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Render_Pipelines[0].Pipeline_Layout = this->m_RHI->Create_Pipeline_Layout(&Pipeline_Layout_Create_Info);
 
 
+		unique_ptr<RHI_Shader_Module> Vertex_Shader_Module{ this->m_RHI->Create_Shader_Module(&POST_PROCESS_VERT) };
+
 		RHI_Pipeline_Shader_Stage_Create_Info Vert_Pipeline_Shader_Stage_Create_Inof{};
 		{
-			//NOTE : Destroyed in the RHI
-			unique_ptr<NameSpace_RHI::RHI_Shader_Module> Vertex_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Vertex_Shader_Code) };
-
-			{
-				Vert_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-				Vert_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
-				Vert_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT;
-				Vert_Pipeline_Shader_Stage_Create_Inof.Module = Vertex_Shader_Module.get();
-				Vert_Pipeline_Shader_Stage_Create_Inof.Name = "main";
-				Vert_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
-			}
+			Vert_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			Vert_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
+			Vert_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_VERTEX_BIT;
+			Vert_Pipeline_Shader_Stage_Create_Inof.Module = Vertex_Shader_Module.get();
+			Vert_Pipeline_Shader_Stage_Create_Inof.Name = "main";
+			Vert_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
 		}
+
+		unique_ptr<RHI_Shader_Module> Fragment_Shader_Module{ this->m_RHI->Create_Shader_Module(&COLOR_GRADING_FRAG) };
 
 		RHI_Pipeline_Shader_Stage_Create_Info Frag_Pipeline_Shader_Stage_Create_Inof{};
 		{
-			//NOTE : Destroyed in the RHI
-			unique_ptr<NameSpace_RHI::RHI_Shader_Module> Fragment_Shader_Module{ this->m_RHI->Create_Shader_Module(&this->m_Fragment_Shader_Code) };
-
-			{
-				Frag_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-				Frag_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
-				Frag_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT;
-				Frag_Pipeline_Shader_Stage_Create_Inof.Module = Fragment_Shader_Module.get();
-				Frag_Pipeline_Shader_Stage_Create_Inof.Name = "main";
-				Frag_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
-			}
+			Frag_Pipeline_Shader_Stage_Create_Inof.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+			Frag_Pipeline_Shader_Stage_Create_Inof.Flags = 0;
+			Frag_Pipeline_Shader_Stage_Create_Inof.Stage = RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT;
+			Frag_Pipeline_Shader_Stage_Create_Inof.Module = Fragment_Shader_Module.get();
+			Frag_Pipeline_Shader_Stage_Create_Inof.Name = "main";
+			Frag_Pipeline_Shader_Stage_Create_Inof.Specialization_Info = nullptr;
 		}
 
 		const vector<const RHI_Pipeline_Shader_Stage_Create_Info*> Shader_Stages{
@@ -237,55 +226,34 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		RHI_Pipeline_Vertex_Input_State_Create_Info Vertex_Input_State_Create_Info{};
 		{
-			vector<const RHI_Vertex_Input_Binding_Description*> Vertex_Input_Binding_Descriptions{
-						&Mesh_Vertex::Position_Binding_Description
-			};
-			vector<const RHI_Vertex_Input_Attribute_Description*> Vertex_Input_Attribute_Descriptions{
-				&Mesh_Vertex::Position_Attribute_Description
-			};
-
-			{
-				Vertex_Input_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-				Vertex_Input_State_Create_Info.Flags = 0;
-				Vertex_Input_State_Create_Info.Vertex_Binding_Descriptions = &Vertex_Input_Binding_Descriptions;
-				Vertex_Input_State_Create_Info.Vertex_Attribute_Descriptions = &Vertex_Input_Attribute_Descriptions;
-			}
+			Vertex_Input_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+			Vertex_Input_State_Create_Info.Flags = 0;
+			Vertex_Input_State_Create_Info.Vertex_Binding_Descriptions = nullptr;
+			Vertex_Input_State_Create_Info.Vertex_Attribute_Descriptions = nullptr;
 		}
 
 		RHI_Pipeline_Input_Assembly_State_Create_Info Input_Assembly_State_Create_Info{};
 		{
 			Input_Assembly_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 			Input_Assembly_State_Create_Info.Flags = 0;
-			Input_Assembly_State_Create_Info.Topology = RHI_PRIMITIVE_TOPOLOGY::RHI_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			Input_Assembly_State_Create_Info.Topology = RHI_PRIMITIVE_TOPOLOGY::RHI_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
 			Input_Assembly_State_Create_Info.Primitive_Restart_Enable = RHI_FALSE;
 		}
 
+		const vector<const RHI_Viewport*> Viewports{
+			&this->m_RHI->Get_SwapChain_Viewport()
+		};
+
+		const vector<const RHI_Rect_2D*> Scissors{
+			&this->m_RHI->Get_SwapChain_Scissor()
+		};
+
 		RHI_Pipeline_Viewport_State_Create_Info Viewport_State_Create_Info{};
 		{
-			RHI_Viewport Viewport{};
-			{
-				Viewport.X = 0.0f;
-				Viewport.Y = 0.0f;
-				Viewport.Width = static_cast<float>(this->m_Frame_Buffer.Width);
-				Viewport.Height = static_cast<float>(this->m_Frame_Buffer.Height);
-				Viewport.Min_Depth = 0.0f;
-				Viewport.Max_Depth = 1.0f;
-			}
-			const vector<const RHI_Viewport*> Viewports{ &Viewport };
-
-			RHI_Rect_2D Scissor{};
-			{
-				Scissor.Offset = { 0,0 };
-				Scissor.Extent = { this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height };
-			}
-			const vector<const RHI_Rect_2D*> Scissors{ &Scissor };
-
-			{
-				Viewport_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-				Viewport_State_Create_Info.Flags = 0;
-				Viewport_State_Create_Info.Viewports = &Viewports;
-				Viewport_State_Create_Info.Scissors = &Scissors;
-			}
+			Viewport_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+			Viewport_State_Create_Info.Flags = 0;
+			Viewport_State_Create_Info.Viewports = &Viewports;
+			Viewport_State_Create_Info.Scissors = &Scissors;
 		}
 
 		RHI_Pipeline_Rasterization_State_Create_Info Rasterization_State_Create_Info{};
@@ -294,9 +262,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Rasterization_State_Create_Info.Flags = 0;
 			Rasterization_State_Create_Info.Depth_Clamp_Enable = RHI_FALSE;
 			Rasterization_State_Create_Info.Rasterizer_Discard_Enable = RHI_FALSE;
-			Rasterization_State_Create_Info.Polygon_Mode = NameSpace_RHI::RHI_POLYGON_MODE::RHI_POLYGON_MODE_FILL;
-			Rasterization_State_Create_Info.Cull_Mode = to_underlying(NameSpace_RHI::RHI_CULL_MODE_FLAG_BITS::RHI_CULL_MODE_BACK_BIT);
-			Rasterization_State_Create_Info.Front_Face = NameSpace_RHI::RHI_FRONT_FACE::RHI_FRONT_FACE_COUNTER_CLOCKWISE;
+			Rasterization_State_Create_Info.Polygon_Mode = RHI_POLYGON_MODE::RHI_POLYGON_MODE_FILL;
+			Rasterization_State_Create_Info.Cull_Mode = to_underlying(RHI_CULL_MODE_FLAG_BITS::RHI_CULL_MODE_BACK_BIT);
+			Rasterization_State_Create_Info.Front_Face = RHI_FRONT_FACE::RHI_FRONT_FACE_CLOCKWISE;
 			Rasterization_State_Create_Info.Depth_Bias_Enable = RHI_FALSE;
 			Rasterization_State_Create_Info.Depth_Bias_Constant_Factor = 0.0f;
 			Rasterization_State_Create_Info.Depth_Bias_Clamp = 0.0f;
@@ -319,7 +287,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Depth_Stencil_State_Create_Info.Flags = 0;
 			Depth_Stencil_State_Create_Info.Depth_Test_Enable = RHI_TRUE;
 			Depth_Stencil_State_Create_Info.Depth_Write_Enable = RHI_TRUE;
-			Depth_Stencil_State_Create_Info.Depth_Compare_Op = NameSpace_RHI::RHI_COMPARE_OP::RHI_COMPARE_OP_LESS;
+			Depth_Stencil_State_Create_Info.Depth_Compare_Op = RHI_COMPARE_OP::RHI_COMPARE_OP_LESS;
 			Depth_Stencil_State_Create_Info.Depth_Bounds_Test_Enable = RHI_FALSE;
 			Depth_Stencil_State_Create_Info.Stencil_Test_Enable = RHI_FALSE;
 			Depth_Stencil_State_Create_Info.Front = {};
@@ -328,41 +296,43 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Depth_Stencil_State_Create_Info.Max_Depth_Bounds = 1.0f;
 		}
 
+		RHI_Pipeline_Color_Blend_Attachment_State Color_Blend_Attachment{};
+		{
+			Color_Blend_Attachment.Blend_Enable = RHI_FALSE;
+			Color_Blend_Attachment.Src_Color_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
+			Color_Blend_Attachment.Dst_Color_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ZERO;
+			Color_Blend_Attachment.Color_Blend_Op = RHI_BLEND_OP::RHI_BLEND_OP_ADD;
+			Color_Blend_Attachment.Src_Alpha_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
+			Color_Blend_Attachment.Dst_Alpha_Blend_Factor = RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ZERO;
+			Color_Blend_Attachment.Alpha_Blend_Op = RHI_BLEND_OP::RHI_BLEND_OP_ADD;
+			Color_Blend_Attachment.Color_Write_Mask =
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_R_BIT |
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_G_BIT |
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_B_BIT |
+				RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_A_BIT;
+		}
+		const vector<const RHI_Pipeline_Color_Blend_Attachment_State*> Color_Blend_Attachments{ &Color_Blend_Attachment };
+
 		RHI_Pipeline_Color_Blend_State_Create_Info Color_Blend_State_Create_Info{};
 		{
-			RHI_Pipeline_Color_Blend_Attachment_State Color_Blend_Attachment{};
-			{
-				Color_Blend_Attachment.Blend_Enable = RHI_FALSE;
-				Color_Blend_Attachment.Src_Color_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
-				Color_Blend_Attachment.Dst_Color_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ZERO;
-				Color_Blend_Attachment.Color_Blend_Op = NameSpace_RHI::RHI_BLEND_OP::RHI_BLEND_OP_ADD;
-				Color_Blend_Attachment.Src_Alpha_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ONE;
-				Color_Blend_Attachment.Dst_Alpha_Blend_Factor = NameSpace_RHI::RHI_BLEND_FACTOR::RHI_BLEND_FACTOR_ZERO;
-				Color_Blend_Attachment.Alpha_Blend_Op = NameSpace_RHI::RHI_BLEND_OP::RHI_BLEND_OP_ADD;
-				Color_Blend_Attachment.Color_Write_Mask =
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_R_BIT |
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_G_BIT |
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_B_BIT |
-					RHI_COLOR_COMPONENT_FLAG_BITS::RHI_COLOR_COMPONENT_A_BIT;
-			}
-
-			const vector<const RHI_Pipeline_Color_Blend_Attachment_State*> Color_Blend_Attachments{ &Color_Blend_Attachment };
-
-			{
-				Color_Blend_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-				Color_Blend_State_Create_Info.Flags = 0;
-				Color_Blend_State_Create_Info.Logic_Op_Enable = RHI_FALSE;
-				Color_Blend_State_Create_Info.Logic_Op = NameSpace_RHI::RHI_LOGIC_OP::RHI_LOGIC_OP_COPY;
-				Color_Blend_State_Create_Info.Attachments = &Color_Blend_Attachments;
-				Color_Blend_State_Create_Info.Blend_Constants = { 0.0f,0.0f,0.0f,0.0f };
-			}
+			Color_Blend_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+			Color_Blend_State_Create_Info.Flags = 0;
+			Color_Blend_State_Create_Info.Logic_Op_Enable = RHI_FALSE;
+			Color_Blend_State_Create_Info.Logic_Op = RHI_LOGIC_OP::RHI_LOGIC_OP_COPY;
+			Color_Blend_State_Create_Info.Attachments = &Color_Blend_Attachments;
+			Color_Blend_State_Create_Info.Blend_Constants = { 0.0f,0.0f,0.0f,0.0f };
 		}
+
+		const vector<RHI_DYNAMIC_STATE> Dynamic_States{
+					RHI_DYNAMIC_STATE::RHI_DYNAMIC_STATE_VIEWPORT,
+					RHI_DYNAMIC_STATE::RHI_DYNAMIC_STATE_SCISSOR
+		};
 
 		RHI_Pipeline_Dynamic_State_Create_Info Dynamic_State_Create_Info{};
 		{
 			Dynamic_State_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 			Dynamic_State_Create_Info.Flags = 0;
-			Dynamic_State_Create_Info.Dynamic_States = nullptr;
+			Dynamic_State_Create_Info.Dynamic_States = &Dynamic_States;
 		}
 
 		RHI_Graphics_Pipeline_Create_Info Graphics_Pipeline_Create_Info{};
@@ -380,8 +350,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Graphics_Pipeline_Create_Info.Color_Blend_State = &Color_Blend_State_Create_Info;
 			Graphics_Pipeline_Create_Info.Dynamic_State = &Dynamic_State_Create_Info;
 			Graphics_Pipeline_Create_Info.Layout = this->m_Render_Pipelines[0].Pipeline_Layout.get();
-			Graphics_Pipeline_Create_Info.Render_Pass = this->m_Frame_Buffer.Render_Pass.get();
-			Graphics_Pipeline_Create_Info.Subpass = 0;
+			Graphics_Pipeline_Create_Info.Render_Pass = this->m_Render_Pass;
+			Graphics_Pipeline_Create_Info.Subpass = _main_camera_subpass_color_grading;
 			Graphics_Pipeline_Create_Info.Base_Pipeline_Handle = RHI_NULL_HANDLE;
 			Graphics_Pipeline_Create_Info.Base_Pipeline_Index = 0;
 		}
@@ -389,59 +359,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
 	}
 
-	void Color_Grading_Pass::Updata_After_Frame_Buffer_ReCreate(RHI_Image_View* Input_Image_View) {
-		RHI_Descriptor_Image_Info Input_Image_Info{};
-		{
-			Input_Image_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
-			Input_Image_Info.Image_View = Input_Image_View;
-			Input_Image_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		}
-
-		RHI_Descriptor_Image_Info Color_Image_Info{};
-		{
-			Color_Image_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
-			Color_Image_Info.Image_View = this->m_Global_Render_Resource->Color_Grading_Resource.Color_Grading_Image_View.get();
-			Color_Image_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		}
-
-		const vector<const RHI_Descriptor_Image_Info*> Image_Infos{
-			&Input_Image_Info,
-			&Color_Image_Info
-		};
-
-		RHI_Write_Descriptor_Set Input_Image_Write{};
-		{
-			Input_Image_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Input_Image_Write.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Input_Image_Write.Dst_Binding = 0;
-			Input_Image_Write.Dst_Array_Element = 0;
-			Input_Image_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			Input_Image_Write.Image_Infos = &Image_Infos;
-		}
-
-		RHI_Write_Descriptor_Set Color_Image_Write{};
-		{
-			Color_Image_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Color_Image_Write.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Color_Image_Write.Dst_Binding = 1;
-			Color_Image_Write.Dst_Array_Element = 0;
-			Color_Image_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			Color_Image_Write.Image_Infos = &Image_Infos;
-		}
-
-		const vector<const RHI_Write_Descriptor_Set*> Writes{
-			&Input_Image_Write,
-			&Color_Image_Write
-		};
-
-		this->m_RHI->Update_Descriptor_Sets(&Writes, nullptr);
-	}
-
 	void Color_Grading_Pass::Draw(void) {
 		//TODO : Implement
 	}
 
-	void Color_Grading_Pass::Post_Inittialize(void)
+	void Color_Grading_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
+		const auto Color_Grading_Info{ static_cast<const Color_Grading_Render_Pass_Pre_Initialize_Info*>(Init_Info) };
+		{
+			this->m_Render_Pass = Color_Grading_Info->Render_Pass;
+			this->m_Input_Attachment = Color_Grading_Info->Input_Attachment;
+		}
+
+		this->Setup_Descriptor_Set_Layout();
+		this->Setup_Pipeline();
+		this->Setup_Descriptor_Set();
+	}
+
+	void Color_Grading_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
 	{
 	}
 
@@ -449,6 +383,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	{
 	}
 
-	
+
 
 }//namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

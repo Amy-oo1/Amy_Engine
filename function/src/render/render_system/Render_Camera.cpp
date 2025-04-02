@@ -53,8 +53,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Vector3 Right = Forward.Cross_Product(Up.Normalize()).Normalize();
 		Vector3 New_Up = Right.Cross_Product(Forward).Normalize();
+		Quaternion Up_Rotation{ Quaternion::Get_Rotation_TO(this->m_Rotation * New_Up,Render_Camera::Z) };
 
-		this->m_Rotation = Quaternion::Get_Rotation_TO(Forward, New_Up).Conjugation();
+		this->m_Rotation = Up_Rotation * this->m_Rotation;
+
+		this->m_Inv_Rotation = this->m_Rotation.Conjugation();
 	}
 
 	void Render_Camera::Set_Z_Near(float Z_Near) {

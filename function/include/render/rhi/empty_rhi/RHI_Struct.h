@@ -334,7 +334,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_STRUCT_TYPE sType;
 		const void* pNext;
 		RHI_Pipeline_Layout_Create_Flags Flags;
-		vector<RHI_Descriptor_Set_Layout*>* Set_Layouts;
+		const vector<RHI_Descriptor_Set_Layout*>* Set_Layouts;
 		const vector<const RHI_Push_Constant_Range*>* Push_Constant_Ranges;
 	};
 

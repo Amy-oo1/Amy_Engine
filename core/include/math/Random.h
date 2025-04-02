@@ -9,67 +9,64 @@
 
 namespace NameSpace_Core::NameSpace_Math {
 
-    template<typename Numeric_Type>
-    using Uniform_Distribution = typename std::conditional<
-        std::is_integral<Numeric_Type>::value,
-        std::uniform_int_distribution<Numeric_Type>,
-        std::uniform_real_distribution<Numeric_Type>>::type;
+	template<typename NumericType>
+	using uniform_distribution = typename std::conditional<std::is_integral<NumericType>::value,
+		std::uniform_int_distribution<NumericType>,
+		std::uniform_real_distribution<NumericType>>::type;
 
-    template<typename Random_Engine = std::default_random_engine>
-    class Random_Number_Generator final {
-    public:
-        template<typename... Params>
-        explicit Random_Number_Generator(Params&&... Temp_Params)
-            : m_Engine{ std::forward<Params>(Temp_Params)... } {
-        }
+	template<typename RandomEngine = std::default_random_engine>
+	class RandomNumberGenerator  final {
+	private:
+		RandomEngine m_engine;
 
-        template<typename... Params>
-        void Seed(Params&&... Seeding) {
-            this->m_Engine.seed(std::forward<Params>(Seeding)...);
-        }
+	public:
+		template<typename... Params>
+		explicit RandomNumberGenerator(Params&&... params) : m_engine(std::forward<Params>(params)...) {
+		}
 
-        template<typename Distribution_Func, typename... Params>
-        typename Distribution_Func::result_type Distribution(Params&&... Temp_Params) const {
-            Distribution_Func dist(std::forward<Params>(Temp_Params)...);
-            return dist(m_Engine);
-        }
+		template<typename... Params>
+		void Seed(Params&&... seeding)
+		{
+			m_engine.seed(std::forward<Params>(seeding)...);
+		}
 
-        template<typename Numeric_Type>
-        Numeric_Type Uniform_Distribution(Numeric_Type Lower, Numeric_Type Upper) const {
-            return Distribution<Uniform_Distribution<Numeric_Type>>(Lower, Upper);
-        }
+		template<typename DistributionFunc, typename... Params>
+		typename DistributionFunc::result_type distribution(Params&&... params)
+		{
+			DistributionFunc dist(std::forward<Params>(params)...);
+			return dist(m_engine);
+		}
 
-        float Uniform_Unit() const {
-            return Uniform_Distribution(0.f, std::nextafter(1.f, Math_MAX_FLOAT));
-        }
+		template<typename NumericType>
+		NumericType Uniform_Distribution(NumericType lower, NumericType upper)
+		{
+			if (lower == upper)
+			{
+				return lower;
+			}
+			return distribution<uniform_distribution<NumericType>>(lower, upper);
+		}
 
-        float Uniform_Symmetry() const {
-            return Uniform_Distribution(-1.f, std::nextafter(1.f, Math_MAX_FLOAT));
-        }
+		float uniformUnit() { return Uniform_Distribution(0.f, std::nextafter(1.f, FLT_MAX)); }
 
-        bool Bernoulli_Distribution(float Probability) const {
-            return Distribution<std::bernoulli_distribution>(Probability);
-        }
+		float uniformSymmetry() { return Uniform_Distribution(-1.f, std::nextafter(1.f, FLT_MAX)); }
 
-        float Normal_Distribution(float Mean, float Standard_Deviation) const {
-            return Distribution<std::normal_distribution<float>>(Mean, Standard_Deviation);
-        }
+		bool bernoulliDistribution(float probability) { return distribution<std::bernoulli_distribution>(probability); }
 
-        template<typename Distribution_Func, typename Range, typename... Params>
-        void Generator(Range&& Temp_Range, Params&&... Temp_Params) const {
-            std::generate(
-                std::begin(Temp_Range),
-                std::end(Temp_Range),
-                [this, ...Temp_Params = std::forward<Params>(Temp_Params)]() mutable {
-                    return Distribution<Distribution_Func>(Temp_Params...);
-                }
-            );
-        }
+		float normalDistribution(float mean, float stddev)
+		{
+			return distribution<std::normal_distribution<float>>(mean, stddev);
+		}
 
-    private:
-        Random_Engine m_Engine;
+		template<typename DistributionFunc, typename Range, typename... Params>
+		void Generator(Range&& range, Params&&... params)
+		{
+			// using ResultType = typename DistributionFunc::result_type;
 
-    };
+			DistributionFunc dist(std::forward<Params>(params)...);
+			return std::generate(std::begin(range), std::end(range), [&] { return dist(m_engine); });
+		}
+	};
 
-    using Default_RNG = Random_Number_Generator<std::mt19937>;
+	using Default_RNG = RandomNumberGenerator<std::mt19937>;
 } // namespace NameSpace_Core::NameSpace_Math

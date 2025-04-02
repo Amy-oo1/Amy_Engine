@@ -235,13 +235,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			m_Resource.reset(res);
 		}*/
 		void Reset(VkDescriptorSet res) {
-			if (nullptr == m_Resource.get())
-				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
-
 			m_Resource.reset(res);
 		}
 
 		VkDescriptorSet Get() const {
+			if (nullptr == m_Resource.get())
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Get Empty Resource");
+
 			return m_Resource.get();
 		}
 

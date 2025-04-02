@@ -310,8 +310,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			Barrier.subresourceRange = Image_Sub_Resource_Range;
 		}
 
-		int32_t Mip_Width = Image_ExTent_2D.width;
-		int32_t Mip_Height = Image_ExTent_2D.height;
+		int32_t Mip_Width = Image_ExTent_2D.width, Mip_Height = Image_ExTent_2D.height;
 		for (uint32_t Mip_Level = 1; Mip_Level < Mip_Levels; ++Mip_Level) {
 			Barrier.subresourceRange.baseMipLevel = Mip_Level - 1;
 			Barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;

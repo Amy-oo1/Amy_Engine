@@ -61,4 +61,12 @@ namespace NameSpace_Function::NameSpace_Particle {
 		return this->m_Global_Particle;
 	}
 
+	const path Particle_Manager::Get_Particle_Billboard_Image_URL(void) const {
+		return Reflection_Global_Particle_Operator::Get_Particle_Billboard_Image_URL_Attribute(this->m_Global_Particle);
+	}
+
+	const path Particle_Manager::Get_Loge_Image_URL(void) const {
+		return Reflection_Global_Particle_Operator::Get_Logo_Image_URL_Attribute(this->m_Global_Particle);
+	}
+
 }// namespace NameSpace_Function::NameSpace_Particle

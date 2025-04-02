@@ -37,9 +37,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		RENDER_CAMERA_TYPE m_Camera_Type{ RENDER_CAMERA_TYPE::EDITOR };
 
 		static const inline Vector3
-			X{ Vector3::UNIT_X },
-			Y{ Vector3::UNIT_Y },
-			Z{ Vector3::UNIT_Z };
+			X{ 1.f,0.f,0.f },
+			Y{ 0.f,1.f,0.f },
+			Z{ 0.f,0.f,1.f };
 
 		static constexpr float MIN_FLV{ 10.f };
 		static constexpr float MAX_FOV{ 89.f };
@@ -47,7 +47,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Vector3 m_Position{ Vector3::ZERO };
 		Quaternion m_Rotation{ Quaternion::IDENTITY };
-		Quaternion M_InV_Rotation{ Quaternion::IDENTITY };
+		Quaternion m_Inv_Rotation{ Quaternion::IDENTITY };
 		float m_Z_Near{ 0.1f };
 		float m_Z_Far{ 1000.0f };
 		Vector3 m_Up_Axis{ Render_Camera::Y };

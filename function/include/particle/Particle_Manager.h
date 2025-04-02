@@ -1,5 +1,7 @@
 #pragma once
 
+#include "file/File_System.h"
+
 #include "global/Global_Particle.h"
 #include "components/emitter/Particle.h"
 
@@ -7,7 +9,7 @@
 
 namespace NameSpace_Function::NameSpace_Particle {
 
-
+	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_Resource::NameSpace_Global::Global_Particle;
 
@@ -28,6 +30,9 @@ namespace NameSpace_Function::NameSpace_Particle {
 		static Particle_Manager& Get_Instance(void);
 
 		const shared_ptr<Global_Particle>& Get_Global_Particle(void) const;
+
+		const path Get_Particle_Billboard_Image_URL(void) const;
+		const path Get_Loge_Image_URL(void) const;
 
 	private:
 		shared_ptr<Global_Particle> m_Global_Particle{ nullptr };
