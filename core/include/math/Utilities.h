@@ -9,6 +9,9 @@
 #include "math/Vector3.h"
 #include "math/Vector4.h"
 
+#include "math/Matrix3x3.h"
+#include "math/Matrix4x4.h"
+
 namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 
 	using std::initializer_list;
@@ -205,5 +208,10 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 	inline const T Clamp(const T& Value, const T& Min, const T& Max) {
 		return Value < Min ? Min : (Value > Max ? Max : Value);
 	}
+
+
+	const Matrix4x4 Make_Look_At(const Vector3& Position, const Vector3& Target, const Vector3& Up);
+
+	const Matrix4x4 Make_Perspective_Matrix(Radian FOV, float Aspect, float Z_Near, float Z_Far);
 
 }// namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities

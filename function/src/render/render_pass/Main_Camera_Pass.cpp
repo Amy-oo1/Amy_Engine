@@ -24,6 +24,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_Resource::NameSpace_Global::Reflection_Global_Particle_Operator;
 
 	using NameSpace_RHI::RHI_BUFFER_USAGE_FLAG_BITS;
@@ -116,8 +118,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_Render_System::Mesh_Vertex;
 
 
-	void Main_Camera_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
-		const auto Main_Camera_Info{ static_cast<const Main_Camera_Render_Pass_Per_Initialize_Info*>(Init_Info) };
+	void Main_Camera_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
+		const auto Main_Camera_Info{ static_pointer_cast<Main_Camera_Render_Pass_Per_Initialize_Info>(Init_Info) };
 		{
 			this->m_Enable_FXAA = Main_Camera_Info->Enable_FXAA;
 			this->m_Point_Light_Shadow_Color_Image_View = Main_Camera_Info->Point_Light_Shadow_Color_Image_View;
@@ -133,7 +135,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_SwapChain_Frame_Buffers();
 	}
 
-	void Main_Camera_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
+	void Main_Camera_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)
 	{
 	}
 
@@ -148,6 +150,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	Main_Camera_Pass::Main_Camera_Pass(const Render_Pass_Command_Info& Command_Info)
 		: Render_Pass{ Command_Info } {
 	}
+
+	bool Main_Camera_Pass::Get_Axis_State(void) const {
+		return this->m_Is_Show_Axis;
+	}
+
+    void Main_Camera_Pass::Set_Aixs_State(bool State) {
+        this->m_Is_Show_Axis = State;
+    }
 
 	void Main_Camera_Pass::Setup_Attachments(void) {
 		this->m_Frame_Buffer.Width = this->m_RHI->Get_SwapChain_Extent().Width;

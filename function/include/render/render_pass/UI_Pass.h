@@ -26,7 +26,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	};
 
 	struct UI_Render_Pass_Post_Initialize_Info final :public Render_Pass_Post_Initialize_Info {
-		shared_ptr<Window_UI> Window_UI;
 	};
 
 
@@ -39,6 +38,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		~UI_Pass(void) = default;
 
 	public:
+		void Set_Window_UI_System(shared_ptr<Window_UI> UI);
 
 	private:
 
@@ -49,8 +49,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	public:
 		void Draw(void)override;
-		void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) override;
-		void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) override;
+		void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) override;
+		void Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 
 	};

@@ -12,6 +12,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
 	using NameSpace_RHI::RHI_IMAGE_TILING;
 	using NameSpace_RHI::RHI_IMAGE_VIEW_TYPE;
@@ -326,8 +328,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		//TODO : Implement
 	}
 
-	void FXAA_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
-		const auto FXAA_Info{ static_cast<const FXAA_Render_Pass_Pre_Initialize_Info*>(Init_Info) };
+	void FXAA_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
+		const auto FXAA_Info{ static_pointer_cast<FXAA_Render_Pass_Pre_Initialize_Info>(Init_Info) };
 		{
 			this->m_Render_Pass = FXAA_Info->Render_Pass;
 			this->m_Input_Attachment = FXAA_Info->Input_Attachment;
@@ -338,7 +340,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set();
 	}
 
-	void FXAA_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
+	void FXAA_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)
 	{
 	}
 

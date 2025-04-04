@@ -745,7 +745,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			vk_Write_Descriptor_Set.pNext = Write_Descriptor_Set->pNext;
 			vk_Write_Descriptor_Set.dstSet = static_cast<Vulkan_Descriptor_Set*>(Write_Descriptor_Set->Dst_Set)->Get();
 			vk_Write_Descriptor_Set.dstBinding = Write_Descriptor_Set->Dst_Binding;
-			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;//TODO £ºMove To Optional
+			vk_Write_Descriptor_Set.dstArrayElement = Write_Descriptor_Set->Dst_Array_Element;
 			vk_Write_Descriptor_Set.descriptorCount = Descriptor_Count;
 			vk_Write_Descriptor_Set.descriptorType = static_cast<VkDescriptorType>(Write_Descriptor_Set->Descriptor_Type);
 			vk_Write_Descriptor_Set.pImageInfo = Image_Infos.has_value() ? Image_Infos->data() : nullptr;

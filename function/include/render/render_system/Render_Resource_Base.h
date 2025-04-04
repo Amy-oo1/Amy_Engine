@@ -37,11 +37,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		virtual ~Render_Resource_Base(void) = default;
 
 	public:
-		shared_ptr<Texture_Data>
-			Load_Texture_HDR(const path& Texture_URL, int desired_Channels = 4)const;
+		static shared_ptr<Texture_Data>
+			Load_Texture_HDR(const path& Texture_URL, int desired_Channels = 4);
 
-		shared_ptr<Texture_Data>
-			Load_Texture(const path& Texture_URL, bool Is_SRGB = false)const;
+		static shared_ptr<Texture_Data>
+			Load_Texture(const path& Texture_URL, bool Is_SRGB = false);
 
 		const Render_Mesh_Data
 			Load_Mesh(const path& Mesh_URL)const;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include<cstdint>
+#include<limits>
 #include<vector>
 
 #include "math/Vector3.h"
@@ -17,25 +18,25 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 	using NameSpace_Core::NameSpace_Bounding::AxisAligned_Bounding_Box;
 
-	struct Render_Entity final {
-		size_t Instance_ID{ 0 };
+	struct Render_Entity {
+		size_t Instance_ID{ std::numeric_limits<size_t>::max() };
 		Matrix4x4 Model_Matrix{ Matrix4x4::IDENTITY };
 
 		//NOTE : Mesh
-		size_t Mesh_Resource_ID{ 0 };
+		size_t Mesh_Resource_ID{ std::numeric_limits<size_t>::max() };
 		bool Enable_Vertex_Blending{ false };
 		vector<Matrix4x4> Joint_Matrices{};
 		AxisAligned_Bounding_Box Bounding_Box{ AxisAligned_Bounding_Box::EMPTY };
 
 		//NOTE : Material
-		size_t Material_Resource_ID{ 0 };
+		size_t Material_Resource_ID{ std::numeric_limits<size_t>::max() };
 		bool Is_Blend{ false };
 		bool Is_Double_Sided{ false };
 
 		Vector4 Base_Color_Factor{ Vector4::ONE };
 		float Metallic_Factor{ 1.f };
 		float Roughness_Factor{ 1.f };
-		Vector3 Emissive_Factor{ Vector3::ONE };
+		Vector3 Emissive_Factor{ Vector3::ZERO };
 
 		float Normal_Scale{ 1.f };
 		float Occlusion_Strength{ 1.f };

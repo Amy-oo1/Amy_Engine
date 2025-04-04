@@ -5,8 +5,14 @@
 #include <chrono>
 #include <filesystem>
 #include <unordered_set>
+#include<memory>
 
 namespace NameSpace_Function {
+
+	using std::string;
+	using std::vector;
+	using std::unordered_set;
+	using std::shared_ptr;
 
 	class Amy_Engine final {
 	private:
@@ -19,7 +25,7 @@ namespace NameSpace_Function {
 		Amy_Engine& operator=(Amy_Engine&&) = delete;
 
 	public:
-		Amy_Engine(const std::vector<std::string>& Arguments);
+		Amy_Engine(const std::vector<string>& Arguments);
 
 		~Amy_Engine(void) = default;
 	};

@@ -71,7 +71,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		const Vector3 Get_Position(void) const;
 		const Quaternion Get_Rotation(void) const;
-		const Vector3 Get_ForWard(void) const;
+		const Vector3 Get_Forward(void) const;
 		const Vector3 Get_Up(void) const;
 		const Vector3 Get_Right(void) const;
 		const Vector2 Get_FOV(void)const;
@@ -80,8 +80,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		const Matrix4x4 Get_Look_At_Matrix(void) const;
 		float Get_FOV_Deprecated(void) const;
 
+	private:
+		const Vector3 Forwad(void)const;
+		const Vector3 Up(void)const;
+		const Vector3 Right(void)const;
+
 		
-	protected:
+	private:
 		float m_Aspect{ 0.f };
 		float m_FOV_X{ 89.f };
 		float m_FOV_Y{ 0.f };

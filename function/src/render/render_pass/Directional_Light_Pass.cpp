@@ -14,6 +14,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
 	using NameSpace_RHI::RHI_IMAGE_TILING;
 	using NameSpace_RHI::RHI_IMAGE_VIEW_TYPE;
@@ -561,7 +563,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
 	}
 
-	void Directional_Light_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
+	void Directional_Light_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
 		//NOTE : Empty
 
 		this->Setup_Attachments();
@@ -570,8 +572,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set_Layout();
 	}
 
-	void Directional_Light_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) {
-		const auto  Directioal_Light_Info{ static_cast<const Directioal_Light_Render_Pass_Post_Initialize_Info*>(Init_Info) };
+	void Directional_Light_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info) {
+		const auto  Directioal_Light_Info{ static_pointer_cast<Directioal_Light_Render_Pass_Post_Initialize_Info>(Init_Info) };
 		{
 			this->m_Per_Mesh_Set_Layout = Directioal_Light_Info->Per_Mesh_Set_Layout;
 		}

@@ -24,7 +24,7 @@
 #include "input/Input_System.h"
 
 #include "render/render_system/Render_Obejct.h"
-#include "render/render_system/Render_GUID_Allocator.h"
+//#include "render/render_system/Render_GUID_Allocator.h"
 
 #include "render/render_system/Render_System.h"
 
@@ -53,7 +53,7 @@ namespace NameSpace_Function::Namespace_Global {
 	using NameSpace_Render::NameSpace_Window::Window_System;
 	using Namespace_Input::Input_System;
 
-	using NameSpace_Render::NameSpace_Render_System::Render_GUID_Allocator;
+	//using NameSpace_Render::NameSpace_Render_System::Render_GUID_Allocator;
 	using NameSpace_Render::NameSpace_Render_System::Game_Object_Part_ID;
 
 	using NameSpace_Render::NameSpace_Render_System::Render_System;

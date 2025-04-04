@@ -3,6 +3,10 @@
 #include<memory>
 #include<filesystem>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_vulkan.h"
+
 #include "meta/generated/Reflection_Header.h"
 #include "meta/generated/Serializer_Header.h"
 
@@ -10,9 +14,10 @@
 
 #include "Engine.h"
 
-using std::unique_ptr;
+#include "default_editor/Editor.h"
 
-using NameSpace_Function::Amy_Engine;
+//using std::shared_ptr;
+using std::unique_ptr;
 
 int main(int argc, char** argv) {
 
@@ -22,7 +27,12 @@ int main(int argc, char** argv) {
 		Config_Path.generic_string()
 	};
 
-	unique_ptr<Amy_Engine> Engine = std::make_unique<Amy_Engine>(Argements);
+	NameSpace_Editor::Amy_Editor Editor{ std::make_unique<NameSpace_Function::Amy_Engine>(Argements) };
 
 
+
+
+	ImGui_ImplVulkan_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 };

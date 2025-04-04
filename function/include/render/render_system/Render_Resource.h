@@ -161,14 +161,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				array<shared_ptr<Texture_Data>, 6> Specular_Maps
 			);
 
-		[[nodiscard]] const Vulkan_Mesh&
+		const Vulkan_Mesh&
 			Get_OR_Create_Vulkan_Mesh(
 				shared_ptr<Empty_RHI> RHI,
 				const Render_Entity& Render_Entity,
 				const Render_Mesh_Data& Mesh_Data
 			);
 
-		[[nodiscard]] const Vulkan_PBR_Material&
+		const Vulkan_PBR_Material&
 			Get_OR_Create_Vulkan_Material(
 				shared_ptr<Empty_RHI> RHI,
 				const Render_Entity& Render_Entity,
@@ -182,7 +182,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	private:
 		[[nodiscard]] Vulkan_Mesh
-			Load_Mesh_Binding(
+			Load_Mesh_Binding_Buffer(
 				shared_ptr<Empty_RHI> RHI,
 				uint32_t Index_Buffer_Size,
 				uint16_t* Index_Buffer_Data,
@@ -224,19 +224,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		const Global_Render_Resource& Get_Global_Render_Resource(void)const;
 
-
 	private:
+		RHI_Descriptor_Set_Layout* m_Mesh_Descriptor_Set_Layout{ nullptr };
+
+		RHI_Descriptor_Set_Layout* m_Material_Descriptor_Set_Layout{ nullptr };
+
 		Global_Render_Resource m_Global_Render_Resource;
-
-		unique_ptr<RHI_Descriptor_Set_Layout>m_Mesh_Descriptor_Set_Layout{ nullptr };
-
-		unique_ptr<RHI_Descriptor_Set_Layout>m_Material_Descriptor_Set_Layout{ nullptr };
 
 		unordered_map<size_t, Vulkan_Mesh> m_Vulkan_Mesh_Map;
 		unordered_map<size_t, Vulkan_PBR_Material> m_Vulkan_PBR_Material_Map;
 
 	public:
-
+		void Set_Mesh_Descriptor_Set_Layout(RHI_Descriptor_Set_Layout* Mesh_Descriptor_Set_Layout);
+		void Set_Material_Descriptor_Set_Layout(RHI_Descriptor_Set_Layout* Material_Descriptor_Set_Layout);
 
 
 		void

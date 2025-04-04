@@ -24,7 +24,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_RHI::RHI_FORMAT;
 
-	shared_ptr<Texture_Data> Render_Resource_Base::Load_Texture_HDR(const path& Texture_URL, int desired_Channels) const {
+	shared_ptr<Texture_Data> Render_Resource_Base::Load_Texture_HDR(const path& Texture_URL, int desired_Channels) {
 
 		static const auto Texture_Data_Deleter = [](void* Pixels) { stbi_image_free(Pixels); };
 		shared_ptr<Texture_Data> Texture = std::make_shared<Texture_Data>();
@@ -62,7 +62,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return Texture;
 	}
 
-	shared_ptr<Texture_Data> Render_Resource_Base::Load_Texture(const path& Texture_URL, bool Is_SRGB)const {
+	shared_ptr<Texture_Data> Render_Resource_Base::Load_Texture(const path& Texture_URL, bool Is_SRGB) {
 		static const auto Texture_Data_Deleter = [](void* Pixels) { stbi_image_free(Pixels); };
 
 		shared_ptr<Texture_Data> Texture = std::make_shared<Texture_Data>();

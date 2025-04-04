@@ -43,7 +43,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	class Main_Camera_Pass final :public Render_Pass {
 	public:
-		
+
 
 	private:
 		Main_Camera_Pass(const Main_Camera_Pass&) = delete;
@@ -55,6 +55,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	public:
 		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
+
+		bool Get_Axis_State(void)const;
+		void Set_Aixs_State(bool State);
+
+
 
 	public:
 		void Setup_Attachments(void);
@@ -79,9 +84,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	private:
 		vector<unique_ptr<RHI_Frame_Buffer>> m_Swapchain_Frame_Buffers{};
 
+
+		bool m_Is_Show_Axis{ false };
+
 	public:
-		void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) override;
-		void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) override;
+		void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) override;
+		void Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 		void Draw(void) override;
 

@@ -35,8 +35,6 @@ namespace NameSpace_Function::Namespace_Input {
 		Input_System& operator=(const Input_System&) = delete;
 
 	public:
-		Input_System(void) = default;
-
 		Input_System(shared_ptr<Window_System> Window);
 
 		~Input_System(void) = default;
@@ -52,7 +50,7 @@ namespace NameSpace_Function::Namespace_Input {
 		void On_Key_Game_Mode(int Key, int Scancode, int Action, int Mods);
 
 	private:
-		shared_ptr<Window_System> m_Window{ nullptr };
+		shared_ptr<Window_System> m_Binding_Window{ nullptr };
 		bool m_Is_Focus_Mode{ false };
 
 		uint32_t m_Game_Commands{ 0 };

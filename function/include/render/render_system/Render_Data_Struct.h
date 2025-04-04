@@ -3,7 +3,10 @@
 #include<malloc.h>
 #include<cstdint>
 #include<memory>
+#include<xhash>
 #include<functional>
+
+#include "file/File_System.h"
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
 
@@ -12,6 +15,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using std::unique_ptr;
 	using std::shared_ptr;
 	using std::function;
+
+	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_RHI::RHI_FORMAT;
 
@@ -79,7 +84,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	struct Render_Mesh_Data final {
 		Static_Mesh_Data Static_Mesh_Data;
-		shared_ptr<Buffer_Data> Skeletion_Binding_Buffer{nullptr};
+		shared_ptr<Buffer_Data> Skeletion_Binding_Buffer{ nullptr };
 
 	};
 
@@ -92,6 +97,62 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	};
 
+	struct Mesh_Source_Desc final {
+		path Mesh_URL;
+		bool operator==(const Mesh_Source_Desc& rhs) const {
+			return
+				this->Mesh_URL == rhs.Mesh_URL;
+		}
+		size_t Get_Has_Value(void)const {
+			return
+				std::hash<std::string>()(this->Mesh_URL.generic_string());
+		}
+	};
 
+
+	struct Material_Source_Desc final {
+		path Base_Color_URL;
+		path Metallic_Roughness_URL;
+		path Normal_URL;
+		path Occlusion_URL;
+		path Emissive_URL;
+
+		bool operator==(const Material_Source_Desc& rhs) const {
+			return
+				this->Base_Color_URL == rhs.Base_Color_URL &&
+				this->Metallic_Roughness_URL == rhs.Metallic_Roughness_URL &&
+				this->Normal_URL == rhs.Normal_URL &&
+				this->Occlusion_URL == rhs.Occlusion_URL &&
+				this->Emissive_URL == rhs.Emissive_URL;
+		}
+
+		size_t Get_Has_Value(void)const {
+			return
+				std::hash<std::string>()(this->Base_Color_URL.string()) ^
+				std::hash<std::string>()(this->Metallic_Roughness_URL.string()) ^
+				std::hash<std::string>()(this->Normal_URL.string()) ^
+				std::hash<std::string>()(this->Occlusion_URL.string()) ^
+				std::hash<std::string>()(this->Emissive_URL.string());
+		}
+	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System
+
+namespace std {
+
+	template<>
+	struct hash<NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Mesh_Source_Desc> {
+		size_t operator()(const NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Mesh_Source_Desc& id) const {
+			return id.Get_Has_Value();
+		}
+	};
+
+	template<>
+	struct hash<NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Material_Source_Desc> {
+		size_t operator()(const NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Material_Source_Desc& id) const {
+			return id.Get_Has_Value();
+		}
+
+	};
+
+}// namespace std

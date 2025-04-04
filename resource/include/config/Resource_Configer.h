@@ -23,9 +23,15 @@ namespace NameSpace_Resource::NameSpace_Config {
 
 	public:
 		const path Get_Root_Directory(void) const;
+		const path Get_Engine_Resource_Directory(void) const;
+		const path Get_User_Resource_Directory(void) const;
 
 		const path Get_Global_Particle_Resource_URL(void)const;
 		const path Get_Global_Render_Resource_URL(void)const;
+
+		const path Get_Engine_Big_Icon_URL(void) const;
+		const path Get_Engine_Small_Icon_URL(void) const;
+		const path Get_Editor_Font_URL(void) const;
 
 	public:
 		static Resource_Configer& Get_Instance(void);

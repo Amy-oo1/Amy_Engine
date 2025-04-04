@@ -44,8 +44,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	public:
 		void Draw(void)override;
-		void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) override;
-		void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) override;
+		void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) override;
+		void Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info) override;
 		void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
 
 	};

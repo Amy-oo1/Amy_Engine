@@ -232,6 +232,7 @@
     <ClInclude Include="include\transform\Orthogonal_Transform.h" />
     <ClInclude Include="include\transform\ScaleTranslation_Transform.h" />
     <ClInclude Include="include\transform\Uniform_Transform.h" />
+    <ClInclude Include="include\utilities\Cpp_Lib_Facility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bounding\Bounding_Box_AxisAligned.cpp" />

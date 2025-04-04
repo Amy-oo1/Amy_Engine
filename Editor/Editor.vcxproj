@@ -115,7 +115,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;JPH_DEBUG_RENDERER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\imgui-1.91.9b\backends\vulkan;D:\Amy_Engine\third_party\imgui-1.91.9b\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -135,7 +135,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Amy_Engine\Editor\include;D:\Amy_Engine\function\include;D:\Amy_Engine\resource\include;D:\Amy_Engine\core\include;D:\Amy_Engine\platform\include;D:\Amy_Engine\third_party\imgui-1.91.9b;D:\Amy_Engine\third_party\tinyobjloader-release\include;D:\Amy_Engine\third_party\glfw-3.4\include;D:\Amy_Engine\third_party\stb-master\include;D:\Amy_Engine\third_party\JoltPhysics-5.2.0\include;D:\Amy_Engine\third_party\VulkanSDK\1.4.309.0\Include;D:\Amy_Engine\third_party\nlohmann-3.11.3\include;D:\Amy_Engine\third_party\spdlog-1.15.0\include;D:\Amy_Engine\third_party\imgui-1.91.9b\backends\vulkan;D:\Amy_Engine\third_party\imgui-1.91.9b\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -149,6 +149,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\default_editor\Editor.cpp" />
+    <ClCompile Include="src\default_editor\Editor_Axis.cpp" />
+    <ClCompile Include="src\default_editor\Editor_Global_Context.cpp" />
+    <ClCompile Include="src\default_editor\Editor_Input_Manager.cpp" />
+    <ClCompile Include="src\default_editor\Editor_Scene_Manager.cpp" />
+    <ClCompile Include="src\default_editor\Editor_UI.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +170,14 @@
     <ProjectReference Include="..\resource\resource.vcxproj">
       <Project>{1e8c58f6-ebe8-44f5-aa04-2026784a70f2}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\default_editor\Editor.h" />
+    <ClInclude Include="include\default_editor\Editor_Axis.h" />
+    <ClInclude Include="include\default_editor\Editor_Global_Context.h" />
+    <ClInclude Include="include\default_editor\Editor_Input_Manager.h" />
+    <ClInclude Include="include\default_editor\Editor_Scene_Manager.h" />
+    <ClInclude Include="include\default_editor\Editor_UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

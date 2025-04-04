@@ -19,6 +19,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_Resource::NameSpace_Global::Reflection_Global_Particle_Operator;
 
 	using NameSpace_Resource::NameSpace_Config::Resource_Configer;
@@ -751,7 +753,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		//NOTE : Billboard Image
 		{
-			const auto& Billboard_Image_Resource{ this->m_Resource->Load_Texture_HDR(Resource_Manager::URL_To_File_Full_Path(Particle_Manager::Get_Instance().Get_Particle_Billboard_Image_URL())) };
+			const auto& Billboard_Image_Resource{ Render_Resource_Base::Load_Texture_HDR(Resource_Manager::URL_To_File_Full_Path(Particle_Manager::Get_Instance().Get_Particle_Billboard_Image_URL())) };
 
 			std::tie(this->m_Particle_Billbord_Image, this->m_Particle_Billbord_Image_View, this->m_Particle_Billbord_Image_Allocation) = this->m_RHI->Create_Global_Image(
 				{ Billboard_Image_Resource->Width,Billboard_Image_Resource->Height },
@@ -760,7 +762,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 				Billboard_Image_Resource->Pixels.get()
 			);
 
-			const auto& Loge_Image_Resource{ this->m_Resource->Load_Texture_HDR(Resource_Manager::URL_To_File_Full_Path(Particle_Manager::Get_Instance().Get_Particle_Billboard_Image_URL())) };
+			const auto& Loge_Image_Resource{ Render_Resource_Base::Load_Texture_HDR(Resource_Manager::URL_To_File_Full_Path(Particle_Manager::Get_Instance().Get_Particle_Billboard_Image_URL())) };
 
 			std::tie(this->m_Particle_Billbord_Image, this->m_Particle_Billbord_Image_View, this->m_Particle_Billbord_Image_Allocation) = this->m_RHI->Create_Global_Image(
 				{ Loge_Image_Resource->Width,Loge_Image_Resource->Height },
@@ -828,7 +830,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	}
 
-	void Particle_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
+	void Particle_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
 		//const auto Partile_Info{ static_cast<const Particle_Paas_Render_Pass_Pre_Initialize_Info*>(Init_Info) };
 		//{
 		//	this->m_Render_Pass = Partile_Info->Render_Pass;
@@ -865,7 +867,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Fence = this->m_RHI->Create_Fence(&Fence_Create_Info);
 	}
 
-	void Particle_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
+	void Particle_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)
 	{
 	}
 

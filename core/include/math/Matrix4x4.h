@@ -11,6 +11,8 @@ namespace NameSpace_Core::NameSpace_Math {
 
 	using std::initializer_list;
 
+	class  Quaternion;
+
 	class Matrix4x4 final {
 	public:
 		Matrix4x4(void) = default;
@@ -97,6 +99,8 @@ namespace NameSpace_Core::NameSpace_Math {
 
 		bool Is_Singular(void)const;
 
+		void Decom_Position(Vector3* Out_Translate, Quaternion* Out_Rotation, Vector3* Out_Scale) const;
+
 	public:
 		static const Matrix4x4 Generate_Column_Order(const Vector4& Column_0, const Vector4& Column_1, const Vector4& Column_2, const Vector4& Column_3);
 		static const Matrix4x4 Generate_Column_Order(const initializer_list<float>& List);
@@ -104,6 +108,9 @@ namespace NameSpace_Core::NameSpace_Math {
 		static const Matrix4x4 Generate_Column_Order(const Vector4 CArrays[4]);
 		static const Matrix4x4 Generate_Column_Order(const float CArray[4][4]);
 		static const Matrix4x4 Generate_Column_Order(const float Carrays[16]);
+
+		static const Matrix4x4 Generate_Translate(const Vector3& Translate);
+		static const Matrix4x4 Generate_Sacle(const Vector3& Scale);
 
 	public:
 		static const Matrix4x4 ZERO;

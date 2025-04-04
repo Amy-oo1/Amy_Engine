@@ -16,6 +16,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
 	using NameSpace_RHI::RHI_IMAGE_TILING;
 	using NameSpace_RHI::RHI_IMAGE_VIEW_TYPE;
@@ -565,7 +567,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Render_Pipelines[0].Pipeline = this->m_RHI->Create_Graphics_Pipeline(&Graphics_Pipeline_Create_Info);
 	}
 
-	void Point_Light_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
+	void Point_Light_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
 		//NOTE : Empty Parm
 
 		this->Setup_Attachments();
@@ -575,10 +577,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set_Layout();
 	}
 
-	void Point_Light_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) {
-		const auto Point_Light_Info{ *static_cast<const Point_Light_Render_Pass_Post_Initialize_Info*>(Init_Info) };
+	void Point_Light_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info) {
+		const auto Point_Light_Info{ static_pointer_cast<Point_Light_Render_Pass_Post_Initialize_Info>(Init_Info) };
 		{
-			this->m_Per_Mesh_Set_Layout = Point_Light_Info.Per_Mesh_Set_Layout;
+			this->m_Per_Mesh_Set_Layout = Point_Light_Info->Per_Mesh_Set_Layout;
 		}
 
 		this->Setup_Pipeline();

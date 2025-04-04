@@ -13,6 +13,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
 	using NameSpace_RHI::RHI_IMAGE_TILING;
 	using NameSpace_RHI::RHI_IMAGE_VIEW_TYPE;
@@ -81,8 +83,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Mesh_Vertex;
 
-	void Pick_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
-		const auto Pick_Info{ static_cast<const Pick_Render_Pass_Pre_Initialize_Info*>(Init_Info) };
+	void Pick_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
+		const auto Pick_Info{ static_pointer_cast<Pick_Render_Pass_Pre_Initialize_Info>(Init_Info) };
 		{
 			this->m_Per_Mesh_Set_Layout = Pick_Info->Per_Mesh_Set_Layout;
 		}
@@ -95,7 +97,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set();
 	}
 
-	void Pick_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
+	void Pick_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)
 	{
 	}
 
@@ -110,7 +112,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	Pick_Pass::Pick_Pass(const Render_Pass_Command_Info& Command_Info)
 		: Render_Pass{ Command_Info } {
 	}
-
 
 	void Pick_Pass::Setup_Attachments(void) {
 		this->m_Frame_Buffer.Width = this->m_RHI->Get_SwapChain_Extent().Width;

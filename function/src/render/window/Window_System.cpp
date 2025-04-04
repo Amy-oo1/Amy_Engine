@@ -70,6 +70,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		glfwSetInputMode(this->m_Window.get(), GLFW_CURSOR, Is_Focus ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 	}
 
+	bool Window_System::Is_Mouse_Button_Down(int Button) const {
+		if (Button< GLFW_MOUSE_BUTTON_1 || Button > GLFW_MOUSE_BUTTON_LAST)
+			return false;
+
+		return glfwGetMouseButton(this->m_Window.get(), Button) == GLFW_PRESS;
+	}
+
 	void Window_System::Register_On_Reset_Func(const On_Reset_Func& Func) {
 		this->m_Reset_Call_Backs.push_back(Func);
 	}
@@ -104,6 +111,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 
 	void Window_System::Register_On_Drop_Func(const On_Drop_Func& Func) {
 		this->m_Drop_Call_Backs.push_back(Func);
+	}
+
+	void Window_System::Register_On_Window_Size_Func(const On_Window_Size_Func& Func) {
+		this->m_Window_Size_Call_Backs.emplace_back(Func);
+	}
+
+	void Window_System::Register_On_Window_Close_Func(const On_Window_Close_Func& Func) {
+		this->m_Window_Close_Call_Backs.push_back(Func);
 	}
 
 	void Window_System::On_Reset(void) {
@@ -151,7 +166,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 			Func(Count, Paths);
 	}
 
+	void Window_System::Error_Call_Back(int Error_Code, const char* Description) {
+		System_Logger::Get_Instance().Log(System_Logger::Level::err, "GLFW Error: %s", Description);
+	}
+
 	void Window_System::Initialize_GLWF(void) {
+		glfwSetErrorCallback(Window_System::Error_Call_Back);
+		if (false == glfwVulkanSupported())
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vulkan is not supported");
+
 		if (GLFW_FALSE == glfwInit())
 			throw std::runtime_error("Failed to initialize GLFW");
 

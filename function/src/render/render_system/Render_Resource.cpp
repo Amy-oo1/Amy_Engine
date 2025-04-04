@@ -194,14 +194,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		if (this->m_Vulkan_Mesh_Map.end() != cIt)
 			return cIt->second;
 
-		uint32_t Index_Buffer_size{ static_cast<uint32_t>(Mesh_Data.Static_Mesh_Data.Index_Buffer->Data_Size * sizeof(uint16_t)) };
+		uint32_t Index_Buffer_size{ static_cast<uint32_t>(Mesh_Data.Static_Mesh_Data.Index_Buffer->Data_Size) };
 		void* Index_Buffer_Data{ Mesh_Data.Static_Mesh_Data.Index_Buffer->Data };
 
 		uint32_t Vertex_Buffer_Size{ static_cast<uint32_t>(Mesh_Data.Static_Mesh_Data.Vertex_Buffer->Data_Size) };
 
 		Mesh_Vertex_Data_Definition* Vertex_Buffer_Data{ reinterpret_cast<Mesh_Vertex_Data_Definition*>(Mesh_Data.Static_Mesh_Data.Vertex_Buffer->Data) };
 
-		if (nullptr != Mesh_Data.Skeletion_Binding_Buffer)
+		if (nullptr == Mesh_Data.Skeletion_Binding_Buffer)
 			return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Load_Mesh_Buffer(
 				RHI,
 				Index_Buffer_size,
@@ -213,7 +213,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		uint32_t Joint_Binding_Buffer_Size{ static_cast<uint32_t>(Mesh_Data.Skeletion_Binding_Buffer->Data_Size) };
 		Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data{ reinterpret_cast<Mesh_Vertx_Binding_Data_Definition*>(Mesh_Data.Skeletion_Binding_Buffer->Data) };
 
-		return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Load_Mesh_Binding(
+		return this->m_Vulkan_Mesh_Map[Render_Entity.Mesh_Resource_ID] = this->Load_Mesh_Binding_Buffer(
 			RHI,
 			Index_Buffer_size,
 			reinterpret_cast<uint16_t*>(Index_Buffer_Data),
@@ -340,7 +340,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		}
 
 		//NOTE : Descriptor_Set
-		vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{ this->m_Material_Descriptor_Set_Layout.get() };
+		vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
+			this->m_Material_Descriptor_Set_Layout
+		};
 
 		RHI_Descriptor_Set_Allocate_Info Descriptor_Set_Allocate_Info{};
 		{
@@ -495,7 +497,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return cIt->second;
 	}
 
-	Vulkan_Mesh Render_Resource::Load_Mesh_Binding(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
+	Vulkan_Mesh Render_Resource::Load_Mesh_Binding_Buffer(shared_ptr<Empty_RHI> RHI, uint32_t Index_Buffer_Size, uint16_t* Index_Buffer_Data, uint32_t Vertex_Buffer_Size, const Mesh_Vertex_Data_Definition* Vertex_Buffer_Data, uint32_t Joint_Binding_Buffer_Size, const Mesh_Vertx_Binding_Data_Definition* Joint_Binding_Buffer_Data) {
 		if (0 != (Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition)))
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vertex_Buffer_Size % sizeof(Mesh_Vertex_Data_Definition) != 0");
 
@@ -506,182 +508,190 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		uint32_t Vertex_Count{ Vertex_Buffer_Size / sizeof(Mesh_Vertex_Data_Definition) };
 		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint16_t) };
 
-
-		RHI_Device_Size
-			Vertex_Position_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Position) * Vertex_Buffer_Size },
-			Vertex_Varying_Enable_Bleding_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending) * Vertex_Buffer_Size },
-			Vertex_Varying_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying) * Vertex_Buffer_Size },
-			Vertex_Joint_Binding_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Joint_Binding) * Joint_Binding_Buffer_Size };
-
-		RHI_Device_Size Vertex_Position_Buffer_Offset{ 0 },
-			Vertex_Varying_Enable_Bleding_Buffer_Offset{ Vertex_Position_Buffer_Size },
-			Vertex_Varying_Bleding_Buffer_Offset{ Vertex_Varying_Enable_Bleding_Buffer_Offset + Vertex_Varying_Enable_Bleding_Buffer_Size },
-			Vertex_Joint_Binding_Buffer_Offset{ Vertex_Varying_Bleding_Buffer_Offset + Vertex_Varying_Buffer_Size };
-
-		RHI_Device_Size Inefficient_Staging_Buffer_Size{ Vertex_Position_Buffer_Size + Vertex_Varying_Enable_Bleding_Buffer_Size + Vertex_Varying_Buffer_Size + Vertex_Joint_Binding_Buffer_Size };
-
-		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
-
-		auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
-			Inefficient_Staging_Buffer_Size,
-			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
-			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
-		);
-
-		void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
-		Ref_Vulkan_RHI->Map_Memory(
-			Inefficient_Staging_Buffer_Memory.get(),
-			0,
-			RHI_WHOLE_SIZE,
-			0,
-			&Inefficient_Staging_Buffer_Mapped_Memory
-		);
-
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Position* Mehs_Vertex_Position_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Position*>(Inefficient_Staging_Buffer_Mapped_Memory) };
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending* Mesh_Vertex_Varying_Enable_Bleding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Enable_Bleding_Buffer_Offset) };
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Varying* Mesh_Vertex_Varying_Bleding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Bleding_Buffer_Offset) };
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Joint_Binding* Mesh_Vertex_Joint_Binding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Joint_Binding*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Joint_Binding_Buffer_Offset) };
-
-		for (uint32_t Vertex_Index = 0; Vertex_Index < Vertex_Count; ++Vertex_Index) {
-			Mehs_Vertex_Position_Buffer[Vertex_Index].Position = Vector3{
-				Vertex_Buffer_Data[Vertex_Index].X,
-				Vertex_Buffer_Data[Vertex_Index].Y,
-				Vertex_Buffer_Data[Vertex_Index].Z
-			};
-			Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Normal = Vector3{
-				Vertex_Buffer_Data[Vertex_Index].NX ,
-				Vertex_Buffer_Data[Vertex_Index].NY,
-				Vertex_Buffer_Data[Vertex_Index].NZ
-			};
-			Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Tangent = Vector3{
-				Vertex_Buffer_Data[Vertex_Index].TX ,
-				Vertex_Buffer_Data[Vertex_Index].TY,
-				Vertex_Buffer_Data[Vertex_Index].TZ
-			};
-			Mesh_Vertex_Varying_Bleding_Buffer[Vertex_Index].TexCoord = Vector2{
-				Vertex_Buffer_Data[Vertex_Index].U,
-				Vertex_Buffer_Data[Vertex_Index].V
-			};
-		}
-
-		for (uint32_t Index_Index = 0; Index_Index < Index_Count; ++Index_Index) {
-			uint32_t Vertex_Buffer_Index{ Index_Buffer_Data[Index_Index] };
-			Mesh_Vertex_Joint_Binding_Buffer[Index_Index].Indices = {
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index0,
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index1,
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index2,
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index3
-			};
-
-			float Total_Weight{ Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight0 + Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight1 + Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight2 + Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight3 };
-			float Inv_Toal_Weight = { 0 == Total_Weight ? 1.f : 1.f / Total_Weight };
-
-			Mesh_Vertex_Joint_Binding_Buffer[Index_Index].Weights = Vector4{
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight0 * Inv_Toal_Weight,
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight1 * Inv_Toal_Weight,
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight2 * Inv_Toal_Weight,
-				Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight3 * Inv_Toal_Weight
-			};
-		}
-
-		Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
-
 		Vulkan_Mesh Vulkan_Mesh_Data{};
 		Vulkan_Mesh_Data.Enable_Vertex_Blending = true;
 		Vulkan_Mesh_Data.Mesh_Vertex_Count = Vertex_Count;
+		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
 
-		RHI_Buffer_Create_Info Buffer_Create_Info{};
+		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
+
+		RHI_Device_Size
+			Vertex_Position_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Position) * Vertex_Count },
+			Vertex_Varying_Enable_Bleding_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending) * Vertex_Count },
+			Vertex_Varying_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying) * Vertex_Count },
+			Vertex_Joint_Binding_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Joint_Binding) * Index_Count };//NOTE : Index 
+
+		RHI_Device_Size
+			Vertex_Position_Buffer_Offset{ 0 },
+			Vertex_Varying_Enable_Bleding_Buffer_Offset{ Vertex_Position_Buffer_Size },
+			Vertex_Varying_Buffer_Offset{ Vertex_Varying_Enable_Bleding_Buffer_Offset + Vertex_Varying_Enable_Bleding_Buffer_Size },
+			Vertex_Joint_Binding_Buffer_Offset{ Vertex_Varying_Buffer_Offset + Vertex_Varying_Buffer_Size };
+
 		{
-			Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		}
+			RHI_Device_Size Inefficient_Staging_Buffer_Size{ Vertex_Position_Buffer_Size + Vertex_Varying_Enable_Bleding_Buffer_Size + Vertex_Varying_Buffer_Size + Vertex_Joint_Binding_Buffer_Size };
 
-		VmaAllocationCreateInfo Allocation_Create_Info{};
-		{
-			//Allocation_Create_Info.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
-			Allocation_Create_Info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
-		}
-
-		{
-			Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
+			auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
+				Inefficient_Staging_Buffer_Size,
+				to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
+				RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 			);
 
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer.get(),
-				Vertex_Position_Buffer_Offset,
+			void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
+			Ref_Vulkan_RHI->Map_Memory(
+				Inefficient_Staging_Buffer_Memory.get(),
 				0,
-				Vertex_Position_Buffer_Size
-			);
-		}
-
-		{
-			Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
-			);
-
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer.get(),
-				Vertex_Varying_Enable_Bleding_Buffer_Offset,
+				RHI_WHOLE_SIZE,
 				0,
-				Vertex_Varying_Enable_Bleding_Buffer_Size
+				&Inefficient_Staging_Buffer_Mapped_Memory
 			);
+
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Position* Mehs_Vertex_Position_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Position*>(Inefficient_Staging_Buffer_Mapped_Memory) };
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending* Mesh_Vertex_Varying_Enable_Bleding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Enable_Bleding_Buffer_Offset) };
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Varying* Mesh_Vertex_Varying_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Buffer_Offset) };
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Joint_Binding* Mesh_Vertex_Joint_Binding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Joint_Binding*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Joint_Binding_Buffer_Offset) };
+
+			for (uint32_t Vertex_Index = 0; Vertex_Index < Vertex_Count; ++Vertex_Index) {
+				Mehs_Vertex_Position_Buffer[Vertex_Index].Position = Vector3{
+					Vertex_Buffer_Data[Vertex_Index].X,
+					Vertex_Buffer_Data[Vertex_Index].Y,
+					Vertex_Buffer_Data[Vertex_Index].Z
+				};
+				Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Normal = Vector3{
+					Vertex_Buffer_Data[Vertex_Index].NX ,
+					Vertex_Buffer_Data[Vertex_Index].NY,
+					Vertex_Buffer_Data[Vertex_Index].NZ
+				};
+				Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Tangent = Vector3{
+					Vertex_Buffer_Data[Vertex_Index].TX ,
+					Vertex_Buffer_Data[Vertex_Index].TY,
+					Vertex_Buffer_Data[Vertex_Index].TZ
+				};
+				Mesh_Vertex_Varying_Buffer[Vertex_Index].TexCoord = Vector2{
+					Vertex_Buffer_Data[Vertex_Index].U,
+					Vertex_Buffer_Data[Vertex_Index].V
+				};
+			}
+
+			for (uint32_t Index_Index = 0; Index_Index < Index_Count; ++Index_Index) {
+				uint32_t Vertex_Buffer_Index{ Index_Buffer_Data[Index_Index] };
+				Mesh_Vertex_Joint_Binding_Buffer[Index_Index].Indices = {
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index0,
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index1,
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index2,
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Index3
+				};
+
+				float Total_Weight{
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight0 +
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight1 +
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight2 +
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight3
+				};
+
+				float Inv_Toal_Weight = { 0.f == Total_Weight ? 1.f : 1.f / Total_Weight };
+
+				Mesh_Vertex_Joint_Binding_Buffer[Index_Index].Weights = Vector4{
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight0 * Inv_Toal_Weight,
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight1 * Inv_Toal_Weight,
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight2 * Inv_Toal_Weight,
+					Joint_Binding_Buffer_Data[Vertex_Buffer_Index].Weight3 * Inv_Toal_Weight
+				};
+			}
+
+			Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
+
+			RHI_Buffer_Create_Info Buffer_Create_Info{};
+			{
+				Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			}
+
+			VmaAllocationCreateInfo Allocation_Create_Info{};
+			{
+				//Allocation_Create_Info.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+				Allocation_Create_Info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
+				Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer.get(),
+					Vertex_Position_Buffer_Offset,
+					0,
+					Vertex_Position_Buffer_Size
+				);
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
+				Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer.get(),
+					Vertex_Varying_Enable_Bleding_Buffer_Offset,
+					0,
+					Vertex_Varying_Enable_Bleding_Buffer_Size
+				);
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
+				Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer.get(),
+					Vertex_Varying_Buffer_Offset,
+					0,
+					Vertex_Varying_Buffer_Size
+				);
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Joint_Binding_Buffer_Size;
+				Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer.get(),
+					Vertex_Joint_Binding_Buffer_Offset,
+					0,
+					Vertex_Joint_Binding_Buffer_Size
+				);
+			}
+
+			//Inefficient_Staging_Buffer.reset();
+			//Inefficient_Staging_Buffer_Memory.reset();
 		}
-
-		{
-			Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
-			);
-
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer.get(),
-				Vertex_Varying_Bleding_Buffer_Offset,
-				0,
-				Vertex_Varying_Buffer_Size
-			);
-		}
-
-		{
-			Buffer_Create_Info.Size = Vertex_Joint_Binding_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
-			);
-
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer.get(),
-				Vertex_Joint_Binding_Buffer_Offset,
-				0,
-				Vertex_Joint_Binding_Buffer_Size
-			);
-		}
-
-		Inefficient_Staging_Buffer.reset();
-		Inefficient_Staging_Buffer_Memory.reset();
 
 		//NOTE: Index Buffer
-		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
 		std::tie(Vulkan_Mesh_Data.Mesh_Index_Buffer, Vulkan_Mesh_Data.Mesh_Index_Allocation) = this->S_Load_Index_Buffer(
 			RHI,
 			Index_Buffer_Size,
@@ -689,40 +699,42 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		);
 
 		//NOTE : Descriptor Set
-		vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{ this->m_Mesh_Descriptor_Set_Layout.get() };
-		RHI_Descriptor_Set_Allocate_Info Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info{};
 		{
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Set_Layouts = &Mesh_Descriptor_Set_Layouts;
+			const vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{
+				this->m_Mesh_Descriptor_Set_Layout
+			};
+
+			RHI_Descriptor_Set_Allocate_Info Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info{};
+			{
+				Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+				Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
+				Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Set_Layouts = &Mesh_Descriptor_Set_Layouts;
+			}
+
+			Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set = std::move(Ref_Vulkan_RHI->Allocate_Descriptor_Sets(&Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info).front());
+
+			RHI_Descriptor_Buffer_Info Mesh_Vertex_Joint_Binding_Storage_Buffer_Info{};
+			{
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Buffer = Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer.get();
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Offset = 0;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Range = Vertex_Joint_Binding_Buffer_Size;
+			}
+			const vector<const RHI_Descriptor_Buffer_Info*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Info };
+
+			RHI_Write_Descriptor_Set Mesh_Vertex_Joint_Binding_Storage_Buffer_Write{};
+			{
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Set = Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set.get();
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Binding = 0;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Array_Element = 0;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Buffer_Infos = &Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Texel_Buffer_Views = nullptr;
+			}
+			const vector<const RHI_Write_Descriptor_Set*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Write };
+
+			RHI->Update_Descriptor_Sets(&Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes, nullptr);
 		}
-
-		Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set = std::move(Ref_Vulkan_RHI->Allocate_Descriptor_Sets(&Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info).front());
-
-		RHI_Descriptor_Buffer_Info Mesh_Vertex_Joint_Binding_Storage_Buffer_Info{};
-		{
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Buffer = Vulkan_Mesh_Data.Mesh_Vertex_Joint_Binding_Buffer.get();
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Offset = 0;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Range = Vertex_Joint_Binding_Buffer_Size;
-		}
-		vector<const RHI_Descriptor_Buffer_Info*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Info };
-
-		RHI_Write_Descriptor_Set Mesh_Vertex_Joint_Binding_Storage_Buffer_Write{};
-		{
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Set = Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set.get();
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Binding = 0;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Array_Element = 0;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Buffer_Infos = &Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Texel_Buffer_Views = nullptr;
-		}
-		vector<const RHI_Write_Descriptor_Set*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Write };
-
-		RHI->Update_Descriptor_Sets(
-			&Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes,
-			nullptr
-		);
 
 		return Vulkan_Mesh_Data;
 	}
@@ -734,141 +746,142 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		uint32_t Vertex_Count{ Vertex_Buffer_Size / sizeof(Mesh_Vertex_Data_Definition) };
 		uint32_t Index_Count{ Index_Buffer_Size / sizeof(uint16_t) };
 
-
-		RHI_Device_Size
-			Vertex_Position_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Position) * Vertex_Buffer_Size },
-			Vertex_Varying_Enable_Bleding_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending) * Vertex_Buffer_Size },
-			Vertex_Varying_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying) * Vertex_Buffer_Size };
-
-		RHI_Device_Size Vertex_Position_Buffer_Offset{ 0 },
-			Vertex_Varying_Enable_Bleding_Buffer_Offset{ Vertex_Position_Buffer_Size },
-			Vertex_Varying_Bleding_Buffer_Offset{ Vertex_Varying_Enable_Bleding_Buffer_Offset + Vertex_Varying_Enable_Bleding_Buffer_Size };
-
-		RHI_Device_Size Inefficient_Staging_Buffer_Size{ Vertex_Position_Buffer_Size + Vertex_Varying_Enable_Bleding_Buffer_Size + Vertex_Varying_Buffer_Size };
-
 		auto Ref_Vulkan_RHI{ static_cast<Vulkan_RHI*>(RHI.get()) };
-
-		auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
-			Inefficient_Staging_Buffer_Size,
-			to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
-			RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
-		);
-
-		void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
-		Ref_Vulkan_RHI->Map_Memory(
-			Inefficient_Staging_Buffer_Memory.get(),
-			0,
-			RHI_WHOLE_SIZE,
-			0,
-			&Inefficient_Staging_Buffer_Mapped_Memory
-		);
-
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Position* Mehs_Vertex_Position_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Position*>(Inefficient_Staging_Buffer_Mapped_Memory) };
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending* Mesh_Vertex_Varying_Enable_Bleding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Enable_Bleding_Buffer_Offset) };
-		Mesh_Vertex::Vulkan_Mesh_Vertex_Varying* Mesh_Vertex_Varying_Bleding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Bleding_Buffer_Offset) };
-
-		for (uint32_t Vertex_Index = 0; Vertex_Index < Vertex_Count; ++Vertex_Index) {
-			Mehs_Vertex_Position_Buffer[Vertex_Index].Position = Vector3{
-				Vertex_Buffer_Data[Vertex_Index].X,
-				Vertex_Buffer_Data[Vertex_Index].Y,
-				Vertex_Buffer_Data[Vertex_Index].Z
-			};
-			Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Normal = Vector3{
-				Vertex_Buffer_Data[Vertex_Index].NX ,
-				Vertex_Buffer_Data[Vertex_Index].NY,
-				Vertex_Buffer_Data[Vertex_Index].NZ
-			};
-			Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Tangent = Vector3{
-				Vertex_Buffer_Data[Vertex_Index].TX ,
-				Vertex_Buffer_Data[Vertex_Index].TY,
-				Vertex_Buffer_Data[Vertex_Index].TZ
-			};
-			Mesh_Vertex_Varying_Bleding_Buffer[Vertex_Index].TexCoord = Vector2{
-				Vertex_Buffer_Data[Vertex_Index].U,
-				Vertex_Buffer_Data[Vertex_Index].V
-			};
-		}
-
-		Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
 
 		Vulkan_Mesh Vulkan_Mesh_Data{};
 		Vulkan_Mesh_Data.Enable_Vertex_Blending = false;
 		Vulkan_Mesh_Data.Mesh_Vertex_Count = Vertex_Count;
-		Vulkan_Mesh_Data.Mesh_Index_Count = std::numeric_limits<uint32_t>::max();
+		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
 
-		RHI_Buffer_Create_Info Buffer_Create_Info{};
+		//NOTE Mesh Vertex Buffer
 		{
-			Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		}
+			RHI_Device_Size
+				Vertex_Position_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Position) * Vertex_Count },
+				Vertex_Varying_Enable_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending) * Vertex_Count },
+				Vertex_Varying_Buffer_Size{ sizeof(Mesh_Vertex::Vulkan_Mesh_Vertex_Varying) * Vertex_Count };
 
-		VmaAllocationCreateInfo Allocation_Create_Info{};
-		{
-			//Allocation_Create_Info.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
-			Allocation_Create_Info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
-		}
+			RHI_Device_Size
+				Vertex_Position_Buffer_Offset{ 0 },
+				Vertex_Varying_Enable_Bleding_Buffer_Offset{ Vertex_Position_Buffer_Size },
+				Vertex_Varying_Buffer_Offset{ Vertex_Varying_Enable_Bleding_Buffer_Offset + Vertex_Varying_Enable_Buffer_Size };
 
-		{
-			Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			RHI_Device_Size Inefficient_Staging_Buffer_Size{ Vertex_Position_Buffer_Size + Vertex_Varying_Enable_Buffer_Size + Vertex_Varying_Buffer_Size };
 
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
+			auto [Inefficient_Staging_Buffer, Inefficient_Staging_Buffer_Memory] = RHI->Create_Buffer(
+				Inefficient_Staging_Buffer_Size,
+				to_underlying(RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_SRC_BIT),
+				RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_VISIBLE_BIT | RHI_MEMORY_PROPERTY_FLAG_BITS::RHI_MEMORY_PROPERTY_HOST_COHERENT_BIT
 			);
 
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer.get(),
-				Vertex_Position_Buffer_Offset,
+			void* Inefficient_Staging_Buffer_Mapped_Memory{ nullptr };
+			Ref_Vulkan_RHI->Map_Memory(
+				Inefficient_Staging_Buffer_Memory.get(),
 				0,
-				Vertex_Position_Buffer_Size
-			);
-		}
-
-		{
-			Buffer_Create_Info.Size = Vertex_Varying_Enable_Bleding_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
-			);
-
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer.get(),
-				Vertex_Varying_Enable_Bleding_Buffer_Offset,
+				RHI_WHOLE_SIZE,
 				0,
-				Vertex_Varying_Enable_Bleding_Buffer_Size
+				&Inefficient_Staging_Buffer_Mapped_Memory
 			);
+
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Position* Mehs_Vertex_Position_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Position*>(Inefficient_Staging_Buffer_Mapped_Memory) };
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending* Mesh_Vertex_Varying_Enable_Bleding_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying_Enable_Blending*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Enable_Bleding_Buffer_Offset) };
+			Mesh_Vertex::Vulkan_Mesh_Vertex_Varying* Mesh_Vertex_Varying_Buffer{ reinterpret_cast<Mesh_Vertex::Vulkan_Mesh_Vertex_Varying*>(reinterpret_cast<uintptr_t>(Inefficient_Staging_Buffer_Mapped_Memory) + Vertex_Varying_Buffer_Offset) };
+
+			for (uint32_t Vertex_Index = 0; Vertex_Index < Vertex_Count; ++Vertex_Index) {
+				Mehs_Vertex_Position_Buffer[Vertex_Index].Position = Vector3{
+					Vertex_Buffer_Data[Vertex_Index].X,
+					Vertex_Buffer_Data[Vertex_Index].Y,
+					Vertex_Buffer_Data[Vertex_Index].Z
+				};
+				Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Normal = Vector3{
+					Vertex_Buffer_Data[Vertex_Index].NX ,
+					Vertex_Buffer_Data[Vertex_Index].NY,
+					Vertex_Buffer_Data[Vertex_Index].NZ
+				};
+				Mesh_Vertex_Varying_Enable_Bleding_Buffer[Vertex_Index].Tangent = Vector3{
+					Vertex_Buffer_Data[Vertex_Index].TX ,
+					Vertex_Buffer_Data[Vertex_Index].TY,
+					Vertex_Buffer_Data[Vertex_Index].TZ
+				};
+				Mesh_Vertex_Varying_Buffer[Vertex_Index].TexCoord = Vector2{
+					Vertex_Buffer_Data[Vertex_Index].U,
+					Vertex_Buffer_Data[Vertex_Index].V
+				};
+			}
+
+			Ref_Vulkan_RHI->UnMap_Memory(Inefficient_Staging_Buffer_Memory.get());
+
+			RHI_Buffer_Create_Info Buffer_Create_Info{};
+			{
+				Buffer_Create_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+				Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			}
+
+			VmaAllocationCreateInfo Allocation_Create_Info{};
+			{
+				//Allocation_Create_Info.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+				Allocation_Create_Info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Position_Buffer_Size;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Position_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Position_Buffer.get(),
+					Vertex_Position_Buffer_Offset,
+					0,
+					Vertex_Position_Buffer_Size
+				);
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Varying_Enable_Buffer_Size;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Varying_Enable_Blending_Buffer.get(),
+					Vertex_Varying_Enable_Bleding_Buffer_Offset,
+					0,
+					Vertex_Varying_Enable_Buffer_Size
+				);
+			}
+
+			{
+				Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
+				Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+
+				std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
+					&Buffer_Create_Info,
+					&Allocation_Create_Info,
+					nullptr
+				);
+
+				Ref_Vulkan_RHI->Copy_Buffer(
+					Inefficient_Staging_Buffer.get(),
+					Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer.get(),
+					Vertex_Varying_Buffer_Offset,
+					0,
+					Vertex_Varying_Buffer_Size
+				);
+			}
+
+			//Inefficient_Staging_Buffer.reset();
+			//Inefficient_Staging_Buffer_Memory.reset();
 		}
-
-		{
-			Buffer_Create_Info.Size = Vertex_Varying_Buffer_Size;
-			Buffer_Create_Info.Usage = RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_TRANSFER_DST_BIT | RHI_BUFFER_USAGE_FLAG_BITS::RHI_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-
-			std::tie(Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer, Vulkan_Mesh_Data.Mesh_Vertex_Varying_Allocation) = Ref_Vulkan_RHI->Create_Buffer_VMA(
-				&Buffer_Create_Info,
-				&Allocation_Create_Info,
-				nullptr
-			);
-
-			Ref_Vulkan_RHI->Copy_Buffer(
-				Inefficient_Staging_Buffer.get(),
-				Vulkan_Mesh_Data.Mesh_Vertex_Varying_Buffer.get(),
-				Vertex_Varying_Bleding_Buffer_Offset,
-				0,
-				Vertex_Varying_Buffer_Size
-			);
-		}
-
-		Inefficient_Staging_Buffer.reset();
-		Inefficient_Staging_Buffer_Memory.reset();
 
 		//NOTE: Index Buffer
-		Vulkan_Mesh_Data.Mesh_Index_Count = Index_Count;
 		std::tie(Vulkan_Mesh_Data.Mesh_Index_Buffer, Vulkan_Mesh_Data.Mesh_Index_Allocation) = this->S_Load_Index_Buffer(
 			RHI,
 			Index_Buffer_Size,
@@ -876,40 +889,41 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		);
 
 		//NOTE : Descriptor Set
-		vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{ this->m_Mesh_Descriptor_Set_Layout.get() };
-		RHI_Descriptor_Set_Allocate_Info Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info{};
 		{
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
-			Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Set_Layouts = &Mesh_Descriptor_Set_Layouts;
+			const vector<RHI_Descriptor_Set_Layout*> Mesh_Descriptor_Set_Layouts{
+				this->m_Mesh_Descriptor_Set_Layout
+			};
+
+			RHI_Descriptor_Set_Allocate_Info Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info{};
+			{
+				Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+				Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Descriptor_Pool = Ref_Vulkan_RHI->Get_Default_Descriptor_Pool();
+				Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info.Set_Layouts = &Mesh_Descriptor_Set_Layouts;
+			}
+
+			Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set = std::move(Ref_Vulkan_RHI->Allocate_Descriptor_Sets(&Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info).front());
+
+			RHI_Descriptor_Buffer_Info Mesh_Vertex_Joint_Binding_Storage_Buffer_Info{};
+			{
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Buffer = this->m_Global_Render_Resource.Storage_Buffer.Global_Null_Descriptor_Storage_Buffer.get();
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Offset = 0;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Range = 1;
+			}
+			const vector<const RHI_Descriptor_Buffer_Info*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Info };
+
+			RHI_Write_Descriptor_Set Mesh_Vertex_Joint_Binding_Storage_Buffer_Write{};
+			{
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Set = Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set.get();
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Binding = 0;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Array_Element = 0;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+				Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Buffer_Infos = &Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos;
+			}
+			const vector<const RHI_Write_Descriptor_Set*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Write };
+
+			RHI->Update_Descriptor_Sets(&Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes, nullptr);
 		}
-
-		Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set = std::move(Ref_Vulkan_RHI->Allocate_Descriptor_Sets(&Mesh_Vertex_Blending_per_Mesh_Descriptor_Set_Allocate_Info).front());
-
-		RHI_Descriptor_Buffer_Info Mesh_Vertex_Joint_Binding_Storage_Buffer_Info{};
-		{
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Buffer = this->m_Global_Render_Resource.Storage_Buffer.Global_Null_Descriptor_Storage_Buffer.get();
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Offset = 0;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Info.Range = 1;
-		}
-		vector<const RHI_Descriptor_Buffer_Info*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Info };
-
-		RHI_Write_Descriptor_Set Mesh_Vertex_Joint_Binding_Storage_Buffer_Write{};
-		{
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Set = Vulkan_Mesh_Data.Mesh_Vertex_Blending_Descriptor_Set.get();
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Binding = 0;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Dst_Array_Element = 0;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Buffer_Infos = &Mesh_Vertex_Joint_Binding_Storage_Buffer_Infos;
-			Mesh_Vertex_Joint_Binding_Storage_Buffer_Write.Texel_Buffer_Views = nullptr;
-		}
-		vector<const RHI_Write_Descriptor_Set*> Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes{ &Mesh_Vertex_Joint_Binding_Storage_Buffer_Write };
-
-		RHI->Update_Descriptor_Sets(
-			&Mesh_Vertex_Joint_Binding_Storage_Buffer_Writes,
-			nullptr
-		);
 
 		return Vulkan_Mesh_Data;
 	}
@@ -1004,14 +1018,22 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			static_cast<RHI_Device_Size>(Index_Buffer_Size)
 		);
 
-		Inefficient_Staging_Buffer.reset();
-		Inefficient_Staging_Buffer_Memory.reset();
+		//Inefficient_Staging_Buffer.reset();
+		//Inefficient_Staging_Buffer_Memory.reset();
 
 		return { std::move(Index_Buffer), Index_Buffer_Allocation };
 	}
 
 	const Global_Render_Resource& Render_Resource::Get_Global_Render_Resource(void) const {
 		return this->m_Global_Render_Resource;
+	}
+
+	void Render_Resource::Set_Mesh_Descriptor_Set_Layout(RHI_Descriptor_Set_Layout* Mesh_Descriptor_Set_Layout) {
+		this->m_Mesh_Descriptor_Set_Layout = Mesh_Descriptor_Set_Layout;
+	}
+
+	void Render_Resource::Set_Material_Descriptor_Set_Layout(RHI_Descriptor_Set_Layout* Material_Descriptor_Set_Layout) {
+		this->m_Material_Descriptor_Set_Layout = Material_Descriptor_Set_Layout;
 	}
 
 	void Render_Resource::Upload_Global_Render_Resource(shared_ptr<Empty_RHI> RHI, const Level_Resource_Desc& Level_Resource_Desc) {

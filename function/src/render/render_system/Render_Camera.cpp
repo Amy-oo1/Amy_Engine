@@ -15,6 +15,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Atan2;
 	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Atan;
 
+	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Make_Look_At;
+	using NameSpace_Core::NameSpace_Math::NameSpace_Utilities::Make_Perspective_Matrix;
+
 	void Render_Camera::Set_Current_Camera_Type(RENDER_CAMERA_TYPE Camera_Type) {
 		std::lock_guard<std::mutex> Lock{ this->m_View_Matrix_Mutex };
 		this->m_Camera_Type = Camera_Type;
@@ -38,7 +41,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	}
 
 	void Render_Camera::Rotate(Vector2 Delta) {
-		//TODO: Implement this function
+		Delta = Vector2{ Radian(Delta.Get_X()).Get_Radian(),Radian(Delta.Get_Y()).Get_Radian() };
+
+		float Dot{ this->m_Up_Axis.Dot_Product(this->Forwad()) };
+
+		if ((Dot < -0.99f && Delta.Get_X()>0.f) ||
+			(Dot > 0.99f && Delta.Get_X() < 0.f))
+			Delta.Set_X(0.f);
+
+		Quaternion Pitch{ Quaternion::Generate_By_AxisAngle(Render_Camera::X,Radian(Delta.Get_X())) };
+		Quaternion Yaw{ Quaternion::Generate_By_AxisAngle(Render_Camera::Y,Radian(Delta.Get_Y())) };
+
+		this->m_Rotation = (Pitch * this->m_Rotation * Yaw).Normalize();
+		this->m_Inv_Rotation = this->m_Rotation.Conjugation();
 	}
 
 	void Render_Camera::Zoom(float Offset) {
@@ -88,16 +103,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return this->m_Rotation;
 	}
 
-	const Vector3 Render_Camera::Get_ForWard(void) const {
-		return this->m_Rotation * Render_Camera::Z;
+	const Vector3 Render_Camera::Get_Forward(void) const {
+		return this->m_Inv_Rotation * Render_Camera::Z;
 	}
 
 	const Vector3 Render_Camera::Get_Up(void) const {
-		return this->m_Rotation * Render_Camera::Y;
+		return this->m_Inv_Rotation * Render_Camera::Y;
 	}
 
 	const Vector3 Render_Camera::Get_Right(void) const {
-		return this->m_Rotation * Render_Camera::X;
+		return this->m_Inv_Rotation * Render_Camera::X;
 	}
 
 	const Vector2 Render_Camera::Get_FOV(void) const {
@@ -109,17 +124,38 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	}
 
 	const Matrix4x4 Render_Camera::Get_Projection_Matrix(void) const {
-		return Matrix4x4::IDENTITY;
-		//TODO
+		Matrix4x4 fix_mat{ 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+
+		return fix_mat * Make_Perspective_Matrix(
+			Radian(Degree(this->m_FOV_X)),
+			this->m_Aspect,
+			this->m_Z_Near,
+			this->m_Z_Far
+		);
 	}
 
 	const Matrix4x4 Render_Camera::Get_Look_At_Matrix(void) const {
-		return Matrix4x4::IDENTITY;//TODO
-		//TODO
+		return Make_Look_At(
+			this->m_Position,
+			this->m_Position + this->Forwad(),
+			this->Up()
+		);
 	}
 
 	float Render_Camera::Get_FOV_Deprecated(void) const {
 		return 0.f;// TODO
+	}
+
+	const Vector3 Render_Camera::Forwad(void) const {
+		return this->m_Inv_Rotation * Render_Camera::Y;
+	}
+
+	const Vector3 Render_Camera::Up(void) const {
+		return this->m_Inv_Rotation * Render_Camera::Z;
+	}
+
+	const Vector3 Render_Camera::Right(void) const {
+		return this->m_Inv_Rotation * Render_Camera::X;
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

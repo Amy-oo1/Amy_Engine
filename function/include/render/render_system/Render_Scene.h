@@ -4,6 +4,8 @@
 #include<vector>
 #include<memory>
 
+#include "file/File_System.h"
+
 #include "color/Color.h"
 
 #include "frame/object/GObject_ID_Allocator.h"
@@ -21,6 +23,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using std::vector;
 
 	using std::shared_ptr;
+
+	using NameSpace_Platform::NameSpace_File::path;
 
 	using NameSpace_Core::NameSpace_Color::Color;
 
@@ -44,7 +48,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		void Set_Directional_Light(const Directional_Light& Directional_Light);
 
 
-
+		shared_ptr<Render_GUID_Allocator<Game_Object_Part_ID>> Get_Instance_ID_Allocator(void)const;
+		shared_ptr<Render_GUID_Allocator<Mesh_Source_Desc>> Get_Mesh_Resource_ID_Allocator(void)const;
+		shared_ptr<Render_GUID_Allocator<Material_Source_Desc>> Get_Material_Resource_ID_Allocator(void)const;
 
 	public:
 
@@ -98,6 +104,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Vulkan_Render_Axis_Node m_Axis_Node;
 
 
+		shared_ptr<Render_GUID_Allocator<Game_Object_Part_ID>>m_Instance_ID_Allocator{ std::make_shared<Render_GUID_Allocator<Game_Object_Part_ID>>() };
+		shared_ptr<Render_GUID_Allocator<Mesh_Source_Desc>> m_Mesh_Resource_ID_Allocator{ std::make_shared<Render_GUID_Allocator<Mesh_Source_Desc>>() };
+		shared_ptr<Render_GUID_Allocator<Material_Source_Desc>> m_Material_Resource_ID_Allocator{ std::make_shared<Render_GUID_Allocator<Material_Source_Desc>>() };
 
 	};
 

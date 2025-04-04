@@ -52,9 +52,6 @@
     <Filter Include="src\meta\serializer">
       <UniqueIdentifier>{d45ddba1-64e6-49bb-b3f9-c5fb7e3b7ca2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\color">
-      <UniqueIdentifier>{7f194d3f-c787-49b3-92e2-7f03372eab08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\color">
       <UniqueIdentifier>{3ed81a37-a355-47e6-9cb5-88704a5719cf}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,12 @@
     </Filter>
     <Filter Include="include\meta\generated\serializer">
       <UniqueIdentifier>{28da7472-c9b1-46b8-b97b-97430d677e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\logger\color">
+      <UniqueIdentifier>{7f194d3f-c787-49b3-92e2-7f03372eab08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\utilities">
+      <UniqueIdentifier>{b2d8c3ee-e4fa-49d0-a3e7-746d28f793ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -151,7 +154,7 @@
       <Filter>include\meta\reflection</Filter>
     </ClInclude>
     <ClInclude Include="include\color\Color.h">
-      <Filter>include\color</Filter>
+      <Filter>include\logger\color</Filter>
     </ClInclude>
     <ClInclude Include="include\meta\generated\Reflection_Header.h">
       <Filter>include\meta\generated</Filter>
@@ -302,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="include\meta\generated\serializer\World_Resource.Generated_Serializer.h">
       <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utilities\Cpp_Lib_Facility.h">
+      <Filter>include\utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

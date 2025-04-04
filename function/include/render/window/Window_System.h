@@ -43,6 +43,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		using On_Cursor_Enter_Func = std::function<void(int)>;
 		using On_Scroll_Func = std::function<void(double, double)>;
 		using On_Drop_Func = std::function<void(int, const char**)>;
+		using On_Window_Size_Func = std::function<void(int, int)>;
+		using On_Window_Close_Func = std::function<void(void)>;
 
 	private:
 		//Window_System(void) = delete;
@@ -53,7 +55,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 	public:
 		Window_System(const Window_System_Initialization_Info& init_info = {});
 
-		~Window_System() = default;
+		~Window_System(void) = default;
 
 	public:
 		GLFWwindow* Get_Window(void);
@@ -68,6 +70,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 
 		void Set_Focus_Mode(bool Is_Focus);
 
+		bool Is_Mouse_Button_Down(int Button) const;
+
+
 		void Register_On_Reset_Func(const On_Reset_Func& Func);
 		void Register_On_Key_Func(const On_Key_Func& Func);
 		void Register_On_Char_Func(const On_Char_Func& Func);
@@ -77,7 +82,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		void Register_On_Cursor_Enter_Func(const On_Cursor_Enter_Func& Func);
 		void Register_On_Scroll_Func(const On_Scroll_Func& Func);
 		void Register_On_Drop_Func(const On_Drop_Func& Func);
-		//TODO : Add Register 
+		void Register_On_Window_Size_Func(const On_Window_Size_Func& Func);
+		void Register_On_Window_Close_Func(const On_Window_Close_Func& Func);
 
 
 	private:
@@ -92,6 +98,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		void On_Drop(int Count, const char** Paths);
 
 	private:
+		static void Error_Call_Back(int Error_Code, const char* Description);
 		static void Initialize_GLWF(void);
 
 		static void Reset_Call_Back(GLFWwindow* Window);
@@ -137,6 +144,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 		vector<On_Cursor_Enter_Func> m_Cursor_Enter_Call_Backs{};
 		vector<On_Scroll_Func> m_Scroll_Call_Backs{};
 		vector<On_Drop_Func> m_Drop_Call_Backs{};
+		vector<On_Window_Size_Func> m_Window_Size_Call_Backs{};
+		vector<On_Window_Close_Func> m_Window_Close_Call_Backs{};
 
 	};
 

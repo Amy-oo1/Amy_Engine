@@ -10,10 +10,54 @@
     <Filter Include="bin">
       <UniqueIdentifier>{e62317b0-135e-48eb-8d46-5b6cf851987d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\default_editor">
+      <UniqueIdentifier>{0d6fa7b7-669b-415a-8f0a-eb7b50df2ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\default_editor">
+      <UniqueIdentifier>{bfb1c4a0-62fe-4299-a7ec-86973f65fe99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\default_editor\Editor_UI.cpp">
+      <Filter>src\default_editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\default_editor\Editor_Axis.cpp">
+      <Filter>src\default_editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\default_editor\Editor.cpp">
+      <Filter>src\default_editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\default_editor\Editor_Scene_Manager.cpp">
+      <Filter>src\default_editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\default_editor\Editor_Input_Manager.cpp">
+      <Filter>src\default_editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\default_editor\Editor_Global_Context.cpp">
+      <Filter>src\default_editor</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\default_editor\Editor_UI.h">
+      <Filter>include\default_editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\default_editor\Editor_Axis.h">
+      <Filter>include\default_editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\default_editor\Editor.h">
+      <Filter>include\default_editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\default_editor\Editor_Scene_Manager.h">
+      <Filter>include\default_editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\default_editor\Editor_Input_Manager.h">
+      <Filter>include\default_editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\default_editor\Editor_Global_Context.h">
+      <Filter>include\default_editor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

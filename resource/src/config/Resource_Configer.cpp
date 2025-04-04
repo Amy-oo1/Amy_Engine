@@ -44,12 +44,32 @@ namespace NameSpace_Resource::NameSpace_Config {
 		return this->m_Root_Directory;
 	}
 
+	const path Resource_Configer::Get_Engine_Resource_Directory(void) const {
+		return this->m_Engine_Resource_Directory;
+	}
+
+	const path Resource_Configer::Get_User_Resource_Directory(void) const {
+		return this->m_User_Resource_Directory;
+	}
+
 	const path Resource_Configer::Get_Global_Particle_Resource_URL(void) const {
 		return this->m_Global_Particle_Resource_URL;
 	}
 
-	const path Resource_Configer::Get_Global_Render_Resource_URL(void) const{
+	const path Resource_Configer::Get_Global_Render_Resource_URL(void) const {
 		return this->m_Global_Render_Resource_URL;
+	}
+
+	const path Resource_Configer::Get_Engine_Big_Icon_URL(void) const {
+		return this->m_Engine_Big_Icon_URL;
+	}
+
+	const path Resource_Configer::Get_Engine_Small_Icon_URL(void) const {
+		return this->m_Engine_Small_Icon_URL;
+	}
+
+	const path Resource_Configer::Get_Editor_Font_URL(void) const {
+		return this->m_Editor_Font_URL;
 	}
 
 	Resource_Configer& Resource_Configer::Get_Instance(void) {

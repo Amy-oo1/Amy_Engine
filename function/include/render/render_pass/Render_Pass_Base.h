@@ -38,8 +38,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		shared_ptr<Empty_RHI> m_RHI;
 		shared_ptr<Render_Resource_Base> m_Resource;
 
-		virtual void Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) = 0;
-		virtual void Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info) = 0;
+		virtual void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) = 0;
+		virtual void Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info) = 0;
 		virtual void PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) = 0;
 		virtual void Draw(void) = 0;
 

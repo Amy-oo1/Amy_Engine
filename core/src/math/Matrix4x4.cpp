@@ -5,6 +5,8 @@
 #include "math/Constant.h"
 #include  "math/Utilities.h"
 
+#include "math/Quaternion.h"
+
 namespace NameSpace_Core::NameSpace_Math {
 
 	Matrix4x4::Matrix4x4(const Vector4& Row_0, const Vector4& Row_1, const Vector4& Row_2, const Vector4& Row_3) :
@@ -294,6 +296,19 @@ namespace NameSpace_Core::NameSpace_Math {
 		return NameSpace_Utilities::Real_Equal(this->Determinant(), 0.f);
 	}
 
+	void Matrix4x4::Decom_Position(Vector3* Out_Translate, Quaternion* Out_Rotation, Vector3* Out_Scale) const {
+		const auto& [Mat_q, Temp_Sacale, Vec_U] = this->Get_LeftTop_Matrix3x3().Calculate_QDU_Decomposition();
+
+		if (nullptr != Out_Translate)
+			*Out_Translate = this->m_Mat[3].Get_XYZ();
+
+		if (nullptr != Out_Rotation)
+			*Out_Rotation = Mat_q;
+
+		if (nullptr != Out_Scale)
+			*Out_Scale = { Temp_Sacale[0][0],Temp_Sacale[1][1],Temp_Sacale[2][2], };
+	}
+
 	const Matrix4x4 Matrix4x4::Generate_Column_Order(const Vector4& Column_0, const Vector4& Column_1, const Vector4& Column_2, const Vector4& Column_3) {
 		return Matrix4x4{ Column_0,Column_1,Column_2,Column_3 }.Transpose();
 	}
@@ -309,6 +324,26 @@ namespace NameSpace_Core::NameSpace_Math {
 	const Matrix4x4 Matrix4x4::Generate_Column_Order(const float Carrays[16]) {
 		return Matrix4x4{ Carrays }.Transpose();
 
+	}
+
+
+
+	const Matrix4x4 Matrix4x4::Generate_Translate(const Vector3& Translate) {
+		return Matrix4x4{
+			1.f,0.f,0.f,0.f,
+			0.f,1.f,0.f,0.f,
+			0.f,0.f,1.f,0.f,
+			Translate.Get_X(),Translate.Get_Y(),Translate.Get_Z(),1.f
+		};
+	}
+
+	const Matrix4x4 Matrix4x4::Generate_Sacle(const Vector3& Scale) {
+		return Matrix4x4{
+			Scale.Get_X(),0.f,0.f,0.f,
+			0.f,Scale.Get_Y(),0.f,0.f,
+			0.f,0.f,Scale.Get_Z(),0.f,
+			0.f,0.f,0.f,1.f
+		};
 	}
 
 	const Matrix4x4 Matrix4x4::Generate_Column_Order(const initializer_list<float>& Scalars) {

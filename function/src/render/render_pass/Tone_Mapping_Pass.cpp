@@ -15,6 +15,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::static_pointer_cast;
+
 	using NameSpace_RHI::RHI_STRUCT_TYPE;
 	using NameSpace_RHI::RHI_IMAGE_TILING;
 	using NameSpace_RHI::RHI_IMAGE_VIEW_TYPE;
@@ -329,8 +331,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		//TODO : Implement
 	}
 
-	void Tone_Mapping_Pass::Pre_Inittialize(const Render_Pass_Pre_Initialize_Info* Init_Info) {
-		const auto Tone_Mapping_Info{ static_cast<const Tone_Mapping_Render_Pass_Pre_Initialize_Info*>(Init_Info) };
+	void Tone_Mapping_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
+		const auto Tone_Mapping_Info{ static_pointer_cast<Tone_Mapping_Render_Pass_Pre_Initialize_Info>(Init_Info) };
 		{
 			this->m_Render_Pass = Tone_Mapping_Info->Render_Pass;
 			this->m_Input_Attachment = Tone_Mapping_Info->Input_Attachment;
@@ -341,7 +343,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set();
 	}
 
-	void Tone_Mapping_Pass::Post_Inittialize(const Render_Pass_Post_Initialize_Info* Init_Info)
+	void Tone_Mapping_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)
 	{
 	}
 

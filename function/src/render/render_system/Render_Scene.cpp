@@ -15,7 +15,18 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	void Render_Scene::Set_Directional_Light(const Directional_Light& Directional_Light) {
 		this->m_Directional_Light = Directional_Light;
 	}
-	;
+
+	shared_ptr<Render_GUID_Allocator<Game_Object_Part_ID>> Render_Scene::Get_Instance_ID_Allocator(void) const {
+		return this->m_Instance_ID_Allocator;
+	}
+
+	shared_ptr<Render_GUID_Allocator<Mesh_Source_Desc>> Render_Scene::Get_Mesh_Resource_ID_Allocator(void) const {
+		return this->m_Mesh_Resource_ID_Allocator;
+	}
+
+	shared_ptr<Render_GUID_Allocator<Material_Source_Desc>> Render_Scene::Get_Material_Resource_ID_Allocator(void) const {
+		return this->m_Material_Resource_ID_Allocator;
+	}
 
 	void Render_Scene::Updata_Visiable_Objects(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera) {
 		UpData_Visiable_Objects_Directional_Light(Resource, Camera);
@@ -45,8 +56,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	void Render_Scene::Updata_Visiable_Objects_Main_Camera(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera)
 	{
 	}
+
 	void Render_Scene::Updata_Visiable_Objects_Axis(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera)
 	{
 		//TODO :
 	}
+
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

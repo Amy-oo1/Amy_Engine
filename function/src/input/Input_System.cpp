@@ -13,19 +13,19 @@ namespace NameSpace_Function::Namespace_Input {
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	Input_System::Input_System(shared_ptr<Window_System> Window)
-		:m_Window{ Window } {
+		:m_Binding_Window{ Window } {
 		this->Re_Binding(Window);
 	}
 
 	void Input_System::Re_Binding(shared_ptr<Window_System> Window) {
-		this->m_Window = Window;
+		this->m_Binding_Window = Window;
 
 		if (nullptr == Window)
 			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Input System No Window");
 
-		this->m_Window->Register_On_Key_Func(std::bind(&Input_System::On_Key, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		this->m_Binding_Window->Register_On_Key_Func(std::bind(&Input_System::On_Key, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 
-		this->m_Window->Register_On_Cursor_Pos_Func(std::bind(&Input_System::On_CUrsor_Pos, this, std::placeholders::_1, std::placeholders::_2));
+		this->m_Binding_Window->Register_On_Cursor_Pos_Func(std::bind(&Input_System::On_CUrsor_Pos, this, std::placeholders::_1, std::placeholders::_2));
 	}
 
 	void Input_System::On_Key(int Key, int Scancode, int Action, int Mods)
@@ -78,7 +78,7 @@ namespace NameSpace_Function::Namespace_Input {
 				this->m_Game_Commands |= static_cast<uint32_t>(GAME_COMMAND::FREE_CAMERA);
 				break;
 			case GLFW_KEY_LEFT_ALT:
-				this->m_Window->Set_Focus_Mode(this->m_Is_Focus_Mode = !this->m_Is_Focus_Mode);
+				this->m_Binding_Window->Set_Focus_Mode(this->m_Is_Focus_Mode = !this->m_Is_Focus_Mode);
 				break;
 			default:
 				break;

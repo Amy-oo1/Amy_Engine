@@ -21,16 +21,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Render_GUID_Allocator& operator=(const Render_GUID_Allocator&) = delete;
 		Render_GUID_Allocator& operator=(Render_GUID_Allocator&&) = delete;
 
+	public:
 		Render_GUID_Allocator() = default;
 
-	public:
 		~Render_GUID_Allocator() = default;
-
-		static Render_GUID_Allocator& Get_Instance(void) {
-			static Render_GUID_Allocator instance{};
-
-			return instance;
-		}
 
 		size_t Allocate_GUID(const T& Element) {
 			if (this->m_Element_TO_GUID_Map.find(Element) != this->m_Element_TO_GUID_Map.end())
@@ -41,6 +35,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				if (this->m_GUID_To_Element_Map.find(Guid) == this->m_GUID_To_Element_Map.end()) {
 					this->m_Element_TO_GUID_Map[Element] = Guid;
 					this->m_GUID_To_Element_Map[Guid] = Element;
+
 					return Guid;
 				}
 			}
