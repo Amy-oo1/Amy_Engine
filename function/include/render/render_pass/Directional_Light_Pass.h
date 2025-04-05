@@ -4,12 +4,16 @@
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Class.h"
+
+#include "render/render_system/Render_Commmon.h"
 #include "render/render_system/Render_Resource.h"
 #include "render/render_pass/Render_Pass.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using std::vector;
+
+	using  NameSpace_Render_System::Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
 
 	struct Directioal_Light_Render_Pass_Pre_Initialize_Info final :public Render_Pass_Pre_Initialize_Info {
 		//NOTE : Empty
@@ -41,10 +45,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Setup_Pipeline(void);
 
 	private:
-		vector<unsigned char> m_Vertex_Shader_Code;
-		vector<unsigned char> m_Fragment_Shader_Code;
 
 		NameSpace_RHI::RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout{ nullptr };
+
+		Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object m_Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
 
 	public:
 		void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) override;

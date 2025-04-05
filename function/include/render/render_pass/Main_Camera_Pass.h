@@ -3,11 +3,15 @@
 #include<vector>
 #include<memory>
 
+#include "render/render_system/Render_Commmon.h"
 #include "render/render_pass/Render_Pass.h"
 
 #include "render/render_pass/Particle_Pass.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
+
+	using NameSpace_Render_System::Mesh_Per_Frame_Storage_Buffer_Object;
+	using NameSpace_Render_System::Axis_Storage_Buffer_Object;
 
 	using std::vector;
 	using std::shared_ptr;
@@ -76,6 +80,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Setup_Frame_Buffer_Descriptor_Set(void);
 		void Setup_SwapChain_Frame_Buffers(void);
 
+
+		void Update_After_Frame_Buffer_ReCreate(void);
+
 	private:
 		bool m_Enable_FXAA{ false };
 		RHI_Image_View* m_Directional_Light_Shadow_Color_Image_View{ nullptr };
@@ -86,6 +93,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 
 		bool m_Is_Show_Axis{ false };
+
+		Mesh_Per_Frame_Storage_Buffer_Object m_Mesh_Per_Frame_Storage_Buffer_Object{};
+		Axis_Storage_Buffer_Object m_Axis_Storage_Buffer_Object{};
 
 	public:
 		void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) override;

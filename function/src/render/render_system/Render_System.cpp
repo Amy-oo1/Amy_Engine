@@ -336,6 +336,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		this->m_Render_Scene->Updata_Visiable_Objects(static_pointer_cast<Render_Resource>(this->m_Render_Resource), this->m_Render_Camera);
 
+		this->m_Render_Pipeline->Prepare_Pass_Data(this->m_Render_Resource);
 	}
 
 

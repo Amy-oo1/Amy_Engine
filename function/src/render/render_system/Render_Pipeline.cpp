@@ -2,6 +2,11 @@
 
 #include<memory>
 
+#include "logger/System_Logger.h"
+
+
+#include "render/rhi/vulkan/Vulkan_RHI.h"
+
 #include "render/render_pass/Directional_Light_Pass.h"
 #include "render/render_pass/Point_Light_Paass.h"
 #include "render/render_pass/Main_Camera_Pass.h"
@@ -16,6 +21,8 @@
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::static_pointer_cast;
+
+	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
 	using NameSpace_Pass::Directional_Light_Pass;
 	using NameSpace_Pass::Point_Light_Pass;
@@ -80,6 +87,31 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	void Render_Pipeline::Set_Window_UI_System(shared_ptr<Window_UI> UI) const {
 		static_pointer_cast<UI_Pass>(this->m_UI_Pass)->Set_Window_UI_System(UI);
+	}
+
+	void Render_Pipeline::Passes_Update_After_Recreate_Swapchain(void) const {
+		auto& Ref_Main_Camera_Pass{ *static_pointer_cast<Main_Camera_Pass>(this->m_Main_Camera_Pass) };
+		auto& Ref_Tone_Mapping_Pass{ *static_pointer_cast<Tone_Mapping_Pass>(this->m_Tone_Mapping_Pass) };
+		auto& Ref_Color_Grading_Pass{ *static_pointer_cast<Color_Grading_Pass>(this->m_Color_Grading_Pass) };
+		auto& Ref_FXAA_Pass{ *static_pointer_cast<FXAA_Pass>(this->m_FXAA_Pass) };
+		auto& Ref_UI_Pass{ *static_pointer_cast<UI_Pass>(this->m_UI_Pass) };
+		auto& Ref_Combine_UI_Pass{ *static_pointer_cast<Combine_UI_Pass>(this->m_Combine_UI_Pass) };
+		auto& Ref_Pick_Pass{ *static_pointer_cast<Pick_Pass>(this->m_Pick_Pss) };
+		auto& Ref_Particle_Pass{ *static_pointer_cast<Particle_Pass>(this->m_Particle_Pass) };
+
+		Ref_Main_Camera_Pass.Update_After_Frame_Buffer_ReCreate();
+		//TODO : Ref_Particle_Pass.Pre_Inittialize(this->m_Particle_Pass_Pre_Info);
+
+		Ref_Tone_Mapping_Pass.Update_After_Frame_Buffer_ReCreate(Ref_Main_Camera_Pass.Get_Frame_Buffer_Image_Views(_main_camera_pass_backup_buffer_odd));
+		Ref_Color_Grading_Pass.Update_After_Frame_Buffer_ReCreate(Ref_Main_Camera_Pass.Get_Frame_Buffer_Image_Views(_main_camera_pass_backup_buffer_even));
+		Ref_FXAA_Pass.Update_After_Frame_Buffer_ReCreate(Ref_Main_Camera_Pass.Get_Frame_Buffer_Image_Views(_main_camera_pass_post_process_buffer_odd));
+		Ref_Combine_UI_Pass.Update_After_Frame_Buffer_ReCreate(
+			Ref_Main_Camera_Pass.Get_Frame_Buffer_Image_Views(_main_camera_pass_backup_buffer_odd),
+			Ref_Main_Camera_Pass.Get_Frame_Buffer_Image_Views(_main_camera_pass_backup_buffer_even)
+		);
+		Ref_Particle_Pass.Update_After_Frame_Buffer_ReCreate();//TODO : 
+		Ref_Pick_Pass.ReCreate_Frame_Buffer();
+
 	}
 
 	void Render_Pipeline::Build_Render_Passes(const Render_Passes_Info& Passes_Info) {
@@ -176,6 +208,37 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		}
 		this->m_FXAA_Pass->Pre_Inittialize(this->m_FXAA_Pass_Pre_Info);
 
+	}
+
+	void Render_Pipeline::Prepare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
+		this->m_Main_Camera_Pass->PrePare_Pass_Data(Resource);
+		this->m_Pick_Pss->PrePare_Pass_Data(Resource);
+		this->m_Directional_Light_Pass->PrePare_Pass_Data(Resource);
+		this->m_Point_Light_Pass->PrePare_Pass_Data(Resource);
+		this->m_Particle_Pass->PrePare_Pass_Data(Resource);//TODO : 
+	}
+
+	void Render_Pipeline::Forwad_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Resource) {
+		auto& Ref_Resource{ *static_pointer_cast<Render_Resource>(this->m_Render_Resource) };
+		auto& Ref_Vulkan_RHI{ *static_pointer_cast<NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI>(this->m_RHI) };
+
+
+		Ref_Resource.Reset_Ring_Buffer_Offset(this->m_RHI->Get_Current_Frame_Index());
+
+		this->m_RHI->Wait_For_InFlight_Fence_PFN();
+
+		this->m_RHI->Reset_InFlight_Command_Pool_PFN();
+
+		if (!Ref_Vulkan_RHI.Prepare_Before_Pass(std::bind(&Render_Pipeline::Passes_Update_After_Recreate_Swapchain, this)))
+			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Render_Pipeline::Forwad_Render : Prepare_Before_Pass Failed");
+
+
+
+
+	}
+
+	void Render_Pipeline::Deferred_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Render_Resource)
+	{
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

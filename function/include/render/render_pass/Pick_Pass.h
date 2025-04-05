@@ -6,7 +6,9 @@
 #include "math/Vector2.h"
 
 #include "render/rhi/empty_rhi/Empty_RHI.h"
+
 #include "render/render_system/Render_Resource.h"
+#include "render/render_system/Render_Commmon.h"
 
 #include "render/render_pass/Render_Pass.h"
 
@@ -16,6 +18,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using std::shared_ptr;
 
 	using NameSpace_RHI::RHI_Descriptor_Set_Layout;
+
+	using NameSpace_Render_System::Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object;
 
 	struct Pick_Render_Pass_Pre_Initialize_Info final :public Render_Pass_Pre_Initialize_Info {
 		RHI_Descriptor_Set_Layout* Per_Mesh_Set_Layout;
@@ -39,6 +43,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	public:
 		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
 
+		void ReCreate_Frame_Buffer(void);
 
 	private:
 		void Setup_Attachments(void);
@@ -50,6 +55,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	private:
 		RHI_Descriptor_Set_Layout* m_Per_Mesh_Set_Layout{ nullptr };
+
+		Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object;
+
 
 	public:
 		void Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) override;

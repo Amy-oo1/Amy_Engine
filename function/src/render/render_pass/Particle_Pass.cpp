@@ -110,6 +110,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->m_Random_Engine.Seed(Seed);
 	}
 
+	void Particle_Pass::Update_After_Frame_Buffer_ReCreate(void)
+	{
+	}
+
 	void Particle_Pass::Set_Render_Pass_Handle(RHI_Render_Pass* Render_Pass) {
 		this->m_Render_Pass = Render_Pass;
 	}
@@ -856,7 +860,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 
 
-		RHI_Command_Buffer_Allocate_Info Compute_Command_Buffer_Allocate_Info{};
+		/*RHI_Command_Buffer_Allocate_Info Compute_Command_Buffer_Allocate_Info{};
 		{
 			Compute_Command_Buffer_Allocate_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 			Compute_Command_Buffer_Allocate_Info.Command_Pool = this->m_RHI->Get_Default_Command_Pool();
@@ -873,15 +877,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Fence_Create_Info.Flags = 0;
 		}
 
-		this->m_Fence = this->m_RHI->Create_Fence(&Fence_Create_Info);
+		this->m_Fence = this->m_RHI->Create_Fence(&Fence_Create_Info);*/
 	}
 
 	void Particle_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)
 	{
 	}
 
-	void Particle_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
-	{
+	void Particle_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
+		//TODO 
 	}
 
 	void Particle_Pass::Draw(void)

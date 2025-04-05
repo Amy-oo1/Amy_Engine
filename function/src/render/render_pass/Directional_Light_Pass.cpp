@@ -6,7 +6,6 @@
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
 
-#include "render/render_system/Render_Commmon.h"
 #include "render/render_system/Render_Mesh.h"
 
 #include "mesh_directional_light_shadow_frag.h"
@@ -80,6 +79,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_Render_System::Mesh_Directional_Light_Shadow_Per_Draw_CallVertex_Blending_Storage_Buffer_Object;
 
 	using NameSpace_Render_System::Mesh_Vertex;
+	using NameSpace_Render_System::Render_Resource;
 
 	Directional_Light_Pass::Directional_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
 		Render_Pass{ Command_Info } {
@@ -583,7 +583,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	}
 
 	void Directional_Light_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
-		//this->m_Global_Render_Resource = std::dynamic_pointer_cast<Global_Render_Resource>(Resource);
+		const auto& Ref_Resource{ *static_pointer_cast<Render_Resource>(Resource) };
+		{
+			this->m_Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object = Ref_Resource.m_Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
+		}
 	}
 
 	void Directional_Light_Pass::Draw(void) {

@@ -492,6 +492,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		auto cIt{ this->m_Vulkan_Mesh_Map.find(Entity.Mesh_Resource_ID) };
 		if (this->m_Vulkan_Mesh_Map.end() == cIt)
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Entity Mesh Not Found");
+
 		return cIt->second;
 	}
 

@@ -82,6 +82,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_Render_System::Mesh_Point_Light_Shadow_Per_Draw_Call_Vertex_Blending_Storage_Buffer_Object;;
 
 
+	using NameSpace_Render_System::Render_Resource;
 	using NameSpace_Render_System::Mesh_Vertex;
 
 	Point_Light_Pass::Point_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
@@ -588,7 +589,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	}
 
 	void Point_Light_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
-		//this->m_Global_Render_Resource = std::dynamic_pointer_cast<Global_Render_Resource>(Resource);
+		const auto& Ref_Resource{ static_pointer_cast<Render_Resource>(Resource) };
+		{
+			this->m_Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object = Ref_Resource->m_Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object;
+		}
 	}
 
 	void Point_Light_Pass::Draw(void) {

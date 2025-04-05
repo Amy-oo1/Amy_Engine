@@ -132,6 +132,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		~Particle_Pass(void) = default;
 
 	public:
+
+		void Update_After_Frame_Buffer_ReCreate(void);
+
 		void Set_Per_Mesh_Set_Layout(NameSpace_RHI::RHI_Descriptor_Set_Layout* Set_Layout);
 
 

@@ -281,14 +281,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Vulkan_PBR_Material* Ref_Material{ nullptr };
 
 		uint32_t Node_ID;
-		bool ENable_Vertex_Blending{ false };
+		bool Enable_Vertex_Blending{ false };
 
 	};
 
 	struct alignas(16)
 		Vulkan_Render_Axis_Node final {
 		Matrix4x4 Model_Matrix{ Matrix4x4::IDENTITY };
-		Vulkan_Mesh* Fef_Mesh{ nullptr };
+		Vulkan_Mesh* Ref_Mesh{ nullptr };
 		uint_fast32_t Node_ID;
 		bool Enbale_Vertex_Blending{ false };
 	};

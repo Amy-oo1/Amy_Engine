@@ -64,7 +64,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		[[nodiscard]] virtual RHI_Command_Pool* Get_Default_Command_Pool(void)const = 0;
 
-		[[nodiscard]] virtual RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const = 0;
+		virtual bool
+			Reset_Command_Pool_PFN(
+				RHI_Command_Pool* Command_Pool,
+				RHI_Command_Pool_Reset_Flags Flags
+			) = 0;
+
+		virtual bool Reset_InFlight_Command_Pool_PFN(void) = 0;
 
 		[[nodiscard]] virtual vector<unique_ptr<RHI_Command_Buffer>>
 			Allocate_Command_Buffers(
@@ -77,11 +83,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
 
+		[[nodiscard]] virtual RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const = 0;
+
 		virtual void Create_SwapChain(void) = 0;
 
 		virtual void Create_SwapChhain_Image_Views(void) = 0;
 
-		virtual void Create_SwapChain_Depth_Image(void) = 0;
+		virtual void Create_SwapChain_Depth_Image_And_View(void) = 0;
 
 		[[nodiscard]] virtual uint32_t Get_Current_Frame_Index(void)const = 0;
 
@@ -279,6 +287,31 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				const RHI_Fence_Create_Info* Create_Info
 			) = 0;
 
+		virtual bool
+			Wait_For_Fence_PFN(
+				RHI_Fence* Fences,
+				uint64_t Time_Out
+			) = 0;
+
+		virtual bool
+			Wait_For_Fences_PFN(
+				const vector<RHI_Fence*> Fences,
+				RHI_Bool32 Wait_All,
+				uint64_t Time_Out
+			) = 0;
+
+		virtual bool Wait_For_InFlight_Fence_PFN(void) = 0;
+
+		virtual bool
+			Reset_Fence_PFN(
+				RHI_Fence* Fence
+			) = 0;
+
+		virtual bool
+			Reset_Fences_PFN(
+				vector<RHI_Fence*> Fences
+			) = 0;
+
 		virtual void Create_Sync_Primitices(void) = 0;
 
 		virtual void Initialize(void) = 0;
@@ -298,41 +331,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		//TODO : 
 
-
-
-
-
-
-
-
-		virtual bool
-			Wait_For_Fences_PFN(
-				const vector<RHI_Fence*> Fences,
-				RHI_Bool32 Wait_All,
-				uint64_t Time_Out
-			) = 0;
-
-		virtual bool
-			Wait_For_Fence_PFN(
-				RHI_Fence* Fences,
-				uint64_t Time_Out
-			) = 0;
-
-		virtual bool
-			Reset_Fences_PFN(
-				vector<RHI_Fence*> Fences
-			) = 0;
-
-		virtual bool
-			Reset_Fence_PFN(
-				RHI_Fence* Fence
-			) = 0;
-
-		virtual bool
-			Reset_Command_Pool_PFN(
-				RHI_Command_Pool* Command_Pool,
-				RHI_Command_Pool_Reset_Flags Flags
-			) = 0;
 
 		virtual bool
 			Begin_Command_Buffer_PFN(

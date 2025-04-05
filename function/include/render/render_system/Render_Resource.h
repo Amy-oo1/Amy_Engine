@@ -32,7 +32,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	//TODO :Remove
 	class Render_Scene;
 
-
 	using std::tuple;
 	using std::array;
 	using std::vector;
@@ -142,6 +141,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	class Render_Resource final :public Render_Resource_Base {
+		friend class Render_Scene;
 	private:
 		Render_Resource(const Render_Resource&) = delete;
 		Render_Resource& operator=(const Render_Resource&) = delete;
@@ -152,7 +152,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		~Render_Resource(void) = default;
 
 
-	private:
 		void Create_Storge_Buffer(shared_ptr<Empty_RHI> RHI);
 
 		void Map_Storage_Buffer(shared_ptr<Empty_RHI> RHI);
@@ -231,7 +230,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		const Global_Render_Resource& Get_Global_Render_Resource(void)const;
 
-	private:
+	public:
 		RHI_Descriptor_Set_Layout* m_Mesh_Descriptor_Set_Layout{ nullptr };
 
 		RHI_Descriptor_Set_Layout* m_Material_Descriptor_Set_Layout{ nullptr };
@@ -243,7 +242,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object m_Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
 
 		Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object;
-		
+
 		Particle_Billboard_Per_Frame_Storage_Buffer_Object m_Particle_Billboard_Per_Frame_Storage_Buffer_Object;
 		Patricle_Collision_Pre_Frame_Storage_Buffer_Object m_Particle_Collision_Pre_Frame_Storage_Buffer_Object;
 

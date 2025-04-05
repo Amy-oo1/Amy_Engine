@@ -3,14 +3,14 @@
 #include<tuple>
 #include<utility>
 
-#include "render/render_system/Render_Mesh.h"
-#include "render/render_pass/Render_Pass.h"
-
 #include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
 
-#include "render/render_system/Render_Commmon.h"
+#include "render/render_system/Render_Mesh.h"
+#include "render/render_pass/Render_Pass.h"
+
+#include "render/render_system/Render_Resource.h"
 
 #include "axis_vert.h"
 #include "axis_frag.h"
@@ -115,6 +115,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_RHI::RHI_DEFAULT_SAMPLER_TYPE;
 
+	using NameSpace_Render_System::Render_Resource;
 	using NameSpace_Render_System::Mesh_Vertex;
 
 
@@ -139,8 +140,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	{
 	}
 
-	void Main_Camera_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
-	{
+	void Main_Camera_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource){
+		const auto& Ref_Render_Resource{ *static_pointer_cast<Render_Resource>(Resource) };
+		{
+			this->m_Mesh_Per_Frame_Storage_Buffer_Object = Ref_Render_Resource.m_Mesh_Per_Frame_Storage_Buffer_Object;
+			this->m_Axis_Storage_Buffer_Object = Ref_Render_Resource.m_Axis_Storage_Buffer_Object;
+		}
+	
 	}
 
 	void Main_Camera_Pass::Draw(void)
@@ -2515,6 +2521,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 			this->m_Swapchain_Frame_Buffers.emplace_back(this->m_RHI->Create_Frame_Buffer(&Frame_Buffer_Create_Info));
 		}
+	}
+
+	void Main_Camera_Pass::Update_After_Frame_Buffer_ReCreate(void){
+		this->m_Frame_Buffer.Attachments.clear();
+		this->m_Swapchain_Frame_Buffers.clear();
+
+		this->Setup_Attachments();
+		this->Setup_Frame_Buffer_Descriptor_Set();
+		this->Setup_SwapChain_Frame_Buffers();
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

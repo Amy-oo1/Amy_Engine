@@ -107,10 +107,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 #endif // DEBUG
 
-		//TODO : Public Func
+
 	public:
+		//TODO : Public Func
+		bool Prepare_Before_Pass(function<void(void)>Passes_Update_After_Recreate_Swapchain);
+
+
 		//TODO Set Function 
-		void Create_Surface(void);//TODO : Direct12 Not Have Surface 
+
 
 		//TODO Get Func
 		[[nodiscard]] size_t Get_API_Version(void)const;
@@ -123,12 +127,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		[[nodiscard]] uint32_t Get_Graphics_Queue_Family(void)const;
 
+		[[nodiscard]] uint32_t Get_Current_SwapChain_Image_Index(void)const;
+
 
 		//TODO : Private Member Func
 	private:
 		void Create_Allocator(void);
 		void Reset_Instance_Deleters(VkInstance Instance, const VkAllocationCallbacks* Allocator);
 		void Reset_Device_Deleters(VkDevice Device, const VkAllocationCallbacks* pAllocator);
+
+		void Create_Surface(void);//TODO : Direct12 Not Have Surface 
 
 		void Get_Device_ProcAddrs(void);
 		void Create_VAM_Allocator(void);
@@ -137,6 +145,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Create_Linear_Sampler(void);
 
 		void Clear_SwapChain(void);
+
+		void Acquare_Next_Frame(void);
 
 		//TODO : Static Public Func
 	public:
@@ -200,7 +210,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			);
 
 		[[nodiscard]] static const Swap_Chain_Support_Details
-			S_Query_Swap_Chain_Support_Details(
+			S_Query_SwapChain_Support_Details(
 				const VkPhysicalDevice Physical_Device,
 				VkSurfaceKHR Suraface
 			);
@@ -384,7 +394,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		unique_ptr<RHI_Sampler> m_Nearest_RHI_Sampler{ std::make_unique<Vulkan_Sampler>() };
 		unordered_map<uint32_t, unique_ptr<RHI_Sampler>> m_Mipmap_RHI_Samplers{};
 
-		Swap_Chain_Support_Details m_Swap_Chain_Support_Details{};
+		Swap_Chain_Support_Details m_SwapChain_Support_Details{};
 
 		//TODO: Sync Window Fields
 		VkFormat m_SwapChain_Image_Format{};
@@ -395,6 +405,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		vector<VkImage> m_SwapChain_VK_Images{};
 		vector<unique_ptr<RHI_Image>> m_SwapChain_RHI_Images{};
+		uint32_t m_Current_SwapChain_Iamage_Index{ 0 };
 
 		vector<VkImageView> m_SwapChain_VK_Image_Views{};
 		vector<unique_ptr<RHI_Image_View>> m_SwapChain_RHI_Image_Views{};
@@ -407,6 +418,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Finished_For_Present_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Available_For_TeCopy_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Fence>, s_Frames_In_Flight> m_InFlight_RHI_Fences{ std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>() };
+		array<VkFence, s_Frames_In_Flight> m_InFlight_VK_Fences{ nullptr,nullptr,nullptr };
+		VkFence m_Current_VK_Fence{ nullptr };
 
 		//TODO : Override Func
 	public:
@@ -429,6 +442,14 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Create_Default_Command_Pool(void) override;
 
+		bool
+			Reset_Command_Pool_PFN(
+				RHI_Command_Pool* Command_Pool,
+				RHI_Command_Pool_Reset_Flags Flags
+			) override;
+
+		bool Reset_InFlight_Command_Pool_PFN(void) override;
+
 		[[nodiscard]] RHI_Command_Pool* Get_Default_Command_Pool(void)const override;
 
 		[[nodiscard]] RHI_Descriptor_Pool* Get_Default_Descriptor_Pool(void)const override;
@@ -448,7 +469,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Create_SwapChhain_Image_Views(void) override;
 
-		void Create_SwapChain_Depth_Image(void) override;
+		void Create_SwapChain_Depth_Image_And_View(void) override;
 
 		[[nodiscard]] uint32_t Get_Current_Frame_Index(void)const override;
 
@@ -644,6 +665,31 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				const RHI_Fence_Create_Info* Create_Info
 			) override;
 
+		bool
+			Wait_For_Fence_PFN(
+				RHI_Fence* Fences,
+				uint64_t Time_Out
+			) override;
+
+		bool
+			Reset_Fences_PFN(
+				vector<RHI_Fence*> Fences
+			) override;
+
+		bool
+			Wait_For_Fences_PFN(
+				const vector<RHI_Fence*> Fences,
+				RHI_Bool32 Wait_All,
+				uint64_t Time_Out
+			) override;
+
+		bool Wait_For_InFlight_Fence_PFN(void) override;
+
+		bool
+			Reset_Fence_PFN(
+				RHI_Fence* Fence
+			) override;
+
 		void Create_Sync_Primitices(void)override;
 
 		void Initialize(void) override;
@@ -696,38 +742,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 
 
-
-
-
-		bool
-			Wait_For_Fences_PFN(
-				const vector<RHI_Fence*> Fences,
-				RHI_Bool32 Wait_All,
-				uint64_t Time_Out
-			) override;
-
-		bool
-			Wait_For_Fence_PFN(
-				RHI_Fence* Fences,
-				uint64_t Time_Out
-			) override;
-
-		bool
-			Reset_Fences_PFN(
-				vector<RHI_Fence*> Fences
-			) override;
-
-
-		bool
-			Reset_Fence_PFN(
-				RHI_Fence* Fence
-			) override;
-
-		bool
-			Reset_Command_Pool_PFN(
-				RHI_Command_Pool* Command_Pool,
-				RHI_Command_Pool_Reset_Flags Flags
-			) override;
 
 		bool
 			Begin_Command_Buffer_PFN(

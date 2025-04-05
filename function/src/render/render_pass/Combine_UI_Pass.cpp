@@ -84,6 +84,54 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		Render_Pass{ Command_Info } {
 	}
 
+	void Combine_UI_Pass::Update_After_Frame_Buffer_ReCreate(RHI_Image_View* Scene_Input_attachment, RHI_Image_View* UI_Input_attachment) {
+		this->m_Scene_Input_attachment = Scene_Input_attachment;
+		this->m_UI_Input_attachment = UI_Input_attachment;
+
+		RHI_Descriptor_Image_Info Per_Frame_Scene_Input_Attachment_Info{};
+		{
+			Per_Frame_Scene_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
+			Per_Frame_Scene_Input_Attachment_Info.Image_View = this->m_Scene_Input_attachment;
+			Per_Frame_Scene_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		}
+		const vector<const RHI_Descriptor_Image_Info*> Per_Frame_Scene_Input_Attachment_Infos{ &Per_Frame_Scene_Input_Attachment_Info };
+
+		RHI_Descriptor_Image_Info Per_Frame_UI_Input_Attachment_Info{};
+		{
+			Per_Frame_UI_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
+			Per_Frame_UI_Input_Attachment_Info.Image_View = this->m_UI_Input_attachment;
+			Per_Frame_UI_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		}
+		const vector<const RHI_Descriptor_Image_Info*> Per_Frame_UI_Input_Attachment_Infos{ &Per_Frame_UI_Input_Attachment_Info };
+
+		RHI_Write_Descriptor_Set Per_Frame_Scene_Input_Attachment_Write_Set{};
+		{
+			Per_Frame_Scene_Input_Attachment_Write_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			Per_Frame_Scene_Input_Attachment_Write_Set.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
+			Per_Frame_Scene_Input_Attachment_Write_Set.Dst_Binding = 0;
+			Per_Frame_Scene_Input_Attachment_Write_Set.Dst_Array_Element = 0;
+			Per_Frame_Scene_Input_Attachment_Write_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+			Per_Frame_Scene_Input_Attachment_Write_Set.Image_Infos = &Per_Frame_Scene_Input_Attachment_Infos;
+		}
+
+		RHI_Write_Descriptor_Set per_frame_UI_input_attachment_write_info{};
+		{
+			per_frame_UI_input_attachment_write_info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			per_frame_UI_input_attachment_write_info.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
+			per_frame_UI_input_attachment_write_info.Dst_Binding = 1;
+			per_frame_UI_input_attachment_write_info.Dst_Array_Element = 0;
+			per_frame_UI_input_attachment_write_info.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+			per_frame_UI_input_attachment_write_info.Image_Infos = &Per_Frame_UI_Input_Attachment_Infos;
+		}
+
+		const vector<const RHI_Write_Descriptor_Set*> Write_Descriptor_Sets{
+			&Per_Frame_Scene_Input_Attachment_Write_Set,
+			&per_frame_UI_input_attachment_write_info
+		};
+
+		this->m_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
+	}
+
 	void Combine_UI_Pass::Setup_Descriptor_Set_Layout(void) {
 		this->m_Descriptors.resize(1);
 
@@ -131,49 +179,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 
 		this->m_Descriptors[0].Descriptor_Set = std::move(this->m_RHI->Allocate_Descriptor_Sets(&Descriptor_Set_Allocate_Info).front());
-
-		RHI_Descriptor_Image_Info Per_Frame_Scene_Input_Attachment_Info{};
-		{
-			Per_Frame_Scene_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
-			Per_Frame_Scene_Input_Attachment_Info.Image_View = this->m_Scene_Input_attachment;
-			Per_Frame_Scene_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		}
-		const vector<const RHI_Descriptor_Image_Info*> Per_Frame_Scene_Input_Attachment_Infos{ &Per_Frame_Scene_Input_Attachment_Info };
-
-		RHI_Descriptor_Image_Info Per_Frame_UI_Input_Attachment_Info{};
-		{
-			Per_Frame_UI_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
-			Per_Frame_UI_Input_Attachment_Info.Image_View = this->m_UI_Input_attachment;
-			Per_Frame_UI_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		}
-		const vector<const RHI_Descriptor_Image_Info*> Per_Frame_UI_Input_Attachment_Infos{ &Per_Frame_UI_Input_Attachment_Info };
-
-		RHI_Write_Descriptor_Set Per_Frame_Scene_Input_Attachment_Write_Set{};
-		{
-			Per_Frame_Scene_Input_Attachment_Write_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Per_Frame_Scene_Input_Attachment_Write_Set.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Per_Frame_Scene_Input_Attachment_Write_Set.Dst_Binding = 0;
-			Per_Frame_Scene_Input_Attachment_Write_Set.Dst_Array_Element = 0;
-			Per_Frame_Scene_Input_Attachment_Write_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-			Per_Frame_Scene_Input_Attachment_Write_Set.Image_Infos = &Per_Frame_Scene_Input_Attachment_Infos;
-		}
-
-		RHI_Write_Descriptor_Set per_frame_UI_input_attachment_write_info{};
-		{
-			per_frame_UI_input_attachment_write_info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			per_frame_UI_input_attachment_write_info.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			per_frame_UI_input_attachment_write_info.Dst_Binding = 1;
-			per_frame_UI_input_attachment_write_info.Dst_Array_Element = 0;
-			per_frame_UI_input_attachment_write_info.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-			per_frame_UI_input_attachment_write_info.Image_Infos = &Per_Frame_UI_Input_Attachment_Infos;
-		}
-
-		const vector<const RHI_Write_Descriptor_Set*> Write_Descriptor_Sets{
-			&Per_Frame_Scene_Input_Attachment_Write_Set,
-			&per_frame_UI_input_attachment_write_info
-		};
-
-		this->m_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
 	}
 
 	void Combine_UI_Pass::Setup_Pipeline(void) {
@@ -372,6 +377,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set_Layout();
 		this->Setup_Pipeline();
 		this->Setup_Descriptor_Set();
+
+		this->Update_After_Frame_Buffer_ReCreate(this->m_Scene_Input_attachment, this->m_UI_Input_attachment);
 	}
 
 	void Combine_UI_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)

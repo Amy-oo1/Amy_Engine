@@ -41,11 +41,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	public:
 		virtual void Build_Render_Passes(const Render_Passes_Info& Passes_Info) = 0;
 
-		virtual void Prepare_Pass_Data(shared_ptr<Render_Resource_Base> Render_Resource);
+		virtual void Prepare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) = 0;
 
-		virtual void Forwad_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Render_Resource);
+		virtual void Forwad_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Resource) = 0;
 
-		virtual void Deferred_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Render_Resource);
+		virtual void Deferred_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Resource) = 0;
 
 	protected:
 		shared_ptr<Empty_RHI> m_RHI{ nullptr };

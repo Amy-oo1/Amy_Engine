@@ -38,6 +38,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	public:
 
+		void Update_After_Frame_Buffer_ReCreate(RHI_Image_View* Scene_Input_attachment, RHI_Image_View* UI_Input_attachment);
+
 	private:
 		void Setup_Descriptor_Set_Layout(void);
 		void Setup_Descriptor_Set(void);

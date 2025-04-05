@@ -214,4 +214,6 @@ namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities {
 
 	const Matrix4x4 Make_Perspective_Matrix(Radian FOV, float Aspect, float Z_Near, float Z_Far);
 
+	Matrix4x4 makeOrthographicProjectionMatrix01(float left, float right, float bottom, float top, float znear, float zfar);
+
 }// namespace NameSpace_Core::NameSpace_Math::NameSpace_Utilities

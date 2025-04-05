@@ -83,6 +83,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Mesh_Vertex;
 
+	using NameSpace_Render_System::Render_Resource;
+
 	void Pick_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
 		const auto Pick_Info{ static_pointer_cast<Pick_Render_Pass_Pre_Initialize_Info>(Init_Info) };
 		{
@@ -101,8 +103,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	{
 	}
 
-	void Pick_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource)
-	{
+	void Pick_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
+		const auto& Ref_Render_Resource{ *static_pointer_cast<Render_Resource>(Resource) };
+		{
+			this->m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object.Proj_View_Matrix = Ref_Render_Resource.m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object.Proj_View_Matrix;
+			this->m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object.Render_Target_Width = this->m_RHI->Get_SwapChain_Extent().Width;
+			this->m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object.Render_Target_Height = this->m_RHI->Get_SwapChain_Extent().Height;
+		}
 	}
 
 	void Pick_Pass::Draw(void)
@@ -111,6 +118,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	Pick_Pass::Pick_Pass(const Render_Pass_Command_Info& Command_Info)
 		: Render_Pass{ Command_Info } {
+	}
+
+	void Pick_Pass::ReCreate_Frame_Buffer(void) {
+		this->m_Frame_Buffer.Attachments.clear();
+
+		this->Setup_Attachments();
+		this->Setup_Frame_Buffer();
 	}
 
 	void Pick_Pass::Setup_Attachments(void) {

@@ -35,6 +35,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		void Set_Window_UI_System(shared_ptr<Window_UI> UI) const;
 
+		void Passes_Update_After_Recreate_Swapchain(void) const;
+
 		shared_ptr<Render_Pass_Base> m_Point_Light_Pass{ nullptr };
 		shared_ptr<Render_Pass_Base> m_Directional_Light_Pass{ nullptr };
 		shared_ptr<Render_Pass_Base> m_Main_Camera_Pass{ nullptr };
@@ -70,6 +72,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	public:
 		void Build_Render_Passes(const Render_Passes_Info& Passes_Info) override;
 
+		void Prepare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) override;
+
+		void Forwad_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Resource) override;
+
+		void Deferred_Render(shared_ptr<Empty_RHI> RHI, shared_ptr<Render_Resource_Base> Resource) override;
 	};
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

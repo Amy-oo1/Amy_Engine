@@ -86,6 +86,31 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		:Render_Pass{ Command_Info } {
 	}
 
+	void FXAA_Pass::Update_After_Frame_Buffer_ReCreate(RHI_Image_View* Input_Attachment) {
+		this->m_Input_Attachment = Input_Attachment;
+
+		RHI_Descriptor_Image_Info Post_Process_Per_Frame_Input_Attachment_Info{};
+		{
+			Post_Process_Per_Frame_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
+			Post_Process_Per_Frame_Input_Attachment_Info.Image_View = this->m_Input_Attachment;
+			Post_Process_Per_Frame_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		}
+		const vector<const RHI_Descriptor_Image_Info*> Per_Frame_Scene_Input_Attachment_Infos{ &Post_Process_Per_Frame_Input_Attachment_Info };
+
+		RHI_Write_Descriptor_Set Post_Process_Per_Frame_Input_Write_Descriptor_Set{};
+		{
+			Post_Process_Per_Frame_Input_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
+			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Dst_Binding = 0;
+			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Dst_Array_Element = 0;
+			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Image_Infos = &Per_Frame_Scene_Input_Attachment_Infos;
+		}
+		const vector<const RHI_Write_Descriptor_Set*> Write_Descriptor_Sets{ &Post_Process_Per_Frame_Input_Write_Descriptor_Set };
+
+		this->m_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
+	}
+
 	void FXAA_Pass::Setup_Descriptor_Set_Layout(void) {
 		this->m_Descriptors.resize(1);
 
@@ -97,7 +122,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 			Post_Process_Global__Layout_Color_Binding.Stage_Flags = to_underlying(RHI_SHADER_STAGE_FLAG_BITS::RHI_SHADER_STAGE_FRAGMENT_BIT);
 			Post_Process_Global__Layout_Color_Binding.Immutable_Samplers = nullptr;
 		}
-		const vector<const RHI_Descriptor_Set_Layout_Binding*> Bindings{&Post_Process_Global__Layout_Color_Binding,};
+		const vector<const RHI_Descriptor_Set_Layout_Binding*> Bindings{ &Post_Process_Global__Layout_Color_Binding, };
 
 		RHI_Descriptor_Set_Layout_Create_Info Descriptor_Set_Layout_Create_Info{};
 		{
@@ -120,27 +145,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 
 		this->m_Descriptors[0].Descriptor_Set = std::move(this->m_RHI->Allocate_Descriptor_Sets(&Descriptor_Set_Allocate_Info).front());
-
-		RHI_Descriptor_Image_Info Post_Process_Per_Frame_Input_Attachment_Info{};
-		{
-			Post_Process_Per_Frame_Input_Attachment_Info.Sampler = this->m_RHI->Get_Default_Sampler(RHI_DEFAULT_SAMPLER_TYPE::DEFAULT_SAMPLER_NEAREST);
-			Post_Process_Per_Frame_Input_Attachment_Info.Image_View = this->m_Input_Attachment;
-			Post_Process_Per_Frame_Input_Attachment_Info.Image_Layout = RHI_IMAGE_LAYOUT::RHI_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		}
-		const vector<const RHI_Descriptor_Image_Info*> Per_Frame_Scene_Input_Attachment_Infos{ &Post_Process_Per_Frame_Input_Attachment_Info };
-
-		RHI_Write_Descriptor_Set Post_Process_Per_Frame_Input_Write_Descriptor_Set{};
-		{
-			Post_Process_Per_Frame_Input_Write_Descriptor_Set.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Dst_Set = this->m_Descriptors[0].Descriptor_Set.get();
-			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Dst_Binding = 0;
-			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Dst_Array_Element = 0;
-			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Descriptor_Type = RHI_DESCRIPTOR_TYPE::RHI_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			Post_Process_Per_Frame_Input_Write_Descriptor_Set.Image_Infos = &Per_Frame_Scene_Input_Attachment_Infos;
-		}
-		const vector<const RHI_Write_Descriptor_Set*> Write_Descriptor_Sets{ &Post_Process_Per_Frame_Input_Write_Descriptor_Set };
-	
-		this->m_RHI->Update_Descriptor_Sets(&Write_Descriptor_Sets, nullptr);
 	}
 
 	void FXAA_Pass::Setup_Pipeline(void) {
@@ -338,6 +342,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		this->Setup_Descriptor_Set_Layout();
 		this->Setup_Pipeline();
 		this->Setup_Descriptor_Set();
+
+		this->Update_After_Frame_Buffer_ReCreate(this->m_Input_Attachment);
 	}
 
 	void FXAA_Pass::Post_Inittialize(shared_ptr<Render_Pass_Post_Initialize_Info> Init_Info)

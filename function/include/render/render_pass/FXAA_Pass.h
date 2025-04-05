@@ -34,6 +34,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		~FXAA_Pass(void) = default;
 
 	public:
+		void Update_After_Frame_Buffer_ReCreate(RHI_Image_View* Input_Attachment);
+
+	public:
 
 	private:
 		void Setup_Descriptor_Set_Layout(void);
