@@ -10,6 +10,8 @@
 #include "math/Vector4.h"
 #include "math/Random.h"
 
+#include "particle/Particle_Desc.h"
+
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/render_pass/Render_Pass.h"
@@ -19,6 +21,7 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	using std::vector;
 	using std::unique_ptr;
 	using std::shared_ptr;
 
@@ -35,6 +38,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_RHI::RHI_Image_View;
 	using NameSpace_RHI::RHI_Device_Memory;
 	using NameSpace_RHI::RHI_Fence;
+
+	using NameSpace_Particle::Particle_Emitter_Desc;
 
 
 	using NameSpace_Render_System::Patricle_Collision_Pre_Frame_Storage_Buffer_Object;
@@ -146,6 +151,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		void Setup_Graphics_Pipeline(void);
 		void Setup_Compute_Pipeline(void);
 
+
+	public:
+		void Set_Emitter_Count(uint32_t Count);
+
+		void Create_Emitter(size_t Index, const Particle_Emitter_Desc& Desc);
+
 	private:
 		Default_RNG m_Random_Engine{};
 
@@ -181,6 +192,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		unique_ptr<RHI_Command_Buffer> m_Copy_Command_Buffer{ nullptr };
 		unique_ptr<RHI_Fence> m_Fence{ nullptr };
 
+		uint32_t m_Emitter_Count{ 0 };
+		vector<Particle_Emitter_Buffer> m_Emitter_Buffer_Bacher{};
 
 
 

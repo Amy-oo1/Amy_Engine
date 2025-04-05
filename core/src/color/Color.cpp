@@ -21,6 +21,10 @@ namespace NameSpace_Core::NameSpace_Color {
 		return this->m_Color;
 	}
 
+	Color::operator Vector3(void) const {
+		return Vector3{ this->m_Color[0],this->m_Color[1],this->m_Color[2] };
+	}
+
 	bool Color::operator==(const Color& other) const {
 		return this->m_Color == other.m_Color;
 	}

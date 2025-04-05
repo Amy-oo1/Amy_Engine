@@ -12,7 +12,7 @@
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Motor.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Skeleton_Mask.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Skeleton_Data.Generated_Serializer.h"
-#include "D:/Amy_Engine/core/include/meta/generated/Serializer/mesh.Generated_Serializer.h"
+#include "D:/Amy_Engine/core/include/meta/generated/Serializer/Mesh.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Mesh_Data.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Global_Particle.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Global_Rendering.Generated_Serializer.h"

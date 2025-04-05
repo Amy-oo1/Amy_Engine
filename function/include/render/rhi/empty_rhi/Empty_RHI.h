@@ -285,6 +285,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void ReCreate_SwapChain(void) = 0;
 
+		virtual void Prepare_Context(void) = 0;
+
 	private:
 
 

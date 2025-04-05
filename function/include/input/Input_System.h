@@ -4,6 +4,7 @@
 #include<limits>
 #include<memory>
 
+#include "math//Degree.h"
 #include "math/Radian.h"
 
 #include "render/window/Window_System.h"
@@ -12,6 +13,7 @@ namespace NameSpace_Function::Namespace_Input {
 
 	using std::shared_ptr;
 
+	using NameSpace_Core::NameSpace_Math::Degree;
 	using NameSpace_Core::NameSpace_Math::Radian;
 
 	using NameSpace_Render::NameSpace_Window::Window_System;
@@ -41,6 +43,12 @@ namespace NameSpace_Function::Namespace_Input {
 
 	public:
 		void Re_Binding(shared_ptr<Window_System> Window);
+
+		uint32_t Get_Game_Command(void)const;
+
+		void Calculate_Cursor_Delta_Angles(void);
+
+		void Tick(void);
 
 	private:
 		void On_Key(int Key, int Scancode, int Action, int Mods);

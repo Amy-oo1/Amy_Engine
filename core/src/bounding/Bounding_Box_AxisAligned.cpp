@@ -20,6 +20,11 @@ namespace NameSpace_Core::NameSpace_Bounding {
 			this->Add_Point(Point);
 	}
 
+	void AxisAligned_Bounding_Box::Add_Points(const vector<Vector3> Points) {
+		for (const auto& Point : Points)
+			this->Add_Point(Point);
+	}
+
 	void AxisAligned_Bounding_Box::Add_Bounding_Box(const AxisAligned_Bounding_Box& Box) {
 		*this = AxisAligned_Bounding_Box::Union(*this, Box);
 	}

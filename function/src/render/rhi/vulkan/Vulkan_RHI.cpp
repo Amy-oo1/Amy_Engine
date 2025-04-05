@@ -1567,6 +1567,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Command_Buffer_Allocate_Info, &this->m_VK_Command_Buffers[Index]));
 			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(this->m_VK_Command_Buffers[Index]);
 		}
+
+		this->m_Current_VK_Command_Buffer = this->m_VK_Command_Buffers.front();
 	}
 
 	unique_ptr<RHI_Command_Buffer> Vulkan_RHI::Begin_SingleTime_Command(void) {
@@ -2692,6 +2694,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 	void Vulkan_RHI::ReCreate_SwapChain(void)
 	{
+	}
+
+	void Vulkan_RHI::Prepare_Context(void) {
+		this->m_Current_VK_Command_Buffer = this->m_VK_Command_Buffers[this->m_Current_Frame_Index];
 	}
 
 

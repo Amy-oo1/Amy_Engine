@@ -13,16 +13,17 @@
 
 #include "render/window/Window_System.h"
 
-#include "default_editor/Editor_Scene_Manager.h"
-
+#include "global/Global_Systemer.h"
 #include "global/Global_Config.h"
 
+#include "default_editor/Editor_Scene_Manager.h"
 #include "default_editor/Editor_Global_Context.h"
 
 namespace NameSpace_Editor {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
 
+	using NameSpace_Function::Namespace_Global::Global_Systemer;
 
 	using NameSpace_Function::NameSpace_Render::NameSpace_Window::Window_System;
 
@@ -206,6 +207,34 @@ namespace NameSpace_Editor {
 		Ref_Window->Register_On_Mouse_Button_Func(std::bind(&Editor_Input_Manager::On_Mouse_Button, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 		Ref_Window->Register_On_Window_Close_Func(std::bind(&Editor_Input_Manager::On_Window_Closed, this));
 		Ref_Window->Register_On_Key_Func(std::bind(&Editor_Input_Manager::On_Key, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	}
+
+	void Editor_Input_Manager::Tick(float Delta_Time) {
+		this->Process_Editor_Command();
+	}
+
+	void Editor_Input_Manager::Process_Editor_Command(void) const {
+		float			camera_speed = this->m_Camera_Speed;
+		auto			editor_camera{ Editor_Global_Context::Get_Instance().m_Camera };
+		Quaternion		camera_rotate{ editor_camera->Get_Rotation().Inverse() };
+		Vector3			camera_relative_pos{ 0, 0, 0 };
+
+		if (to_underlying(EDITOR_COMMAND::CAMERA_FORWAD) & this->m_Editor_Command)
+			camera_relative_pos += camera_rotate * Vector3{ 0, camera_speed, 0 };
+		if (to_underlying(EDITOR_COMMAND::CAMERA_BACK) & this->m_Editor_Command)
+			camera_relative_pos += camera_rotate * Vector3{ 0, -camera_speed, 0 };
+		if (to_underlying(EDITOR_COMMAND::CAMERA_LEFT) & this->m_Editor_Command)
+			camera_relative_pos += camera_rotate * Vector3{ -camera_speed, 0, 0 };
+		if (to_underlying(EDITOR_COMMAND::CAMERA_RIGHT) & this->m_Editor_Command)
+			camera_relative_pos += camera_rotate * Vector3{ camera_speed, 0, 0 };
+		if (to_underlying(EDITOR_COMMAND::CAMERA_UP) & this->m_Editor_Command)
+			camera_relative_pos += Vector3{ 0, 0, camera_speed };
+		if (to_underlying(EDITOR_COMMAND::CAMERA_DOWN) & this->m_Editor_Command)
+			camera_relative_pos += Vector3{ 0, 0, -camera_speed };
+		if (to_underlying(EDITOR_COMMAND::DELETE_OBJECT) & this->m_Editor_Command)
+			Editor_Global_Context::Get_Instance().m_Scene_Manager->On_Delete_Selected_Object();
+
+		editor_camera->Move(camera_relative_pos);
 	}
 
 }// namespace NameSpace_Editor

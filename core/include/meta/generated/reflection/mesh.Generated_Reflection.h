@@ -7,7 +7,7 @@
 
 #include "meta/Reflection/Reflection_Instance.h"
 
-#include "D:/Amy_Engine/resource/include/components/mesh/mesh.h"
+#include "D:/Amy_Engine/resource/include/components/mesh/Mesh.h"
 
 namespace NameSpace_Resource::NameSpace_Components{
 
@@ -139,7 +139,7 @@ namespace NameSpace_Resource::NameSpace_Components{
         
 
             static const string Get_Meshes_Type_Spelling(void){
-                return string{"vector<Mesh_Sub>"};
+                return string{"vector<shared_ptr<Mesh_Sub>>"};
             }
 
             static const string Get_Meshes_Spelling(void){
@@ -151,11 +151,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                 return string{"Meshes"};
             }
 
-            static const vector<Mesh_Sub>& Get_Meshes_Attribute(shared_ptr<Mesh> Instance){
+            static const vector<shared_ptr<Mesh_Sub>>& Get_Meshes_Attribute(shared_ptr<Mesh> Instance){
                 return Instance->m_Meshes;
             }
 
-            static void Set_Field_Meshes_Attribute(shared_ptr<Mesh> Instance, const vector<Mesh_Sub>& Value){
+            static void Set_Field_Meshes_Attribute(shared_ptr<Mesh> Instance, const vector<shared_ptr<Mesh_Sub>>& Value){
                 Instance->m_Meshes=Value;
             }
 
@@ -164,7 +164,7 @@ namespace NameSpace_Resource::NameSpace_Components{
             }
 
                 static const string Get_Meshes_CPPVector_Element_Type_Spelling(void){
-                    return string {"Mesh_Sub"};
+                    return string {"shared_ptr<Mesh_Sub>"};
                 }
 
                 static const size_t Get_Meshes_CPPVector_Capacity(shared_ptr<Mesh> Instance){
@@ -175,11 +175,11 @@ namespace NameSpace_Resource::NameSpace_Components{
                     return Instance->m_Meshes.size();
                 }
 
-                static const Mesh_Sub& Get_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index){
+                static const shared_ptr<Mesh_Sub>& Get_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index){
                     return Instance->m_Meshes[Index];
                 }
 
-                static void Set_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index, const Mesh_Sub& Value){
+                static void Set_Meshes_CPPVector_Element(shared_ptr<Mesh> Instance, size_t Index, const shared_ptr<Mesh_Sub>& Value){
                     Instance->m_Meshes[Index]=Value;
                 }
 
@@ -187,7 +187,7 @@ namespace NameSpace_Resource::NameSpace_Components{
                     Instance->m_Meshes.reserve(Capacity);
                 }
 
-                static void Push_Back_Meshes_CPPVector(shared_ptr<Mesh> Instance, const Mesh_Sub& Value){
+                static void Push_Back_Meshes_CPPVector(shared_ptr<Mesh> Instance, const shared_ptr<Mesh_Sub>& Value){
                     Instance->m_Meshes.push_back(Value);
                 }
 

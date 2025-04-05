@@ -569,6 +569,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 	}
 
+	void Particle_Pass::Set_Emitter_Count(uint32_t Count) {
+		this->m_Emitter_Buffer_Bacher.clear();
+		this->m_Emitter_Buffer_Bacher.resize(this->m_Emitter_Count = Count);
+	}
+
+	void Particle_Pass::Create_Emitter(size_t Index, const Particle_Emitter_Desc& Desc) {
+		//TODO :
+	}
+
 	void Particle_Pass::Setup_Graphics_Pipeline(void) {
 		const vector<RHI_Descriptor_Set_Layout*> Descriptor_Set_Layouts{
 				this->m_Descriptors[2].Descriptor_Set_Layout.get(),

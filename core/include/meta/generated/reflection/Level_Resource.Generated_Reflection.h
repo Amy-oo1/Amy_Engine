@@ -86,7 +86,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             
 
             static const string Get_Objects_Type_Spelling(void){
-                return string{"vector<Object_Instance>"};
+                return string{"vector<shared_ptr<Object_Instance>>"};
             }
 
             static const string Get_Objects_Spelling(void){
@@ -98,11 +98,11 @@ namespace NameSpace_Resource::NameSpace_Common{
                 return string{"Objects"};
             }
 
-            static const vector<Object_Instance>& Get_Objects_Attribute(shared_ptr<Level_Resource> Instance){
+            static const vector<shared_ptr<Object_Instance>>& Get_Objects_Attribute(shared_ptr<Level_Resource> Instance){
                 return Instance->m_Objects;
             }
 
-            static void Set_Field_Objects_Attribute(shared_ptr<Level_Resource> Instance, const vector<Object_Instance>& Value){
+            static void Set_Field_Objects_Attribute(shared_ptr<Level_Resource> Instance, const vector<shared_ptr<Object_Instance>>& Value){
                 Instance->m_Objects=Value;
             }
 
@@ -111,7 +111,7 @@ namespace NameSpace_Resource::NameSpace_Common{
             }
 
                 static const string Get_Objects_CPPVector_Element_Type_Spelling(void){
-                    return string {"Object_Instance"};
+                    return string {"shared_ptr<Object_Instance>"};
                 }
 
                 static const size_t Get_Objects_CPPVector_Capacity(shared_ptr<Level_Resource> Instance){
@@ -122,11 +122,11 @@ namespace NameSpace_Resource::NameSpace_Common{
                     return Instance->m_Objects.size();
                 }
 
-                static const Object_Instance& Get_Objects_CPPVector_Element(shared_ptr<Level_Resource> Instance, size_t Index){
+                static const shared_ptr<Object_Instance>& Get_Objects_CPPVector_Element(shared_ptr<Level_Resource> Instance, size_t Index){
                     return Instance->m_Objects[Index];
                 }
 
-                static void Set_Objects_CPPVector_Element(shared_ptr<Level_Resource> Instance, size_t Index, const Object_Instance& Value){
+                static void Set_Objects_CPPVector_Element(shared_ptr<Level_Resource> Instance, size_t Index, const shared_ptr<Object_Instance>& Value){
                     Instance->m_Objects[Index]=Value;
                 }
 
@@ -134,7 +134,7 @@ namespace NameSpace_Resource::NameSpace_Common{
                     Instance->m_Objects.reserve(Capacity);
                 }
 
-                static void Push_Back_Objects_CPPVector(shared_ptr<Level_Resource> Instance, const Object_Instance& Value){
+                static void Push_Back_Objects_CPPVector(shared_ptr<Level_Resource> Instance, const shared_ptr<Object_Instance>& Value){
                     Instance->m_Objects.push_back(Value);
                 }
 

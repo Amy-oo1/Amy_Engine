@@ -67,11 +67,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	{
 		REFLECTION_BODY(Game_Object_Material_Desc);
 	private:
-		path m_Base_Color_Texture_URL;
-		path m_Metallic_Roughness_Texture_URL;
-		path m_Normal_Texture_URL;
-		path m_Occlusion_Texture_URL;
-		path m_Emissive_Texture_URL;
+		path m_Base_Color_URL;
+		path m_Metallic_Roughness_URL;
+		path m_Normal_URL;
+		path m_Occlusion_URL;
+		path m_Emissive_URL;
 		bool m_Is_With_Texture{ false };
 
 	};
@@ -91,10 +91,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		REFLECTION_BODY(Game_Object_Part_Desc);
 	private:
 		shared_ptr<Game_Object_Mesh_Desc> m_Mesh_Desc;
+		shared_ptr<Game_Object_Material_Desc> m_Material_Desc;
+		shared_ptr<Game_Object_Transform_Desc> m_Transform_Desc;
 		shared_ptr<Skeleton_Binding_Desc> m_Skeleton_Binding_Desc;
 		shared_ptr<Skeleton_Animation_Result> m_Skeleton_Animation_Result;
-		shared_ptr<Game_Object_Material_Desc> m_Material_Desc;
-		shared_ptr< Game_Object_Transform_Desc> m_Transform_Desc;
 		bool m_Is_With_Skeleton{ false };
 
 	};

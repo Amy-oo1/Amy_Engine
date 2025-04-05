@@ -123,6 +123,19 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	class Render_Swap_Context final {
+	private:
+		Render_Swap_Context(const Render_Swap_Context&) = delete;
+		Render_Swap_Context(Render_Swap_Context&&) = delete;
+
+		Render_Swap_Context& operator=(const Render_Swap_Context&) = delete;
+		Render_Swap_Context& operator=(Render_Swap_Context&&) = delete;
+
+	public:
+		Render_Swap_Context(void) = default;
+
+		~Render_Swap_Context(void) = default;
+
+
 	public:
 		enum class SWAPDATA_TYPE :uint32_t {
 			SWAPDATA_TYPE_LOGIC = 0,
@@ -130,7 +143,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			SWAPDATA_TYPE_COUNT
 		};
 
-		const Render_SwapData& Get_SwapData(SWAPDATA_TYPE Type) const;
+		//NOTE : You Should Use Get Func To Set Field
+		Render_SwapData& Get_SwapData(SWAPDATA_TYPE Type);
 
 		void Swap_Logic_Render_Data(void);
 

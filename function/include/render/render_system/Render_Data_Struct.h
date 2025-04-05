@@ -89,11 +89,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	};
 
 	struct Render_Material_Data final {
-		shared_ptr<Texture_Data> Base_Color_Texture;
-		shared_ptr<Texture_Data> Metallic_Roughness_Texture;
-		shared_ptr<Texture_Data> Normal_Texture;
-		shared_ptr<Texture_Data> Occlusion_Texture;
-		shared_ptr<Texture_Data> Emissive_Texture;
+		shared_ptr<Texture_Data> Base_Color_Texture{ nullptr };
+		shared_ptr<Texture_Data> Metallic_Roughness_Texture{ nullptr };
+		shared_ptr<Texture_Data> Normal_Texture{ nullptr };
+		shared_ptr<Texture_Data> Occlusion_Texture{ nullptr };
+		shared_ptr<Texture_Data> Emissive_Texture{ nullptr };
 
 	};
 

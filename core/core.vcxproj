@@ -184,7 +184,7 @@
     <ClInclude Include="include\meta\generated\reflection\Global_Rendering.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h" />
-    <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Mesh.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Object_Resource.Generated_Reflection.h" />

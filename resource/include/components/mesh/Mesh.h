@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<string>
+#include<memory>
 
 #include "meta/reflection/Reflection_Macro.h"
 
@@ -12,6 +13,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 	using std::vector;
 	using std::string;
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
 
@@ -43,7 +45,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Mesh(void) = default;
 
 	private:
-		vector<Mesh_Sub> m_Meshes{};
+		vector<shared_ptr<Mesh_Sub>> m_Meshes{};
 
 	};
 

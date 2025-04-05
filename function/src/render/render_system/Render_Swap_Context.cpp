@@ -82,7 +82,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		this->m_Emitter_Transform_Request->Add(Emitter_Transform_Desc);
 	}
 
-	const Render_SwapData& Render_Swap_Context::Get_SwapData(SWAPDATA_TYPE Type) const {
+	Render_SwapData& Render_Swap_Context::Get_SwapData(SWAPDATA_TYPE Type) {
 		switch (Type)
 		{
 		case SWAPDATA_TYPE::SWAPDATA_TYPE_LOGIC:

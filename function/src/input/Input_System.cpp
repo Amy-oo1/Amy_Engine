@@ -5,12 +5,15 @@
 #include "logger/System_Logger.h"
 
 #include "global/Global_Config.h"
+#include "global/Global_Systemer.h"
 
 //TODO input tounderying ,but it define in render/rhi/types.h
 
 namespace NameSpace_Function::Namespace_Input {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
+
+	using Namespace_Global::Global_Systemer;
 
 	Input_System::Input_System(shared_ptr<Window_System> Window)
 		:m_Binding_Window{ Window } {
@@ -26,6 +29,47 @@ namespace NameSpace_Function::Namespace_Input {
 		this->m_Binding_Window->Register_On_Key_Func(std::bind(&Input_System::On_Key, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 
 		this->m_Binding_Window->Register_On_Cursor_Pos_Func(std::bind(&Input_System::On_CUrsor_Pos, this, std::placeholders::_1, std::placeholders::_2));
+	}
+
+	uint32_t Input_System::Get_Game_Command(void) const {
+		return this->m_Game_Commands;
+	}
+
+	void Input_System::Calculate_Cursor_Delta_Angles(void) {
+		const auto& [Width, Height] {Global_Systemer::Get_Instance().Main_Window->Get_Window_Size()};
+		if (Width == 0 || Height == 0)
+			return;
+
+		const auto& FOV{ Global_Systemer::Get_Instance().Main_Render_System->Get_Render_Camera()->Get_FOV() };
+
+		auto Cursor_Delta_X{ Radian{Degree{this->m_Cursor_Delta_X}}.Get_Radian() };
+		auto Cursor_Delta_Y{ Radian{Degree{this->m_Cursor_Delta_Y}}.Get_Radian() };
+
+		this->m_Cursor_Yaw = Cursor_Delta_X * (FOV.Get_X() / static_cast<float>(Width));
+		this->m_Cursor_Pitch = Cursor_Delta_Y * (FOV.Get_Y() / static_cast<float>(Height));
+
+	}
+
+	void Input_System::Tick(void) {
+		if (this->m_Is_Focus_Mode) {
+			/*this->m_Cursor_Yaw += Radian(this->m_Cursor_Delta_X * 0.1f);
+			this->m_Cursor_Pitch += Radian(this->m_Cursor_Delta_Y * 0.1f);*/
+
+			this->Calculate_Cursor_Delta_Angles();
+
+			this->m_Game_Commands &= (std::numeric_limits<uint32_t>::max() ^ static_cast<uint32_t>(GAME_COMMAND::INVAID));
+		}
+		else {
+			this->m_Cursor_Yaw = Radian(0.0f);
+			this->m_Cursor_Pitch = Radian(0.0f);
+
+			this->m_Game_Commands |= static_cast<uint32_t>(GAME_COMMAND::INVAID);
+		}
+
+		this->m_Cursor_Delta_X = 0.0f;
+		this->m_Cursor_Delta_Y = 0.0f;
+	
+		System_Logger::Get_Instance().Log(System_Logger::Level::info, "Input_System::Tick : Cursor Yaw : {}, Cursor Pitch : {}", this->m_Cursor_Yaw.Get_Radian(), this->m_Cursor_Pitch.Get_Radian());
 	}
 
 	void Input_System::On_Key(int Key, int Scancode, int Action, int Mods)

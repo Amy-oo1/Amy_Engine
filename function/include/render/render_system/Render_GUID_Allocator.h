@@ -2,9 +2,11 @@
 
 #include<vector>
 #include<unordered_map>
+#include<utility>
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
+	using std::pair;
 	using std::vector;
 	using std::unordered_map;
 
@@ -47,12 +49,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			return this->m_Element_TO_GUID_Map.find(Element) != this->m_Element_TO_GUID_Map.end();
 		}
 
-		const T& Get_Element(const size_t Guid) const {
+		pair<const T&, bool> Get_Element(const size_t Guid) const {
 			auto Iter = this->m_GUID_To_Element_Map.find(Guid);
 			if (Iter != this->m_GUID_To_Element_Map.end())
-				return Iter->second;
+				return std::make_pair(Iter->second, true);
 
-			return T{};
+			return std::make_pair(T{}, false);
 		}
 
 		size_t Get_GUID(const T& Element) const {

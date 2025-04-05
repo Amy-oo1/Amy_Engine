@@ -150,11 +150,11 @@
 
             
 
-                Json_Context["Base_Color_Texture_URL"] = Serializer::Write(Instance.m_Base_Color_Texture_URL);
-                Json_Context["Metallic_Roughness_Texture_URL"] = Serializer::Write(Instance.m_Metallic_Roughness_Texture_URL);
-                Json_Context["Normal_Texture_URL"] = Serializer::Write(Instance.m_Normal_Texture_URL);
-                Json_Context["Occlusion_Texture_URL"] = Serializer::Write(Instance.m_Occlusion_Texture_URL);
-                Json_Context["Emissive_Texture_URL"] = Serializer::Write(Instance.m_Emissive_Texture_URL);
+                Json_Context["Base_Color_URL"] = Serializer::Write(Instance.m_Base_Color_URL);
+                Json_Context["Metallic_Roughness_URL"] = Serializer::Write(Instance.m_Metallic_Roughness_URL);
+                Json_Context["Normal_URL"] = Serializer::Write(Instance.m_Normal_URL);
+                Json_Context["Occlusion_URL"] = Serializer::Write(Instance.m_Occlusion_URL);
+                Json_Context["Emissive_URL"] = Serializer::Write(Instance.m_Emissive_URL);
                 Json_Context["Is_With_Texture"] = Serializer::Write(Instance.m_Is_With_Texture);
 
             return Json_Context;
@@ -163,11 +163,11 @@
         template<> inline Game_Object_Material_Desc& Serializer::Read<Game_Object_Material_Desc>(const JSON& Json_Context, Game_Object_Material_Desc &Instance){
             
 
-                Serializer::Read(Json_Context["Base_Color_Texture_URL"],Instance.m_Base_Color_Texture_URL);
-                Serializer::Read(Json_Context["Metallic_Roughness_Texture_URL"],Instance.m_Metallic_Roughness_Texture_URL);
-                Serializer::Read(Json_Context["Normal_Texture_URL"],Instance.m_Normal_Texture_URL);
-                Serializer::Read(Json_Context["Occlusion_Texture_URL"],Instance.m_Occlusion_Texture_URL);
-                Serializer::Read(Json_Context["Emissive_Texture_URL"],Instance.m_Emissive_Texture_URL);
+                Serializer::Read(Json_Context["Base_Color_URL"],Instance.m_Base_Color_URL);
+                Serializer::Read(Json_Context["Metallic_Roughness_URL"],Instance.m_Metallic_Roughness_URL);
+                Serializer::Read(Json_Context["Normal_URL"],Instance.m_Normal_URL);
+                Serializer::Read(Json_Context["Occlusion_URL"],Instance.m_Occlusion_URL);
+                Serializer::Read(Json_Context["Emissive_URL"],Instance.m_Emissive_URL);
                 Serializer::Read(Json_Context["Is_With_Texture"],Instance.m_Is_With_Texture);
 
             return Instance;
@@ -223,10 +223,10 @@
             
 
                 Json_Context["Mesh_Desc"] = Serializer::Write(Instance.m_Mesh_Desc);
-                Json_Context["Skeleton_Binding_Desc"] = Serializer::Write(Instance.m_Skeleton_Binding_Desc);
-                Json_Context["Skeleton_Animation_Result"] = Serializer::Write(Instance.m_Skeleton_Animation_Result);
                 Json_Context["Material_Desc"] = Serializer::Write(Instance.m_Material_Desc);
                 Json_Context["Transform_Desc"] = Serializer::Write(Instance.m_Transform_Desc);
+                Json_Context["Skeleton_Binding_Desc"] = Serializer::Write(Instance.m_Skeleton_Binding_Desc);
+                Json_Context["Skeleton_Animation_Result"] = Serializer::Write(Instance.m_Skeleton_Animation_Result);
                 Json_Context["Is_With_Skeleton"] = Serializer::Write(Instance.m_Is_With_Skeleton);
 
             return Json_Context;
@@ -236,10 +236,10 @@
             
 
                 Serializer::Read(Json_Context["Mesh_Desc"],Instance.m_Mesh_Desc);
-                Serializer::Read(Json_Context["Skeleton_Binding_Desc"],Instance.m_Skeleton_Binding_Desc);
-                Serializer::Read(Json_Context["Skeleton_Animation_Result"],Instance.m_Skeleton_Animation_Result);
                 Serializer::Read(Json_Context["Material_Desc"],Instance.m_Material_Desc);
                 Serializer::Read(Json_Context["Transform_Desc"],Instance.m_Transform_Desc);
+                Serializer::Read(Json_Context["Skeleton_Binding_Desc"],Instance.m_Skeleton_Binding_Desc);
+                Serializer::Read(Json_Context["Skeleton_Animation_Result"],Instance.m_Skeleton_Animation_Result);
                 Serializer::Read(Json_Context["Is_With_Skeleton"],Instance.m_Is_With_Skeleton);
 
             return Instance;

@@ -8,7 +8,9 @@
 #include "logger/System_Logger.h"
 #include "transform/Affine_Transform.h"
 
+#include "frame/components/transform/Transform_Component.h"
 #include "render/render_system/Render_Obejct.h"
+#include "render/render_system/Render_Swap_Context.h"
 
 #include "render/render_system/Render_Data_Struct.h"
 
@@ -25,9 +27,12 @@ namespace NameSpace_Editor {
 	using NameSpace_Core::NameSpace_Math::Radian;
 	using NameSpace_Core::NameSpace_Transform::Affine_Transform;
 
+	using NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform::Transform_Component;
 
 	using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Game_Object_Part_ID;
 	using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Mesh_Source_Desc;
+	using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Render_Swap_Context;
+	using NameSpace_Function::NameSpace_Render::NameSpace_Render_System::Game_Object_Desc;
 
 	using NameSpace_Function::Namespace_Global::Global_Systemer;
 
@@ -64,6 +69,28 @@ namespace NameSpace_Editor {
 			&this->m_Scale_Axis
 		);
 
+	}
+
+	void Editor_Scene_Manage::Tick(float Delta_Time) const {
+		auto Selected_Object{ this->Get_Selected_Object().lock() };
+		if (Selected_Object) {
+			shared_ptr<Transform_Component> Component{ Selected_Object->TryGet_Component<Transform_Component>(string{ "TransformComponent" }) };
+
+			if (Component)
+				Component->Set_Dirty_Flag(true);
+		}
+	}
+
+	weak_ptr<GObject> Editor_Scene_Manage::Get_Selected_Object(void) const {
+		if (GObject_ID_Allocator::INVALID_GOBJECT_ID != this->m_Selected_Object_ID) {
+			auto Level{ Global_Systemer::Get_Instance().World_Manager.Get_Current_Active_Level().lock() };
+			if (Level)
+				return  Level->Get_Object(this->m_Selected_Object_ID);
+			else
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Editor_Scene_Manage::Get_Selected_Object", "Level is not found");
+		}
+		else
+			return weak_ptr<GObject>{};
 	}
 
 	void Editor_Scene_Manage::Move_Entity(float New_Mouse_Pos_X, float New_Mouse_Pos_Y, float Last_Mouse_Pos_X, float Last_Mouse_Pos_Y, Vector2 Window_Pos, Vector2 Window_Size, size_t Cursor_On_Axis) {
@@ -222,6 +249,52 @@ namespace NameSpace_Editor {
 		}
 
 		this->m_Selected_Object_Transform = New_Model_Matrix;
+	}
+
+	void Editor_Scene_Manage::On_GObject_Selected(GObject_ID Selected_Object_ID) {
+
+		if (this->m_Selected_Object_ID == Selected_Object_ID)
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "Editor_Scene_Manage::On_GObject_Selected", "Selected Object ID is same");
+		else if (GObject_ID_Allocator::INVALID_GOBJECT_ID == Selected_Object_ID) {
+			this->m_Selected_Object_ID = Selected_Object_ID;
+
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Editor_Scene_Manage::On_GObject_Selected", "Selected Object ID is invalid");
+			return;
+		}
+		else if (GObject_ID_Allocator::INVALID_GOBJECT_ID != this->m_Selected_Object_ID) {
+			this->m_Selected_Object_ID = Selected_Object_ID;
+
+			auto Last_Selected_Object{ this->Get_Selected_Object().lock() };
+			if (Last_Selected_Object) {
+				auto Trans{ Last_Selected_Object->TryGet_Component<Transform_Component>(string{ "TransformComponent" }) };
+				if (Trans)
+					System_Logger::Get_Instance().Log(System_Logger::Level::info, "TUDO");
+				else
+					System_Logger::Get_Instance().Log(System_Logger::Level::err, "Editor_Scene_Manage::On_GObject_Selected", "Transform Component is not found");
+			}
+		}
+	}
+
+	void Editor_Scene_Manage::On_Delete_Selected_Object(void) {
+		auto Selected_Object{ this->Get_Selected_Object().lock() };
+
+		if (nullptr != Selected_Object) {
+			auto Level{ Global_Systemer::Get_Instance().World_Manager.Get_Current_Active_Level().lock() };
+
+			if (nullptr != Level) {
+				Level->Delete_Object(this->m_Selected_Object_ID);
+
+				auto& Swap_Conotext{ *Editor_Global_Context::Get_Instance().m_Render_System->Get_Render_Swap_Context() };
+				Swap_Conotext.Get_SwapData(Render_Swap_Context::SWAPDATA_TYPE::SWAPDATA_TYPE_LOGIC).Add_Delete_Game_Object(Game_Object_Desc{ Selected_Object->Get_ID(),{} });
+			}
+			else
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Editor_Input_Manager::On_Delete_Selected_Object", "Level is not found");
+		}
+		else {
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "No Object Selected");
+		}
+
+		this->On_GObject_Selected(GObject_ID_Allocator::INVALID_GOBJECT_ID);
 	}
 
 

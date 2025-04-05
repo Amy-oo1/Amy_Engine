@@ -29,8 +29,7 @@ int main(int argc, char** argv) {
 
 	NameSpace_Editor::Amy_Editor Editor{ std::make_unique<NameSpace_Function::Amy_Engine>(Argements) };
 
-
-
+	Editor.Run();
 
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();

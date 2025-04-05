@@ -4,6 +4,7 @@
 #include "math/Radian.h"
 #include "math/Utilities.h"
 
+#include<cmath>
 #include <algorithm>
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
@@ -92,7 +93,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	}
 
 	void Render_Camera::Set_FOV_X(float FOV) {
-		//TODO
+		this->m_FOV_X = std::clamp(FOV, Render_Camera::MIN_FLV, Render_Camera::MAX_FOV);
 	}
 
 	const Vector3 Render_Camera::Get_Position(void) const {

@@ -72,6 +72,30 @@ namespace NameSpace_Resource::NameSpace_Config {
 		return this->m_Editor_Font_URL;
 	}
 
+	const path Resource_Configer::Get_Default_World_Resource_URL(void) const {
+		return this->m_Default_World_Resource_URL;
+	}
+
+	const path Resource_Configer::Get_Default_Base_Color_Image_URL(void) const {
+		return this->m_Default_Base_Color_Image_URL;
+	}
+
+	const path Resource_Configer::Get_Default_Metallic_Roughness_Image_URL(void) const {
+		return this->m_Default_Metallic_Roughness_Image_URL;
+	}
+
+	const path Resource_Configer::Get_Default_Normal_Image_URL(void) const {
+		return this->m_Default_Normal_Image_URL;
+	}
+
+	const path Resource_Configer::Get_Default_Occlusion_Image_URL(void) const{
+		return this->m_Default_Occlusion_Image_URL;
+	}
+
+	const path Resource_Configer::Get_Default_Emissive_Image_URL(void) const{
+		return this->m_Default_Emissive_Image_URL;
+	}
+
 	Resource_Configer& Resource_Configer::Get_Instance(void) {
 		static Resource_Configer Instance{ s_Config_File_Name };//TODO : change this to a config file
 

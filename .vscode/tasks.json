@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build with MSVC", // 任务名称（自定义）
+      "type": "shell", // 任务类型：在终端中运行
+      "command": "cl.exe", // 调用 MSVC 编译器
+      "args": [ // 编译参数
+        "/EHsc", // 启用 C++ 异常处理
+        "/Fe:${fileDirname}\\${fileBasenameNoExtension}.exe", // 输出 exe 路径
+        "${file}" // 当前打开的源文件
+      ],
+      "group": { // 任务分组
+        "kind": "build", // 归类到“编译”任务组
+        "isDefault": true // 设为默认编译任务（Ctrl+Shift+B 直接触发）
+      },
+      "problemMatcher": [], // 错误匹配器（留空表示不处理错误格式）
+      "options": { // 终端环境配置
+        "shell": {
+          "executable": "cmd.exe", // 使用 Windows 命令行
+          "args": [
+            "/C", // 执行命令后关闭终端
+            // 加载 MSVC 环境变量（关键步骤！）
+            "\"C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build/vcvarsall.bat\" x64",
+            "&&" // 环境变量加载后继续执行后续命令
+          ]
+        }
+      }
+    }
+  ]
+}

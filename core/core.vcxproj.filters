@@ -198,9 +198,6 @@
     <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\reflection\mesh.Generated_Reflection.h">
-      <Filter>include\meta\generated\reflection</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="include\utilities\Cpp_Lib_Facility.h">
       <Filter>include\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Mesh.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

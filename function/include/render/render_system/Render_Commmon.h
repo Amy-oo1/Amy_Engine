@@ -150,7 +150,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Matrix4x4 Prjo_View_Matrix;
 		Vector3 Right_Direction;
 		Vector3 Up_Direction;
-		Vector3 Foward_Position;
+		Vector3 Forward_Direction;
 	};
 
 	struct alignas(16)

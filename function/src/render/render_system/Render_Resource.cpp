@@ -6,14 +6,20 @@
 
 #include "logger/System_Logger.h"
 
+#include "math/Constant.h"
+
 #include "global/Global_Rendering.h"
 #include "meta/generated/reflection/Global_Rendering.Generated_Reflection.h"
 
 #include "render/rhi/vulkan/Vulkan_RHI.h"
 
+#include "render/render_system/Render_Scene.h"
+
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using NameSpace_Core::NameSpace_Logger::System_Logger;
+
+	using NameSpace_Core::NameSpace_Math::Math_PI;
 
 	using NameSpace_Resource::NameSpace_Global::SkyBox_Irradiance_Map;
 	using NameSpace_Resource::NameSpace_Global::SkyBox_Specular_Map;
@@ -1099,8 +1105,49 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		this->Get_OR_Create_Vulkan_Material(RHI, Render_Entity, Material_Data);
 	}
 
-	void Render_Resource::Updata_Per_Frame_Buffer(shared_ptr<Render_Camera> Camera) {
-		//TODO : Update Per Frame Buffer
+	void Render_Resource::Updata_Per_Frame_Buffer(shared_ptr<Render_Scene> Scene, shared_ptr<Render_Camera> Camera) {
+
+		Matrix4x4 View_Matrix{ Camera->Get_View_Matrix() };
+		Matrix4x4 Proj_Matrix{ Camera->Get_Projection_Matrix() };
+		Matrix4x4 View_Proj_Matrix{ Proj_Matrix * View_Matrix };
+		Vector3 Camera_Position{ Camera->Get_Position() };
+
+		Vector3 Ambient_Light{ static_cast<Vector3>(Scene->m_Ambient_Light) };
+		uint32_t Point_Light_Num{ static_cast<uint32_t>(Scene->m_Point_Light_List.m_Light.size()) };
+
+		this->m_Mesh_Per_Frame_Storage_Buffer_Object.Proj_View_Matrix = View_Proj_Matrix;
+		this->m_Mesh_Per_Frame_Storage_Buffer_Object.Camera_Position = Camera_Position;
+		this->m_Mesh_Per_Frame_Storage_Buffer_Object.Ambient_Light = Ambient_Light;
+		this->m_Mesh_Per_Frame_Storage_Buffer_Object.Point_Light_Num = Point_Light_Num;
+
+		this->m_Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object.Point_Light_Num = Point_Light_Num;
+
+		this->m_Particle_Collision_Pre_Frame_Storage_Buffer_Object.View_Matrix = View_Matrix;
+		this->m_Particle_Collision_Pre_Frame_Storage_Buffer_Object.Proj_View_Matrix = View_Proj_Matrix;
+		this->m_Particle_Collision_Pre_Frame_Storage_Buffer_Object.Proj_Inv_Matrix = Proj_Matrix.Inverse();
+
+		for (uint32_t Index = 0; Index < Point_Light_Num; ++Index) {
+			Vector3 Point_Light_Position{ Scene->m_Point_Light_List.m_Light[Index].Position };
+			Vector3 Position_Light_Intensity{ Scene->m_Point_Light_List.m_Light[Index].Flux / (4.f * Math_PI) };
+
+			float Point_Light_Radius{ Scene->m_Point_Light_List.m_Light[Index].Calculate_Radius() };
+
+			this->m_Mesh_Per_Frame_Storage_Buffer_Object.Scene_Point_Lights[Index].Position = Point_Light_Position;
+			this->m_Mesh_Per_Frame_Storage_Buffer_Object.Scene_Point_Lights[Index].Intensity = Position_Light_Intensity;
+			this->m_Mesh_Per_Frame_Storage_Buffer_Object.Scene_Point_Lights[Index].Radius = Point_Light_Radius;
+
+			this->m_Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object.Point_Lights_Position_And_Radius[Index] = Vector4{ Point_Light_Position, Point_Light_Radius };
+		}
+
+		this->m_Mesh_Per_Frame_Storage_Buffer_Object.m_Scene_Directional_Light.Direction = Scene->m_Directional_Light.Direction.Normalize();
+		this->m_Mesh_Per_Frame_Storage_Buffer_Object.m_Scene_Directional_Light.Color = static_cast<Vector3>(Scene->m_Directional_Light.m_Color);
+
+		this->m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object.Proj_View_Matrix = View_Proj_Matrix;
+
+		this->m_Particle_Billboard_Per_Frame_Storage_Buffer_Object.Prjo_View_Matrix = View_Proj_Matrix;
+		this->m_Particle_Billboard_Per_Frame_Storage_Buffer_Object.Right_Direction = Camera->Get_Right();
+		this->m_Particle_Billboard_Per_Frame_Storage_Buffer_Object.Forward_Direction = Camera->Get_Forward();
+		this->m_Particle_Billboard_Per_Frame_Storage_Buffer_Object.Up_Direction = Camera->Get_Up();
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

@@ -14,11 +14,13 @@
 #include "math/Vector2.h"
 #include"math/Vector3.h"
 #include"math/Vector4.h"
+#include "math/Matrix4x4.h"
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
 #include "render/rhi/vulkan/Vulkan_RHI_Resource.h"
+
 #include "render/render_system/Render_Data_Struct.h"
 #include "render/render_system/Render_Commmon.h"
 #include "render/render_system/Render_Mesh.h"
@@ -26,6 +28,10 @@
 
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
+
+	//TODO :Remove
+	class Render_Scene;
+
 
 	using std::tuple;
 	using std::array;
@@ -37,6 +43,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Core::NameSpace_Math::Vector2;
 	using NameSpace_Core::NameSpace_Math::Vector3;
 	using NameSpace_Core::NameSpace_Math::Vector4;
+	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 
 	using NameSpace_RHI::RHI_FORMAT;
 
@@ -231,6 +238,17 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		Global_Render_Resource m_Global_Render_Resource;
 
+		Mesh_Per_Frame_Storage_Buffer_Object m_Mesh_Per_Frame_Storage_Buffer_Object;
+		Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object m_Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object;
+		Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object m_Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
+
+		Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object m_Mesh_Inefficient_Pick_Per_Frame_Storage_Buffer_Object;
+		
+		Particle_Billboard_Per_Frame_Storage_Buffer_Object m_Particle_Billboard_Per_Frame_Storage_Buffer_Object;
+		Patricle_Collision_Pre_Frame_Storage_Buffer_Object m_Particle_Collision_Pre_Frame_Storage_Buffer_Object;
+
+		Axis_Storage_Buffer_Object m_Axis_Storage_Buffer_Object;
+
 		unordered_map<size_t, Vulkan_Mesh> m_Vulkan_Mesh_Map;
 		unordered_map<size_t, Vulkan_PBR_Material> m_Vulkan_PBR_Material_Map;
 
@@ -269,7 +287,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 
 		void Updata_Per_Frame_Buffer(
-			//TODO
+			shared_ptr<Render_Scene> Scene,
 			shared_ptr<Render_Camera> Camera
 		) override;
 

@@ -2,11 +2,13 @@
 
 #include<cstddef>
 
+#include "math/Vector3.h"
 #include "math/Vector4.h"
 
 namespace NameSpace_Core::NameSpace_Color {
 
-	using NameSpace_Core::NameSpace_Math::Vector4;
+	using NameSpace_Math::Vector3;
+	using NameSpace_Math::Vector4;
 
 	class Color final {
 	public:
@@ -27,6 +29,7 @@ namespace NameSpace_Core::NameSpace_Color {
 		Color& operator=(const Vector4& Val);
 
 		explicit operator Vector4(void) const;
+		explicit operator Vector3(void) const;
 
 		bool operator==(const Color& other) const;
 		bool operator!=(const Color& other) const;

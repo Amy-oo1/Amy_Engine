@@ -49,6 +49,7 @@ namespace NameSpace_Editor {
 		void On_Scroll(double X_Offset, double Y_Offset);
 		void On_Window_Closed(void);
 
+		void On_Delete_Selected_Object(void);
 
 	public:
 		bool Is_Cursor_In_Rect(Vector2 Pos, Vector2 Size) const;
@@ -58,7 +59,13 @@ namespace NameSpace_Editor {
 
 		void Register_Input(void);
 
+		void Tick(float Delta_Time);
+
 	private:
+
+	private:
+		void Process_Editor_Command(void)const;
+
 		uint32_t m_Editor_Command{ 0 };
 
 		Vector2 Window_Pos{ Vector2::ZERO };

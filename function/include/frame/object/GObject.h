@@ -19,6 +19,7 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 	using std::string;
 	using std::vector;
 	using std::shared_ptr;
+	using std::static_pointer_cast;
 
 	using NameSpace_Platform::NameSpace_File::path;
 
@@ -38,6 +39,8 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	public:
 		GObject(void) = default;
+
+		GObject(const shared_ptr<Object_Instance>& Object_Instance_Res);
 
 		virtual ~GObject(void) = default;
 

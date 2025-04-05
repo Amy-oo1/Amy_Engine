@@ -33,6 +33,14 @@ namespace NameSpace_Resource::NameSpace_Config {
 		const path Get_Engine_Small_Icon_URL(void) const;
 		const path Get_Editor_Font_URL(void) const;
 
+		const path Get_Default_World_Resource_URL(void)const;
+
+		const path Get_Default_Base_Color_Image_URL(void) const;
+		const path Get_Default_Metallic_Roughness_Image_URL(void) const;
+		const path Get_Default_Normal_Image_URL(void) const;
+		const path Get_Default_Occlusion_Image_URL(void) const;
+		const path Get_Default_Emissive_Image_URL(void) const;
+
 	public:
 		static Resource_Configer& Get_Instance(void);
 
@@ -51,6 +59,14 @@ namespace NameSpace_Resource::NameSpace_Config {
 
 		path m_Global_Render_Resource_URL{};
 		path m_Global_Particle_Resource_URL{};
+
+		path m_Default_World_Resource_URL{};
+
+		path m_Default_Base_Color_Image_URL{};
+		path m_Default_Metallic_Roughness_Image_URL{};
+		path m_Default_Normal_Image_URL{};
+		path m_Default_Occlusion_Image_URL{};
+		path m_Default_Emissive_Image_URL{};
 
 	};
 

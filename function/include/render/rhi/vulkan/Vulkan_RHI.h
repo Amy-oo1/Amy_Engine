@@ -374,6 +374,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		array<unique_ptr<RHI_Command_Buffer>, s_Frames_In_Flight> m_RHI_Command_Buffers{ std::make_unique<Vulkan_Command_Buffer>(),std::make_unique<Vulkan_Command_Buffer>() ,std::make_unique<Vulkan_Command_Buffer>() };
 		array<VkCommandBuffer, s_Frames_In_Flight> m_VK_Command_Buffers{ nullptr,nullptr,nullptr };
+		VkCommandBuffer m_Current_VK_Command_Buffer{ nullptr };
 		uint32_t m_Current_Frame_Index{ 0 };
 
 		unique_ptr<RHI_Descriptor_Pool> m_Default_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
@@ -648,6 +649,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		void Initialize(void) override;
 
 		void ReCreate_SwapChain(void) override;
+
+		void Prepare_Context(void) override;
 
 	private:
 

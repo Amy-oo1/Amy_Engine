@@ -36,14 +36,24 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_World {
 	public:
 		~World_Manager(void) = default;
 
+
+	public:
+		weak_ptr<Level> Get_Current_Active_Level(void)const;
+
+		void Tick(float Delta_Time);
+
 	public:
 		static World_Manager& Get_Instance(void);
 
-	private:
-		path m_Current_World_URL;
+		void Load_World(const path& World_URL);
+		void Load_Level(const path& Level_URL);
 
-		shared_ptr<World_Resource> m_Current_World;
-		unordered_map<path, shared_ptr<Level>> m_Levels;
+
+	private:
+		path m_Current_World_URL{};
+
+		shared_ptr<World_Resource> m_Current_World_Resource{ nullptr };
+		unordered_map<path, shared_ptr<Level>> m_Levels{};
 		weak_ptr<Level> m_Current_Level;
 	};
 

@@ -5,7 +5,6 @@
 #include<unordered_map>
 #include<memory>
 
-
 #include "file/File_System.h"
 
 #include "bounding/Bounding_Box_AxisAligned.h"
@@ -17,6 +16,9 @@
 #include "render/render_system/Render_Swap_Context.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
+
+	//TODO : Remove
+	class Render_Scene;
 
 	using std::shared_ptr;
 	using std::unordered_map;
@@ -44,14 +46,16 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			Load_Texture(const path& Texture_URL, bool Is_SRGB = false);
 
 		const Render_Mesh_Data
-			Load_Mesh(const path& Mesh_URL)const;
+			Load_Mesh(const path& Mesh_URL, AxisAligned_Bounding_Box& Bounding_Box);
 
 		//TODO :
-		const Render_Material_Data
-			Load_Material(const path& Material_URL)const;
+		static const Render_Material_Data
+			Load_Material(const Material_Source_Desc& Sourec_Desc);
+
+		const AxisAligned_Bounding_Box& Get_Bounding_Box(const path& Mesh_URL);
 
 	private:
-		Static_Mesh_Data Load_Static_Mesh(const path& Mesh_URL, AxisAligned_Bounding_Box& Bounding_Box)const;
+		static Static_Mesh_Data Load_Static_Mesh(const path& Mesh_URL, AxisAligned_Bounding_Box& Bounding_Box);
 
 	private:
 		unordered_map<path, AxisAligned_Bounding_Box>
@@ -89,7 +93,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 
 		virtual void Updata_Per_Frame_Buffer(
-			//TODO
+			shared_ptr<Render_Scene> Scene,
 			shared_ptr<Render_Camera> Camera
 		) = 0;
 

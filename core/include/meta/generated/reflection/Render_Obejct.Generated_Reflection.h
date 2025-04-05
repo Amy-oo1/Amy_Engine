@@ -269,136 +269,136 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
 
         
 
-            static const string Get_Base_Color_Texture_URL_Type_Spelling(void){
+            static const string Get_Base_Color_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Base_Color_Texture_URL_Spelling(void){
-                return string{"m_Base_Color_Texture_URL"};
+            static const string Get_Base_Color_URL_Spelling(void){
+                return string{"m_Base_Color_URL"};
             }
 
 
-            static const string Get_Base_Color_Texture_URL_Display_Name(void){
-                return string{"Base_Color_Texture_URL"};
+            static const string Get_Base_Color_URL_Display_Name(void){
+                return string{"Base_Color_URL"};
             }
 
-            static const path& Get_Base_Color_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
-                return Instance->m_Base_Color_Texture_URL;
+            static const path& Get_Base_Color_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
+                return Instance->m_Base_Color_URL;
             }
 
-            static void Set_Field_Base_Color_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
-                Instance->m_Base_Color_Texture_URL=Value;
+            static void Set_Field_Base_Color_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
+                Instance->m_Base_Color_URL=Value;
             }
 
-            static const bool Is_Filed_Base_Color_Texture_URL_CPPVector(void){
+            static const bool Is_Filed_Base_Color_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Metallic_Roughness_Texture_URL_Type_Spelling(void){
+            static const string Get_Metallic_Roughness_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Metallic_Roughness_Texture_URL_Spelling(void){
-                return string{"m_Metallic_Roughness_Texture_URL"};
+            static const string Get_Metallic_Roughness_URL_Spelling(void){
+                return string{"m_Metallic_Roughness_URL"};
             }
 
 
-            static const string Get_Metallic_Roughness_Texture_URL_Display_Name(void){
-                return string{"Metallic_Roughness_Texture_URL"};
+            static const string Get_Metallic_Roughness_URL_Display_Name(void){
+                return string{"Metallic_Roughness_URL"};
             }
 
-            static const path& Get_Metallic_Roughness_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
-                return Instance->m_Metallic_Roughness_Texture_URL;
+            static const path& Get_Metallic_Roughness_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
+                return Instance->m_Metallic_Roughness_URL;
             }
 
-            static void Set_Field_Metallic_Roughness_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
-                Instance->m_Metallic_Roughness_Texture_URL=Value;
+            static void Set_Field_Metallic_Roughness_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
+                Instance->m_Metallic_Roughness_URL=Value;
             }
 
-            static const bool Is_Filed_Metallic_Roughness_Texture_URL_CPPVector(void){
+            static const bool Is_Filed_Metallic_Roughness_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Normal_Texture_URL_Type_Spelling(void){
+            static const string Get_Normal_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Normal_Texture_URL_Spelling(void){
-                return string{"m_Normal_Texture_URL"};
+            static const string Get_Normal_URL_Spelling(void){
+                return string{"m_Normal_URL"};
             }
 
 
-            static const string Get_Normal_Texture_URL_Display_Name(void){
-                return string{"Normal_Texture_URL"};
+            static const string Get_Normal_URL_Display_Name(void){
+                return string{"Normal_URL"};
             }
 
-            static const path& Get_Normal_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
-                return Instance->m_Normal_Texture_URL;
+            static const path& Get_Normal_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
+                return Instance->m_Normal_URL;
             }
 
-            static void Set_Field_Normal_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
-                Instance->m_Normal_Texture_URL=Value;
+            static void Set_Field_Normal_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
+                Instance->m_Normal_URL=Value;
             }
 
-            static const bool Is_Filed_Normal_Texture_URL_CPPVector(void){
+            static const bool Is_Filed_Normal_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Occlusion_Texture_URL_Type_Spelling(void){
+            static const string Get_Occlusion_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Occlusion_Texture_URL_Spelling(void){
-                return string{"m_Occlusion_Texture_URL"};
+            static const string Get_Occlusion_URL_Spelling(void){
+                return string{"m_Occlusion_URL"};
             }
 
 
-            static const string Get_Occlusion_Texture_URL_Display_Name(void){
-                return string{"Occlusion_Texture_URL"};
+            static const string Get_Occlusion_URL_Display_Name(void){
+                return string{"Occlusion_URL"};
             }
 
-            static const path& Get_Occlusion_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
-                return Instance->m_Occlusion_Texture_URL;
+            static const path& Get_Occlusion_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
+                return Instance->m_Occlusion_URL;
             }
 
-            static void Set_Field_Occlusion_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
-                Instance->m_Occlusion_Texture_URL=Value;
+            static void Set_Field_Occlusion_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
+                Instance->m_Occlusion_URL=Value;
             }
 
-            static const bool Is_Filed_Occlusion_Texture_URL_CPPVector(void){
+            static const bool Is_Filed_Occlusion_URL_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Emissive_Texture_URL_Type_Spelling(void){
+            static const string Get_Emissive_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_Emissive_Texture_URL_Spelling(void){
-                return string{"m_Emissive_Texture_URL"};
+            static const string Get_Emissive_URL_Spelling(void){
+                return string{"m_Emissive_URL"};
             }
 
 
-            static const string Get_Emissive_Texture_URL_Display_Name(void){
-                return string{"Emissive_Texture_URL"};
+            static const string Get_Emissive_URL_Display_Name(void){
+                return string{"Emissive_URL"};
             }
 
-            static const path& Get_Emissive_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
-                return Instance->m_Emissive_Texture_URL;
+            static const path& Get_Emissive_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance){
+                return Instance->m_Emissive_URL;
             }
 
-            static void Set_Field_Emissive_Texture_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
-                Instance->m_Emissive_Texture_URL=Value;
+            static void Set_Field_Emissive_URL_Attribute(shared_ptr<Game_Object_Material_Desc> Instance, const path& Value){
+                Instance->m_Emissive_URL=Value;
             }
 
-            static const bool Is_Filed_Emissive_Texture_URL_CPPVector(void){
+            static const bool Is_Filed_Emissive_URL_CPPVector(void){
                 return  false;
             }
 
@@ -537,60 +537,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
 
             
 
-            static const string Get_Skeleton_Binding_Desc_Type_Spelling(void){
-                return string{"shared_ptr<Skeleton_Binding_Desc>"};
-            }
-
-            static const string Get_Skeleton_Binding_Desc_Spelling(void){
-                return string{"m_Skeleton_Binding_Desc"};
-            }
-
-
-            static const string Get_Skeleton_Binding_Desc_Display_Name(void){
-                return string{"Skeleton_Binding_Desc"};
-            }
-
-            static const shared_ptr<Skeleton_Binding_Desc>& Get_Skeleton_Binding_Desc_Attribute(shared_ptr<Game_Object_Part_Desc> Instance){
-                return Instance->m_Skeleton_Binding_Desc;
-            }
-
-            static void Set_Field_Skeleton_Binding_Desc_Attribute(shared_ptr<Game_Object_Part_Desc> Instance, const shared_ptr<Skeleton_Binding_Desc>& Value){
-                Instance->m_Skeleton_Binding_Desc=Value;
-            }
-
-            static const bool Is_Filed_Skeleton_Binding_Desc_CPPVector(void){
-                return  false;
-            }
-
-            
-
-            static const string Get_Skeleton_Animation_Result_Type_Spelling(void){
-                return string{"shared_ptr<Skeleton_Animation_Result>"};
-            }
-
-            static const string Get_Skeleton_Animation_Result_Spelling(void){
-                return string{"m_Skeleton_Animation_Result"};
-            }
-
-
-            static const string Get_Skeleton_Animation_Result_Display_Name(void){
-                return string{"Skeleton_Animation_Result"};
-            }
-
-            static const shared_ptr<Skeleton_Animation_Result>& Get_Skeleton_Animation_Result_Attribute(shared_ptr<Game_Object_Part_Desc> Instance){
-                return Instance->m_Skeleton_Animation_Result;
-            }
-
-            static void Set_Field_Skeleton_Animation_Result_Attribute(shared_ptr<Game_Object_Part_Desc> Instance, const shared_ptr<Skeleton_Animation_Result>& Value){
-                Instance->m_Skeleton_Animation_Result=Value;
-            }
-
-            static const bool Is_Filed_Skeleton_Animation_Result_CPPVector(void){
-                return  false;
-            }
-
-            
-
             static const string Get_Material_Desc_Type_Spelling(void){
                 return string{"shared_ptr<Game_Object_Material_Desc>"};
             }
@@ -640,6 +586,60 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System{
             }
 
             static const bool Is_Filed_Transform_Desc_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Skeleton_Binding_Desc_Type_Spelling(void){
+                return string{"shared_ptr<Skeleton_Binding_Desc>"};
+            }
+
+            static const string Get_Skeleton_Binding_Desc_Spelling(void){
+                return string{"m_Skeleton_Binding_Desc"};
+            }
+
+
+            static const string Get_Skeleton_Binding_Desc_Display_Name(void){
+                return string{"Skeleton_Binding_Desc"};
+            }
+
+            static const shared_ptr<Skeleton_Binding_Desc>& Get_Skeleton_Binding_Desc_Attribute(shared_ptr<Game_Object_Part_Desc> Instance){
+                return Instance->m_Skeleton_Binding_Desc;
+            }
+
+            static void Set_Field_Skeleton_Binding_Desc_Attribute(shared_ptr<Game_Object_Part_Desc> Instance, const shared_ptr<Skeleton_Binding_Desc>& Value){
+                Instance->m_Skeleton_Binding_Desc=Value;
+            }
+
+            static const bool Is_Filed_Skeleton_Binding_Desc_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Skeleton_Animation_Result_Type_Spelling(void){
+                return string{"shared_ptr<Skeleton_Animation_Result>"};
+            }
+
+            static const string Get_Skeleton_Animation_Result_Spelling(void){
+                return string{"m_Skeleton_Animation_Result"};
+            }
+
+
+            static const string Get_Skeleton_Animation_Result_Display_Name(void){
+                return string{"Skeleton_Animation_Result"};
+            }
+
+            static const shared_ptr<Skeleton_Animation_Result>& Get_Skeleton_Animation_Result_Attribute(shared_ptr<Game_Object_Part_Desc> Instance){
+                return Instance->m_Skeleton_Animation_Result;
+            }
+
+            static void Set_Field_Skeleton_Animation_Result_Attribute(shared_ptr<Game_Object_Part_Desc> Instance, const shared_ptr<Skeleton_Animation_Result>& Value){
+                Instance->m_Skeleton_Animation_Result=Value;
+            }
+
+            static const bool Is_Filed_Skeleton_Animation_Result_CPPVector(void){
                 return  false;
             }
 

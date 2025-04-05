@@ -7,7 +7,7 @@
 #include "meta/Reflection/Reflection_Instance.h"
 
 
-#include "D:/Amy_Engine/resource/include/components/mesh/mesh.h"
+#include "D:/Amy_Engine/resource/include/components/mesh/Mesh.h"
 
     namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
 

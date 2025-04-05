@@ -2,6 +2,7 @@
 
 #include "meta/generated/reflection/Global_Rendering.Generated_Reflection.h"
 #include "meta/generated/reflection/Camera_Controller.Generated_Reflection.h"
+#include "meta/generated/reflection/Render_Obejct.Generated_Reflection.h"
 
 
 #include "config/Resource_Configer.h"
@@ -15,6 +16,7 @@
 #include "render/rhi/vulkan/Vulkan_RHI.h"
 
 #include "render/render_system/Render_Resource.h"
+#include "render/render_pass/Particle_Pass.h"
 #include "render/render_pass/Main_Camera_Pass.h"
 #include "render/render_system/Render_Pipeline.h"
 
@@ -32,13 +34,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Resource::NameSpace_Components::Reflection_Camera_Pose_Operator;
 	using NameSpace_Resource::NameSpace_Global::Reflection_Directional_Light_Operator;
 
-
 	using NameSpace_Resource::NameSpace_Config::Resource_Configer;
 	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
 
 	using NameSpace_RHI::NameSpace_Vulkan_RHI::Vulkan_RHI;
 	using NameSpace_RHI::RHI_Initialization_Info;
 
+	using NameSpace_Pass::Particle_Pass;
 	using NameSpace_Pass::Main_Camera_Pass;
 
 	using NameSpace_Editor::Editor_Translation_Axis;
@@ -144,6 +146,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return this->m_Render_Camera;
 	}
 
+	shared_ptr<Render_Swap_Context> Render_System::Get_Render_Swap_Context(void) const {
+		return this->m_Render_Swap_Context;
+	}
+
 	void Render_System::Set_Window_UI_System(shared_ptr<Window_UI> UI) const {
 		static_pointer_cast<Render_Pipeline>(this->m_Render_Pipeline)->Set_Window_UI_System(UI);
 	}
@@ -166,7 +172,172 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		);
 	}
 
-	void Render_System::Render(void) {
+	void Render_System::Swap_Logic_Render_Data(void) {
+		this->m_Render_Swap_Context->Swap_Logic_Render_Data();
 	}
+
+	void Render_System::Proccess_Swap_Data(void) {
+		auto& Swap_Data{ this->m_Render_Swap_Context->Get_SwapData(Render_Swap_Context::SWAPDATA_TYPE::SWAPDATA_TYPE_RENDER) };
+
+		if (Swap_Data.Level_Resource_Desc.has_value()) {
+			this->m_Render_Resource->Upload_Global_Render_Resource(this->m_RHI, Swap_Data.Level_Resource_Desc.value());
+			this->m_Render_Swap_Context->Reset_Level_Resource_SwapData();
+		}
+
+		if (Swap_Data.GO_Resource_Desc.has_value()) {
+			const auto& Object_Desc{ Swap_Data.GO_Resource_Desc->Get_Next_Process_Object() };
+
+			while (!Swap_Data.GO_Resource_Desc->Is_Empty()) {
+
+				for (size_t Part_Index = 0; Part_Index < Object_Desc.Get_Part_Descs().size(); ++Part_Index) {
+					const auto& Part_Desc{ Object_Desc.Get_Part_Descs()[Part_Index] };
+					Game_Object_Part_ID Part_ID{ Object_Desc.Get_ID(), static_cast<uint32_t>(Part_Index) };
+
+					Render_Entity Entity{};
+
+					//NOTE : Instance
+					bool Is_Entity_In_Scene{ false };
+					if (this->m_Render_Scene->Get_Instance_ID_Allocator()->Has_Element(Part_ID))
+						Is_Entity_In_Scene = true;
+
+					Entity.Instance_ID = this->m_Render_Scene->Get_Instance_ID_Allocator()->Allocate_GUID(Part_ID);
+					Entity.Model_Matrix = Reflection_Game_Object_Transform_Desc_Operator::Get_Transform_Attribute(Reflection_Game_Object_Part_Desc_Operator::Get_Transform_Desc_Attribute(Part_Desc));
+
+					//NOTYE: Add
+					this->m_Render_Scene->Add_Entity(Entity.Instance_ID, Object_Desc.Get_ID());
+
+					//NOTE : Mesh Data
+					Render_Mesh_Data Mesh_data{};
+					bool Is_Mesh_Loaded{ false };
+					{
+						const auto& Mesh_URL{ Reflection_Game_Object_Mesh_Desc_Operator::Get_Mesh_URL_Attribute(Reflection_Game_Object_Part_Desc_Operator::Get_Mesh_Desc_Attribute(Part_Desc)) };
+						if (!(Is_Mesh_Loaded = this->m_Render_Scene->Get_Mesh_Resource_ID_Allocator()->Has_Element(Mesh_Source_Desc{ Mesh_URL })))
+							Mesh_data = this->m_Render_Resource->Load_Mesh(Mesh_URL, Entity.Bounding_Box);
+						else
+							Entity.Bounding_Box = this->m_Render_Resource->Get_Bounding_Box(Mesh_URL);
+
+						Entity.Mesh_Resource_ID = this->m_Render_Scene->Get_Mesh_Resource_ID_Allocator()->Allocate_GUID(Mesh_Source_Desc{ Mesh_URL });
+
+						const auto& Skeleton_Animation_Result{ Reflection_Game_Object_Part_Desc_Operator::Get_Skeleton_Animation_Result_Attribute(Part_Desc) };
+						Entity.Enable_Vertex_Blending = Reflection_Skeleton_Animation_Result_Operator::Get_Transforms_CPPVector_Size(Skeleton_Animation_Result) > 1;
+						Entity.Joint_Matrices.reserve(Reflection_Skeleton_Animation_Result_Operator::Get_Transforms_CPPVector_Size(Skeleton_Animation_Result));
+						for (const auto& Transform : Reflection_Skeleton_Animation_Result_Operator::Get_Transforms_Attribute(Skeleton_Animation_Result))
+							Entity.Joint_Matrices.push_back(Reflection_Skeleton_Animation_Result_Transform_Operator::Get_Matrix_Attribute(Transform));
+					}
+
+					Render_Material_Data Material_data{};
+					bool Is_Material_Loaded{ false };
+					// NOTE : Material Data
+					{
+						const auto& Material_Desc = Reflection_Game_Object_Part_Desc_Operator::Get_Material_Desc_Attribute(Part_Desc);
+
+						Material_Source_Desc Sourec_Desc{};
+						if (Reflection_Game_Object_Material_Desc_Operator::Get_Is_With_Texture_Attribute(Material_Desc)) {
+							Sourec_Desc.Base_Color_URL = Reflection_Game_Object_Material_Desc_Operator::Get_Base_Color_URL_Attribute(Material_Desc);
+							Sourec_Desc.Metallic_Roughness_URL = Reflection_Game_Object_Material_Desc_Operator::Get_Metallic_Roughness_URL_Attribute(Material_Desc);
+							Sourec_Desc.Normal_URL = Reflection_Game_Object_Material_Desc_Operator::Get_Normal_URL_Attribute(Material_Desc);
+							Sourec_Desc.Occlusion_URL = Reflection_Game_Object_Material_Desc_Operator::Get_Occlusion_URL_Attribute(Material_Desc);
+							Sourec_Desc.Emissive_URL = Reflection_Game_Object_Material_Desc_Operator::Get_Emissive_URL_Attribute(Material_Desc);
+						}
+						else {
+							Sourec_Desc.Base_Color_URL = Resource_Configer::Get_Instance().Get_Default_Base_Color_Image_URL();
+							Sourec_Desc.Metallic_Roughness_URL = Resource_Configer::Get_Instance().Get_Default_Metallic_Roughness_Image_URL();
+							Sourec_Desc.Normal_URL = Resource_Configer::Get_Instance().Get_Default_Normal_Image_URL();
+							Sourec_Desc.Occlusion_URL = Resource_Configer::Get_Instance().Get_Default_Occlusion_Image_URL();
+							Sourec_Desc.Emissive_URL = Resource_Configer::Get_Instance().Get_Default_Emissive_Image_URL();
+						}
+
+						if (!(Is_Material_Loaded = this->m_Render_Scene->Get_Material_Resource_ID_Allocator()->Has_Element(Sourec_Desc)))
+							Material_data = Render_Resource_Base::Load_Material(Sourec_Desc);
+						Entity.Material_Resource_ID = this->m_Render_Scene->Get_Material_Resource_ID_Allocator()->Allocate_GUID(Sourec_Desc);
+					}
+
+
+					if (!Is_Mesh_Loaded)
+						this->m_Render_Resource->Upload_Game_Object_Render_Resource(this->m_RHI, Entity, Mesh_data);
+					if (!Is_Material_Loaded)
+						this->m_Render_Resource->Upload_Game_Object_Render_Resource(this->m_RHI, Entity, Material_data);
+
+					if (!Is_Entity_In_Scene)
+						this->m_Render_Scene->m_Render_Entities.emplace_back(Entity);
+					else {
+						for (auto& Loaded_Entity : this->m_Render_Scene->m_Render_Entities)
+							if (Loaded_Entity.Instance_ID == Entity.Instance_ID) {
+								Loaded_Entity = Entity;
+
+								break;
+							}
+					}
+				}
+
+				Swap_Data.GO_Resource_Desc->Pop();
+			}
+
+			this->m_Render_Swap_Context->Reset_Game_Object_Resource_SwapData();
+		}
+
+		if (Swap_Data.GO_Resource_To_Delete.has_value()) {
+			while (!Swap_Data.GO_Resource_To_Delete->Is_Empty()) {
+				this->m_Render_Scene->Delete_Entity(Swap_Data.GO_Resource_To_Delete->Get_Next_Process_Object().Get_ID());
+				Swap_Data.GO_Resource_To_Delete->Pop();
+			}
+
+			this->m_Render_Swap_Context->Reset_Game_Object_Resource_To_Delete_SwapData();
+		}
+
+		if (Swap_Data.Camera_SwapData.has_value()) {
+			if (Swap_Data.Camera_SwapData->FOV_X.has_value())
+				this->m_Render_Camera->Set_FOV_X(Swap_Data.Camera_SwapData->FOV_X.value());
+
+			if (Swap_Data.Camera_SwapData->Camera_Type.has_value())
+				this->m_Render_Camera->Set_Current_Camera_Type(Swap_Data.Camera_SwapData->Camera_Type.value());
+
+			if (Swap_Data.Camera_SwapData->View_Matrix.has_value())
+				this->m_Render_Camera->Set_Main_View_Matrix(Swap_Data.Camera_SwapData->View_Matrix.value());
+
+			this->m_Render_Swap_Context->Reset_Camera_SwapData();
+		}
+
+		if (Swap_Data.m_Particle_Submit_Request.has_value()) {
+			auto Ref_Particle_Pass{ static_pointer_cast<Particle_Pass>(static_pointer_cast<Render_Pipeline>(this->m_Render_Pipeline)->m_Particle_Pass) };
+
+			uint32_t Emitter_Count{ Swap_Data.m_Particle_Submit_Request->Get_Emitter_Count() };
+			Ref_Particle_Pass->Set_Emitter_Count(Emitter_Count);
+
+			for (uint32_t Index = 0; Index < Emitter_Count; ++Index) {
+				const auto& Emitter_Desc{ Swap_Data.m_Particle_Submit_Request->Get_Emitter_Desc(Index) };
+				Ref_Particle_Pass->Create_Emitter(Index, Emitter_Desc);
+			}
+			//TODO :
+			/*ef_Particle_Pass->Ini*/
+
+			this->m_Render_Swap_Context->Reset_Particle_Submit_Request_SwapData();
+		}
+
+		if (Swap_Data.m_Emitter_Tick_Request.has_value()) {
+			//TODO:
+
+			this->m_Render_Swap_Context->Reset_Emitter_Tick_Request_SwapData();
+		}
+
+		if (Swap_Data.m_Emitter_Transform_Request.has_value()) {
+			//TODO : 
+
+			this->m_Render_Swap_Context->Reset_Emitter_Transform_Request_SwapData();
+		}
+	}
+
+	void Render_System::Tick(float Delta_Time) {
+		this->Proccess_Swap_Data();
+
+		this->m_RHI->Prepare_Context();
+
+		this->m_Render_Resource->Updata_Per_Frame_Buffer(this->m_Render_Scene, this->m_Render_Camera);
+
+		this->m_Render_Scene->Updata_Visiable_Objects(static_pointer_cast<Render_Resource>(this->m_Render_Resource), this->m_Render_Camera);
+
+	}
+
+
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System

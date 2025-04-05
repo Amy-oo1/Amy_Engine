@@ -17,6 +17,10 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	using Namespace_Global::Global_Systemer;
 
+	GObject::GObject(const shared_ptr<Object_Instance>& Object_Instance_Res) {
+		this->Load(Object_Instance_Res);
+	}
+
 	void GObject::Tick(float Delta_Time) {
 		//TODO : Add Tick If
 		for (auto& Temp_Component : m_Components)

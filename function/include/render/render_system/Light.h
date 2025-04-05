@@ -28,7 +28,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	struct Directional_Light final {
 		Vector3 Direction;
-		Color Irradiance;
+		Color m_Color;
 
 	};
 

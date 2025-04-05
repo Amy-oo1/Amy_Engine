@@ -29,7 +29,6 @@
                 Json_Context["Position"] = Serializer::Write(Instance.m_Position);
                 Json_Context["Normal"] = Serializer::Write(Instance.m_Normal);
                 Json_Context["Tangent"] = Serializer::Write(Instance.m_Tangent);
-                Json_Context["Bitangent"] = Serializer::Write(Instance.m_Bitangent);
                 Json_Context["Texture_Coordinate"] = Serializer::Write(Instance.m_Texture_Coordinate);
 
             return Json_Context;
@@ -41,7 +40,6 @@
                 Serializer::Read(Json_Context["Position"],Instance.m_Position);
                 Serializer::Read(Json_Context["Normal"],Instance.m_Normal);
                 Serializer::Read(Json_Context["Tangent"],Instance.m_Tangent);
-                Serializer::Read(Json_Context["Bitangent"],Instance.m_Bitangent);
                 Serializer::Read(Json_Context["Texture_Coordinate"],Instance.m_Texture_Coordinate);
 
             return Instance;
@@ -58,9 +56,9 @@
 
         using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-        using NameSpace_Resource::NameSpace_Components::Meah_SkeletonBinding;
+        using NameSpace_Resource::NameSpace_Components::Meah_Skeleton_Binding;
 
-        template<> inline const JSON Serializer::Write<Meah_SkeletonBinding>(const Meah_SkeletonBinding& Instance){
+        template<> inline const JSON Serializer::Write<Meah_Skeleton_Binding>(const Meah_Skeleton_Binding& Instance){
             JSON Json_Context { JSON::object() };
 
             
@@ -71,7 +69,7 @@
             return Json_Context;
         }
 
-        template<> inline Meah_SkeletonBinding& Serializer::Read<Meah_SkeletonBinding>(const JSON& Json_Context, Meah_SkeletonBinding &Instance){
+        template<> inline Meah_Skeleton_Binding& Serializer::Read<Meah_Skeleton_Binding>(const JSON& Json_Context, Meah_Skeleton_Binding &Instance){
             
 
                 Serializer::Read(Json_Context["Bone_Indices"],Instance.m_Bone_Indices);
@@ -98,9 +96,9 @@
 
             
 
-                Json_Context["Vertices_buffer"] = Serializer::Write(Instance.m_Vertices_buffer);
+                Json_Context["Vertices_Buffer"] = Serializer::Write(Instance.m_Vertices_Buffer);
                 Json_Context["Indices_Buffer"] = Serializer::Write(Instance.m_Indices_Buffer);
-                Json_Context["SkeletonBindings"] = Serializer::Write(Instance.m_SkeletonBindings);
+                Json_Context["Skeleton_Bindings"] = Serializer::Write(Instance.m_Skeleton_Bindings);
 
             return Json_Context;
         }
@@ -108,9 +106,9 @@
         template<> inline Mesh_Data& Serializer::Read<Mesh_Data>(const JSON& Json_Context, Mesh_Data &Instance){
             
 
-                Serializer::Read(Json_Context["Vertices_buffer"],Instance.m_Vertices_buffer);
+                Serializer::Read(Json_Context["Vertices_Buffer"],Instance.m_Vertices_Buffer);
                 Serializer::Read(Json_Context["Indices_Buffer"],Instance.m_Indices_Buffer);
-                Serializer::Read(Json_Context["SkeletonBindings"],Instance.m_SkeletonBindings);
+                Serializer::Read(Json_Context["Skeleton_Bindings"],Instance.m_Skeleton_Bindings);
 
             return Instance;
         }

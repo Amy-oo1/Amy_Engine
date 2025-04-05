@@ -2,6 +2,7 @@
 
 #include<string>
 #include<vector>
+#include<memory>
 
 #include "meta/reflection/Reflection_Macro.h"
 
@@ -12,6 +13,7 @@ namespace NameSpace_Resource::NameSpace_Common {
 
 	using std::string;
 	using std::vector;
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Math::Vector3;
 
@@ -28,7 +30,7 @@ namespace NameSpace_Resource::NameSpace_Common {
 		Vector3 m_Gravity{ 0.f, 0.f, -9.8f };
 
 		string m_Character_Name;
-		vector<Object_Instance> m_Objects;
+		vector<shared_ptr<Object_Instance>> m_Objects;
 
 	};
 

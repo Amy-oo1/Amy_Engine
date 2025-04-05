@@ -38,4 +38,21 @@ namespace NameSpace_Editor {
 		this->m_Editor_Tick_Component_Type.emplace(Name);
 	}
 
+	void Amy_Editor::Run(void) {
+		float Delta_Time{};
+
+		auto& Ref_Editor_Scene_Manage{ *Editor_Global_Context::Get_Instance().m_Scene_Manager };
+		auto& Ref_Editor_Input_Manager{ *Editor_Global_Context::Get_Instance().m_Input_Manager };
+
+		while (true) {
+			Delta_Time = this->m_Engine->Calculate_Delta_Time();
+
+			Ref_Editor_Scene_Manage.Tick(Delta_Time);
+			Ref_Editor_Input_Manager.Tick(Delta_Time);
+
+			if (!this->m_Engine->Tick_One_Frame(Delta_Time))
+				break;
+		}
+	}
+
 }// namespace NameSpace_Editor

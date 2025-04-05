@@ -2,8 +2,11 @@
 
 #include "meta/reflection/Reflection_Macro.h"
 
-#include<vector>
+#include<cstdint>
 #include<string>
+#include<array>
+#include<vector>
+#include<memory>
 
 #include "math/Vector2.h"
 #include "math/Vector3.h"
@@ -12,8 +15,10 @@
 
 namespace NameSpace_Resource::NameSpace_Components {
 
-	using std::vector;
 	using std::string;
+	using std::array;
+	using std::vector;
+	using std::shared_ptr;
 
 	using NameSpace_Core::NameSpace_Math::Vector2;
 	using NameSpace_Core::NameSpace_Math::Vector3;
@@ -33,23 +38,23 @@ namespace NameSpace_Resource::NameSpace_Components {
 		Vector3 m_Position{ Vector3::ZERO };
 		Vector3 m_Normal{ Vector3::UNIT_Z };
 		Vector3 m_Tangent{ Vector3::UNIT_X };
-		Vector3 m_Bitangent{ Vector3::UNIT_Y };
-		Vector2 m_Texture_Coordinate{ Vector2::ZERO };
+		//Vector3 m_Bitangent{ Vector3::UNIT_Y };
+		array<size_t, 2> m_Texture_Coordinate{};
 
 	};
 
-	REFLECTION_HEADER(Meah_SkeletonBinding);
-	REFLECTION_CLASS(Meah_SkeletonBinding, All)
+	REFLECTION_HEADER(Meah_Skeleton_Binding);
+	REFLECTION_CLASS(Meah_Skeleton_Binding, All)
 	{
-		REFLECTION_BODY(Meah_SkeletonBinding);
+		REFLECTION_BODY(Meah_Skeleton_Binding);
 	public:
-		Meah_SkeletonBinding(void) = default;
+		Meah_Skeleton_Binding(void) = default;
 
-		~Meah_SkeletonBinding(void) = default;
+		~Meah_Skeleton_Binding(void) = default;
 	private:
-		vector<int> m_Bone_Indices{ -1,-1,-1,-1 };
+		array<size_t, 4> m_Bone_Indices{};
 		Vector4 m_Weights{ Vector4::ZERO };
-		
+
 	};
 
 	REFLECTION_HEADER(Mesh_Data);
@@ -62,9 +67,9 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Mesh_Data(void) = default;
 
 	private:
-		vector<Mesh_Vertex> m_Vertices_buffer{};
+		vector<shared_ptr<Mesh_Vertex>> m_Vertices_Buffer{};
 		vector<size_t> m_Indices_Buffer{};
-		vector<Meah_SkeletonBinding> m_SkeletonBindings{};
+		vector<shared_ptr<Meah_Skeleton_Binding>> m_Skeleton_Bindings{};
 
 	};
 }// namespace NameSpace_Resource::NameSpace_Components

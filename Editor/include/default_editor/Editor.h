@@ -41,6 +41,8 @@ namespace NameSpace_Editor {
 	public:
 		void Register_Editor_Tick_Component(const string& Name);
 
+		void Run(void);
+
 	public:
 		unordered_set<string> m_Editor_Tick_Component_Type{};
 

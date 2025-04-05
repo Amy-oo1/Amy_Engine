@@ -172,8 +172,9 @@ Parser_Header.o: \
   D:\Amy_Engine\resource\include\components\motor\Motor.h \
   D:\Amy_Engine\resource\include\components\skeleton\Skeleton_Mask.h \
   D:\Amy_Engine\resource\include\components\skeleton\Skeleton_Data.h \
-  D:\Amy_Engine\resource\include\components\mesh\mesh.h \
+  D:\Amy_Engine\resource\include\components\mesh\Mesh.h \
   D:\Amy_Engine\resource\include\components\mesh\Mesh_Data.h \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\array \
   D:\Amy_Engine\resource\include\global\Global_Particle.h \
   D:\Amy_Engine\resource\include\global\Global_Rendering.h \
   D:\Amy_Engine\resource\include\common\Object_Resource.h \

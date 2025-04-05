@@ -1,11 +1,13 @@
 #pragma once
 
+#include<vector>
 #include<initializer_list>
 
 #include "math/Head_Math.h"
 
 namespace NameSpace_Core::NameSpace_Bounding {
 
+	using std::vector;
 	using std::initializer_list;
 
 	using NameSpace_Math::Vector3;
@@ -27,6 +29,7 @@ namespace NameSpace_Core::NameSpace_Bounding {
 	public:
 		void Add_Point(const Vector3& Point);
 		void Add_Point(const initializer_list<Vector3>& Points);
+		void Add_Points(const vector<Vector3> Points);
 
 		void Add_Bounding_Box(const AxisAligned_Bounding_Box& Box);
 

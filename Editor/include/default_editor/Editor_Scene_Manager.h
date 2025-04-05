@@ -1,6 +1,7 @@
 #pragma once
 
 #include<cstdint>
+#include<string>
 #include<memory>
 
 #include "math/Vector2.h"
@@ -18,7 +19,9 @@
 
 namespace NameSpace_Editor {
 
+	using std::string;
 	using std::shared_ptr;
+	using std::weak_ptr;
 
 	using NameSpace_Core::NameSpace_Math::Vector2;
 	using NameSpace_Core::NameSpace_Math::Vector3;
@@ -56,7 +59,11 @@ namespace NameSpace_Editor {
 		void UpData_Axis_Resource(void);
 
 
+		void Tick(float Delta_Time) const;
+
 	public:
+		weak_ptr<GObject> Get_Selected_Object(void)const;
+
 
 
 		void Move_Entity(
@@ -68,6 +75,13 @@ namespace NameSpace_Editor {
 			Vector2 Window_Size,
 			size_t Cursor_On_Axis
 		);
+
+		void On_GObject_Selected(GObject_ID Selected_Object_ID);
+		void On_Delete_Selected_Object(void);
+
+	private:
+
+
 
 	private:
 		Editor_Translation_Axis m_Translation_Axis{};

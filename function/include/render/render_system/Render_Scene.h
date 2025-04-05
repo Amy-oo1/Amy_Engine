@@ -1,7 +1,9 @@
 #pragma once
 
+#include<cstdint>
 #include<optional>
 #include<vector>
+#include<unordered_map>
 #include<memory>
 
 #include "file/File_System.h"
@@ -21,6 +23,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::optional;
 	using std::vector;
+	using std::unordered_map;
 
 	using std::shared_ptr;
 
@@ -61,6 +64,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		void Set_Visiable_Nodes(void);
 
+		void Add_Entity(size_t Instance_ID,GObject_ID GO_ID);
+		void Delete_Entity(GObject_ID ID);
+
 
 
 	private:
@@ -81,7 +87,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 			shared_ptr<Render_Resource> Resource,
 			shared_ptr<Render_Camera> Camera);
 
-
+		void Updata_Visiable_Objects_Particle(
+			shared_ptr<Render_Resource> Resource,
+			shared_ptr<Render_Camera> Camera
+		);
 
 
 	public://TODO : 
@@ -107,6 +116,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		shared_ptr<Render_GUID_Allocator<Game_Object_Part_ID>>m_Instance_ID_Allocator{ std::make_shared<Render_GUID_Allocator<Game_Object_Part_ID>>() };
 		shared_ptr<Render_GUID_Allocator<Mesh_Source_Desc>> m_Mesh_Resource_ID_Allocator{ std::make_shared<Render_GUID_Allocator<Mesh_Source_Desc>>() };
 		shared_ptr<Render_GUID_Allocator<Material_Source_Desc>> m_Material_Resource_ID_Allocator{ std::make_shared<Render_GUID_Allocator<Material_Source_Desc>>() };
+
+		unordered_map<size_t, GObject_ID> m_Mesh_Object_ID_Map;
 
 	};
 

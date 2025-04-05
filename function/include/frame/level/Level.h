@@ -6,6 +6,9 @@
 
 #include "file/File_System.h"
 
+#include "common/Object_Resource.h"
+#include "common/Level_Resource.h"
+
 #include "frame/object/GObject_ID_Allocator.h"
 #include "frame/object/GObject.h"
 #include "physics/Physics_Scene.h"
@@ -15,7 +18,11 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level {
 
 	using NameSpace_Platform::NameSpace_File::path;
 
+	using NameSpace_Resource::NameSpace_Common::Object_Instance;
+	using NameSpace_Resource::NameSpace_Common::Level_Resource;
+
 	using NameSpace_GObject::GObject_ID;
+	using NameSpace_GObject::GObject_ID_Allocator;
 	using NameSpace_GObject::GObject;
 	using Namespace_Physics::Physics_Scene;
 	using Namespace_Character::Character;
@@ -26,26 +33,36 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level {
 	using std::weak_ptr;
 
 	class Level final {
+	private:
+		Level(const Level&) = delete;
+		Level(Level&&) = delete;
+
+		Level& operator=(const Level&) = delete;
+		Level& operator=(Level&&) = delete;
+
 	public:
-		/*Level(const path& Level_Resource_URL, const shared_ptr<Physics_Scene>& Physics_Scene);
+		Level(void) = default;
+
+		Level(const path& Level_Resource_URL);
+
 		~Level(void) = default;
-		void Load(void);
-		void Unload(void);
-		void Update(void);
-		void Add_Object(const shared_ptr<GObject>& Object);
-		void Remove_Object(const GObject_ID& Object_ID);
-		const shared_ptr<GObject> Get_Object(const GObject_ID& Object_ID) const;
-		const shared_ptr<Character> Get_Character(void) const;
-		const path& Get_Level_Resource_URL(void) const;
-		const unordered_map<GObject_ID, shared_ptr<GObject>>& Get_Objects(void) const;
-		const weak_ptr<Physics_Scene>& Get_Physics_Scene(void) const;
-		void Set_Character(const shared_ptr<Character>& Character);
-*/
+
+		shared_ptr<Level> Load_Level(const path& Level_Resource_URL);
+
+		GObject_ID Create_Object(const shared_ptr<Object_Instance>& Object_Instance_Res);
+
+		weak_ptr<GObject> Get_Object(GObject_ID Object_ID) const;
+		void Delete_Object(GObject_ID Object_ID);
+
+		void Tick(float Delta_Time);
 
 	private:
 		path m_Level_Resource_URL{};
+		shared_ptr<Level_Resource> m_Level_Resource{ nullptr };
+
 		unordered_map<GObject_ID, shared_ptr<GObject>> m_Objects{};
 
+		bool m_Is_Character_Active{ false };
 		shared_ptr<Character> m_Character{};
 
 		weak_ptr<Physics_Scene> m_Physics_Scene{};

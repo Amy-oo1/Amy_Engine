@@ -29,10 +29,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	}
 
 	void Render_Scene::Updata_Visiable_Objects(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera) {
-		UpData_Visiable_Objects_Directional_Light(Resource, Camera);
-		Updata_Visiable_Objects_Point_Light(Resource);
-		Updata_Visiable_Objects_Main_Camera(Resource, Camera);
-		Updata_Visiable_Objects_Axis(Resource, Camera);
+		this->UpData_Visiable_Objects_Directional_Light(Resource, Camera);
+		this->Updata_Visiable_Objects_Point_Light(Resource);
+		this->Updata_Visiable_Objects_Main_Camera(Resource, Camera);
+		this->Updata_Visiable_Objects_Axis(Resource, Camera);
+		this->Updata_Visiable_Objects_Particle(Resource, Camera);
 	}
 
 	void Render_Scene::Set_Visiable_Nodes(void) {
@@ -43,6 +44,30 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		Render_Pass::s_Visable_Node.Main_Camera_Visiable_Mesh_Nodes = &this->m_Main_Camera_Visible_Mesh_Nodes;
 
 		Render_Pass::s_Visable_Node.Axis_Node = &this->m_Axis_Node;
+	}
+
+	void Render_Scene::Add_Entity(size_t Instance_ID, GObject_ID GO_ID) {
+		this->m_Mesh_Object_ID_Map[Instance_ID] = GO_ID;
+	}
+
+	void Render_Scene::Delete_Entity(GObject_ID ID) {
+		for (auto& [Instance_Id, GO_ID] : this->m_Mesh_Object_ID_Map)
+			if (GO_ID == ID) {
+				this->m_Mesh_Object_ID_Map.erase(Instance_Id);
+				break;
+			}
+
+		Game_Object_Part_ID Part_ID{ ID,0 };//NOTE : Part_ID = 0
+		size_t Find_GUID{};
+
+		auto Target_GUID{ this->m_Instance_ID_Allocator->Get_GUID(Game_Object_Part_ID{ ID,0 }) };
+		if (INVALID_GUID != Target_GUID)
+			for (auto It = this->m_Render_Entities.begin(); It != this->m_Render_Entities.end(); ++It)
+				if (It->Instance_ID == Target_GUID) {
+					this->m_Render_Entities.erase(It);
+
+					break;
+				}
 	}
 
 	void Render_Scene::UpData_Visiable_Objects_Directional_Light(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera) {
@@ -60,6 +85,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	void Render_Scene::Updata_Visiable_Objects_Axis(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera)
 	{
 		//TODO :
+	}
+
+	void Render_Scene::Updata_Visiable_Objects_Particle(shared_ptr<Render_Resource> Resource, shared_ptr<Render_Camera> Camera) {
+		//TODO : 
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System
