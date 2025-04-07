@@ -34,7 +34,8 @@
         template<> inline Skeleton_Node_Map& Serializer::Read<Skeleton_Node_Map>(const JSON& Json_Context, Skeleton_Node_Map &Instance){
             
 
-                Serializer::Read(Json_Context["Convert"],Instance.m_Convert);
+            if(Json_Context.contains("Convert")&&!Json_Context["Convert"].is_null())
+                    Serializer::Read(Json_Context["Convert"],Instance.m_Convert);
 
             return Instance;
         }

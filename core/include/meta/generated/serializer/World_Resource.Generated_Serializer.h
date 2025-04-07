@@ -36,9 +36,12 @@
         template<> inline World_Resource& Serializer::Read<World_Resource>(const JSON& Json_Context, World_Resource &Instance){
             
 
-                Serializer::Read(Json_Context["Name"],Instance.m_Name);
-                Serializer::Read(Json_Context["Default_Level_URL"],Instance.m_Default_Level_URL);
-                Serializer::Read(Json_Context["Levels_URL"],Instance.m_Levels_URL);
+            if(Json_Context.contains("Name")&&!Json_Context["Name"].is_null())
+                    Serializer::Read(Json_Context["Name"],Instance.m_Name);
+            if(Json_Context.contains("Default_Level_URL")&&!Json_Context["Default_Level_URL"].is_null())
+                    Serializer::Read(Json_Context["Default_Level_URL"],Instance.m_Default_Level_URL);
+            if(Json_Context.contains("Levels_URL")&&!Json_Context["Levels_URL"].is_null())
+                    Serializer::Read(Json_Context["Levels_URL"],Instance.m_Levels_URL);
 
             return Instance;
         }

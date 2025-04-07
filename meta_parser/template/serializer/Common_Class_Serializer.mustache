@@ -48,7 +48,8 @@
             {{/Class_Base_Class_Define_List}}
 
             {{#Field_Define_List}}
-                Serializer::Read(Json_Context["{{& Field_Display_Name}}"],Instance.{{& Field_Spelling}});
+            if(Json_Context.contains("{{& Field_Display_Name}}")&&!Json_Context["{{& Field_Display_Name}}"].is_null())
+                    Serializer::Read(Json_Context["{{& Field_Display_Name}}"],Instance.{{& Field_Spelling}});
             {{/Field_Define_List}}
 
             return Instance;

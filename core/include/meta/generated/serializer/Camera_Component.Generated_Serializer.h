@@ -38,11 +38,16 @@
         template<> inline Camera_Component& Serializer::Read<Camera_Component>(const JSON& Json_Context, Camera_Component &Instance){
                     Serializer::Read<NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component>(Json_Context["Component"],*static_cast<NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component*>(&Instance));
 
-                Serializer::Read(Json_Context["Camera_Resource"],Instance.m_Camera_Resource);
-                Serializer::Read(Json_Context["Position"],Instance.m_Position);
-                Serializer::Read(Json_Context["Forward"],Instance.m_Forward);
-                Serializer::Read(Json_Context["Up"],Instance.m_Up);
-                Serializer::Read(Json_Context["Right"],Instance.m_Right);
+            if(Json_Context.contains("Camera_Resource")&&!Json_Context["Camera_Resource"].is_null())
+                    Serializer::Read(Json_Context["Camera_Resource"],Instance.m_Camera_Resource);
+            if(Json_Context.contains("Position")&&!Json_Context["Position"].is_null())
+                    Serializer::Read(Json_Context["Position"],Instance.m_Position);
+            if(Json_Context.contains("Forward")&&!Json_Context["Forward"].is_null())
+                    Serializer::Read(Json_Context["Forward"],Instance.m_Forward);
+            if(Json_Context.contains("Up")&&!Json_Context["Up"].is_null())
+                    Serializer::Read(Json_Context["Up"],Instance.m_Up);
+            if(Json_Context.contains("Right")&&!Json_Context["Right"].is_null())
+                    Serializer::Read(Json_Context["Right"],Instance.m_Right);
 
             return Instance;
         }

@@ -12,6 +12,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Core::NameSpace_Math::Matrix4x4;
 	using NameSpace_Core::NameSpace_Bounding::Bounding_Sphere;
 
+	using NameSpace_Pass::Render_Pass;
+
 	using namespace NameSpace_Utilities;
 
 	void Render_Scene::Set_Ambient_Light(const Color& Ambient_Light) {
@@ -103,7 +105,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				if (!entity.Joint_Matrices.empty())
 				{
 					temp_node.Joint_Count = static_cast<uint32_t>(entity.Joint_Matrices.size());
-					temp_node.Joint_Matrix = entity.Joint_Matrices.data();
+					temp_node.Joint_Matrices = entity.Joint_Matrices.data();
 				}
 				temp_node.Node_ID = entity.Instance_ID;
 
@@ -153,7 +155,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				if (!entity.Joint_Matrices.empty())
 				{
 					temp_node.Joint_Count = static_cast<uint32_t>(entity.Joint_Matrices.size());
-					temp_node.Joint_Matrix = entity.Joint_Matrices.data();
+					temp_node.Joint_Matrices = entity.Joint_Matrices.data();
 				}
 				temp_node.Node_ID = entity.Instance_ID;
 
@@ -194,7 +196,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 				if (!entity.Joint_Matrices.empty())
 				{
 					temp_node.Joint_Count = static_cast<uint32_t>(entity.Joint_Matrices.size());
-					temp_node.Joint_Matrix = entity.Joint_Matrices.data();
+					temp_node.Joint_Matrices = entity.Joint_Matrices.data();
 				}
 
 				temp_node.Node_ID = entity.Instance_ID;

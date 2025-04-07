@@ -38,11 +38,16 @@
         template<> inline Bone_Raw& Serializer::Read<Bone_Raw>(const JSON& Json_Context, Bone_Raw &Instance){
             
 
-                Serializer::Read(Json_Context["Name"],Instance.m_Name);
-                Serializer::Read(Json_Context["Current_Index"],Instance.m_Current_Index);
-                Serializer::Read(Json_Context["Parent_Index"],Instance.m_Parent_Index);
-                Serializer::Read(Json_Context["Binding_Pose"],Instance.m_Binding_Pose);
-                Serializer::Read(Json_Context["Tpose_Matrix"],Instance.m_Tpose_Matrix);
+            if(Json_Context.contains("Name")&&!Json_Context["Name"].is_null())
+                    Serializer::Read(Json_Context["Name"],Instance.m_Name);
+            if(Json_Context.contains("Current_Index")&&!Json_Context["Current_Index"].is_null())
+                    Serializer::Read(Json_Context["Current_Index"],Instance.m_Current_Index);
+            if(Json_Context.contains("Parent_Index")&&!Json_Context["Parent_Index"].is_null())
+                    Serializer::Read(Json_Context["Parent_Index"],Instance.m_Parent_Index);
+            if(Json_Context.contains("Binding_Pose")&&!Json_Context["Binding_Pose"].is_null())
+                    Serializer::Read(Json_Context["Binding_Pose"],Instance.m_Binding_Pose);
+            if(Json_Context.contains("Tpose_Matrix")&&!Json_Context["Tpose_Matrix"].is_null())
+                    Serializer::Read(Json_Context["Tpose_Matrix"],Instance.m_Tpose_Matrix);
 
             return Instance;
         }
@@ -76,10 +81,14 @@
         template<> inline Skeleton_Data& Serializer::Read<Skeleton_Data>(const JSON& Json_Context, Skeleton_Data &Instance){
             
 
-                Serializer::Read(Json_Context["Bones"],Instance.m_Bones);
-                Serializer::Read(Json_Context["Is_Flat"],Instance.m_Is_Flat);
-                Serializer::Read(Json_Context["Root_Index"],Instance.Root_Index);
-                Serializer::Read(Json_Context["In_Topological_Order"],Instance.In_Topological_Order);
+            if(Json_Context.contains("Bones")&&!Json_Context["Bones"].is_null())
+                    Serializer::Read(Json_Context["Bones"],Instance.m_Bones);
+            if(Json_Context.contains("Is_Flat")&&!Json_Context["Is_Flat"].is_null())
+                    Serializer::Read(Json_Context["Is_Flat"],Instance.m_Is_Flat);
+            if(Json_Context.contains("Root_Index")&&!Json_Context["Root_Index"].is_null())
+                    Serializer::Read(Json_Context["Root_Index"],Instance.Root_Index);
+            if(Json_Context.contains("In_Topological_Order")&&!Json_Context["In_Topological_Order"].is_null())
+                    Serializer::Read(Json_Context["In_Topological_Order"],Instance.In_Topological_Order);
 
             return Instance;
         }

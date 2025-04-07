@@ -166,8 +166,10 @@
     <ClInclude Include="include\animation\Bone.h" />
     <ClInclude Include="include\character\Character.h" />
     <ClInclude Include="include\Engine.h" />
+    <ClInclude Include="include\frame\components\animation\Animation_Component.h" />
     <ClInclude Include="include\frame\components\camera\Camera_Component.h" />
     <ClInclude Include="include\frame\components\Component.h" />
+    <ClInclude Include="include\frame\components\motor\Motor_Component.h" />
     <ClInclude Include="include\frame\components\transform\Transform_Component.h" />
     <ClInclude Include="include\frame\level\Level.h" />
     <ClInclude Include="include\frame\object\GObject.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="include\render\render_pass\Point_Light_Paass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass.h" />
     <ClInclude Include="include\render\render_pass\Render_Pass_Base.h" />
+    <ClInclude Include="include\render\render_pass\Render_Pass_Utilities.h" />
     <ClInclude Include="include\render\render_pass\Tone_Mapping_Pass.h" />
     <ClInclude Include="include\render\render_pass\UI_Pass.h" />
     <ClInclude Include="include\render\render_system\Light.h" />
@@ -235,10 +238,14 @@
     <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_draw.cpp" />
     <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_tables.cpp" />
     <ClCompile Include="..\third_party\imgui-1.91.9b\imgui_widgets.cpp" />
+    <ClInclude Include="include\frame\components\mesh\Mesh_Component.h" />
     <ClCompile Include="src\character\Character.cpp" />
     <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\frame\components\animation\Animation_Component.cpp" />
     <ClCompile Include="src\frame\components\camera\Camera_Component.cpp" />
     <ClCompile Include="src\frame\components\Component.cpp" />
+    <ClCompile Include="src\frame\components\mesh\Mesh_Component.cpp" />
+    <ClCompile Include="src\frame\components\motor\Motor_Component.cpp" />
     <ClCompile Include="src\frame\components\transform\Transform_Component.cpp" />
     <ClCompile Include="src\frame\level\Level.cpp" />
     <ClCompile Include="src\frame\world\World_Manager.cpp" />

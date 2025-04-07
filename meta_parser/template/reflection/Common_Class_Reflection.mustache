@@ -5,14 +5,18 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 {{#Include_Define_List}}
 #include "{{& Src_File_Path}}"
 {{/Include_Define_List}}
 
 {{#Class_Define_List}}
-namespace {{Class_NameSpace}}{
+namespace {{& Class_NameSpace}}{
 
     using std::string;
     using std::vector;
@@ -104,5 +108,42 @@ namespace {{Class_NameSpace}}{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace {{& Class_NameSpace}}
+
+    {{#Class_Base_Class_Define_List}}
+        {{#Class_Base_Spelling_List}}
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}};
+	            using ::{{& Class_NameSpace}}::{{& Class_Spelling}};
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<{{& Class_Spelling}}>::operator Reflection_Instance<{{& Class_Base_Class_Spelling}}>(void) const {
+		            return Reflection_Instance<{{& Class_Base_Class_Spelling}}>{
+			            std::string{"{{& Class_Spelling}}"},
+			            std::static_pointer_cast<{{& Class_Base_Class_Spelling}}>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::{{& Class_Base_Class_NameSpace}}::{{& Class_Base_Class_Spelling}};
+	//            using ::{{& Class_NameSpace}}::{{& Class_Spelling}};
+
+     //          Reflection_Cast_Tale[string{"{{& Class_Spelling}}"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<{{& Class_Spelling}}>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+        {{/Class_Base_Spelling_List}}
+    {{/Class_Base_Class_Define_List}}
+ 
  {{/Class_Define_List}}

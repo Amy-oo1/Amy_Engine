@@ -34,7 +34,8 @@
         template<> inline Bone_Blend_Weight& Serializer::Read<Bone_Blend_Weight>(const JSON& Json_Context, Bone_Blend_Weight &Instance){
             
 
-                Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
+            if(Json_Context.contains("Blend_Weights")&&!Json_Context["Blend_Weights"].is_null())
+                    Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
 
             return Instance;
         }
@@ -68,10 +69,14 @@
         template<> inline BlendState_With_Clip_Data& Serializer::Read<BlendState_With_Clip_Data>(const JSON& Json_Context, BlendState_With_Clip_Data &Instance){
             
 
-                Serializer::Read(Json_Context["Blend_Clip"],Instance.m_Blend_Clip);
-                Serializer::Read(Json_Context["Blend_Skeleton"],Instance.m_Blend_Skeleton);
-                Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
-                Serializer::Read(Json_Context["Blend_ratio"],Instance.m_Blend_ratio);
+            if(Json_Context.contains("Blend_Clip")&&!Json_Context["Blend_Clip"].is_null())
+                    Serializer::Read(Json_Context["Blend_Clip"],Instance.m_Blend_Clip);
+            if(Json_Context.contains("Blend_Skeleton")&&!Json_Context["Blend_Skeleton"].is_null())
+                    Serializer::Read(Json_Context["Blend_Skeleton"],Instance.m_Blend_Skeleton);
+            if(Json_Context.contains("Blend_Weights")&&!Json_Context["Blend_Weights"].is_null())
+                    Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
+            if(Json_Context.contains("Blend_ratio")&&!Json_Context["Blend_ratio"].is_null())
+                    Serializer::Read(Json_Context["Blend_ratio"],Instance.m_Blend_ratio);
 
             return Instance;
         }
@@ -107,12 +112,18 @@
         template<> inline Blend_State& Serializer::Read<Blend_State>(const JSON& Json_Context, Blend_State &Instance){
             
 
-                Serializer::Read(Json_Context["Blend_Clip_URL"],Instance.m_Blend_Clip_URL);
-                Serializer::Read(Json_Context["Blend_Clip_Length"],Instance.m_Blend_Clip_Length);
-                Serializer::Read(Json_Context["Blend_Skeleton_Node_Map_URL"],Instance.m_Blend_Skeleton_Node_Map_URL);
-                Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
-                Serializer::Read(Json_Context["Blend_Mask_URL"],Instance.m_Blend_Mask_URL);
-                Serializer::Read(Json_Context["Blend_Ratio"],Instance.m_Blend_Ratio);
+            if(Json_Context.contains("Blend_Clip_URL")&&!Json_Context["Blend_Clip_URL"].is_null())
+                    Serializer::Read(Json_Context["Blend_Clip_URL"],Instance.m_Blend_Clip_URL);
+            if(Json_Context.contains("Blend_Clip_Length")&&!Json_Context["Blend_Clip_Length"].is_null())
+                    Serializer::Read(Json_Context["Blend_Clip_Length"],Instance.m_Blend_Clip_Length);
+            if(Json_Context.contains("Blend_Skeleton_Node_Map_URL")&&!Json_Context["Blend_Skeleton_Node_Map_URL"].is_null())
+                    Serializer::Read(Json_Context["Blend_Skeleton_Node_Map_URL"],Instance.m_Blend_Skeleton_Node_Map_URL);
+            if(Json_Context.contains("Blend_Weights")&&!Json_Context["Blend_Weights"].is_null())
+                    Serializer::Read(Json_Context["Blend_Weights"],Instance.m_Blend_Weights);
+            if(Json_Context.contains("Blend_Mask_URL")&&!Json_Context["Blend_Mask_URL"].is_null())
+                    Serializer::Read(Json_Context["Blend_Mask_URL"],Instance.m_Blend_Mask_URL);
+            if(Json_Context.contains("Blend_Ratio")&&!Json_Context["Blend_Ratio"].is_null())
+                    Serializer::Read(Json_Context["Blend_Ratio"],Instance.m_Blend_Ratio);
 
             return Instance;
         }

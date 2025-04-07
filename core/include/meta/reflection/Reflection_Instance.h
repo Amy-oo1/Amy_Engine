@@ -1,8 +1,12 @@
 #pragma once
 
+#include "json.h"
+
 #include<memory>
 #include<utility>
 #include<string>
+#include<functional>
+#include<unordered_map>
 #include<cassert>
 
 namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
@@ -12,7 +16,12 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 
 	using std::string;
+	using std::function;
+	using std::unordered_map;
 	using std::shared_ptr;
+
+	using JSON = nlohmann::json;
+
 
 	template<typename Type>
 	class Reflection_Instance final {
@@ -121,6 +130,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
 		shared_ptr<Type> m_Instance{ nullptr };
 
 	};
+
 
 }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
 

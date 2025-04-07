@@ -59,7 +59,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Animation_Component_Res(void) = default;
 
 	private:
-		path m_skeleton_File_Path{};
+		path m_Skeleton_URL{};
 
 		shared_ptr<Blend_State> m_Blend_State{};
 

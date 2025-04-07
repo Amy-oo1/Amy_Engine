@@ -35,8 +35,10 @@
         template<> inline Animation_Effect_Element& Serializer::Read<Animation_Effect_Element>(const JSON& Json_Context, Animation_Effect_Element &Instance){
             
 
-                Serializer::Read(Json_Context["Index"],Instance.m_Index);
-                Serializer::Read(Json_Context["Transform"],Instance.m_Transform);
+            if(Json_Context.contains("Index")&&!Json_Context["Index"].is_null())
+                    Serializer::Read(Json_Context["Index"],Instance.m_Index);
+            if(Json_Context.contains("Transform")&&!Json_Context["Transform"].is_null())
+                    Serializer::Read(Json_Context["Transform"],Instance.m_Transform);
 
             return Instance;
         }
@@ -67,7 +69,8 @@
         template<> inline Animation_Effect& Serializer::Read<Animation_Effect>(const JSON& Json_Context, Animation_Effect &Instance){
             
 
-                Serializer::Read(Json_Context["Effects"],Instance.m_Effects);
+            if(Json_Context.contains("Effects")&&!Json_Context["Effects"].is_null())
+                    Serializer::Read(Json_Context["Effects"],Instance.m_Effects);
 
             return Instance;
         }
@@ -90,7 +93,7 @@
 
             
 
-                Json_Context["skeleton_File_Path"] = Serializer::Write(Instance.m_skeleton_File_Path);
+                Json_Context["Skeleton_URL"] = Serializer::Write(Instance.m_Skeleton_URL);
                 Json_Context["Blend_State"] = Serializer::Write(Instance.m_Blend_State);
                 Json_Context["Effect"] = Serializer::Write(Instance.m_Effect);
 
@@ -100,9 +103,12 @@
         template<> inline Animation_Component_Res& Serializer::Read<Animation_Component_Res>(const JSON& Json_Context, Animation_Component_Res &Instance){
             
 
-                Serializer::Read(Json_Context["skeleton_File_Path"],Instance.m_skeleton_File_Path);
-                Serializer::Read(Json_Context["Blend_State"],Instance.m_Blend_State);
-                Serializer::Read(Json_Context["Effect"],Instance.m_Effect);
+            if(Json_Context.contains("Skeleton_URL")&&!Json_Context["Skeleton_URL"].is_null())
+                    Serializer::Read(Json_Context["Skeleton_URL"],Instance.m_Skeleton_URL);
+            if(Json_Context.contains("Blend_State")&&!Json_Context["Blend_State"].is_null())
+                    Serializer::Read(Json_Context["Blend_State"],Instance.m_Blend_State);
+            if(Json_Context.contains("Effect")&&!Json_Context["Effect"].is_null())
+                    Serializer::Read(Json_Context["Effect"],Instance.m_Effect);
 
             return Instance;
         }

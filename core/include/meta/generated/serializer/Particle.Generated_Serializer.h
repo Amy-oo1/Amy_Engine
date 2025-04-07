@@ -40,13 +40,20 @@
         template<> inline Particle_Res& Serializer::Read<Particle_Res>(const JSON& Json_Context, Particle_Res &Instance){
             
 
-                Serializer::Read(Json_Context["Local_Transform"],Instance.m_Local_Transform);
-                Serializer::Read(Json_Context["Velocity"],Instance.m_Velocity);
-                Serializer::Read(Json_Context["Acceleration"],Instance.m_Acceleration);
-                Serializer::Read(Json_Context["Size"],Instance.m_Size);
-                Serializer::Read(Json_Context["Emitter_Type"],Instance.m_Emitter_Type);
-                Serializer::Read(Json_Context["Life"],Instance.m_Life);
-                Serializer::Read(Json_Context["Color"],Instance.m_Color);
+            if(Json_Context.contains("Local_Transform")&&!Json_Context["Local_Transform"].is_null())
+                    Serializer::Read(Json_Context["Local_Transform"],Instance.m_Local_Transform);
+            if(Json_Context.contains("Velocity")&&!Json_Context["Velocity"].is_null())
+                    Serializer::Read(Json_Context["Velocity"],Instance.m_Velocity);
+            if(Json_Context.contains("Acceleration")&&!Json_Context["Acceleration"].is_null())
+                    Serializer::Read(Json_Context["Acceleration"],Instance.m_Acceleration);
+            if(Json_Context.contains("Size")&&!Json_Context["Size"].is_null())
+                    Serializer::Read(Json_Context["Size"],Instance.m_Size);
+            if(Json_Context.contains("Emitter_Type")&&!Json_Context["Emitter_Type"].is_null())
+                    Serializer::Read(Json_Context["Emitter_Type"],Instance.m_Emitter_Type);
+            if(Json_Context.contains("Life")&&!Json_Context["Life"].is_null())
+                    Serializer::Read(Json_Context["Life"],Instance.m_Life);
+            if(Json_Context.contains("Color")&&!Json_Context["Color"].is_null())
+                    Serializer::Read(Json_Context["Color"],Instance.m_Color);
 
             return Instance;
         }

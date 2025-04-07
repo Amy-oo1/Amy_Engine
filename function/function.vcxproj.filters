@@ -139,6 +139,24 @@
     <Filter Include="src\imgui">
       <UniqueIdentifier>{a846e2d2-abd1-4140-83d2-7de71c64b0f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\frame\component​s\animation">
+      <UniqueIdentifier>{6abd2fbc-3506-4eae-8ce6-7d81800d69ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\components\animation">
+      <UniqueIdentifier>{2b633c68-ef36-4c15-a878-486b913e3306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\component​s\mesh">
+      <UniqueIdentifier>{e2b48a1e-2def-4936-959b-fea667fe9ff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\components\mesh">
+      <UniqueIdentifier>{d4b9eee2-57be-4f00-92f0-38a4c3ed41b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\frame\component​s\motor">
+      <UniqueIdentifier>{ed147c50-5128-4813-a9e8-7dd1f711a46a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\frame\components\motor">
+      <UniqueIdentifier>{fd0e75b3-1865-464b-9a62-e45ca9dec57b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation\Bone.h">
@@ -345,6 +363,18 @@
     <ClInclude Include="..\third_party\imgui-1.91.9b\backends\imgui_impl_vulkan.h">
       <Filter>include\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\render_pass\Render_Pass_Utilities.h">
+      <Filter>include\render\render_pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\components\animation\Animation_Component.h">
+      <Filter>include\frame\component​s\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\components\mesh\Mesh_Component.h">
+      <Filter>include\frame\component​s\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\frame\components\motor\Motor_Component.h">
+      <Filter>include\frame\component​s\motor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Bone.cpp">
@@ -526,6 +556,15 @@
     </ClCompile>
     <ClCompile Include="..\third_party\imgui-1.91.9b\backends\imgui_impl_vulkan.cpp">
       <Filter>src\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\components\animation\Animation_Component.cpp">
+      <Filter>src\frame\components\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\components\mesh\Mesh_Component.cpp">
+      <Filter>src\frame\components\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame\components\motor\Motor_Component.cpp">
+      <Filter>src\frame\components\motor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

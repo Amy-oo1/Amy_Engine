@@ -63,6 +63,6 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 }// namespace NameSpace_Resource::NameSpace_Components
 
-CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Box)
-CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Sphere)
-CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Cylinder)
+//CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Box)
+//CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Sphere)
+//CONVERT_UP(NameSpace_Resource::NameSpace_Components, Geometry_Base, Geometry_Cylinder)

@@ -118,6 +118,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	using NameSpace_Render_System::Render_Resource;
 	using NameSpace_Render_System::Mesh_Vertex;
 
+	using namespace NameSpace_RHI;
+
 
 	void Main_Camera_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {
 		const auto Main_Camera_Info{ static_pointer_cast<Main_Camera_Render_Pass_Per_Initialize_Info>(Init_Info) };
@@ -140,13 +142,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	{
 	}
 
-	void Main_Camera_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource){
+	void Main_Camera_Pass::PrePare_Pass_Data(shared_ptr<Render_Resource_Base> Resource) {
 		const auto& Ref_Render_Resource{ *static_pointer_cast<Render_Resource>(Resource) };
 		{
 			this->m_Mesh_Per_Frame_Storage_Buffer_Object = Ref_Render_Resource.m_Mesh_Per_Frame_Storage_Buffer_Object;
 			this->m_Axis_Storage_Buffer_Object = Ref_Render_Resource.m_Axis_Storage_Buffer_Object;
 		}
-	
+
 	}
 
 	void Main_Camera_Pass::Draw(void)
@@ -161,9 +163,215 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		return this->m_Is_Show_Axis;
 	}
 
-    void Main_Camera_Pass::Set_Aixs_State(bool State) {
-        this->m_Is_Show_Axis = State;
-    }
+	void Main_Camera_Pass::Set_Aixs_State(bool State) {
+		this->m_Is_Show_Axis = State;
+	}
+
+	void Main_Camera_Pass::Draw_Forward(shared_ptr<Color_Grading_Pass> Color_Grading_Pass, shared_ptr<FXAA_Pass> FXAA_Pass, shared_ptr<Tone_Mapping_Pass> Tone_Mapping_Pass, shared_ptr<UI_Pass> UI_Pass, shared_ptr<Combine_UI_Pass> Combine_UI_Pass, uint32_t Frame_Index) {
+		{
+			auto GBuffer_A_Color_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Color_Float({ 0.f,0.f,0.f,0.f })
+				.Build()
+			};
+
+			auto GBuffer_B_Color_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Color_Float({ 0.f,0.f,0.f,0.f })
+				.Build()
+			};
+
+			auto GBuffer_C_Color_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Color_Float({ 0.f,0.f,0.f,0.f })
+				.Build()
+			};
+
+			auto Backup_Odd_Color_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Color_Float({ 0.f,0.f,0.f,1.f })
+				.Build()
+			};
+
+			auto Backup_Even_Color_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Color_Float({ 0.f,0.f,0.f,1.f })
+				.Build()
+			};
+
+			auto Depth_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Depth_Stencil(1.f, 0)
+				.Build()
+			};
+
+			auto SwapChain_Color_Clear_Value{ RHI_Clear_Value_Builder()
+				.Set_Color_Float({ 0.f,0.f,0.f,1.f })
+				.Build()
+			};
+
+			const vector<const RHI_Clear_Value*> Clear_Values{
+				&GBuffer_A_Color_Clear_Value,
+				&GBuffer_B_Color_Clear_Value,
+				&GBuffer_C_Color_Clear_Value,
+				&Backup_Odd_Color_Clear_Value,
+				&Backup_Even_Color_Clear_Value,
+				&Depth_Clear_Value,
+				&SwapChain_Color_Clear_Value
+			};
+
+			RHI_Render_Pass_Begin_Info Render_Pass_Begin_Info{};
+			{
+				Render_Pass_Begin_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+				Render_Pass_Begin_Info.Render_Pass = this->m_Frame_Buffer.Render_Pass.get();
+				Render_Pass_Begin_Info.Frame_Buffer = this->m_Swapchain_Frame_Buffers[Frame_Index].get();
+				Render_Pass_Begin_Info.Render_Area.Offset = { 0,0 };
+				Render_Pass_Begin_Info.Render_Area.Extent = { this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height };
+				Render_Pass_Begin_Info.Clear_Values = &Clear_Values;
+			}
+
+			this->m_RHI->Cmd_Begin_Render_Pass_PFN(this->m_RHI->Get_Current_Command_Buffer(), &Render_Pass_Begin_Info, RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+		}
+
+		this->m_RHI->Cmd_Next_Subpass_PFN(this->m_RHI->Get_Current_Command_Buffer(), RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+		this->m_RHI->Cmd_Next_Subpass_PFN(this->m_RHI->Get_Current_Command_Buffer(), RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+
+		this->Draw_Mesh_Lighting();
+		this->Draw_SkeBox();
+
+		this->m_RHI->Cmd_Next_Subpass_PFN(this->m_RHI->Get_Current_Command_Buffer(), RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+
+		Tone_Mapping_Pass->Draw();
+		this->m_RHI->Cmd_Next_Subpass_PFN(this->m_RHI->Get_Current_Command_Buffer(), RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+
+		Color_Grading_Pass->Draw();
+		this->m_RHI->Cmd_Next_Subpass_PFN(this->m_RHI->Get_Current_Command_Buffer(), RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+
+		if (false)//FXAA
+		{
+			FXAA_Pass->Draw();
+		}
+
+		this->m_RHI->Cmd_Next_Subpass_PFN(this->m_RHI->Get_Current_Command_Buffer(), RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE);
+
+		RHI_Clear_Attachment Clear_Attachment{};
+		{
+			Clear_Attachment.Aspect_Mask = to_underlying(RHI_IMAGE_ASPECT_FLAG_BITS::RHI_IMAGE_ASPECT_COLOR_BIT);
+			Clear_Attachment.Color_Attachment = 0;
+			Clear_Attachment.Clear_Value = RHI_Clear_Value_Builder().Set_Color_Float({ 0.f,0.f,0.f,0.f }).Build();
+		}
+
+		RHI_Clear_Rect Clear_Rect{};
+		{
+			Clear_Rect.Rect = this->m_RHI->Get_SwapChain_Scissor();
+			Clear_Rect.Base_Array_Layer = 0;
+			Clear_Rect.Layer_Count = 1;
+		}
+
+		this->m_RHI->Cmd_Clear_Attachment_PFN(this->m_RHI->Get_Current_Command_Buffer(), &Clear_Attachment, &Clear_Rect);
+
+		UI_Pass->Draw();
+		this->m_RHI->Cmd_Clear_Attachment_PFN(this->m_RHI->Get_Current_Command_Buffer(), &Clear_Attachment, &Clear_Rect);
+
+		Combine_UI_Pass->Draw();
+
+		this->m_RHI->Cmd_End_Render_Pass_PFN(this->m_RHI->Get_Current_Command_Buffer());
+	}
+
+	void Main_Camera_Pass::Draw_Mesh_Lighting(void) {
+		struct Mesh_Node final {
+			const Matrix4x4* Model_Matrix{ nullptr };
+			const Matrix4x4* Joint_Matrices{ nullptr };
+			uint32_t Joint_Count{ 0 };
+		};
+
+		map<Vulkan_PBR_Material*, map<Vulkan_Mesh*, vector<Mesh_Node>>> Mesh_Draw_Call_Batch;
+
+		for (const auto& Node : *Render_Pass::s_Visable_Node.Directional_Light_Visiable_Mesh_Nodes) {
+			auto& Mesh_Instance{ Mesh_Draw_Call_Batch[Node.Ref_Material] };
+			auto& Ref_Mesh_Nodes{ Mesh_Instance[Node.Ref_Mesh] };
+
+			Mesh_Node Temp{};
+			{
+				Temp.Model_Matrix = Node.Model_Matrix;
+				if (Node.Enable_Vertex_Blending) {
+					Temp.Joint_Matrices = Node.Joint_Matrices;
+					Temp.Joint_Count = Node.Joint_Count;
+				}
+			}
+			Ref_Mesh_Nodes.emplace_back(Temp);
+		}
+
+
+		//NOTE :Mesh
+		{
+			this->m_RHI->Cmd_Bind_Pipeline_PFN(
+				this->m_RHI->Get_Current_Command_Buffer(),
+				RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+				this->m_Render_Pipelines[_render_pipeline_type_mesh_lighting].Pipeline.get()
+			);
+
+			this->m_RHI->Cmd_Set_Viewport_PFN(this->m_RHI->Get_Current_Command_Buffer(), this->m_RHI->Get_SwapChain_Viewport());
+			this->m_RHI->Cmd_Set_Scissor_PFN(this->m_RHI->Get_Current_Command_Buffer(), this->m_RHI->Get_SwapChain_Scissor());
+
+			auto& Ref_Global_Storage_Buffer{ this->m_Global_Render_Resource->Storage_Buffer };
+
+			uint32_t Per_Frame_Dynamic_Offset{ Round_Up(Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffers_End[this->m_RHI->Get_Current_Frame_Index()],Ref_Global_Storage_Buffer.Min_Storage_Buffer_Offset_Alignment) };
+
+			Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffers_End[this->m_RHI->Get_Current_Frame_Index()] = Per_Frame_Dynamic_Offset + sizeof(Mesh_Per_Frame_Storage_Buffer_Object);
+
+			*reinterpret_cast<Mesh_Per_Frame_Storage_Buffer_Object*>(reinterpret_cast<uintptr_t>(Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffer_Mapped_Mamary) + Per_Frame_Dynamic_Offset) = this->m_Mesh_Per_Frame_Storage_Buffer_Object;
+
+			for (const auto& [Temp_Material, Temp_Mesh_Instanced] : Mesh_Draw_Call_Batch) {
+				for (const auto& [Temp_Mesh, Temp_Mesh_Nodes] : Temp_Mesh_Instanced) {
+					uint32_t Total_Instance_Count{ static_cast<uint32_t>(Temp_Mesh_Nodes.size()) };
+
+					if (0 < Total_Instance_Count) {
+						this->m_RHI->Cmd_Bind_Descriptor_Set_PFN(
+							this->m_RHI->Get_Current_Command_Buffer(),
+							RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+							this->m_Render_Pipelines[0].Pipeline_Layout.get(),
+							1,
+							this->m_Descriptors[0].Descriptor_Set.get(),
+							nullptr
+						);
+
+						this->m_RHI->Cmd_Bind_Vertex_Buffer_PFN(this->m_RHI->Get_Current_Command_Buffer(), Temp_Mesh->Mesh_Vertex_Position_Buffer.get(), 0);
+						this->m_RHI->Cmd_Bind_Index_Buffer_PFN(this->m_RHI->Get_Current_Command_Buffer(), Temp_Mesh->Mesh_Index_Buffer.get(), 0, RHI_INDEX_TYPE::RHI_INDEX_TYPE_UINT16);
+					}
+				}
+
+
+				//TODD
+			}
+		}
+	}
+
+	void Main_Camera_Pass::Draw_SkeBox(void) {
+		auto& Ref_Global_Storage_Buffer{ this->m_Global_Render_Resource->Storage_Buffer };
+
+
+		uint32_t Per_Frame_Dynamic_Offset{ Round_Up(Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffers_End[this->m_RHI->Get_Current_Frame_Index()],Ref_Global_Storage_Buffer.Min_Storage_Buffer_Offset_Alignment) };
+
+		Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffers_End[this->m_RHI->Get_Current_Frame_Index()] = Per_Frame_Dynamic_Offset + sizeof(Mesh_Per_Frame_Storage_Buffer_Object);
+
+		*reinterpret_cast<Mesh_Per_Frame_Storage_Buffer_Object*>(reinterpret_cast<uintptr_t>(Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffer_Mapped_Mamary) + Per_Frame_Dynamic_Offset) = this->m_Mesh_Per_Frame_Storage_Buffer_Object;
+
+		this->m_RHI->Cmd_Bind_Pipeline_PFN(
+			this->m_RHI->Get_Current_Command_Buffer(),
+			RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+			this->m_Render_Pipelines[_render_pipeline_type_skybox].Pipeline.get()
+		);
+
+		const vector<uint32_t> Dynamic_Offsets{
+			Per_Frame_Dynamic_Offset
+		};
+
+		this->m_RHI->Cmd_Bind_Descriptor_Set_PFN(
+			this->m_RHI->Get_Current_Command_Buffer(),
+			RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+			this->m_Render_Pipelines[_render_pipeline_type_skybox].Pipeline_Layout.get(),
+			0,
+			this->m_Descriptors[0].Descriptor_Set.get(),
+			&Dynamic_Offsets
+		);
+
+		this->m_RHI->Cmd_Draw(this->m_RHI->Get_Current_Command_Buffer(), 36, 1, 0, 0);
+	}
 
 	void Main_Camera_Pass::Setup_Attachments(void) {
 		this->m_Frame_Buffer.Width = this->m_RHI->Get_SwapChain_Extent().Width;
@@ -2523,7 +2731,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 		}
 	}
 
-	void Main_Camera_Pass::Update_After_Frame_Buffer_ReCreate(void){
+	void Main_Camera_Pass::Update_After_Frame_Buffer_ReCreate(void) {
 		this->m_Frame_Buffer.Attachments.clear();
 		this->m_Swapchain_Frame_Buffers.clear();
 

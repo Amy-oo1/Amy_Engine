@@ -19,25 +19,29 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level {
 
 	using Namespace_Global::Global_Systemer;
 
-	Level::Level(const path& Level_Resource_URL) {
+	/*Level::Level(const path& Level_Resource_URL) {
 		this->Load_Level(Level_Resource_URL);
-	}
+	}*/
 
-	shared_ptr<Level> Level::Load_Level(const path& Level_Resource_URL) {
+	void Level::Load_Level(const path& Level_Resource_URL) {
 		this->m_Level_Resource_URL = Level_Resource_URL;
 		this->m_Level_Resource = Resource_Manager::Load<Level_Resource>(Level_Resource_URL);
 
-		Global_Systemer::Get_Instance().Physics_Manager.Create_Scene(Reflection_Level_Resource_Operator::Get_Gravity_Attribute(this->m_Level_Resource));
+		//Global_Systemer::Get_Instance().Physics_Manager.Create_Scene(Reflection_Level_Resource_Operator::Get_Gravity_Attribute(this->m_Level_Resource));
 
 		for (const auto& Object_Res : Reflection_Level_Resource_Operator::Get_Objects_Attribute(this->m_Level_Resource))
 			this->Create_Object(Object_Res);
 	}
 
 	GObject_ID Level::Create_Object(const shared_ptr<Object_Instance>& Object_Instance_Res) {
+		auto  Temp_ID{ GObject_ID_Allocator::Alloc() };
+
 		this->m_Objects.emplace(
-			GObject_ID_Allocator::Alloc(),
+			Temp_ID,
 			std::make_shared<GObject>(Object_Instance_Res)
 		);
+
+		return Temp_ID;
 	}
 
 	weak_ptr<GObject> Level::Get_Object(GObject_ID Object_ID) const {

@@ -7,6 +7,20 @@
 #include "render/render_system/Render_Pipeline_Base.h"
 #include "render/render_pass/Render_Pass_Base.h"
 
+namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
+
+	class Main_Camera_Pass;
+
+	using NameSpace_RHI::RHI_PIPELINE_BIND_POINT;
+	using NameSpace_RHI::RHI_PIPELINE_STAGE_FLAG_BITS;
+	using NameSpace_RHI::RHI_ACCESS_FLAG_BITS;
+	using NameSpace_RHI::RHI_SHADER_STAGE_FLAG_BITS;
+	using NameSpace_Render_System::Render_Pipeline_Base;
+	using NameSpace_Render_System::Render_Pipeline_Info;
+	using NameSpace_Render_System::Render_Passes_Info;
+}// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass
+
+
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::shared_ptr;
@@ -18,8 +32,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	using NameSpace_Pass::Render_Pass_Pre_Initialize_Info;
 	using NameSpace_Pass::Render_Pass_Post_Initialize_Info;
 
+
+
 	class Render_Pipeline final : public Render_Pipeline_Base {
 		friend class Render_System;
+		//friend class Render_Main_Camera_Pass;
 	private:
 		Render_Pipeline(const Render_Pipeline&) = delete;
 		Render_Pipeline& operator=(const Render_Pipeline&) = delete;

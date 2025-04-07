@@ -37,12 +37,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "image", "image", "{1FF8E011
 		bin\engine_resource\image\Amy_Engine_Samall_Icon.jpg = bin\engine_resource\image\Amy_Engine_Samall_Icon.jpg
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "word", "word", "{7A10BD43-9201-4835-975C-1EF660269173}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "world", "world", "{7A10BD43-9201-4835-975C-1EF660269173}"
+	ProjectSection(SolutionItems) = preProject
+		bin\user_resource\world\Default_World_Resource.json = bin\user_resource\world\Default_World_Resource.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{6CB178E8-794C-4C37-95E5-6D5E7D6BE107}"
 	ProjectSection(SolutionItems) = preProject
 		bin\user_resource\global\Default_Global_Particle.json = bin\user_resource\global\Default_Global_Particle.json
 		bin\user_resource\global\Default_Global_Render.json = bin\user_resource\global\Default_Global_Render.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "image", "image", "{089BD2B4-D806-4FF2-819A-C2B985533643}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "level", "level", "{C5716A3D-F654-4A22-B404-55CA3FF6D35D}"
+	ProjectSection(SolutionItems) = preProject
+		bin\user_resource\level\Default_Level_Resource.json = bin\user_resource\level\Default_Level_Resource.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "object", "object", "{81C91932-A825-4EC8-84C8-26D21CE0C8C1}"
+	ProjectSection(SolutionItems) = preProject
+		bin\user_resource\object\character\palyer\Player_Object.json = bin\user_resource\object\character\palyer\Player_Object.json
 	EndProjectSection
 EndProject
 Global
@@ -120,6 +135,9 @@ Global
 		{1FF8E011-B84C-4845-8338-EE595A7B7CAA} = {6F6113A3-4DFC-40B0-8F81-BFE701CC26D4}
 		{7A10BD43-9201-4835-975C-1EF660269173} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
 		{6CB178E8-794C-4C37-95E5-6D5E7D6BE107} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
+		{089BD2B4-D806-4FF2-819A-C2B985533643} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
+		{C5716A3D-F654-4A22-B404-55CA3FF6D35D} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
+		{81C91932-A825-4EC8-84C8-26D21CE0C8C1} = {8655E517-9D6D-4E78-99D2-CB821A8A8305}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B07C124-2F8B-4152-A037-6C7DED513854}

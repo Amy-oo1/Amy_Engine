@@ -91,31 +91,34 @@ Parser_Header.o: \
   C:\Program\ Files\ (x86)\Windows\ Kits\10\Include\10.0.22621.0\ucrt\ctype.h \
   D:\Amy_Engine\core\include\meta\reflection\Reflection_Macro.h \
   D:\Amy_Engine\core\include\meta\reflection\Reflection_Instance.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\memory \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\typeinfo \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\vcruntime_typeinfo.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\cassert \
-  C:\Program\ Files\ (x86)\Windows\ Kits\10\Include\10.0.22621.0\ucrt\assert.h \
-  D:\Amy_Engine\core\include\math\Quaternion.h \
-  D:\Amy_Engine\core\include\math\Constant.h \
-  D:\Amy_Engine\core\include\math\Matrix3x3.h \
-  D:\Amy_Engine\core\include\math\Vector3.h \
-  D:\Amy_Engine\core\include\math\Radian.h \
-  D:\Amy_Engine\core\include\math\Matrix4x4.h \
-  D:\Amy_Engine\core\include\math\Vector4.h \
-  D:\Amy_Engine\resource\include\components\camera\Camera_Controller.h \
-  D:\Amy_Engine\core\include\math\Vector2.h \
-  D:\Amy_Engine\resource\include\components\skeleton\Skeleton_Node.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\vector \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_bit_utils.hpp \
-  D:\Amy_Engine\resource\include\components\animation\Blend_State.h \
-  D:\Amy_Engine\platform\include\file\File_System.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\optional \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xsmf_control.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\filesystem \
+  D:\Amy_Engine\third_party\nlohmann-3.11.3\include\json.h \
+  D:\Amy_Engine\third_party\nlohmann-3.11.3\include\..\json.hpp \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\algorithm \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_heap_algorithms.hpp \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_minmax.hpp \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\functional \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\typeinfo \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\vcruntime_typeinfo.h \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\unordered_map \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xhash \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\cmath \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\list \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\vector \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_bit_utils.hpp \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xbit_ops.h \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xnode_handle.h \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\iterator \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\memory \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\array \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\forward_list \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\map \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xtree \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\valarray \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\stdexcept \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\version \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\cassert \
+  C:\Program\ Files\ (x86)\Windows\ Kits\10\Include\10.0.22621.0\ucrt\assert.h \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\filesystem \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\chrono \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_chrono.hpp \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\ctime \
@@ -125,7 +128,6 @@ Parser_Header.o: \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\system_error \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_system_error_abi.hpp \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\cerrno \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\stdexcept \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xcall_once.h \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xerrc.h \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\atomic \
@@ -137,8 +139,6 @@ Parser_Header.o: \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\__msvc_ostream.hpp \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\ios \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xlocnum \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\cmath \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\iterator \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\streambuf \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xiosbase \
   C:\Program\ Files\ (x86)\Windows\ Kits\10\Include\10.0.22621.0\ucrt\share.h \
@@ -153,6 +153,24 @@ Parser_Header.o: \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\locale \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xlocbuf \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xlocmes \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\numeric \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\ostream \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\any \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\string_view \
+  D:\Amy_Engine\core\include\math\Quaternion.h \
+  D:\Amy_Engine\core\include\math\Constant.h \
+  D:\Amy_Engine\core\include\math\Matrix3x3.h \
+  D:\Amy_Engine\core\include\math\Vector3.h \
+  D:\Amy_Engine\core\include\math\Radian.h \
+  D:\Amy_Engine\core\include\math\Matrix4x4.h \
+  D:\Amy_Engine\core\include\math\Vector4.h \
+  D:\Amy_Engine\resource\include\components\camera\Camera_Controller.h \
+  D:\Amy_Engine\core\include\math\Vector2.h \
+  D:\Amy_Engine\resource\include\components\skeleton\Skeleton_Node.h \
+  D:\Amy_Engine\resource\include\components\animation\Blend_State.h \
+  D:\Amy_Engine\platform\include\file\File_System.h \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\optional \
+  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xsmf_control.h \
   D:\Amy_Engine\resource\include\components\animation\Animation_Clip.h \
   D:\Amy_Engine\core\include\transform\Affine_Transform.h \
   D:\Amy_Engine\core\include\math\Head_Math.h \
@@ -174,7 +192,6 @@ Parser_Header.o: \
   D:\Amy_Engine\resource\include\components\skeleton\Skeleton_Data.h \
   D:\Amy_Engine\resource\include\components\mesh\Mesh.h \
   D:\Amy_Engine\resource\include\components\mesh\Mesh_Data.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\array \
   D:\Amy_Engine\resource\include\global\Global_Particle.h \
   D:\Amy_Engine\resource\include\global\Global_Rendering.h \
   D:\Amy_Engine\resource\include\common\Object_Resource.h \
@@ -184,10 +201,7 @@ Parser_Header.o: \
   D:\Amy_Engine\function\include\frame\components\transform\Transform_Component.h \
   D:\Amy_Engine\function\include\frame\object\GObject.h \
   C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\unordered_set \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xhash \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\list \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xbit_ops.h \
-  C:\Program\ Files\Microsoft\ Visual\ Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include\xnode_handle.h \
   D:\Amy_Engine\function\include\frame\object\GObject_ID_Allocator.h \
   D:\Amy_Engine\function\include\render\render_system\Render_Obejct.h \
-  D:\Amy_Engine\function\include\frame\components\camera\Camera_Component.h
+  D:\Amy_Engine\function\include\frame\components\camera\Camera_Component.h \
+  D:\Amy_Engine\function\include\frame\components\mesh\Mesh_Component.h

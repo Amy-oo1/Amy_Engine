@@ -23,3 +23,4 @@
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Transform_Component.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Render_Obejct.Generated_Serializer.h"
 #include "D:/Amy_Engine/core/include/meta/generated/Serializer/Camera_Component.Generated_Serializer.h"
+#include "D:/Amy_Engine/core/include/meta/generated/Serializer/Mesh_Component.Generated_Serializer.h"

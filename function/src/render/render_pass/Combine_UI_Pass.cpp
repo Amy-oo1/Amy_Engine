@@ -363,7 +363,23 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	}
 
 	void Combine_UI_Pass::Draw(void) {
-		//TODO : Implement
+		this->m_RHI->Cmd_Bind_Pipeline_PFN(
+			this->m_RHI->Get_Current_Command_Buffer(),
+			RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+			this->m_Render_Pipelines[0].Pipeline.get()
+		);
+
+		this->m_RHI->Cmd_Set_Viewport_PFN(this->m_RHI->Get_Current_Command_Buffer(), this->m_RHI->Get_SwapChain_Viewport());
+		this->m_RHI->Cmd_Set_Scissor_PFN(this->m_RHI->Get_Current_Command_Buffer(), this->m_RHI->Get_SwapChain_Scissor());
+
+
+		this->m_RHI->Cmd_Bind_Descriptor_Set_PFN(
+			this->m_RHI->Get_Current_Command_Buffer(),
+			RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+			this->m_Render_Pipelines[0].Pipeline_Layout.get(),
+			0,
+			this->m_Descriptors[0].Descriptor_Set.get()
+		);
 	}
 
 	void Combine_UI_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {

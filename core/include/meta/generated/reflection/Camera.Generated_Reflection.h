@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/resource/include/components/camera/Camera.h"
 
@@ -61,7 +65,10 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -120,7 +127,40 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Resource::NameSpace_Components::Camera_Base;
+	            using ::NameSpace_Resource::NameSpace_Components::Camera_First_Persion;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Camera_First_Persion>::operator Reflection_Instance<Camera_Base>(void) const {
+		            return Reflection_Instance<Camera_Base>{
+			            std::string{"Camera_First_Persion"},
+			            std::static_pointer_cast<Camera_Base>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Resource::NameSpace_Components::Camera_Base;
+	//            using ::NameSpace_Resource::NameSpace_Components::Camera_First_Persion;
+
+     //          Reflection_Cast_Tale[string{"Camera_First_Persion"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Camera_First_Persion>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -260,7 +300,40 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Resource::NameSpace_Components::Camera_Base;
+	            using ::NameSpace_Resource::NameSpace_Components::Camera_Third_Persion;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Camera_Third_Persion>::operator Reflection_Instance<Camera_Base>(void) const {
+		            return Reflection_Instance<Camera_Base>{
+			            std::string{"Camera_Third_Persion"},
+			            std::static_pointer_cast<Camera_Base>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Resource::NameSpace_Components::Camera_Base;
+	//            using ::NameSpace_Resource::NameSpace_Components::Camera_Third_Persion;
+
+     //          Reflection_Cast_Tale[string{"Camera_Third_Persion"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Camera_Third_Persion>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -319,7 +392,40 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Resource::NameSpace_Components::Camera_Base;
+	            using ::NameSpace_Resource::NameSpace_Components::Camera_Free;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Camera_Free>::operator Reflection_Instance<Camera_Base>(void) const {
+		            return Reflection_Instance<Camera_Base>{
+			            std::string{"Camera_Free"},
+			            std::static_pointer_cast<Camera_Base>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Resource::NameSpace_Components::Camera_Base;
+	//            using ::NameSpace_Resource::NameSpace_Components::Camera_Free;
+
+     //          Reflection_Cast_Tale[string{"Camera_Free"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Camera_Free>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -372,5 +478,8 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 

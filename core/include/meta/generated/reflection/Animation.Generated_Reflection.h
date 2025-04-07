@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/resource/include/components/animation/Animation.h"
 
@@ -88,7 +92,10 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -167,7 +174,10 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -190,28 +200,28 @@ namespace NameSpace_Resource::NameSpace_Components{
 
         
 
-            static const string Get_skeleton_File_Path_Type_Spelling(void){
+            static const string Get_Skeleton_URL_Type_Spelling(void){
                 return string{"path"};
             }
 
-            static const string Get_skeleton_File_Path_Spelling(void){
-                return string{"m_skeleton_File_Path"};
+            static const string Get_Skeleton_URL_Spelling(void){
+                return string{"m_Skeleton_URL"};
             }
 
 
-            static const string Get_skeleton_File_Path_Display_Name(void){
-                return string{"skeleton_File_Path"};
+            static const string Get_Skeleton_URL_Display_Name(void){
+                return string{"Skeleton_URL"};
             }
 
-            static const path& Get_skeleton_File_Path_Attribute(shared_ptr<Animation_Component_Res> Instance){
-                return Instance->m_skeleton_File_Path;
+            static const path& Get_Skeleton_URL_Attribute(shared_ptr<Animation_Component_Res> Instance){
+                return Instance->m_Skeleton_URL;
             }
 
-            static void Set_Field_skeleton_File_Path_Attribute(shared_ptr<Animation_Component_Res> Instance, const path& Value){
-                Instance->m_skeleton_File_Path=Value;
+            static void Set_Field_Skeleton_URL_Attribute(shared_ptr<Animation_Component_Res> Instance, const path& Value){
+                Instance->m_Skeleton_URL=Value;
             }
 
-            static const bool Is_Filed_skeleton_File_Path_CPPVector(void){
+            static const bool Is_Filed_Skeleton_URL_CPPVector(void){
                 return  false;
             }
 
@@ -274,5 +284,8 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 

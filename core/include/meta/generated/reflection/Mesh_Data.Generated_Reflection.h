@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/resource/include/components/mesh/Mesh_Data.h"
 
@@ -112,28 +116,28 @@ namespace NameSpace_Resource::NameSpace_Components{
 
             
 
-            static const string Get_Texture_Coordinate_Type_Spelling(void){
-                return string{"array<size_t, 2>"};
+            static const string Get_Texture_Coordinates_Type_Spelling(void){
+                return string{"Vector2"};
             }
 
-            static const string Get_Texture_Coordinate_Spelling(void){
-                return string{"m_Texture_Coordinate"};
+            static const string Get_Texture_Coordinates_Spelling(void){
+                return string{"m_Texture_Coordinates"};
             }
 
 
-            static const string Get_Texture_Coordinate_Display_Name(void){
-                return string{"Texture_Coordinate"};
+            static const string Get_Texture_Coordinates_Display_Name(void){
+                return string{"Texture_Coordinates"};
             }
 
-            static const array<size_t, 2>& Get_Texture_Coordinate_Attribute(shared_ptr<Mesh_Vertex> Instance){
-                return Instance->m_Texture_Coordinate;
+            static const Vector2& Get_Texture_Coordinates_Attribute(shared_ptr<Mesh_Vertex> Instance){
+                return Instance->m_Texture_Coordinates;
             }
 
-            static void Set_Field_Texture_Coordinate_Attribute(shared_ptr<Mesh_Vertex> Instance, const array<size_t, 2>& Value){
-                Instance->m_Texture_Coordinate=Value;
+            static void Set_Field_Texture_Coordinates_Attribute(shared_ptr<Mesh_Vertex> Instance, const Vector2& Value){
+                Instance->m_Texture_Coordinates=Value;
             }
 
-            static const bool Is_Filed_Texture_Coordinate_CPPVector(void){
+            static const bool Is_Filed_Texture_Coordinates_CPPVector(void){
                 return  false;
             }
 
@@ -142,7 +146,10 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -165,55 +172,217 @@ namespace NameSpace_Resource::NameSpace_Components{
 
         
 
-            static const string Get_Bone_Indices_Type_Spelling(void){
-                return string{"array<size_t, 4>"};
+            static const string Get_Index_0_Type_Spelling(void){
+                return string{"size_t"};
             }
 
-            static const string Get_Bone_Indices_Spelling(void){
-                return string{"m_Bone_Indices"};
+            static const string Get_Index_0_Spelling(void){
+                return string{"m_Index_0"};
             }
 
 
-            static const string Get_Bone_Indices_Display_Name(void){
-                return string{"Bone_Indices"};
+            static const string Get_Index_0_Display_Name(void){
+                return string{"Index_0"};
             }
 
-            static const array<size_t, 4>& Get_Bone_Indices_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
-                return Instance->m_Bone_Indices;
+            static const size_t& Get_Index_0_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Index_0;
             }
 
-            static void Set_Field_Bone_Indices_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const array<size_t, 4>& Value){
-                Instance->m_Bone_Indices=Value;
+            static void Set_Field_Index_0_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const size_t& Value){
+                Instance->m_Index_0=Value;
             }
 
-            static const bool Is_Filed_Bone_Indices_CPPVector(void){
+            static const bool Is_Filed_Index_0_CPPVector(void){
                 return  false;
             }
 
             
 
-            static const string Get_Weights_Type_Spelling(void){
-                return string{"Vector4"};
+            static const string Get_Index_1_Type_Spelling(void){
+                return string{"size_t"};
             }
 
-            static const string Get_Weights_Spelling(void){
-                return string{"m_Weights"};
+            static const string Get_Index_1_Spelling(void){
+                return string{"m_Index_1"};
             }
 
 
-            static const string Get_Weights_Display_Name(void){
-                return string{"Weights"};
+            static const string Get_Index_1_Display_Name(void){
+                return string{"Index_1"};
             }
 
-            static const Vector4& Get_Weights_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
-                return Instance->m_Weights;
+            static const size_t& Get_Index_1_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Index_1;
             }
 
-            static void Set_Field_Weights_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const Vector4& Value){
-                Instance->m_Weights=Value;
+            static void Set_Field_Index_1_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const size_t& Value){
+                Instance->m_Index_1=Value;
             }
 
-            static const bool Is_Filed_Weights_CPPVector(void){
+            static const bool Is_Filed_Index_1_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Index_2_Type_Spelling(void){
+                return string{"size_t"};
+            }
+
+            static const string Get_Index_2_Spelling(void){
+                return string{"m_Index_2"};
+            }
+
+
+            static const string Get_Index_2_Display_Name(void){
+                return string{"Index_2"};
+            }
+
+            static const size_t& Get_Index_2_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Index_2;
+            }
+
+            static void Set_Field_Index_2_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const size_t& Value){
+                Instance->m_Index_2=Value;
+            }
+
+            static const bool Is_Filed_Index_2_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Index_3_Type_Spelling(void){
+                return string{"size_t"};
+            }
+
+            static const string Get_Index_3_Spelling(void){
+                return string{"m_Index_3"};
+            }
+
+
+            static const string Get_Index_3_Display_Name(void){
+                return string{"Index_3"};
+            }
+
+            static const size_t& Get_Index_3_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Index_3;
+            }
+
+            static void Set_Field_Index_3_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const size_t& Value){
+                Instance->m_Index_3=Value;
+            }
+
+            static const bool Is_Filed_Index_3_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Weight_0_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Weight_0_Spelling(void){
+                return string{"m_Weight_0"};
+            }
+
+
+            static const string Get_Weight_0_Display_Name(void){
+                return string{"Weight_0"};
+            }
+
+            static const float& Get_Weight_0_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Weight_0;
+            }
+
+            static void Set_Field_Weight_0_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const float& Value){
+                Instance->m_Weight_0=Value;
+            }
+
+            static const bool Is_Filed_Weight_0_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Weight_1_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Weight_1_Spelling(void){
+                return string{"m_Weight_1"};
+            }
+
+
+            static const string Get_Weight_1_Display_Name(void){
+                return string{"Weight_1"};
+            }
+
+            static const float& Get_Weight_1_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Weight_1;
+            }
+
+            static void Set_Field_Weight_1_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const float& Value){
+                Instance->m_Weight_1=Value;
+            }
+
+            static const bool Is_Filed_Weight_1_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Weight_2_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Weight_2_Spelling(void){
+                return string{"m_Weight_2"};
+            }
+
+
+            static const string Get_Weight_2_Display_Name(void){
+                return string{"Weight_2"};
+            }
+
+            static const float& Get_Weight_2_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Weight_2;
+            }
+
+            static void Set_Field_Weight_2_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const float& Value){
+                Instance->m_Weight_2=Value;
+            }
+
+            static const bool Is_Filed_Weight_2_CPPVector(void){
+                return  false;
+            }
+
+            
+
+            static const string Get_Weight_3_Type_Spelling(void){
+                return string{"float"};
+            }
+
+            static const string Get_Weight_3_Spelling(void){
+                return string{"m_Weight_3"};
+            }
+
+
+            static const string Get_Weight_3_Display_Name(void){
+                return string{"Weight_3"};
+            }
+
+            static const float& Get_Weight_3_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance){
+                return Instance->m_Weight_3;
+            }
+
+            static void Set_Field_Weight_3_Attribute(shared_ptr<Meah_Skeleton_Binding> Instance, const float& Value){
+                Instance->m_Weight_3=Value;
+            }
+
+            static const bool Is_Filed_Weight_3_CPPVector(void){
                 return  false;
             }
 
@@ -222,7 +391,10 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -407,5 +579,8 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 

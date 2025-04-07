@@ -248,23 +248,95 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				Submit_Info.pSignalSemaphores = nullptr;
 			}
 
-			THROW_IF_VK_FAILED(vkResetFences(this->m_Logical_VK_Device, 1, &this->m_Current_VK_Fence));
+			THROW_IF_VK_FAILED(vkResetFences(this->m_Logical_VK_Device, 1, &this->m_VK_Fences[this->m_Current_Frame_Index]));
 
 			THROW_IF_VK_FAILED(vkQueueSubmit(
 				this->m_Queues.Graphic_Queue,
 				1,
 				&Submit_Info,
-				this->m_Current_VK_Fence
+				this->m_VK_Fences[this->m_Current_Frame_Index]
 			));
 
 			this->Acquare_Next_Frame();
 
-			return true;
+			return false;
 		}
 		else
 			THROW_IF_VK_FAILED(vk_Resoult);
 
+		VkCommandBufferBeginInfo Begin_Info{};
+		{
+			Begin_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			Begin_Info.flags = 0;
+			Begin_Info.pInheritanceInfo = nullptr;
+		}
+
+		THROW_IF_VK_FAILED(this->F_vkBeginCommandBuffer(this->m_VK_Command_Buffers[this->m_Current_Frame_Index], &Begin_Info));
+
 		return true;
+	}
+
+	void Vulkan_RHI::Submit_Render(function<void(void)> Passes_Update_After_Recreate_Swapchain) {
+		THROW_IF_VK_FAILED(this->F_vkEndCommandBuffer(this->m_VK_Command_Buffers[this->m_Current_Frame_Index]));
+
+		THROW_IF_VK_FAILED(this->F_vkResetFences(this->m_Logical_VK_Device, 1, &this->m_VK_Fences[this->m_Current_Frame_Index]));
+
+		VkSemaphore semaphores[2]{
+			static_cast<Vulkan_Semaphore*>(this->m_Image_available_For_Render_RHI_Semaphores[this->m_Current_Frame_Index].get())->Get(),
+			static_cast<Vulkan_Semaphore*>(this->m_Image_Finished_For_Present_RHI_Semaphores[this->m_Current_Frame_Index].get())->Get()
+		};
+
+		VkPipelineStageFlags wait_stages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+
+		VkSubmitInfo submit_info{};
+		{
+			submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submit_info.waitSemaphoreCount = 1;
+			submit_info.pWaitSemaphores = &semaphores[0];
+			submit_info.pWaitDstStageMask = wait_stages;
+			submit_info.commandBufferCount = 1;
+			submit_info.pCommandBuffers = &this->m_VK_Command_Buffers[this->m_Current_Frame_Index];
+			submit_info.signalSemaphoreCount = 2;
+			submit_info.pSignalSemaphores = semaphores;
+		}
+
+		THROW_IF_VK_FAILED(vkQueueSubmit(
+			this->m_Queues.Graphic_Queue,
+			1,
+			&submit_info,
+			this->m_VK_Fences[this->m_Current_Frame_Index]
+		));
+
+		auto swapchain{ this->m_Vk_SwapChain.get() };
+
+		VkPresentInfoKHR Present_Info{};
+		{
+			Present_Info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+			Present_Info.waitSemaphoreCount = 1;
+			Present_Info.pWaitSemaphores = &semaphores[1];
+			Present_Info.swapchainCount = 1;
+			Present_Info.pSwapchains = &swapchain;
+			Present_Info.pImageIndices = &this->m_Current_SwapChain_Iamage_Index;
+			Present_Info.pResults = nullptr;
+		}
+
+		auto present_result{
+			vkQueuePresentKHR(
+				this->m_Queues.Present_Queue,
+				&Present_Info
+			)
+		};
+
+		if (VK_ERROR_OUT_OF_DATE_KHR == present_result || VK_SUBOPTIMAL_KHR == present_result)
+		{
+			this->ReCreate_SwapChain();
+			Passes_Update_After_Recreate_Swapchain();
+		}
+		else
+			THROW_IF_VK_FAILED(present_result);
+
+		this->Acquare_Next_Frame();
+
 	}
 
 	size_t Vulkan_RHI::Get_API_Version(void) const {
@@ -500,9 +572,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 	void Vulkan_RHI::Acquare_Next_Frame(void) {
 		this->m_Current_Frame_Index = (this->m_Current_Frame_Index + 1) % s_Frames_In_Flight;
-
-		this->m_Current_VK_Command_Buffer = this->m_VK_Command_Buffers[this->m_Current_Frame_Index];
-		this->m_Current_VK_Fence = this->m_InFlight_VK_Fences[this->m_Current_Frame_Index];
 	}
 
 	//Static Func
@@ -1232,6 +1301,44 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		return std::make_optional(vk_Pipeline_Dynamic_State_Create_Info);
 	}
 
+	const optional<VkClearValue> Vulkan_RHI::S_Parser_RHI_Clear_Value(const RHI_Clear_Value* Clear_Value) {
+		if (nullptr == Clear_Value)
+			return std::nullopt;
+
+		VkClearValue vk_Clear_Value{};
+		if (Clear_Value->Color.has_value() && (!Clear_Value->Depth_Stencil.has_value())) {
+			if (Clear_Value->Color->Float32.has_value() && (!Clear_Value->Color->Int32.has_value()) && (!Clear_Value->Color->Uint32.has_value())) {
+				vk_Clear_Value.color.float32[0] = Clear_Value->Color->Float32->at(0);
+				vk_Clear_Value.color.float32[1] = Clear_Value->Color->Float32->at(1);
+				vk_Clear_Value.color.float32[2] = Clear_Value->Color->Float32->at(2);
+				vk_Clear_Value.color.float32[3] = Clear_Value->Color->Float32->at(3);
+			}
+			else if ((!Clear_Value->Color->Float32.has_value()) && Clear_Value->Color->Int32.has_value() && (!Clear_Value->Color->Uint32.has_value())) {
+				vk_Clear_Value.color.int32[0] = Clear_Value->Color->Int32->at(0);
+				vk_Clear_Value.color.int32[1] = Clear_Value->Color->Int32->at(1);
+				vk_Clear_Value.color.int32[2] = Clear_Value->Color->Int32->at(2);
+				vk_Clear_Value.color.int32[3] = Clear_Value->Color->Int32->at(3);
+			}
+			else if ((!Clear_Value->Color->Float32.has_value()) && (!Clear_Value->Color->Int32.has_value()) && Clear_Value->Color->Uint32.has_value()) {
+				vk_Clear_Value.color.uint32[0] = Clear_Value->Color->Uint32->at(0);
+				vk_Clear_Value.color.uint32[1] = Clear_Value->Color->Uint32->at(1);
+				vk_Clear_Value.color.uint32[2] = Clear_Value->Color->Uint32->at(2);
+				vk_Clear_Value.color.uint32[3] = Clear_Value->Color->Uint32->at(3);
+			}
+			else
+				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
+
+		}
+		else if (Clear_Value->Depth_Stencil.has_value() && (!Clear_Value->Color.has_value())) {
+			vk_Clear_Value.depthStencil.depth = Clear_Value->Depth_Stencil->Depth;
+			vk_Clear_Value.depthStencil.stencil = Clear_Value->Depth_Stencil->Stencil;
+		}
+		else
+			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Clear Value Sync Attenacnt ,MUse Be Union ");
+
+		return std::make_optional(vk_Clear_Value);
+	}
+
 	//NOTE : Override Func
 	void Vulkan_RHI::Create_Instance(void) {
 		if (nullptr != static_cast<Vulkan_Instance*>(this->m_RHI_Instance.get())->Get())
@@ -1647,8 +1754,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			THROW_IF_VK_FAILED(vkAllocateCommandBuffers(this->m_Logical_VK_Device, &Command_Buffer_Allocate_Info, &this->m_VK_Command_Buffers[Index]));
 			static_cast<Vulkan_Command_Buffer*>(this->m_RHI_Command_Buffers[Index].get())->Reset(this->m_VK_Command_Buffers[Index]);
 		}
+	}
 
-		this->m_Current_VK_Command_Buffer = this->m_VK_Command_Buffers.front();
+	RHI_Command_Buffer* Vulkan_RHI::Get_Current_Command_Buffer(void) {
+		return this->m_RHI_Command_Buffers[this->m_Current_Frame_Index].get();//TODO : Check If Command Buffer Is Reset
 	}
 
 	unique_ptr<RHI_Command_Buffer> Vulkan_RHI::Begin_SingleTime_Command(void) {
@@ -2752,7 +2861,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	bool Vulkan_RHI::Wait_For_InFlight_Fence_PFN(void) {
-		auto vk_Result{ this->F_vkWaitForFences(this->m_Logical_VK_Device, 1, &this->m_Current_VK_Fence, VK_TRUE, std::numeric_limits<uint64_t>::max()) };
+		auto vk_Result{ this->F_vkWaitForFences(this->m_Logical_VK_Device, 1, &(this->m_VK_Fences[this->m_Current_Frame_Index]), VK_TRUE, std::numeric_limits<uint64_t>::max()) };
 
 		if (VK_SUCCESS != vk_Result) {
 			if (VK_TIMEOUT == vk_Result)
@@ -2818,14 +2927,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			}
 
 			{
-				THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device, &Fence_Info, this->m_Allocator.get(), &this->m_InFlight_VK_Fences[Index]));
+				THROW_IF_VK_FAILED(vkCreateFence(this->m_Logical_VK_Device, &Fence_Info, this->m_Allocator.get(), &this->m_VK_Fences[Index]));
 				if (nullptr == this->m_InFlight_RHI_Fences[Index])
 					this->m_InFlight_RHI_Fences[Index] = std::make_unique<Vulkan_Fence>();
-				static_cast<Vulkan_Fence*>(this->m_InFlight_RHI_Fences[Index].get())->Reset(this->m_InFlight_VK_Fences[Index]);
+				static_cast<Vulkan_Fence*>(this->m_InFlight_RHI_Fences[Index].get())->Reset(this->m_VK_Fences[Index]);
 			}
 		}
-
-		this->m_Current_VK_Fence = this->m_InFlight_VK_Fences.front();
 	}
 
 	void Vulkan_RHI::Initialize(void) {
@@ -2864,8 +2971,311 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 	}
 
 	void Vulkan_RHI::Prepare_Context(void) {
-		this->m_Current_VK_Command_Buffer = this->m_VK_Command_Buffers[this->m_Current_Frame_Index];
+		//this->m_Current_VK_Command_Buffer = this->m_VK_Command_Buffers[this->m_Current_Frame_Index];
+		//TODO :Remove It
 	}
+
+	void Vulkan_RHI::Cmd_Begin_Render_Pass_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Render_Pass_Begin_Info* Render_Pass_Begin, RHI_SUBPASS_CONTENTS Content) {
+		if (nullptr == Render_Pass_Begin || nullptr == Render_Pass_Begin->Clear_Values || Render_Pass_Begin->Clear_Values->empty())
+			throw runtime_error("Render Pass Begin Info is nullptr or Clear Values is nullptr or empty!");
+
+		vector<VkClearValue> vk_Clear_Values{};
+		vk_Clear_Values.reserve(Render_Pass_Begin->Clear_Values->size());
+
+		for (const auto& Clear_Value : *Render_Pass_Begin->Clear_Values) {
+			const auto vk_Clear_Value{ Vulkan_RHI::S_Parser_RHI_Clear_Value(Clear_Value) };
+			if (!vk_Clear_Value.has_value())
+				throw runtime_error("Clear Value is nullptr!");
+
+			vk_Clear_Values.emplace_back(vk_Clear_Value.value());
+		}
+
+
+		VkRenderPassBeginInfo vk_Render_Pass_Begin_Info{};
+		{
+			vk_Render_Pass_Begin_Info.sType = static_cast<VkStructureType>(Render_Pass_Begin->sType);
+			vk_Render_Pass_Begin_Info.pNext = Render_Pass_Begin->pNext;
+			vk_Render_Pass_Begin_Info.renderPass = static_cast<Vulkan_Render_Pass*>(Render_Pass_Begin->Render_Pass)->Get();
+			vk_Render_Pass_Begin_Info.framebuffer = static_cast<Vulkan_Frame_Buffer*>(Render_Pass_Begin->Frame_Buffer)->Get();
+			vk_Render_Pass_Begin_Info.renderArea.offset.x = Render_Pass_Begin->Render_Area.Offset.X;
+			vk_Render_Pass_Begin_Info.renderArea.offset.y = Render_Pass_Begin->Render_Area.Offset.Y;
+			vk_Render_Pass_Begin_Info.renderArea.extent.width = Render_Pass_Begin->Render_Area.Extent.Width;
+			vk_Render_Pass_Begin_Info.renderArea.extent.height = Render_Pass_Begin->Render_Area.Extent.Height;
+			vk_Render_Pass_Begin_Info.clearValueCount = static_cast<uint32_t>(vk_Clear_Values.size());
+			vk_Render_Pass_Begin_Info.pClearValues = vk_Clear_Values.data();
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdBeginRenderPass(vk_Command_Buffer, &vk_Render_Pass_Begin_Info, static_cast<VkSubpassContents>(Content));
+	}
+
+	void Vulkan_RHI::Cmd_End_Render_Pass_PFN(RHI_Command_Buffer* Command_Buffer) {
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdEndRenderPass(vk_Command_Buffer);
+
+	}
+
+	void Vulkan_RHI::Cmd_Next_Subpass_PFN(RHI_Command_Buffer* Command_Buffer, RHI_SUBPASS_CONTENTS Content) {
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdNextSubpass(vk_Command_Buffer, static_cast<VkSubpassContents>(Content));
+	}
+
+
+	void Vulkan_RHI::Cmd_Bind_Pipeline_PFN(RHI_Command_Buffer* Command_Buffer, RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point, RHI_Pipeline* Pipeline) {
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+		VkPipeline vk_Pipeline{ static_cast<Vulkan_Pipeline*>(Pipeline)->Get() };
+
+		this->F_vkCmdBindPipeline(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline);
+	}
+
+	void Vulkan_RHI::Cmd_Bind_Descriptor_Set_PFN(RHI_Command_Buffer* Command_Buffer, RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point, RHI_Pipeline_Layout* Layout, uint32_t First_Set_Index, RHI_Descriptor_Set* Descriptor_Sets, const vector<uint32_t>* Dynamic_Offsets) {
+		VkDescriptorSet vk_Descriptor_Sets{ static_cast<Vulkan_Descriptor_Set*>(Descriptor_Sets)->Get() };
+		VkPipelineLayout vk_Pipeline_Layout{ static_cast<Vulkan_Pipeline_Layout*>(Layout)->Get() };
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		if (nullptr == Dynamic_Offsets)
+			this->F_vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, First_Set_Index, 1, &vk_Descriptor_Sets, 0, nullptr);
+		else
+			this->F_vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, First_Set_Index, 1, &vk_Descriptor_Sets, Dynamic_Offsets->size(), Dynamic_Offsets->data());
+	}
+
+	void Vulkan_RHI::Cmd_Bind_Descriptor_Sets_PFN(RHI_Command_Buffer* Command_Buffer, RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point, RHI_Pipeline_Layout* Layout, uint32_t First_Set_Index, const vector<RHI_Descriptor_Set*>* Descriptor_Sets, const vector<uint32_t>* Dynamic_Offsets) {
+		if (nullptr == Descriptor_Sets || Descriptor_Sets->empty())
+			throw runtime_error("Descriptor Sets is nullptr or empty!");
+
+		vector<VkDescriptorSet> vk_Descriptor_Sets{};
+		vk_Descriptor_Sets.reserve(Descriptor_Sets->size());
+		for (const auto& Descriptor_Set : *Descriptor_Sets)
+			vk_Descriptor_Sets.push_back(static_cast<Vulkan_Descriptor_Set*>(Descriptor_Set)->Get());
+
+		VkPipelineLayout vk_Pipeline_Layout{ static_cast<Vulkan_Pipeline_Layout*>(Layout)->Get() };
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		if (nullptr == Dynamic_Offsets)
+			this->F_vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, First_Set_Index, static_cast<uint32_t>(vk_Descriptor_Sets.size()), vk_Descriptor_Sets.data(), 0, nullptr);
+		else
+			this->F_vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, First_Set_Index, static_cast<uint32_t>(vk_Descriptor_Sets.size()), vk_Descriptor_Sets.data(), Dynamic_Offsets->size(), Dynamic_Offsets->data());
+	}
+
+	void Vulkan_RHI::Cmd_Bind_Vertex_Buffers_PFN(RHI_Command_Buffer* Command_Buffer, uint32_t First_Binding_Index, const vector<RHI_Buffer*>* Buffers, const vector<RHI_Device_Size>* Offsets) {
+		if (nullptr == Buffers || Buffers->empty())
+			throw runtime_error("Buffers is nullptr or empty!");
+
+		if (nullptr == Offsets || Offsets->empty())
+			throw runtime_error("Offsets is nullptr or empty!");
+
+		if (Buffers->size() != Offsets->size())
+			throw runtime_error("Buffers size is not equal to Offsets size!");
+
+		vector<VkBuffer> vk_Buffers{};
+		vk_Buffers.reserve(Buffers->size());
+		for (const auto& Buffer : *Buffers)
+			vk_Buffers.push_back(static_cast<Vulkan_Buffer*>(Buffer)->Get());
+
+		vector<VkDeviceSize> vk_Offsets{};
+		vk_Offsets.reserve(Offsets->size());
+		for (const auto& Offset : *Offsets)
+			vk_Offsets.push_back(static_cast<VkDeviceSize>(Offset));
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdBindVertexBuffers(vk_Command_Buffer, First_Binding_Index, static_cast<uint32_t>(vk_Buffers.size()), vk_Buffers.data(), vk_Offsets.data());
+	}
+
+	void Vulkan_RHI::Cmd_Bind_Vertex_Buffer_PFN(RHI_Command_Buffer* Command_Buffer, RHI_Buffer* Buffer, RHI_Device_Size Offset) {
+		VkBuffer vk_Buffers{ static_cast<Vulkan_Buffer*>(Buffer)->Get() };
+		VkDeviceSize vk_Offsets{ static_cast<VkDeviceSize>(Offset) };
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdBindVertexBuffers(vk_Command_Buffer, 0, 1, &vk_Buffers, &vk_Offsets);
+	}
+
+	void Vulkan_RHI::Cmd_Bind_Index_Buffer_PFN(RHI_Command_Buffer* Command_Buffer, RHI_Buffer* Buffer, RHI_Device_Size Offset, RHI_INDEX_TYPE Index_Type) {
+		VkBuffer vk_Buffer{ static_cast<Vulkan_Buffer*>(Buffer)->Get() };
+		VkDeviceSize vk_Offset{ static_cast<VkDeviceSize>(Offset) };
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdBindIndexBuffer(vk_Command_Buffer, vk_Buffer, vk_Offset, static_cast<VkIndexType>(Index_Type));
+	}
+
+	void Vulkan_RHI::Cmd_Set_Viewports_PFN(RHI_Command_Buffer* Command_Buffer, const vector<const RHI_Viewport*>* Viewports) {
+		if (nullptr == Viewports || Viewports->empty())
+			throw runtime_error("Viewports is nullptr or empty!");
+
+		vector<VkViewport> vk_Viewports{};
+		vk_Viewports.reserve(Viewports->size());
+		for (const auto& Viewport : *Viewports) {
+			if (nullptr == Viewport)
+				throw runtime_error("Viewport is nullptr!");
+
+			VkViewport vk_Viewport{};
+			{
+				vk_Viewport.x = Viewport->X;
+				vk_Viewport.y = Viewport->Y;
+				vk_Viewport.width = Viewport->Width;
+				vk_Viewport.height = Viewport->Height;
+				vk_Viewport.minDepth = Viewport->Min_Depth;
+				vk_Viewport.maxDepth = Viewport->Max_Depth;
+			}
+
+			vk_Viewports.emplace_back(vk_Viewport);
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdSetViewport(vk_Command_Buffer, 0, vk_Viewports.size(), vk_Viewports.data());
+	}
+
+	void Vulkan_RHI::Cmd_Set_Viewport_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Viewport& Viewport) {
+		VkViewport vk_Viewport{};
+		{
+			vk_Viewport.x = Viewport.X;
+			vk_Viewport.y = Viewport.Y;
+			vk_Viewport.width = Viewport.Width;
+			vk_Viewport.height = Viewport.Height;
+			vk_Viewport.minDepth = Viewport.Min_Depth;
+			vk_Viewport.maxDepth = Viewport.Max_Depth;
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdSetViewport(vk_Command_Buffer, 0, 1, &vk_Viewport);
+	}
+
+	void Vulkan_RHI::Cmd_Set_Scissors_PFN(RHI_Command_Buffer* Command_Buffer, const vector<const RHI_Rect_2D*>* Scissors) {
+		if (nullptr == Scissors || Scissors->empty())
+			throw runtime_error("Scissors is nullptr or empty!");
+
+		vector<VkRect2D> vk_Scissors{};
+		vk_Scissors.reserve(Scissors->size());
+		for (const auto& Scissor : *Scissors) {
+			if (nullptr == Scissor)
+				throw runtime_error("Scissor is nullptr!");
+
+			VkRect2D vk_Scissor{};
+			{
+				vk_Scissor.offset.x = Scissor->Offset.X;
+				vk_Scissor.offset.y = Scissor->Offset.Y;
+				vk_Scissor.extent.width = Scissor->Extent.Width;
+				vk_Scissor.extent.height = Scissor->Extent.Height;
+			}
+
+			vk_Scissors.emplace_back(vk_Scissor);
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdSetScissor(vk_Command_Buffer, 0, vk_Scissors.size(), vk_Scissors.data());
+	}
+
+	void Vulkan_RHI::Cmd_Set_Scissor_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Rect_2D& Scissors) {
+		VkRect2D vk_Scissor{};
+		{
+			vk_Scissor.offset.x = Scissors.Offset.X;
+			vk_Scissor.offset.y = Scissors.Offset.Y;
+			vk_Scissor.extent.width = Scissors.Extent.Width;
+			vk_Scissor.extent.height = Scissors.Extent.Height;
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdSetScissor(vk_Command_Buffer, 0, 1, &vk_Scissor);
+	}
+
+	void Vulkan_RHI::Cmd_Draw(RHI_Command_Buffer* Command_Buffer, uint32_t Vertex_Count, uint32_t Instance_Count, uint32_t First_Vertex_Index, uint32_t First_Instance_Index) {
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		vkCmdDraw(vk_Command_Buffer, Vertex_Count, Instance_Count, First_Vertex_Index, First_Instance_Index);
+	}
+
+	void Vulkan_RHI::Cmd_Clear_Attachments_PFN(RHI_Command_Buffer* Command_Buffer, const vector<const RHI_Clear_Attachment*>* Attachments, const vector<const RHI_Clear_Rect*>* Rects) {
+		if (nullptr == Attachments || Attachments->empty())
+			throw runtime_error("Attachments is nullptr or empty!");
+
+		if (nullptr == Rects || Rects->empty())
+			throw runtime_error("Rects is nullptr or empty!");
+
+		if (Attachments->size() != Rects->size())
+			throw runtime_error("Attachments size is not equal to Rects size!");
+
+		vector<VkClearAttachment> vk_Clear_Attachments{};
+		vk_Clear_Attachments.reserve(Attachments->size());
+		for (const auto& Attachment : *Attachments) {
+			if (nullptr == Attachment)
+				throw runtime_error("Attachment is nullptr!");
+
+			VkClearAttachment vk_Clear_Attachment{};
+			{
+				vk_Clear_Attachment.aspectMask = static_cast<VkImageAspectFlags>(Attachment->Aspect_Mask);
+				vk_Clear_Attachment.colorAttachment = Attachment->Color_Attachment;
+				vk_Clear_Attachment.clearValue = Vulkan_RHI::S_Parser_RHI_Clear_Value(&Attachment->Clear_Value).value();
+			}
+
+			vk_Clear_Attachments.emplace_back(vk_Clear_Attachment);
+		}
+		vector<VkClearRect> vk_Clear_Rects{};
+		vk_Clear_Rects.reserve(Rects->size());
+		for (const auto& Rect : *Rects) {
+			if (nullptr == Rect)
+				throw runtime_error("Rect is nullptr!");
+
+			VkClearRect vk_Clear_Rect{};
+			{
+				vk_Clear_Rect.rect.offset.x = Rect->Rect.Offset.X;
+				vk_Clear_Rect.rect.offset.y = Rect->Rect.Offset.Y;
+				vk_Clear_Rect.rect.extent.width = Rect->Rect.Extent.Width;
+				vk_Clear_Rect.rect.extent.height = Rect->Rect.Extent.Height;
+				vk_Clear_Rect.baseArrayLayer = Rect->Base_Array_Layer;
+				vk_Clear_Rect.layerCount = Rect->Layer_Count;
+			}
+
+			vk_Clear_Rects.emplace_back(vk_Clear_Rect);
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdClearAttachments(vk_Command_Buffer, static_cast<uint32_t>(vk_Clear_Attachments.size()), vk_Clear_Attachments.data(), static_cast<uint32_t>(vk_Clear_Rects.size()), vk_Clear_Rects.data());
+	}
+
+	void Vulkan_RHI::Cmd_Clear_Attachment_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Clear_Attachment* Attachment, const RHI_Clear_Rect* Rect) {
+		if (nullptr == Attachment)
+			throw runtime_error("Attachment is nullptr!");
+
+		if (nullptr == Rect)
+			throw runtime_error("Rect is nullptr!");
+
+		VkClearAttachment vk_Clear_Attachment{};
+		{
+			vk_Clear_Attachment.aspectMask = static_cast<VkImageAspectFlags>(Attachment->Aspect_Mask);
+			vk_Clear_Attachment.colorAttachment = Attachment->Color_Attachment;
+			vk_Clear_Attachment.clearValue = Vulkan_RHI::S_Parser_RHI_Clear_Value(&Attachment->Clear_Value).value();
+		}
+
+		VkClearRect vk_Clear_Rect{};
+		{
+			vk_Clear_Rect.rect.offset.x = Rect->Rect.Offset.X;
+			vk_Clear_Rect.rect.offset.y = Rect->Rect.Offset.Y;
+			vk_Clear_Rect.rect.extent.width = Rect->Rect.Extent.Width;
+			vk_Clear_Rect.rect.extent.height = Rect->Rect.Extent.Height;
+			vk_Clear_Rect.baseArrayLayer = Rect->Base_Array_Layer;
+			vk_Clear_Rect.layerCount = Rect->Layer_Count;
+		}
+
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdClearAttachments(vk_Command_Buffer, 1, &vk_Clear_Attachment, 1, &vk_Clear_Rect);
+	}
+
+
+	void Vulkan_RHI::Cmd_Draw_Indexed_PFN(RHI_Command_Buffer* Command_Buffer, uint32_t Index_Count, uint32_t Instance_Count, uint32_t First_Index, int32_t VertexOffset, uint32_t First_Instance) {
+		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
+
+		this->F_vkCmdDrawIndexed(vk_Command_Buffer, Index_Count, Instance_Count, First_Index, VertexOffset, First_Instance);
+	}
+
 
 	bool Vulkan_RHI::Set_Buffer_Data(tuple<unique_ptr<RHI_Buffer>, unique_ptr<RHI_Device_Memory>> Buffer_And_Memory, RHI_Device_Size Offset, RHI_Device_Size Size, void* Data) {
 		const auto& [Buffer, Device_Memory] = Buffer_And_Memory;
@@ -2879,44 +3289,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		vkUnmapMemory(this->m_Logical_VK_Device, static_cast<Vulkan_Device_Memory*>(Device_Memory.get())->Get());
 
 		return true;
-	}
-
-	const optional<VkClearValue> Vulkan_RHI::Parser_RHI_Clear_Value(const RHI_Clear_Value* Clear_Value) {
-		if (nullptr == Clear_Value)
-			return std::nullopt;
-
-		VkClearValue vk_Clear_Value{};
-		if (Clear_Value->Color.has_value() && (!Clear_Value->Depth_Stencil.has_value())) {
-			if (Clear_Value->Color->Float32.has_value() && (!Clear_Value->Color->Int32.has_value()) && (!Clear_Value->Color->Uint32.has_value())) {
-				vk_Clear_Value.color.float32[0] = Clear_Value->Color->Float32->at(0);
-				vk_Clear_Value.color.float32[1] = Clear_Value->Color->Float32->at(1);
-				vk_Clear_Value.color.float32[2] = Clear_Value->Color->Float32->at(2);
-				vk_Clear_Value.color.float32[3] = Clear_Value->Color->Float32->at(3);
-			}
-			else if ((!Clear_Value->Color->Float32.has_value()) && Clear_Value->Color->Int32.has_value() && (!Clear_Value->Color->Uint32.has_value())) {
-				vk_Clear_Value.color.int32[0] = Clear_Value->Color->Int32->at(0);
-				vk_Clear_Value.color.int32[1] = Clear_Value->Color->Int32->at(1);
-				vk_Clear_Value.color.int32[2] = Clear_Value->Color->Int32->at(2);
-				vk_Clear_Value.color.int32[3] = Clear_Value->Color->Int32->at(3);
-			}
-			else if ((!Clear_Value->Color->Float32.has_value()) && (!Clear_Value->Color->Int32.has_value()) && Clear_Value->Color->Uint32.has_value()) {
-				vk_Clear_Value.color.uint32[0] = Clear_Value->Color->Uint32->at(0);
-				vk_Clear_Value.color.uint32[1] = Clear_Value->Color->Uint32->at(1);
-				vk_Clear_Value.color.uint32[2] = Clear_Value->Color->Uint32->at(2);
-				vk_Clear_Value.color.uint32[3] = Clear_Value->Color->Uint32->at(3);
-			}
-			else
-				System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
-
-		}
-		else if (Clear_Value->Depth_Stencil.has_value() && (!Clear_Value->Color.has_value())) {
-			vk_Clear_Value.depthStencil.depth = Clear_Value->Depth_Stencil->Depth;
-			vk_Clear_Value.depthStencil.stencil = Clear_Value->Depth_Stencil->Stencil;
-		}
-		else
-			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Union ");
-
-		return std::make_optional(vk_Clear_Value);
 	}
 
 	bool Vulkan_RHI::Begin_Command_Buffer_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Command_Buffer_Begin_Info* Begin_Command_Info) {
@@ -2954,300 +3326,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		THROW_IF_VK_FAILED(vkEndCommandBuffer(vk_Command_Buffer));
 
 		return true;
-	}
-
-	void Vulkan_RHI::Cmd_Begin_Render_Pass_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Render_Pass_Begin_Info* Render_Pass_Begin, RHI_SUBPASS_CONTENTS Content) {
-		vector<VkClearValue> vk_Clear_Values{};
-		if (nullptr == Render_Pass_Begin->Clear_Values || Render_Pass_Begin->Clear_Values->empty()) {
-			vk_Clear_Values.reserve(Render_Pass_Begin->Clear_Values->size());
-			for (const auto& Clear_Value : *Render_Pass_Begin->Clear_Values) {
-				const auto vk_Clear_Value{ Vulkan_RHI::Parser_RHI_Clear_Value(Clear_Value) };
-				if (!vk_Clear_Value.has_value())
-					throw runtime_error("Clear Value is nullptr!");
-
-				vk_Clear_Values.emplace_back(vk_Clear_Value.value());
-			}
-		}
-
-		VkRenderPassBeginInfo vk_Render_Pass_Begin_Info{};
-		{
-			vk_Render_Pass_Begin_Info.sType = static_cast<VkStructureType>(Render_Pass_Begin->sType);
-			vk_Render_Pass_Begin_Info.pNext = Render_Pass_Begin->pNext;
-			vk_Render_Pass_Begin_Info.renderPass = static_cast<Vulkan_Render_Pass*>(Render_Pass_Begin->Render_Pass)->Get();
-			vk_Render_Pass_Begin_Info.framebuffer = static_cast<Vulkan_Frame_Buffer*>(Render_Pass_Begin->Frame_Buffer)->Get();
-			vk_Render_Pass_Begin_Info.renderArea.offset.x = Render_Pass_Begin->Render_Area.Offset.X;
-			vk_Render_Pass_Begin_Info.renderArea.offset.y = Render_Pass_Begin->Render_Area.Offset.Y;
-			vk_Render_Pass_Begin_Info.renderArea.extent.width = Render_Pass_Begin->Render_Area.Extent.Width;
-			vk_Render_Pass_Begin_Info.renderArea.extent.height = Render_Pass_Begin->Render_Area.Extent.Height;
-			vk_Render_Pass_Begin_Info.clearValueCount = vk_Clear_Values.size();
-			vk_Render_Pass_Begin_Info.pClearValues = vk_Clear_Values.data();
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-		vkCmdBeginRenderPass(vk_Command_Buffer, &vk_Render_Pass_Begin_Info, static_cast<VkSubpassContents>(Content));
-	}
-
-	void Vulkan_RHI::Cmd_Next_Subpass_PFN(RHI_Command_Buffer* Command_Buffer, RHI_SUBPASS_CONTENTS Content) {
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdNextSubpass(vk_Command_Buffer, static_cast<VkSubpassContents>(Content));
-	}
-
-	void Vulkan_RHI::Cmd_End_Render_Pass_PFN(RHI_Command_Buffer* Command_Buffer) {
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdEndRenderPass(vk_Command_Buffer);
-	}
-
-	void Vulkan_RHI::Cmd_Bind_Pipeline_PFN(RHI_Command_Buffer* Command_Buffer, RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point, RHI_Pipeline* Pipeline) {
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-		VkPipeline vk_Pipeline{ static_cast<Vulkan_Pipeline*>(Pipeline)->Get() };
-
-		vkCmdBindPipeline(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline);
-	}
-
-	void Vulkan_RHI::Cmd_Set_Viewports_PFN(RHI_Command_Buffer* Command_Buffer, uint32_t First_Viewport_Index, const vector<const RHI_Viewport*>* Viewports) {
-		if (nullptr == Viewports || Viewports->empty())
-			throw runtime_error("Viewports is nullptr or empty!");
-
-		vector<VkViewport> vk_Viewports{};
-		vk_Viewports.reserve(Viewports->size());
-		for (const auto& Viewport : *Viewports) {
-			if (nullptr == Viewport)
-				throw runtime_error("Viewport is nullptr!");
-
-			VkViewport vk_Viewport{};
-			{
-				vk_Viewport.x = Viewport->X;
-				vk_Viewport.y = Viewport->Y;
-				vk_Viewport.width = Viewport->Width;
-				vk_Viewport.height = Viewport->Height;
-				vk_Viewport.minDepth = Viewport->Min_Depth;
-				vk_Viewport.maxDepth = Viewport->Max_Depth;
-			}
-
-			vk_Viewports.emplace_back(vk_Viewport);
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdSetViewport(vk_Command_Buffer, First_Viewport_Index, vk_Viewports.size(), vk_Viewports.data());
-	}
-
-	void Vulkan_RHI::Cmd_Set_Viewport_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Viewport* Viewport) {
-		if (nullptr == Viewport)
-			throw runtime_error("Viewport is nullptr!");
-
-		VkViewport vk_Viewport{};
-		{
-			vk_Viewport.x = Viewport->X;
-			vk_Viewport.y = Viewport->Y;
-			vk_Viewport.width = Viewport->Width;
-			vk_Viewport.height = Viewport->Height;
-			vk_Viewport.minDepth = Viewport->Min_Depth;
-			vk_Viewport.maxDepth = Viewport->Max_Depth;
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdSetViewport(vk_Command_Buffer, 0, 1, &vk_Viewport);
-	}
-
-	void Vulkan_RHI::Cmd_Set_Scissors_PFN(RHI_Command_Buffer* Command_Buffer, uint32_t First_Scissor_Index, const vector<const RHI_Rect_2D*>* Scissors) {
-		if (nullptr == Scissors || Scissors->empty())
-			throw runtime_error("Scissors is nullptr or empty!");
-
-		vector<VkRect2D> vk_Scissors{};
-		vk_Scissors.reserve(Scissors->size());
-		for (const auto& Scissor : *Scissors) {
-			if (nullptr == Scissor)
-				throw runtime_error("Scissor is nullptr!");
-
-			VkRect2D vk_Scissor{};
-			{
-				vk_Scissor.offset.x = Scissor->Offset.X;
-				vk_Scissor.offset.y = Scissor->Offset.Y;
-				vk_Scissor.extent.width = Scissor->Extent.Width;
-				vk_Scissor.extent.height = Scissor->Extent.Height;
-			}
-
-			vk_Scissors.emplace_back(vk_Scissor);
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdSetScissor(vk_Command_Buffer, First_Scissor_Index, vk_Scissors.size(), vk_Scissors.data());
-	}
-
-	void Vulkan_RHI::Cmd_Set_Scissors_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Rect_2D* Scissors) {
-		if (nullptr == Scissors)
-			throw runtime_error("Scissors is nullptr!");
-
-		VkRect2D vk_Scissor{};
-		{
-			vk_Scissor.offset.x = Scissors->Offset.X;
-			vk_Scissor.offset.y = Scissors->Offset.Y;
-			vk_Scissor.extent.width = Scissors->Extent.Width;
-			vk_Scissor.extent.height = Scissors->Extent.Height;
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdSetScissor(vk_Command_Buffer, 0, 1, &vk_Scissor);
-	}
-
-	void Vulkan_RHI::Cmd_Bind_Vertex_Buffers_PFN(RHI_Command_Buffer* Command_Buffer, uint32_t First_Binding_Index, const vector<RHI_Buffer*>* Buffers, const vector<RHI_Device_Size>* Offsets) {
-		if (nullptr == Buffers || Buffers->empty())
-			throw runtime_error("Buffers is nullptr or empty!");
-
-		if (nullptr == Offsets || Offsets->empty())
-			throw runtime_error("Offsets is nullptr or empty!");
-
-		if (Buffers->size() != Offsets->size())
-			throw runtime_error("Buffers size is not equal to Offsets size!");
-
-		vector<VkBuffer> vk_Buffers{};
-		vk_Buffers.reserve(Buffers->size());
-		for (const auto& Buffer : *Buffers)
-			vk_Buffers.push_back(static_cast<Vulkan_Buffer*>(Buffer)->Get());
-
-		vector<VkDeviceSize> vk_Offsets{};
-		vk_Offsets.reserve(Offsets->size());
-		for (const auto& Offset : *Offsets)
-			vk_Offsets.push_back(static_cast<VkDeviceSize>(Offset));
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdBindVertexBuffers(vk_Command_Buffer, First_Binding_Index, vk_Buffers.size(), vk_Buffers.data(), vk_Offsets.data());
-	}
-
-	void Vulkan_RHI::Cmd_Bind_Vertex_Buffer_PFN(RHI_Command_Buffer* Command_Buffer, RHI_Buffer* Buffers, RHI_Device_Size* Offsets) {
-		VkBuffer vk_Buffers{ static_cast<Vulkan_Buffer*>(Buffers)->Get() };
-		VkDeviceSize vk_Offsets{ static_cast<VkDeviceSize>(*Offsets) };
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdBindVertexBuffers(vk_Command_Buffer, 0, 1, &vk_Buffers, &vk_Offsets);
-	}
-
-	void Vulkan_RHI::Cmd_Bind_Index_Buffer_PFN(RHI_Command_Buffer* Command_Buffer, RHI_Buffer* Buffer, RHI_Device_Size Offset, RHI_INDEX_TYPE Index_Type) {
-		VkBuffer vk_Buffer{ static_cast<Vulkan_Buffer*>(Buffer)->Get() };
-		VkDeviceSize vk_Offset{ static_cast<VkDeviceSize>(Offset) };
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdBindIndexBuffer(vk_Command_Buffer, vk_Buffer, vk_Offset, static_cast<VkIndexType>(Index_Type));
-	}
-
-	void Vulkan_RHI::Cmd_Bind_Descriptor_Sets_PFN(RHI_Command_Buffer* Command_Buffer, RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point, RHI_Pipeline_Layout* Layout, uint32_t First_Set_Index, const vector<RHI_Descriptor_Set*>* Descriptor_Sets, const vector<uint32_t>* Dynamic_Offsets) {
-		if (nullptr == Descriptor_Sets || Descriptor_Sets->empty())
-			throw runtime_error("Descriptor Sets is nullptr or empty!");
-
-		vector<VkDescriptorSet> vk_Descriptor_Sets{};
-		vk_Descriptor_Sets.reserve(Descriptor_Sets->size());
-		for (const auto& Descriptor_Set : *Descriptor_Sets)
-			vk_Descriptor_Sets.push_back(static_cast<Vulkan_Descriptor_Set*>(Descriptor_Set)->Get());
-
-		VkPipelineLayout vk_Pipeline_Layout{ static_cast<Vulkan_Pipeline_Layout*>(Layout)->Get() };
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		if (nullptr == Dynamic_Offsets)
-			vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, First_Set_Index, vk_Descriptor_Sets.size(), vk_Descriptor_Sets.data(), 0, nullptr);
-		else
-			vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, First_Set_Index, vk_Descriptor_Sets.size(), vk_Descriptor_Sets.data(), Dynamic_Offsets->size(), Dynamic_Offsets->data());
-	}
-
-	void Vulkan_RHI::Cmd_Bind_Descriptor_Set_PFN(RHI_Command_Buffer* Command_Buffer, RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point, RHI_Pipeline_Layout* Layout, RHI_Descriptor_Set* Descriptor_Sets, const vector<uint32_t>* Dynamic_Offsets) {
-		VkDescriptorSet vk_Descriptor_Sets{ static_cast<Vulkan_Descriptor_Set*>(Descriptor_Sets)->Get() };
-		VkPipelineLayout vk_Pipeline_Layout{ static_cast<Vulkan_Pipeline_Layout*>(Layout)->Get() };
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		if (nullptr == Dynamic_Offsets)
-			vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, 0, 1, &vk_Descriptor_Sets, 0, nullptr);
-		else
-			vkCmdBindDescriptorSets(vk_Command_Buffer, static_cast<VkPipelineBindPoint>(Pipeline_Bind_Point), vk_Pipeline_Layout, 0, 1, &vk_Descriptor_Sets, Dynamic_Offsets->size(), Dynamic_Offsets->data());
-	}
-
-	void Vulkan_RHI::Cmd_Draw_Indexed_PFN(RHI_Command_Buffer* Command_Buffer, uint32_t Index_Count, uint32_t Instance_Count, uint32_t First_Index, int32_t VertexOffset, uint32_t First_Instance) {
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdDrawIndexed(vk_Command_Buffer, Index_Count, Instance_Count, First_Index, VertexOffset, First_Instance);
-	}
-
-	void Vulkan_RHI::Cmd_Clear_Attachments_PFN(RHI_Command_Buffer* Command_Buffer, const vector<const RHI_Clear_Attachment*>* Attachments, const vector<const RHI_Clear_Rect*>* Rects) {
-		if (nullptr == Attachments || Attachments->empty())
-			throw runtime_error("Attachments is nullptr or empty!");
-
-		if (nullptr == Rects || Rects->empty())
-			throw runtime_error("Rects is nullptr or empty!");
-
-		if (Attachments->size() != Rects->size())
-			throw runtime_error("Attachments size is not equal to Rects size!");
-
-		vector<VkClearAttachment> vk_Clear_Attachments{};
-		vk_Clear_Attachments.reserve(Attachments->size());
-		for (const auto& Attachment : *Attachments) {
-			if (nullptr == Attachment)
-				throw runtime_error("Attachment is nullptr!");
-
-			VkClearAttachment vk_Clear_Attachment{};
-			{
-				vk_Clear_Attachment.aspectMask = static_cast<VkImageAspectFlags>(Attachment->Aspect_Mask);
-				vk_Clear_Attachment.colorAttachment = Attachment->Color_Attachment;
-				vk_Clear_Attachment.clearValue = Vulkan_RHI::Parser_RHI_Clear_Value(&Attachment->Clear_Value).value();
-			}
-
-			vk_Clear_Attachments.emplace_back(vk_Clear_Attachment);
-		}
-		vector<VkClearRect> vk_Clear_Rects{};
-		vk_Clear_Rects.reserve(Rects->size());
-		for (const auto& Rect : *Rects) {
-			if (nullptr == Rect)
-				throw runtime_error("Rect is nullptr!");
-
-			VkClearRect vk_Clear_Rect{};
-			{
-				vk_Clear_Rect.rect.offset.x = Rect->Rect.Offset.X;
-				vk_Clear_Rect.rect.offset.y = Rect->Rect.Offset.Y;
-				vk_Clear_Rect.rect.extent.width = Rect->Rect.Extent.Width;
-				vk_Clear_Rect.rect.extent.height = Rect->Rect.Extent.Height;
-				vk_Clear_Rect.baseArrayLayer = Rect->Base_Array_Layer;
-				vk_Clear_Rect.layerCount = Rect->Layer_Count;
-			}
-
-			vk_Clear_Rects.emplace_back(vk_Clear_Rect);
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdClearAttachments(vk_Command_Buffer, vk_Clear_Attachments.size(), vk_Clear_Attachments.data(), vk_Clear_Rects.size(), vk_Clear_Rects.data());
-	}
-
-	void Vulkan_RHI::Cmd_Clear_Attachment_PFN(RHI_Command_Buffer* Command_Buffer, const RHI_Clear_Attachment* Attachment, const RHI_Clear_Rect* Rect) {
-		if (nullptr == Attachment)
-			throw runtime_error("Attachment is nullptr!");
-
-		if (nullptr == Rect)
-			throw runtime_error("Rect is nullptr!");
-
-		VkClearAttachment vk_Clear_Attachment{};
-		{
-			vk_Clear_Attachment.aspectMask = static_cast<VkImageAspectFlags>(Attachment->Aspect_Mask);
-			vk_Clear_Attachment.colorAttachment = Attachment->Color_Attachment;
-			vk_Clear_Attachment.clearValue = Vulkan_RHI::Parser_RHI_Clear_Value(&Attachment->Clear_Value).value();
-		}
-
-		VkClearRect vk_Clear_Rect{};
-		{
-			vk_Clear_Rect.rect.offset.x = Rect->Rect.Offset.X;
-			vk_Clear_Rect.rect.offset.y = Rect->Rect.Offset.Y;
-			vk_Clear_Rect.rect.extent.width = Rect->Rect.Extent.Width;
-			vk_Clear_Rect.rect.extent.height = Rect->Rect.Extent.Height;
-			vk_Clear_Rect.baseArrayLayer = Rect->Base_Array_Layer;
-			vk_Clear_Rect.layerCount = Rect->Layer_Count;
-		}
-
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdClearAttachments(vk_Command_Buffer, 1, &vk_Clear_Attachment, 1, &vk_Clear_Rect);
 	}
 
 	void Vulkan_RHI::Cmd_Copy_Image_To_Buffer(RHI_Command_Buffer* Command_Buffer, RHI_Image* Src_Image, RHI_IMAGE_LAYOUT Src_Image_Layout, RHI_Buffer* Dst_Buffer, const vector<const RHI_Buffer_Image_Copy*>* Regions) {
@@ -3337,12 +3415,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
 
 		vkCmdCopyBuffer(vk_Command_Buffer, vk_Src_Buffer, vk_Dst_Buffer, vk_Buffer_Copies.size(), vk_Buffer_Copies.data());
-	}
-
-	void Vulkan_RHI::Cmd_Draw(RHI_Command_Buffer* Command_Buffer, uint32_t Vertex_Count, uint32_t Instance_Count, uint32_t First_Vertex_Index, uint32_t First_Instance_Index) {
-		VkCommandBuffer vk_Command_Buffer{ static_cast<Vulkan_Command_Buffer*>(Command_Buffer)->Get() };
-
-		vkCmdDraw(vk_Command_Buffer, Vertex_Count, Instance_Count, First_Vertex_Index, First_Instance_Index);
 	}
 
 	void Vulkan_RHI::Cmd_Dispatch(RHI_Command_Buffer* Command_Buffer, uint32_t Group_Count_X, uint32_t Group_Count_Y, uint32_t Group_Count_Z) {

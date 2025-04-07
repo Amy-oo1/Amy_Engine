@@ -29,23 +29,23 @@ namespace NameSpace_Resource::NameSpace_Components {
 		~Mesh_Sub(void) = default;
 
 	private:
-		path m_Object_Path{};
+		path m_OBJ_URL{};
 		Affine_Transform m_Transform{ Affine_Transform::IDENTITY };
-		string m_Material{};
+		path m_Material_URL{};
 
 	};
 
-	REFLECTION_HEADER(Mesh);
-	REFLECTION_CLASS(Mesh, All) final
+	REFLECTION_HEADER(Mesh_Resource);
+	REFLECTION_CLASS(Mesh_Resource, All) final
 	{
-		REFLECTION_BODY(Mesh);
+		REFLECTION_BODY(Mesh_Resource);
 	public:
-		Mesh(void) = default;
+		Mesh_Resource(void) = default;
 
-		~Mesh(void) = default;
+		~Mesh_Resource(void) = default;
 
 	private:
-		vector<shared_ptr<Mesh_Sub>> m_Meshes{};
+		vector<shared_ptr<Mesh_Sub>> m_Sub_Meshes{};
 
 	};
 

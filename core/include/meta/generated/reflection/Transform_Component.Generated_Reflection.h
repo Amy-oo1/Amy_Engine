@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/function/include/frame/components/transform/Transform_Component.h"
 
@@ -64,115 +68,41 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_T
 
             
 
-            static const string Get_Transform_Buffer_Type_Spelling(void){
-                return string{"vector<Affine_Transform>"};
-            }
-
-            static const string Get_Transform_Buffer_Spelling(void){
-                return string{"m_Transform_Buffer"};
-            }
-
-
-            static const string Get_Transform_Buffer_Display_Name(void){
-                return string{"Transform_Buffer"};
-            }
-
-            static const vector<Affine_Transform>& Get_Transform_Buffer_Attribute(shared_ptr<Transform_Component> Instance){
-                return Instance->m_Transform_Buffer;
-            }
-
-            static void Set_Field_Transform_Buffer_Attribute(shared_ptr<Transform_Component> Instance, const vector<Affine_Transform>& Value){
-                Instance->m_Transform_Buffer=Value;
-            }
-
-            static const bool Is_Filed_Transform_Buffer_CPPVector(void){
-                return  !  false;
-            }
-
-                static const string Get_Transform_Buffer_CPPVector_Element_Type_Spelling(void){
-                    return string {"Affine_Transform"};
-                }
-
-                static const size_t Get_Transform_Buffer_CPPVector_Capacity(shared_ptr<Transform_Component> Instance){
-                    return Instance->m_Transform_Buffer.capacity();
-                }
-
-                static const size_t Get_Transform_Buffer_CPPVector_Size(shared_ptr<Transform_Component> Instance){
-                    return Instance->m_Transform_Buffer.size();
-                }
-
-                static const Affine_Transform& Get_Transform_Buffer_CPPVector_Element(shared_ptr<Transform_Component> Instance, size_t Index){
-                    return Instance->m_Transform_Buffer[Index];
-                }
-
-                static void Set_Transform_Buffer_CPPVector_Element(shared_ptr<Transform_Component> Instance, size_t Index, const Affine_Transform& Value){
-                    Instance->m_Transform_Buffer[Index]=Value;
-                }
-
-                static void Reserve_Transform_Buffer_CPPVector(shared_ptr<Transform_Component> Instance, size_t Capacity){
-                    Instance->m_Transform_Buffer.reserve(Capacity);
-                }
-
-                static void Push_Back_Transform_Buffer_CPPVector(shared_ptr<Transform_Component> Instance, const Affine_Transform& Value){
-                    Instance->m_Transform_Buffer.push_back(Value);
-                }
-
-            static const string Get_Currrent_Buffer_Index_Type_Spelling(void){
-                return string{"size_t"};
-            }
-
-            static const string Get_Currrent_Buffer_Index_Spelling(void){
-                return string{"m_Currrent_Buffer_Index"};
-            }
-
-
-            static const string Get_Currrent_Buffer_Index_Display_Name(void){
-                return string{"Currrent_Buffer_Index"};
-            }
-
-            static const size_t& Get_Currrent_Buffer_Index_Attribute(shared_ptr<Transform_Component> Instance){
-                return Instance->m_Currrent_Buffer_Index;
-            }
-
-            static void Set_Field_Currrent_Buffer_Index_Attribute(shared_ptr<Transform_Component> Instance, const size_t& Value){
-                Instance->m_Currrent_Buffer_Index=Value;
-            }
-
-            static const bool Is_Filed_Currrent_Buffer_Index_CPPVector(void){
-                return  false;
-            }
-
-            
-
-            static const string Get_Next_Buffer_Index_Type_Spelling(void){
-                return string{"size_t"};
-            }
-
-            static const string Get_Next_Buffer_Index_Spelling(void){
-                return string{"m_Next_Buffer_Index"};
-            }
-
-
-            static const string Get_Next_Buffer_Index_Display_Name(void){
-                return string{"Next_Buffer_Index"};
-            }
-
-            static const size_t& Get_Next_Buffer_Index_Attribute(shared_ptr<Transform_Component> Instance){
-                return Instance->m_Next_Buffer_Index;
-            }
-
-            static void Set_Field_Next_Buffer_Index_Attribute(shared_ptr<Transform_Component> Instance, const size_t& Value){
-                Instance->m_Next_Buffer_Index=Value;
-            }
-
-            static const bool Is_Filed_Next_Buffer_Index_CPPVector(void){
-                return  false;
-            }
-
-            
-
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component;
+	            using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform::Transform_Component;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Transform_Component>::operator Reflection_Instance<Component>(void) const {
+		            return Reflection_Instance<Component>{
+			            std::string{"Transform_Component"},
+			            std::static_pointer_cast<Component>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component;
+	//            using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Transform::Transform_Component;
+
+     //          Reflection_Cast_Tale[string{"Transform_Component"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Transform_Component>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 

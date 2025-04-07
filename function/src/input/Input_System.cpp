@@ -42,8 +42,8 @@ namespace NameSpace_Function::Namespace_Input {
 
 		const auto& FOV{ Global_Systemer::Get_Instance().Main_Render_System->Get_Render_Camera()->Get_FOV() };
 
-		auto Cursor_Delta_X{ Radian{Degree{this->m_Cursor_Delta_X}}.Get_Radian() };
-		auto Cursor_Delta_Y{ Radian{Degree{this->m_Cursor_Delta_Y}}.Get_Radian() };
+		auto Cursor_Delta_X{ Radian{Degree{static_cast<float>(this->m_Cursor_Delta_X)}}.Get_Radian() };
+		auto Cursor_Delta_Y{ Radian{Degree{static_cast<float>(this->m_Cursor_Delta_Y)}}.Get_Radian() };
 
 		this->m_Cursor_Yaw = Cursor_Delta_X * (FOV.Get_X() / static_cast<float>(Width));
 		this->m_Cursor_Pitch = Cursor_Delta_Y * (FOV.Get_Y() / static_cast<float>(Height));
@@ -68,7 +68,7 @@ namespace NameSpace_Function::Namespace_Input {
 
 		this->m_Cursor_Delta_X = 0.0f;
 		this->m_Cursor_Delta_Y = 0.0f;
-	
+
 		System_Logger::Get_Instance().Log(System_Logger::Level::info, "Input_System::Tick : Cursor Yaw : {}, Cursor Pitch : {}", this->m_Cursor_Yaw.Get_Radian(), this->m_Cursor_Pitch.Get_Radian());
 	}
 

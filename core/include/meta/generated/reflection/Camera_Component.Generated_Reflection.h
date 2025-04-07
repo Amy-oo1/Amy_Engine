@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/function/include/frame/components/camera/Camera_Component.h"
 
@@ -175,5 +179,38 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_C
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Camera
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component;
+	            using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Camera::Camera_Component;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Camera_Component>::operator Reflection_Instance<Component>(void) const {
+		            return Reflection_Instance<Component>{
+			            std::string{"Camera_Component"},
+			            std::static_pointer_cast<Component>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::Component;
+	//            using ::NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_Camera::Camera_Component;
+
+     //          Reflection_Cast_Tale[string{"Camera_Component"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Camera_Component>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 

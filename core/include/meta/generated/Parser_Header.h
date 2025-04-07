@@ -23,3 +23,4 @@
 #include "D:/Amy_Engine/function/include/frame/components/transform/Transform_Component.h"
 #include "D:/Amy_Engine/function/include/render/render_system/Render_Obejct.h"
 #include "D:/Amy_Engine/function/include/frame/components/camera/Camera_Component.h"
+#include "D:/Amy_Engine/function/include/frame/components/mesh/Mesh_Component.h"

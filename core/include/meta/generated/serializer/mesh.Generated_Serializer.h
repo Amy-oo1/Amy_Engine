@@ -26,9 +26,9 @@
 
             
 
-                Json_Context["Object_Path"] = Serializer::Write(Instance.m_Object_Path);
+                Json_Context["OBJ_URL"] = Serializer::Write(Instance.m_OBJ_URL);
                 Json_Context["Transform"] = Serializer::Write(Instance.m_Transform);
-                Json_Context["Material"] = Serializer::Write(Instance.m_Material);
+                Json_Context["Material_URL"] = Serializer::Write(Instance.m_Material_URL);
 
             return Json_Context;
         }
@@ -36,9 +36,12 @@
         template<> inline Mesh_Sub& Serializer::Read<Mesh_Sub>(const JSON& Json_Context, Mesh_Sub &Instance){
             
 
-                Serializer::Read(Json_Context["Object_Path"],Instance.m_Object_Path);
-                Serializer::Read(Json_Context["Transform"],Instance.m_Transform);
-                Serializer::Read(Json_Context["Material"],Instance.m_Material);
+            if(Json_Context.contains("OBJ_URL")&&!Json_Context["OBJ_URL"].is_null())
+                    Serializer::Read(Json_Context["OBJ_URL"],Instance.m_OBJ_URL);
+            if(Json_Context.contains("Transform")&&!Json_Context["Transform"].is_null())
+                    Serializer::Read(Json_Context["Transform"],Instance.m_Transform);
+            if(Json_Context.contains("Material_URL")&&!Json_Context["Material_URL"].is_null())
+                    Serializer::Read(Json_Context["Material_URL"],Instance.m_Material_URL);
 
             return Instance;
         }
@@ -54,22 +57,23 @@
 
         using NameSpace_Core::NameSpace_Meta::NameSpace_Reflection::Reflection_Instance;
 
-        using NameSpace_Resource::NameSpace_Components::Mesh;
+        using NameSpace_Resource::NameSpace_Components::Mesh_Resource;
 
-        template<> inline const JSON Serializer::Write<Mesh>(const Mesh& Instance){
+        template<> inline const JSON Serializer::Write<Mesh_Resource>(const Mesh_Resource& Instance){
             JSON Json_Context { JSON::object() };
 
             
 
-                Json_Context["Meshes"] = Serializer::Write(Instance.m_Meshes);
+                Json_Context["Sub_Meshes"] = Serializer::Write(Instance.m_Sub_Meshes);
 
             return Json_Context;
         }
 
-        template<> inline Mesh& Serializer::Read<Mesh>(const JSON& Json_Context, Mesh &Instance){
+        template<> inline Mesh_Resource& Serializer::Read<Mesh_Resource>(const JSON& Json_Context, Mesh_Resource &Instance){
             
 
-                Serializer::Read(Json_Context["Meshes"],Instance.m_Meshes);
+            if(Json_Context.contains("Sub_Meshes")&&!Json_Context["Sub_Meshes"].is_null())
+                    Serializer::Read(Json_Context["Sub_Meshes"],Instance.m_Sub_Meshes);
 
             return Instance;
         }

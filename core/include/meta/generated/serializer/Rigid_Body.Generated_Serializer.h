@@ -38,11 +38,16 @@
         template<> inline Rigid_Body_Shape& Serializer::Read<Rigid_Body_Shape>(const JSON& Json_Context, Rigid_Body_Shape &Instance){
             
 
-                Serializer::Read(Json_Context["Global_Transform"],Instance.m_Global_Transform);
-                Serializer::Read(Json_Context["Local_Transform"],Instance.m_Local_Transform);
-                Serializer::Read(Json_Context["Bounding_Box"],Instance.m_Bounding_Box);
-                Serializer::Read(Json_Context["Type"],Instance.m_Type);
-                Serializer::Read(Json_Context["Geometry"],Instance.m_Geometry);
+            if(Json_Context.contains("Global_Transform")&&!Json_Context["Global_Transform"].is_null())
+                    Serializer::Read(Json_Context["Global_Transform"],Instance.m_Global_Transform);
+            if(Json_Context.contains("Local_Transform")&&!Json_Context["Local_Transform"].is_null())
+                    Serializer::Read(Json_Context["Local_Transform"],Instance.m_Local_Transform);
+            if(Json_Context.contains("Bounding_Box")&&!Json_Context["Bounding_Box"].is_null())
+                    Serializer::Read(Json_Context["Bounding_Box"],Instance.m_Bounding_Box);
+            if(Json_Context.contains("Type")&&!Json_Context["Type"].is_null())
+                    Serializer::Read(Json_Context["Type"],Instance.m_Type);
+            if(Json_Context.contains("Geometry")&&!Json_Context["Geometry"].is_null())
+                    Serializer::Read(Json_Context["Geometry"],Instance.m_Geometry);
 
             return Instance;
         }
@@ -75,9 +80,12 @@
         template<> inline Rigid_Body_Res& Serializer::Read<Rigid_Body_Res>(const JSON& Json_Context, Rigid_Body_Res &Instance){
             
 
-                Serializer::Read(Json_Context["Shapes"],Instance.m_Shapes);
-                Serializer::Read(Json_Context["Inverse_Mass"],Instance.m_Inverse_Mass);
-                Serializer::Read(Json_Context["Actor_Type"],Instance.m_Actor_Type);
+            if(Json_Context.contains("Shapes")&&!Json_Context["Shapes"].is_null())
+                    Serializer::Read(Json_Context["Shapes"],Instance.m_Shapes);
+            if(Json_Context.contains("Inverse_Mass")&&!Json_Context["Inverse_Mass"].is_null())
+                    Serializer::Read(Json_Context["Inverse_Mass"],Instance.m_Inverse_Mass);
+            if(Json_Context.contains("Actor_Type")&&!Json_Context["Actor_Type"].is_null())
+                    Serializer::Read(Json_Context["Actor_Type"],Instance.m_Actor_Type);
 
             return Instance;
         }

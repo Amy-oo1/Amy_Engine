@@ -34,7 +34,8 @@
         template<> inline Physics_Controller_Config& Serializer::Read<Physics_Controller_Config>(const JSON& Json_Context, Physics_Controller_Config &Instance){
             
 
-                Serializer::Read(Json_Context["Cylinder"],Instance.m_Cylinder);
+            if(Json_Context.contains("Cylinder")&&!Json_Context["Cylinder"].is_null())
+                    Serializer::Read(Json_Context["Cylinder"],Instance.m_Cylinder);
 
             return Instance;
         }
@@ -71,13 +72,20 @@
         template<> inline Motor& Serializer::Read<Motor>(const JSON& Json_Context, Motor &Instance){
             
 
-                Serializer::Read(Json_Context["Physics_Controller_Config"],Instance.m_Physics_Controller_Config);
-                Serializer::Read(Json_Context["Move_Speed"],Instance.m_Move_Speed);
-                Serializer::Read(Json_Context["Jump_Height"],Instance.m_Jump_Height);
-                Serializer::Read(Json_Context["Max_Move_Speed_Ratio"],Instance.m_Max_Move_Speed_Ratio);
-                Serializer::Read(Json_Context["Max_Sprint_Speed_Ratio"],Instance.m_Max_Sprint_Speed_Ratio);
-                Serializer::Read(Json_Context["Move_Acceleration"],Instance.m_Move_Acceleration);
-                Serializer::Read(Json_Context["Sprint_Acceleration"],Instance.m_Sprint_Acceleration);
+            if(Json_Context.contains("Physics_Controller_Config")&&!Json_Context["Physics_Controller_Config"].is_null())
+                    Serializer::Read(Json_Context["Physics_Controller_Config"],Instance.m_Physics_Controller_Config);
+            if(Json_Context.contains("Move_Speed")&&!Json_Context["Move_Speed"].is_null())
+                    Serializer::Read(Json_Context["Move_Speed"],Instance.m_Move_Speed);
+            if(Json_Context.contains("Jump_Height")&&!Json_Context["Jump_Height"].is_null())
+                    Serializer::Read(Json_Context["Jump_Height"],Instance.m_Jump_Height);
+            if(Json_Context.contains("Max_Move_Speed_Ratio")&&!Json_Context["Max_Move_Speed_Ratio"].is_null())
+                    Serializer::Read(Json_Context["Max_Move_Speed_Ratio"],Instance.m_Max_Move_Speed_Ratio);
+            if(Json_Context.contains("Max_Sprint_Speed_Ratio")&&!Json_Context["Max_Sprint_Speed_Ratio"].is_null())
+                    Serializer::Read(Json_Context["Max_Sprint_Speed_Ratio"],Instance.m_Max_Sprint_Speed_Ratio);
+            if(Json_Context.contains("Move_Acceleration")&&!Json_Context["Move_Acceleration"].is_null())
+                    Serializer::Read(Json_Context["Move_Acceleration"],Instance.m_Move_Acceleration);
+            if(Json_Context.contains("Sprint_Acceleration")&&!Json_Context["Sprint_Acceleration"].is_null())
+                    Serializer::Read(Json_Context["Sprint_Acceleration"],Instance.m_Sprint_Acceleration);
 
             return Instance;
         }

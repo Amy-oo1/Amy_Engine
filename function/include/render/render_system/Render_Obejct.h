@@ -93,6 +93,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		shared_ptr<Game_Object_Mesh_Desc> m_Mesh_Desc;
 		shared_ptr<Game_Object_Material_Desc> m_Material_Desc;
 		shared_ptr<Game_Object_Transform_Desc> m_Transform_Desc;
+		//TODO :zhis is empty
 		shared_ptr<Skeleton_Binding_Desc> m_Skeleton_Binding_Desc;
 		shared_ptr<Skeleton_Animation_Result> m_Skeleton_Animation_Result;
 		bool m_Is_With_Skeleton{ false };

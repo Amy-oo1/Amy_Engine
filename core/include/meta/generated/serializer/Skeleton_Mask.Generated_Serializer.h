@@ -35,8 +35,10 @@
         template<> inline Bone_Blend_Mask& Serializer::Read<Bone_Blend_Mask>(const JSON& Json_Context, Bone_Blend_Mask &Instance){
             
 
-                Serializer::Read(Json_Context["Skeleton_Data_URL"],Instance.m_Skeleton_Data_URL);
-                Serializer::Read(Json_Context["Enabled"],Instance.Enabled);
+            if(Json_Context.contains("Skeleton_Data_URL")&&!Json_Context["Skeleton_Data_URL"].is_null())
+                    Serializer::Read(Json_Context["Skeleton_Data_URL"],Instance.m_Skeleton_Data_URL);
+            if(Json_Context.contains("Enabled")&&!Json_Context["Enabled"].is_null())
+                    Serializer::Read(Json_Context["Enabled"],Instance.Enabled);
 
             return Instance;
         }

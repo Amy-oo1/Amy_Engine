@@ -3,6 +3,7 @@
 #include<string>
 #include<unordered_map>
 #include<memory>
+#include<utility>
 
 #include "file/File_System.h"
 
@@ -32,7 +33,7 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level {
 	using std::shared_ptr;
 	using std::weak_ptr;
 
-	class Level final {
+	class Level final :public std::enable_shared_from_this<Level> {
 	private:
 		Level(const Level&) = delete;
 		Level(Level&&) = delete;
@@ -43,11 +44,11 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Level {
 	public:
 		Level(void) = default;
 
-		Level(const path& Level_Resource_URL);
+		//Level(const path& Level_Resource_URL);
 
 		~Level(void) = default;
 
-		shared_ptr<Level> Load_Level(const path& Level_Resource_URL);
+		void Load_Level(const path& Level_Resource_URL);
 
 		GObject_ID Create_Object(const shared_ptr<Object_Instance>& Object_Instance_Res);
 

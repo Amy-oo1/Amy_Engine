@@ -38,10 +38,10 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_Components::NameSpace_T
 	protected:
 		Affine_Transform m_Transform{ Affine_Transform::IDENTITY };
 
-		vector<Affine_Transform> m_Transform_Buffer{ Affine_Transform::IDENTITY ,Affine_Transform::IDENTITY };
+		META(Disable) vector<Affine_Transform> m_Transform_Buffer{ Affine_Transform::IDENTITY ,Affine_Transform::IDENTITY };
 
-		size_t m_Currrent_Buffer_Index{ 0 };
-		size_t m_Next_Buffer_Index{ 1 };
+		META(Disable) size_t m_Currrent_Buffer_Index{ 0 };
+		META(Disable) size_t m_Next_Buffer_Index{ 1 };
 
 	};
 

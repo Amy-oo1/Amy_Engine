@@ -79,6 +79,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void Allocate_Default_Command_Buffers(void) = 0;
 
+		[[nodiscard]] virtual RHI_Command_Buffer* Get_Current_Command_Buffer(void) = 0;
+
 		[[nodiscard]] virtual unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Command(void) = 0;
 
 		virtual void End_SingleTime_Command(unique_ptr<RHI_Command_Buffer> Command_Buffer) = 0;
@@ -320,6 +322,121 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 
 		virtual void Prepare_Context(void) = 0;
 
+		virtual void
+			Cmd_Begin_Render_Pass_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const RHI_Render_Pass_Begin_Info* Render_Pass_Begin,
+				RHI_SUBPASS_CONTENTS  Contents
+			) = 0;
+
+		virtual void
+			Cmd_End_Render_Pass_PFN(
+				RHI_Command_Buffer* Command_Buffer
+			) = 0;
+
+		virtual void
+			Cmd_Next_Subpass_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_SUBPASS_CONTENTS contents
+			) = 0;
+
+
+		virtual void
+			Cmd_Bind_Pipeline_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point,
+				RHI_Pipeline* Pipeline
+			) = 0;
+
+		virtual void
+			Cmd_Bind_Descriptor_Sets_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point,
+				RHI_Pipeline_Layout* Layout,
+				uint32_t First_Set_Index,
+				const vector<RHI_Descriptor_Set*>* Descriptor_Sets,
+				const vector<uint32_t>* Dynamic_Offsets = nullptr
+			) = 0;
+
+		virtual void
+			Cmd_Bind_Descriptor_Set_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point,
+				RHI_Pipeline_Layout* Layout,
+				uint32_t First_Set_Index,
+				RHI_Descriptor_Set* Descriptor_Set,
+				const vector<uint32_t>* Dynamic_Offsets = nullptr
+			) = 0;
+
+		virtual void
+			Cmd_Bind_Vertex_Buffers_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				uint32_t First_Binding_Index,
+				const vector<RHI_Buffer*>* Buffers,
+				const vector<RHI_Device_Size>* Offsets
+			) = 0;
+
+		virtual void
+			Cmd_Bind_Vertex_Buffer_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_Buffer* Buffer,
+				RHI_Device_Size Offset
+			) = 0;
+
+		virtual void
+			Cmd_Bind_Index_Buffer_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_Buffer* Buffer,
+				RHI_Device_Size Offset,
+				RHI_INDEX_TYPE Index_Type
+			) = 0;
+
+		virtual void
+			Cmd_Set_Viewports_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const vector<const RHI_Viewport*>* Viewports
+			) = 0;
+
+		virtual void
+			Cmd_Set_Viewport_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const RHI_Viewport& Viewport
+			) = 0;
+
+		virtual void
+			Cmd_Set_Scissors_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const vector<const RHI_Rect_2D*>* Scissors
+			) = 0;
+
+		virtual void
+			Cmd_Set_Scissor_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const RHI_Rect_2D& Scissor
+			) = 0;
+
+		virtual void
+			Cmd_Draw(
+				RHI_Command_Buffer* Command_Buffer,
+				uint32_t Vertex_Count,
+				uint32_t Instance_Count,
+				uint32_t First_Vertex_Index,
+				uint32_t First_Instance_Index
+			) = 0;
+
+		virtual void Cmd_Clear_Attachments_PFN(
+			RHI_Command_Buffer* Command_Buffer,
+			const vector<const RHI_Clear_Attachment*>* Attachments,
+			const vector<const RHI_Clear_Rect*>* Rects
+		) = 0;
+
+		virtual void Cmd_Clear_Attachment_PFN(
+			RHI_Command_Buffer* Command_Buffer,
+			const RHI_Clear_Attachment* Attachment,
+			const RHI_Clear_Rect* Rect
+		) = 0;
+
+
 	private:
 
 
@@ -343,98 +460,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				RHI_Command_Buffer* Command_Buffer
 			) = 0;
 
-		virtual void
-			Cmd_Begin_Render_Pass_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				const RHI_Render_Pass_Begin_Info* Render_Pass_Begin,
-				RHI_SUBPASS_CONTENTS  Contents) = 0;
-
-		virtual void
-			Cmd_Next_Subpass_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_SUBPASS_CONTENTS contents
-			) = 0;
 
 
-		virtual void
-			Cmd_End_Render_Pass_PFN(
-				RHI_Command_Buffer* Command_Buffer
-			) = 0;
 
-		virtual void
-			Cmd_Bind_Pipeline_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point,
-				RHI_Pipeline* Pipeline
-			) = 0;
 
-		virtual void
-			Cmd_Set_Viewports_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t First_Viewport_Index,
-				const vector<const RHI_Viewport*>* Viewports
-			) = 0;
 
-		virtual void
-			Cmd_Set_Viewport_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				const RHI_Viewport* Viewport
-			) = 0;
-
-		virtual void
-			Cmd_Set_Scissors_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t First_Scissor_Index,
-				const vector<const RHI_Rect_2D*>* Scissors
-			) = 0;
-
-		virtual void
-			Cmd_Set_Scissors_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				const RHI_Rect_2D* Scissors
-			) = 0;
-
-		virtual void
-			Cmd_Bind_Vertex_Buffers_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t First_Binding_Index,
-				const vector<RHI_Buffer*>* Buffers,
-				const vector<RHI_Device_Size>* Offsets
-			) = 0;
-
-		virtual void
-			Cmd_Bind_Vertex_Buffer_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_Buffer* Buffers,
-				RHI_Device_Size* Offsets
-			) = 0;
-
-		virtual void
-			Cmd_Bind_Index_Buffer_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_Buffer* Buffer,
-				RHI_Device_Size Offset,
-				RHI_INDEX_TYPE Index_Type
-			) = 0;
-
-		virtual void
-			Cmd_Bind_Descriptor_Sets_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point,
-				RHI_Pipeline_Layout* Layout,
-				uint32_t First_Set_Index,
-				const vector<RHI_Descriptor_Set*>* Descriptor_Sets,
-				const vector<uint32_t>* Dynamic_Offsets = nullptr
-			) = 0;
-
-		virtual void
-			Cmd_Bind_Descriptor_Set_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point,
-				RHI_Pipeline_Layout* Layout,
-				RHI_Descriptor_Set* Descriptor_Sets,
-				const vector<uint32_t>* Dynamic_Offsets = nullptr
-			) = 0;
 
 
 		virtual void
@@ -447,17 +477,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				uint32_t First_Instance
 			) = 0;
 
-		virtual void Cmd_Clear_Attachments_PFN(
-			RHI_Command_Buffer* Command_Buffer,
-			const vector<const RHI_Clear_Attachment*>* Attachments,
-			const vector<const RHI_Clear_Rect*>* Rects
-		) = 0;
-
-		virtual void Cmd_Clear_Attachment_PFN(
-			RHI_Command_Buffer* Command_Buffer,
-			const RHI_Clear_Attachment* Attachment,
-			const RHI_Clear_Rect* Rect
-		) = 0;
 
 		virtual void
 			Cmd_Copy_Image_To_Buffer(
@@ -488,15 +507,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 				RHI_Buffer* Src_Buffer,
 				RHI_Buffer* Dst_Buffer,
 				const vector<const RHI_Buffer_Copy*>* Regions
-			) = 0;
-
-		virtual void
-			Cmd_Draw(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t Vertex_Count,
-				uint32_t Instance_Count,
-				uint32_t First_Vertex_Index,
-				uint32_t First_Instance_Index
 			) = 0;
 
 		virtual void

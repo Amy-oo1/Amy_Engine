@@ -48,7 +48,7 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 		virtual void Tick(float Delta_Time);
 
 		//NOTE : Ptr Fromt his is not safe In Construction
-		bool Load(const shared_ptr<Object_Instance>& Object_Instance_Res);
+		void Load(const shared_ptr<Object_Instance>& Object_Instance_Res);
 
 		shared_ptr<Object_Instance> Save(void);
 
@@ -88,7 +88,7 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	private:
 		void Load_Instance(const shared_ptr<Object_Instance>& Object_Instance_Res);
-		bool Load_Definition(void);
+		void Load_Definition(const path& Definiton_URL);
 
 	};
 

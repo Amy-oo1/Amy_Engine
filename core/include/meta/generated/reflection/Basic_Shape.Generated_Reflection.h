@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/resource/include/components/rigid_body/Basic_Shape.h"
 
@@ -35,7 +39,10 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -94,7 +101,40 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Resource::NameSpace_Components::Geometry_Base;
+	            using ::NameSpace_Resource::NameSpace_Components::Geometry_Box;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Geometry_Box>::operator Reflection_Instance<Geometry_Base>(void) const {
+		            return Reflection_Instance<Geometry_Base>{
+			            std::string{"Geometry_Box"},
+			            std::static_pointer_cast<Geometry_Base>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Resource::NameSpace_Components::Geometry_Base;
+	//            using ::NameSpace_Resource::NameSpace_Components::Geometry_Box;
+
+     //          Reflection_Cast_Tale[string{"Geometry_Box"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Geometry_Box>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -153,7 +193,40 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Resource::NameSpace_Components::Geometry_Base;
+	            using ::NameSpace_Resource::NameSpace_Components::Geometry_Sphere;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Geometry_Sphere>::operator Reflection_Instance<Geometry_Base>(void) const {
+		            return Reflection_Instance<Geometry_Base>{
+			            std::string{"Geometry_Sphere"},
+			            std::static_pointer_cast<Geometry_Base>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Resource::NameSpace_Components::Geometry_Base;
+	//            using ::NameSpace_Resource::NameSpace_Components::Geometry_Sphere;
+
+     //          Reflection_Cast_Tale[string{"Geometry_Sphere"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Geometry_Sphere>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 namespace NameSpace_Resource::NameSpace_Components{
 
     using std::string;
@@ -239,5 +312,38 @@ namespace NameSpace_Resource::NameSpace_Components{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Components
+
+            namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection {
+                using ::NameSpace_Resource::NameSpace_Components::Geometry_Base;
+	            using ::NameSpace_Resource::NameSpace_Components::Geometry_Cylinder;
+
+	            template<>
+	            template<>
+	            inline Reflection_Instance<Geometry_Cylinder>::operator Reflection_Instance<Geometry_Base>(void) const {
+		            return Reflection_Instance<Geometry_Base>{
+			            std::string{"Geometry_Cylinder"},
+			            std::static_pointer_cast<Geometry_Base>(this->m_Instance)
+		            }; 
+	            }
+            };// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Reflection
+
+
+
+
+  //          namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer{
+   //             using JSON = nlohmann::json;
+//
+   //             using ::NameSpace_Resource::NameSpace_Components::Geometry_Base;
+	//            using ::NameSpace_Resource::NameSpace_Components::Geometry_Cylinder;
+
+     //          Reflection_Cast_Tale[string{"Geometry_Cylinder"}]=[](const JSON& Json_Context){
+      //              auto Temp_Instance=make_shared<Geometry_Cylinder>();
+       //             Serializer::Read(Json_Context,Temp_Instance);
+//
+      //              return static_pointer_cast<void>(Temp_Instance);
+          //     };
+//
+    //        }// namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer
+ 
 

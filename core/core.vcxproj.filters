@@ -267,9 +267,6 @@
     <ClInclude Include="include\meta\generated\serializer\Materia.Generated_Serializer.h">
       <Filter>include\meta\generated\serializer</Filter>
     </ClInclude>
-    <ClInclude Include="include\meta\generated\serializer\mesh.Generated_Serializer.h">
-      <Filter>include\meta\generated\serializer</Filter>
-    </ClInclude>
     <ClInclude Include="include\meta\generated\serializer\Mesh_Data.Generated_Serializer.h">
       <Filter>include\meta\generated\serializer</Filter>
     </ClInclude>
@@ -308,6 +305,15 @@
     </ClInclude>
     <ClInclude Include="include\meta\generated\reflection\Mesh.Generated_Reflection.h">
       <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Mesh.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\reflection\Mesh_Component.Generated_Reflection.h">
+      <Filter>include\meta\generated\reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\meta\generated\serializer\Mesh_Component.Generated_Serializer.h">
+      <Filter>include\meta\generated\serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

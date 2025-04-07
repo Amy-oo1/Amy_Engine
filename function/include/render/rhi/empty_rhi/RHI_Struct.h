@@ -6,6 +6,7 @@
 #include<vector>
 #include<array>
 #include<memory>
+#include<utility>
 
 #include "vulkan/vulkan.h"
 
@@ -435,6 +436,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		optional<array<uint32_t, 4>> Uint32;
 	};
 
+
 	struct RHI_Clear_Depth_Stencil_Value final {
 		float Depth;
 		uint32_t Stencil;
@@ -443,7 +445,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 	struct RHI_Clear_Value {
 		optional<RHI_Clear_Color_Value> Color;
 		optional<RHI_Clear_Depth_Stencil_Value> Depth_Stencil;
-	};;
+	};
 
 	struct RHI_Render_Pass_Begin_Info final {
 		RHI_STRUCT_TYPE sType;
@@ -702,5 +704,28 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI {
 		RHI_Physical_Device_Limits Limits;
 		RHI_Physical_DeviceSparse_Properties Sparse_Properties;
 	};;
+
+	//NOTE :Builder
+	class RHI_Clear_Value_Builder {
+		RHI_Clear_Value m_value;
+
+	public:
+		RHI_Clear_Value_Builder& Set_Color_Float(const std::array<float, 4>& values) {
+			m_value.Color.emplace();
+			m_value.Color->Float32.emplace(values);
+			return *this;
+		}
+
+		RHI_Clear_Value_Builder& Set_Depth_Stencil(float depth, uint32_t stencil) {
+			m_value.Depth_Stencil.emplace(RHI_Clear_Depth_Stencil_Value{ depth, stencil });
+			return *this;
+		}
+
+		RHI_Clear_Value Build() {
+			return std::move(m_value);
+		}
+	};
+
+
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI

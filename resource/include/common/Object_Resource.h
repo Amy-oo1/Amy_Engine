@@ -48,7 +48,6 @@ namespace NameSpace_Resource::NameSpace_Common {
 		~Object_Definition(void) = default;
 
 	private:
-		string m_Seplling;
 		vector<Reflection_Instance<Component>> m_Components;
 
 	};

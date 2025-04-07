@@ -39,7 +39,7 @@ namespace NameSpace_Resource::NameSpace_Components {
 		Vector3 m_Normal{ Vector3::UNIT_Z };
 		Vector3 m_Tangent{ Vector3::UNIT_X };
 		//Vector3 m_Bitangent{ Vector3::UNIT_Y };
-		array<size_t, 2> m_Texture_Coordinate{};
+		Vector2 m_Texture_Coordinates{};
 
 	};
 
@@ -52,9 +52,15 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 		~Meah_Skeleton_Binding(void) = default;
 	private:
-		array<size_t, 4> m_Bone_Indices{};
-		Vector4 m_Weights{ Vector4::ZERO };
+		size_t m_Index_0{ 0 };
+		size_t m_Index_1{ 0 };
+		size_t m_Index_2{ 0 };
+		size_t m_Index_3{ 0 };
 
+		float m_Weight_0{ 0.f };
+		float m_Weight_1{ 0.f };
+		float m_Weight_2{ 0.f };
+		float m_Weight_3{ 0.f };
 	};
 
 	REFLECTION_HEADER(Mesh_Data);

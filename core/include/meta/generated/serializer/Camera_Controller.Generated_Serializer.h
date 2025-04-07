@@ -36,9 +36,12 @@
         template<> inline Camera_Pose& Serializer::Read<Camera_Pose>(const JSON& Json_Context, Camera_Pose &Instance){
             
 
-                Serializer::Read(Json_Context["Position"],Instance.m_Position);
-                Serializer::Read(Json_Context["Target"],Instance.m_Target);
-                Serializer::Read(Json_Context["Up"],Instance.m_Up);
+            if(Json_Context.contains("Position")&&!Json_Context["Position"].is_null())
+                    Serializer::Read(Json_Context["Position"],Instance.m_Position);
+            if(Json_Context.contains("Target")&&!Json_Context["Target"].is_null())
+                    Serializer::Read(Json_Context["Target"],Instance.m_Target);
+            if(Json_Context.contains("Up")&&!Json_Context["Up"].is_null())
+                    Serializer::Read(Json_Context["Up"],Instance.m_Up);
 
             return Instance;
         }
@@ -72,10 +75,14 @@
         template<> inline Camera_Config& Serializer::Read<Camera_Config>(const JSON& Json_Context, Camera_Config &Instance){
             
 
-                Serializer::Read(Json_Context["Pose"],Instance.m_Pose);
-                Serializer::Read(Json_Context["Aspect"],Instance.m_Aspect);
-                Serializer::Read(Json_Context["Z_Near"],Instance.m_Z_Near);
-                Serializer::Read(Json_Context["Z_Far"],Instance.m_Z_Far);
+            if(Json_Context.contains("Pose")&&!Json_Context["Pose"].is_null())
+                    Serializer::Read(Json_Context["Pose"],Instance.m_Pose);
+            if(Json_Context.contains("Aspect")&&!Json_Context["Aspect"].is_null())
+                    Serializer::Read(Json_Context["Aspect"],Instance.m_Aspect);
+            if(Json_Context.contains("Z_Near")&&!Json_Context["Z_Near"].is_null())
+                    Serializer::Read(Json_Context["Z_Near"],Instance.m_Z_Near);
+            if(Json_Context.contains("Z_Far")&&!Json_Context["Z_Far"].is_null())
+                    Serializer::Read(Json_Context["Z_Far"],Instance.m_Z_Far);
 
             return Instance;
         }

@@ -34,7 +34,8 @@
         template<> inline Camera_Base& Serializer::Read<Camera_Base>(const JSON& Json_Context, Camera_Base &Instance){
             
 
-                Serializer::Read(Json_Context["FOV"],Instance.m_FOV);
+            if(Json_Context.contains("FOV")&&!Json_Context["FOV"].is_null())
+                    Serializer::Read(Json_Context["FOV"],Instance.m_FOV);
 
             return Instance;
         }
@@ -65,7 +66,8 @@
         template<> inline Camera_First_Persion& Serializer::Read<Camera_First_Persion>(const JSON& Json_Context, Camera_First_Persion &Instance){
                     Serializer::Read<NameSpace_Resource::NameSpace_Components::Camera_Base>(Json_Context["Camera_Base"],*static_cast<NameSpace_Resource::NameSpace_Components::Camera_Base*>(&Instance));
 
-                Serializer::Read(Json_Context["Vertical_Offset"],Instance.m_Vertical_Offset);
+            if(Json_Context.contains("Vertical_Offset")&&!Json_Context["Vertical_Offset"].is_null())
+                    Serializer::Read(Json_Context["Vertical_Offset"],Instance.m_Vertical_Offset);
 
             return Instance;
         }
@@ -99,10 +101,14 @@
         template<> inline Camera_Third_Persion& Serializer::Read<Camera_Third_Persion>(const JSON& Json_Context, Camera_Third_Persion &Instance){
                     Serializer::Read<NameSpace_Resource::NameSpace_Components::Camera_Base>(Json_Context["Camera_Base"],*static_cast<NameSpace_Resource::NameSpace_Components::Camera_Base*>(&Instance));
 
-                Serializer::Read(Json_Context["Horizontal_Offset"],Instance.m_Horizontal_Offset);
-                Serializer::Read(Json_Context["Vertical_Offset"],Instance.m_Vertical_Offset);
-                Serializer::Read(Json_Context["Cursor_Pitch"],Instance.m_Cursor_Pitch);
-                Serializer::Read(Json_Context["Cursor_Yaw"],Instance.m_Cursor_Yaw);
+            if(Json_Context.contains("Horizontal_Offset")&&!Json_Context["Horizontal_Offset"].is_null())
+                    Serializer::Read(Json_Context["Horizontal_Offset"],Instance.m_Horizontal_Offset);
+            if(Json_Context.contains("Vertical_Offset")&&!Json_Context["Vertical_Offset"].is_null())
+                    Serializer::Read(Json_Context["Vertical_Offset"],Instance.m_Vertical_Offset);
+            if(Json_Context.contains("Cursor_Pitch")&&!Json_Context["Cursor_Pitch"].is_null())
+                    Serializer::Read(Json_Context["Cursor_Pitch"],Instance.m_Cursor_Pitch);
+            if(Json_Context.contains("Cursor_Yaw")&&!Json_Context["Cursor_Yaw"].is_null())
+                    Serializer::Read(Json_Context["Cursor_Yaw"],Instance.m_Cursor_Yaw);
 
             return Instance;
         }
@@ -133,7 +139,8 @@
         template<> inline Camera_Free& Serializer::Read<Camera_Free>(const JSON& Json_Context, Camera_Free &Instance){
                     Serializer::Read<NameSpace_Resource::NameSpace_Components::Camera_Base>(Json_Context["Camera_Base"],*static_cast<NameSpace_Resource::NameSpace_Components::Camera_Base*>(&Instance));
 
-                Serializer::Read(Json_Context["Speed"],Instance.m_Speed);
+            if(Json_Context.contains("Speed")&&!Json_Context["Speed"].is_null())
+                    Serializer::Read(Json_Context["Speed"],Instance.m_Speed);
 
             return Instance;
         }
@@ -164,7 +171,8 @@
         template<> inline Camera_Resource& Serializer::Read<Camera_Resource>(const JSON& Json_Context, Camera_Resource &Instance){
             
 
-                Serializer::Read(Json_Context["Camera"],Instance.m_Camera);
+            if(Json_Context.contains("Camera")&&!Json_Context["Camera"].is_null())
+                    Serializer::Read(Json_Context["Camera"],Instance.m_Camera);
 
             return Instance;
         }

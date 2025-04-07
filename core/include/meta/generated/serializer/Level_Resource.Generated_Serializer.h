@@ -36,9 +36,12 @@
         template<> inline Level_Resource& Serializer::Read<Level_Resource>(const JSON& Json_Context, Level_Resource &Instance){
             
 
-                Serializer::Read(Json_Context["Gravity"],Instance.m_Gravity);
-                Serializer::Read(Json_Context["Character_Name"],Instance.m_Character_Name);
-                Serializer::Read(Json_Context["Objects"],Instance.m_Objects);
+            if(Json_Context.contains("Gravity")&&!Json_Context["Gravity"].is_null())
+                    Serializer::Read(Json_Context["Gravity"],Instance.m_Gravity);
+            if(Json_Context.contains("Character_Name")&&!Json_Context["Character_Name"].is_null())
+                    Serializer::Read(Json_Context["Character_Name"],Instance.m_Character_Name);
+            if(Json_Context.contains("Objects")&&!Json_Context["Objects"].is_null())
+                    Serializer::Read(Json_Context["Objects"],Instance.m_Objects);
 
             return Instance;
         }

@@ -274,7 +274,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 	struct alignas(16)
 		Vulkan_Render_Mesh_Node final {
 		const Matrix4x4* Model_Matrix{ nullptr };
-		const Matrix4x4* Joint_Matrix{ nullptr };
+		const Matrix4x4* Joint_Matrices{ nullptr };
 		uint32_t Joint_Count{ 0 };
 
 		Vulkan_Mesh* Ref_Mesh{ nullptr };

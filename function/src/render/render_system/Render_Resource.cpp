@@ -1031,7 +1031,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		return { std::move(Index_Buffer), Index_Buffer_Allocation };
 	}
 
-	const Global_Render_Resource& Render_Resource::Get_Global_Render_Resource(void) const {
+	 Global_Render_Resource& Render_Resource::Get_Global_Render_Resource(void) {
 		return this->m_Global_Render_Resource;
 	}
 

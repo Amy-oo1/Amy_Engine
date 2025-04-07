@@ -43,15 +43,13 @@ namespace NameSpace_Function::NameSpace_Animation {
 
 	class  Animation_Manager final {
 	private:
-		Animation_Manager(void) = delete;
-
 		Animation_Manager(const Animation_Manager&) = delete;
 		Animation_Manager(Animation_Manager&&) = delete;
 
 		Animation_Manager& operator=(const Animation_Manager&) = delete;
 		Animation_Manager& operator=(Animation_Manager&&) = delete;
 
-		Animation_Manager(Animation_Loader& Ref_Animation_Loader);
+		Animation_Manager(void) = default;
 
 	public:
 		~Animation_Manager(void) = default;
@@ -91,10 +89,9 @@ namespace NameSpace_Function::NameSpace_Animation {
 		//const tuple<vector<shared_ptr<Animation_Clip>>, vector<shared_ptr<Skeleton_Node_Map>>> Populate_Blend_Data(void)const;
 
 	public:
-		[[nodiscard]] static Animation_Manager& Get_Instance(Animation_Loader& Ref_Animation_Loader);
+		[[nodiscard]] static Animation_Manager& Get_Instance(void);
 
 	private:
-		Animation_Loader& m_Ref_Animation_Loader;
 
 		unordered_map<path, shared_ptr<Skeleton_Data>> m_Skeleton_Data_Cache{};
 		unordered_map<path, shared_ptr<Skeleton_Node_Map>> m_Skeleton_Node_Map_Cache{};

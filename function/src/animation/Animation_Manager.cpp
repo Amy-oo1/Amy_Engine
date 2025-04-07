@@ -20,16 +20,11 @@ namespace NameSpace_Function::NameSpace_Animation {
 	using NameSpace_Resource::NameSpace_Components::Reflection_Bone_Blend_Mask_Operator;
 	using NameSpace_Resource::NameSpace_Components::Reflection_Blend_State_Operator;
 
-
-	Animation_Manager::Animation_Manager(Animation_Loader& Ref_Animation_Loader)
-		:m_Ref_Animation_Loader{ Ref_Animation_Loader } {
-	}
-
 	shared_ptr<Skeleton_Data> Animation_Manager::TryLoad_Skeleton_Data(const path& Skeleton_Data_URL) {
 		return this->TryLoad_Resource<Skeleton_Data>(
 			Skeleton_Data_URL,
 			this->m_Skeleton_Data_Cache,
-			[this](const path& URL) {return this->m_Ref_Animation_Loader.Load_Skeleton_Data(URL); }
+			[this](const path& URL) {return Animation_Loader::Get_Instance().Load_Skeleton_Data(URL); }
 		);
 	}
 
@@ -37,7 +32,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return this->TryLoad_Resource<Skeleton_Node_Map>(
 			Skeleton_Node_Map_RUL,
 			this->m_Skeleton_Node_Map_Cache,
-			[this](const path& URL) {return this->m_Ref_Animation_Loader.Load_Skeleton_Node_Map(URL); }
+			[this](const path& URL) {return Animation_Loader::Get_Instance().Load_Skeleton_Node_Map(URL); }
 		);
 	}
 
@@ -45,7 +40,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return this->TryLoad_Resource<Bone_Blend_Mask>(
 			Bone_Blend_Mask_URL,
 			this->m_Bone_Blend_Mask_Cache,
-			[this](const path& URL) {return this->m_Ref_Animation_Loader.Load_Bone_Blend_Mask(URL); }
+			[this](const path& URL) {return Animation_Loader::Get_Instance().Load_Bone_Blend_Mask(URL); }
 		);
 	}
 
@@ -53,7 +48,7 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return this->TryLoad_Resource<Animation_Clip>(
 			Animation_Clip_URL,
 			this->m_Animation_Clip_Cache,
-			[this](const path& URL) {return this->m_Ref_Animation_Loader.Load_Animation_Clip(URL); }
+			[this](const path& URL) {return Animation_Loader::Get_Instance().Load_Animation_Clip(URL); }
 		);
 	}
 
@@ -175,8 +170,8 @@ namespace NameSpace_Function::NameSpace_Animation {
 		return{ Temp_Clips, Temp_Skeleton_Node_Maps };
 	}*/
 
-	Animation_Manager& Animation_Manager::Get_Instance(Animation_Loader& Ref_Animation_Loader) {
-		static Animation_Manager Instance{ Ref_Animation_Loader };
+	Animation_Manager& Animation_Manager::Get_Instance(void) {
+		static Animation_Manager Instance{};
 
 		return Instance;
 	}

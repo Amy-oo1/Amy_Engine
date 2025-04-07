@@ -43,16 +43,18 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_World {
 
 		this->m_Current_World_Resource = Resource_Manager::Load<World_Resource>(World_URL);
 
-		this->Load_Level(
-			Reflection_World_Resource_Operator::Get_Default_Level_URL_Attribute(this->m_Current_World_Resource)
-		);
+		this->Load_Level(Reflection_World_Resource_Operator::Get_Default_Level_URL_Attribute(this->m_Current_World_Resource));
 	}
 
 	void World_Manager::Load_Level(const path& Level_URL) {
-		auto  Level_Instance{ std::make_shared<Level>(Level_URL) };
+		auto  Level_Instance{ std::make_shared<Level>() };
+		Level_Instance->Load_Level(Level_URL);
+
 		this->m_Levels.emplace(Level_URL, Level_Instance);
 
 		this->m_Current_Level = Level_Instance;
+
+		
 	}
 
 }// namespace NameSpace_Function::NameSpace_Frame::NameSpace_World

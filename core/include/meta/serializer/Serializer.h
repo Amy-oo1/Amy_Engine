@@ -1,10 +1,13 @@
 #pragma once
 
-#include "json.h"
-
 #include<string>
+#include<array>
 #include<vector>
+#include<unordered_map>
 #include<memory>
+#include<functional>
+
+#include "json.h"
 
 #include "file/File_System.h"
 
@@ -25,6 +28,11 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 	using std::weak_ptr;
 	using std::unique_ptr;
 
+	using std::string;
+	using std::function;
+	using std::unordered_map;
+	using std::shared_ptr;
+
 
 	using JSON = nlohmann::json;
 
@@ -39,6 +47,8 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 	using NameSpace_Color::Color;
 
 	using NameSpace_Reflection::Reflection_Instance;
+
+	inline unordered_map<string, function<shared_ptr<void>(const JSON&)>> Reflection_Cast_Tale{};
 
 	class Serializer final {
 	public:
@@ -106,7 +116,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 				Json_Context.push_back(Serializer::Write(Instance));
 			return Json_Context;
 		}
-	
+
 
 		template<typename Type>
 		static Type& Read(const JSON& Json_Context, Type& Instance) {
@@ -140,7 +150,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 
 		template<typename Type>
 		static Reflection_Instance<Type>& Read(const JSON& Json_Context, Reflection_Instance<Type>& Instance) {
-			if (Json_Context.is_null()) {
+			if (!Json_Context.is_null()) {
 				Instance.m_Instance = std::make_shared<Type>();
 				Serializer::Read<std::string>(Json_Context["Type_Spelling"], Instance.m_Type_Spelling);
 				Serializer::Read<Type>(Json_Context["Instance"], *Instance.m_Instance);
@@ -332,8 +342,9 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 
 	template<> inline const JSON Serializer::Write<Affine_Transform>(const Affine_Transform& Instance) {
 		return JSON{
-			{"Basis", Serializer::Write<Matrix3x3>(Instance.Get_Basis())},
-			{"Translation", Serializer::Write<Vector3>(Instance.Get_Translation())}
+			{"Translation", Serializer::Write<Vector3>(Instance.Get_Translation())},
+			{"Rotation", Serializer::Write<Quaternion>(Instance.Get_Rotation())},
+			{"Scale", Serializer::Write<Vector3>(Instance.Get_Scale())}
 		};
 	}
 
@@ -367,7 +378,7 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 	template<> inline const JSON Serializer::Write<Color>(const Color& Instance) {
 		return JSON{
 			{"R", Serializer::Write<float>(Instance.Get_R()) },
-			{"Gr", Serializer::Write<float>(Instance.Get_G()) },
+			{"G", Serializer::Write<float>(Instance.Get_G()) },
 			{"B", Serializer::Write<float>(Instance.Get_B()) },
 			{"A", Serializer::Write<float>(Instance.Get_A())}
 		};
@@ -588,10 +599,13 @@ namespace NameSpace_Core::NameSpace_Meta::NameSpace_Serializer {
 		if (Json_Context.is_null())
 			return Instance;
 		else {
-			Matrix3x3 Temp_Basis{};
 			Vector3 Temp_Translation{};
+			Quaternion Temp_Rotation{};
+			Vector3 Temp_Scale{};
+
 			return Instance = Affine_Transform{
-				Serializer::Read<Matrix3x3>(Json_Context["Basis"], Temp_Basis),
+				Serializer::Read<Vector3>(Json_Context["Scale"], Temp_Scale),
+				Serializer::Read<Quaternion>(Json_Context["Rotation"], Temp_Rotation),
 				Serializer::Read<Vector3>(Json_Context["Translation"], Temp_Translation)
 			};
 		}

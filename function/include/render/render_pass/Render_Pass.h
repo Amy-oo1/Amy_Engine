@@ -121,11 +121,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 		virtual RHI_Render_Pass* Get_Render_Pass(void)const;
 
-		static inline Visiable_Node s_Visable_Node{};
+		static Visiable_Node s_Visable_Node;
 
 
 	public://TODO : 
-		const Global_Render_Resource* m_Global_Render_Resource{ nullptr };
+		Global_Render_Resource* m_Global_Render_Resource{ nullptr };
 
 		Frame_Buffer m_Frame_Buffer{};
 		vector<Descriptor> m_Descriptors{};

@@ -37,6 +37,18 @@ namespace NameSpace_Resource::NameSpace_Config {
 				File_System::Set_Lexically_Normal(this->m_Global_Particle_Resource_URL = Config_Value);
 			else if ("Global_Render_Resource_URL" == Config_Name)
 				File_System::Set_Lexically_Normal(this->m_Global_Render_Resource_URL = Config_Value);
+			else if ("Default_World_Resource_URL" == Config_Name)
+				File_System::Set_Lexically_Normal(this->m_Default_World_Resource_URL = Config_Value);
+			else if ("Default_Base_Color_Image_URL" == Config_Name)
+				File_System::Set_Lexically_Normal(this->m_Default_Base_Color_Image_URL = Config_Value);
+			else if ("Default_Metallic_Roughness_Image_URL" == Config_Name)
+				File_System::Set_Lexically_Normal(this->m_Default_Metallic_Roughness_Image_URL = Config_Value);
+			else if ("Default_Normal_Image_URL" == Config_Name)
+				File_System::Set_Lexically_Normal(this->m_Default_Normal_Image_URL = Config_Value);
+			else if ("Default_Occlusion_Image_URL" == Config_Name)
+				File_System::Set_Lexically_Normal(this->m_Default_Occlusion_Image_URL = Config_Value);
+			else if ("Default_Emissive_Image_URL" == Config_Name)
+				File_System::Set_Lexically_Normal(this->m_Default_Emissive_Image_URL = Config_Value);
 		}
 	}
 

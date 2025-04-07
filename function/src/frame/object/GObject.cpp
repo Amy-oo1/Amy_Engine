@@ -14,6 +14,7 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 	using NameSpace_Resource::NameSpace_Common::Reflection_Object_Instance_Operator;
 
 	using NameSpace_Resource::NameSpace_Common::Object_Definition;
+	using NameSpace_Resource::NameSpace_Manage::Resource_Manager;
 
 	using Namespace_Global::Global_Systemer;
 
@@ -27,10 +28,11 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 			Temp_Component->Tick(Delta_Time);
 	}
 
-	bool GObject::Load(const shared_ptr<Object_Instance>& Object_Instance_Res) {
+	void GObject::Load(const shared_ptr<Object_Instance>& Object_Instance_Res) {
 		this->Load_Instance(Object_Instance_Res);
-		return this->Load_Definition();
+		this->Load_Definition(Reflection_Object_Instance_Operator::Get_Definition_URL_Attribute(Object_Instance_Res));
 	}
+
 	shared_ptr<Object_Instance> GObject::Save(void) {
 		shared_ptr<Object_Instance> Res{ std::make_shared<Object_Instance>() };
 
@@ -67,7 +69,6 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 
 	void GObject::Load_Instance(const shared_ptr<Object_Instance>& Object_Instance_Res) {
 		this->m_Name = Reflection_Object_Instance_Operator::Get_Name_Attribute(Object_Instance_Res);
-		this->m_Definition_URL = Reflection_Object_Instance_Operator::Get_Definition_URL_Attribute(Object_Instance_Res);
 
 		this->m_Components.clear();
 		this->m_Components = Reflection_Object_Instance_Operator::Get_Instanced_Components_Attribute(Object_Instance_Res);
@@ -75,21 +76,23 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject {
 			Temp_Component->Post_Load_Resource(this->std::enable_shared_from_this<GObject>::weak_from_this());
 	}
 
-	bool GObject::Load_Definition(void) {
-		shared_ptr< Object_Definition> Temp_Definition = nullptr; //Global_Systemer::Get_Instance().Resource_Manager.Load<Object_Definition>(this->m_Definition_URL);
-		if (nullptr == Temp_Definition) {
-			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Failed to Load Definition :{} ", this->m_Definition_URL.generic_string());
+	void GObject::Load_Definition(const path& Definiton_URL) {
+		if (Definiton_URL.empty())
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "Failed to Load Definition :{} ", this->m_Definition_URL.generic_string());
 
-			return false;
-		}
+		this->m_Definition_URL = Definiton_URL;
 
-		for (auto& Temp_Component : Reflection_Object_Definition_Operator::Get_Components_Attribute(Temp_Definition))
+		shared_ptr<Object_Definition> Temp_Definition{ Resource_Manager::Load<Object_Definition>(this->m_Definition_URL) };
+		if (nullptr == Temp_Definition)
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "Failed to Load Definition :{} ", this->m_Definition_URL.generic_string());
+
+		for (auto&& Temp_Component : Reflection_Object_Definition_Operator::Get_Components_Attribute(Temp_Definition))
 			if (!this->Has_Component(Temp_Component.Get_Type_Spelling())) {
-				this->m_Components.push_back(Temp_Component);
+				this->m_Components.emplace_back(std::move(Temp_Component));
 
 				this->m_Components.back()->Post_Load_Resource(this->std::enable_shared_from_this<GObject>::weak_from_this());
 			}
 
-		return true;
 	}
+
 }// namespace NameSpace_Function::NameSpace_Frame::NameSpace_GObject

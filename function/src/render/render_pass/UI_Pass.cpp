@@ -60,7 +60,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	}
 
 	void UI_Pass::Draw(void) {
-		//TODO : Implement
+		if (this->m_Window_UI) {
+			/*ImGui_ImplVulkan_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+
+			this->m_Window_UI*/
+
+			//TODO :
+		}
 	}
 
 	void UI_Pass::Pre_Inittialize(shared_ptr<Render_Pass_Pre_Initialize_Info> Init_Info) {

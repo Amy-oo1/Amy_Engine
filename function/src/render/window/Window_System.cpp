@@ -171,12 +171,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Window {
 	}
 
 	void Window_System::Initialize_GLWF(void) {
+		if (GLFW_FALSE == glfwInit())
+			throw std::runtime_error("Failed to initialize GLFW");
+
 		glfwSetErrorCallback(Window_System::Error_Call_Back);
 		if (false == glfwVulkanSupported())
 			System_Logger::Get_Instance().Log(System_Logger::Level::err, "Vulkan is not supported");
-
-		if (GLFW_FALSE == glfwInit())
-			throw std::runtime_error("Failed to initialize GLFW");
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);

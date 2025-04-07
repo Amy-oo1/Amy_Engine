@@ -36,9 +36,12 @@
         template<> inline Component& Serializer::Read<Component>(const JSON& Json_Context, Component &Instance){
             
 
-                Serializer::Read(Json_Context["Is_Dirty"],Instance.m_Is_Dirty);
-                Serializer::Read(Json_Context["Is_Scale_Dirty"],Instance.m_Is_Scale_Dirty);
-                Serializer::Read(Json_Context["Tick_In_Editor_Mode"],Instance.m_Tick_In_Editor_Mode);
+            if(Json_Context.contains("Is_Dirty")&&!Json_Context["Is_Dirty"].is_null())
+                    Serializer::Read(Json_Context["Is_Dirty"],Instance.m_Is_Dirty);
+            if(Json_Context.contains("Is_Scale_Dirty")&&!Json_Context["Is_Scale_Dirty"].is_null())
+                    Serializer::Read(Json_Context["Is_Scale_Dirty"],Instance.m_Is_Scale_Dirty);
+            if(Json_Context.contains("Tick_In_Editor_Mode")&&!Json_Context["Tick_In_Editor_Mode"].is_null())
+                    Serializer::Read(Json_Context["Tick_In_Editor_Mode"],Instance.m_Tick_In_Editor_Mode);
 
             return Instance;
         }

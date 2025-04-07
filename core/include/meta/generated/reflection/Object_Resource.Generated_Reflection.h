@@ -5,7 +5,11 @@
 #include<memory>
 #include<cstddef>
 
+#include "json.h"
+
 #include "meta/Reflection/Reflection_Instance.h"
+
+#include "meta/Serializer/Serializer.h"
 
 #include "D:/Amy_Engine/resource/include/common/Object_Resource.h"
 
@@ -88,7 +92,10 @@ namespace NameSpace_Resource::NameSpace_Common{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Common
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Common{
 
     using std::string;
@@ -110,33 +117,6 @@ namespace NameSpace_Resource::NameSpace_Common{
         }
 
         
-
-            static const string Get_Seplling_Type_Spelling(void){
-                return string{"string"};
-            }
-
-            static const string Get_Seplling_Spelling(void){
-                return string{"m_Seplling"};
-            }
-
-
-            static const string Get_Seplling_Display_Name(void){
-                return string{"Seplling"};
-            }
-
-            static const string& Get_Seplling_Attribute(shared_ptr<Object_Definition> Instance){
-                return Instance->m_Seplling;
-            }
-
-            static void Set_Field_Seplling_Attribute(shared_ptr<Object_Definition> Instance, const string& Value){
-                Instance->m_Seplling=Value;
-            }
-
-            static const bool Is_Filed_Seplling_CPPVector(void){
-                return  false;
-            }
-
-            
 
             static const string Get_Components_Type_Spelling(void){
                 return string{"vector<Reflection_Instance<Component>>"};
@@ -194,7 +174,10 @@ namespace NameSpace_Resource::NameSpace_Common{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Common
+
+    
+ 
 namespace NameSpace_Resource::NameSpace_Common{
 
     using std::string;
@@ -327,5 +310,8 @@ namespace NameSpace_Resource::NameSpace_Common{
 
     };
    
-}// NameSpace_Core::NameSpace_Meta::NameSpace_Generated::NameSpace_Reflection
+}// namespace NameSpace_Resource::NameSpace_Common
+
+    
+ 
 

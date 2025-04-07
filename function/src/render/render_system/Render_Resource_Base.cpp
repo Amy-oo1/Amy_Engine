@@ -132,8 +132,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 					Ref_Vertex_Data[Index].TY = Reflection_Mesh_Vertex_Operator::Get_Tangent_Attribute(Vertexs_Buffer[Index]).Get_Y();
 					Ref_Vertex_Data[Index].TZ = Reflection_Mesh_Vertex_Operator::Get_Tangent_Attribute(Vertexs_Buffer[Index]).Get_Z();
 
-					Ref_Vertex_Data[Index].U = Reflection_Mesh_Vertex_Operator::Get_Texture_Coordinate_Attribute(Vertexs_Buffer[Index])[0];
-					Ref_Vertex_Data[Index].V = Reflection_Mesh_Vertex_Operator::Get_Texture_Coordinate_Attribute(Vertexs_Buffer[Index])[1];
+					Ref_Vertex_Data[Index].U = Reflection_Mesh_Vertex_Operator::Get_Texture_Coordinates_Attribute(Vertexs_Buffer[Index]).Get_X();
+					Ref_Vertex_Data[Index].V = Reflection_Mesh_Vertex_Operator::Get_Texture_Coordinates_Attribute(Vertexs_Buffer[Index]).Get_Y();
 
 					Bounding_Box.Add_Point(Reflection_Mesh_Vertex_Operator::Get_Position_Attribute(Vertexs_Buffer[Index]));
 				}
@@ -160,15 +160,15 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 					reinterpret_cast<Mesh_Vertx_Binding_Data_Definition*>(Ret.Skeletion_Binding_Buffer->Data);
 
 				for (size_t Index = 0; Index < Skeleton_Bindings.size(); ++Index) {
-					Ref_Binding_Data[Index].Index0 = Reflection_Meah_Skeleton_Binding_Operator::Get_Bone_Indices_Attribute(Skeleton_Bindings[Index])[0];
-					Ref_Binding_Data[Index].Index1 = Reflection_Meah_Skeleton_Binding_Operator::Get_Bone_Indices_Attribute(Skeleton_Bindings[Index])[1];
-					Ref_Binding_Data[Index].Index2 = Reflection_Meah_Skeleton_Binding_Operator::Get_Bone_Indices_Attribute(Skeleton_Bindings[Index])[2];
-					Ref_Binding_Data[Index].Index3 = Reflection_Meah_Skeleton_Binding_Operator::Get_Bone_Indices_Attribute(Skeleton_Bindings[Index])[3];
+					Ref_Binding_Data[Index].Index0 = Reflection_Meah_Skeleton_Binding_Operator::Get_Index_0_Attribute(Skeleton_Bindings[Index]);
+					Ref_Binding_Data[Index].Index1 = Reflection_Meah_Skeleton_Binding_Operator::Get_Index_1_Attribute(Skeleton_Bindings[Index]);
+					Ref_Binding_Data[Index].Index2 = Reflection_Meah_Skeleton_Binding_Operator::Get_Index_2_Attribute(Skeleton_Bindings[Index]);
+					Ref_Binding_Data[Index].Index3 = Reflection_Meah_Skeleton_Binding_Operator::Get_Index_3_Attribute(Skeleton_Bindings[Index]);
 
-					Ref_Binding_Data[Index].Weight0 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weights_Attribute(Skeleton_Bindings[Index])[0];
-					Ref_Binding_Data[Index].Weight1 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weights_Attribute(Skeleton_Bindings[Index])[1];
-					Ref_Binding_Data[Index].Weight2 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weights_Attribute(Skeleton_Bindings[Index])[2];
-					Ref_Binding_Data[Index].Weight3 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weights_Attribute(Skeleton_Bindings[Index])[3];
+					Ref_Binding_Data[Index].Weight0 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weight_0_Attribute(Skeleton_Bindings[Index]);
+					Ref_Binding_Data[Index].Weight1 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weight_0_Attribute(Skeleton_Bindings[Index]);
+					Ref_Binding_Data[Index].Weight2 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weight_0_Attribute(Skeleton_Bindings[Index]);
+					Ref_Binding_Data[Index].Weight3 = Reflection_Meah_Skeleton_Binding_Operator::Get_Weight_0_Attribute(Skeleton_Bindings[Index]);
 				}
 			}
 		}
@@ -206,7 +206,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 		if (Iter != this->m_Bounding_Box_Cache.end())
 			return Iter->second;
 
-		return AxisAligned_Bounding_Box{ AxisAligned_Bounding_Box::EMPTY };
+		return  AxisAligned_Bounding_Box::EMPTY;
 	}
 
 	Static_Mesh_Data Render_Resource_Base::Load_Static_Mesh(const path& Mesh_URL, AxisAligned_Bounding_Box& Bounding_Box) {

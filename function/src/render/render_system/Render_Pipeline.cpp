@@ -18,6 +18,7 @@
 #include "render/render_pass/Pick_Pass.h"
 #include "render/render_pass/Particle_Pass.h"
 
+
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 	using std::static_pointer_cast;
@@ -229,10 +230,13 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Render_System {
 
 		this->m_RHI->Reset_InFlight_Command_Pool_PFN();
 
-		if (!Ref_Vulkan_RHI.Prepare_Before_Pass(std::bind(&Render_Pipeline::Passes_Update_After_Recreate_Swapchain, this)))
-			System_Logger::Get_Instance().Log(System_Logger::Level::critical, "Render_Pipeline::Forwad_Render : Prepare_Before_Pass Failed");
+		if (!Ref_Vulkan_RHI.Prepare_Before_Pass(std::bind(&Render_Pipeline::Passes_Update_After_Recreate_Swapchain, this))) {
+			System_Logger::Get_Instance().Log(System_Logger::Level::info, "Render_Pipeline::Forwad_Render : Prepare_Before_Pass Failed");
 
+			return;
+		}
 
+		Ref_Vulkan_RHI.Submit_Render(std::bind(&Render_Pipeline::Passes_Update_After_Recreate_Swapchain, this));
 
 
 	}

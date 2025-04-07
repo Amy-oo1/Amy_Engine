@@ -112,6 +112,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		//TODO : Public Func
 		bool Prepare_Before_Pass(function<void(void)>Passes_Update_After_Recreate_Swapchain);
 
+		void Submit_Render(function<void(void)> Passes_Update_After_Recreate_Swapchain);
 
 		//TODO Set Function 
 
@@ -128,7 +129,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		[[nodiscard]] uint32_t Get_Graphics_Queue_Family(void)const;
 
 		[[nodiscard]] uint32_t Get_Current_SwapChain_Image_Index(void)const;
-
 
 		//TODO : Private Member Func
 	private:
@@ -299,6 +299,11 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				optional<vector<VkDynamicState>>& vk_Dynamic_States
 			);
 
+		[[nodiscard]] static const optional<VkClearValue>
+			S_Parser_RHI_Clear_Value(
+				const RHI_Clear_Value* Clear_Value
+			);
+
 		//NOTE : Static Member Variable
 	public:
 		static constexpr uint32_t s_Frames_In_Flight{ 3 };
@@ -382,10 +387,10 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		array<unique_ptr<RHI_Command_Pool>, s_Frames_In_Flight> m_RHI_Command_Pools{ std::make_unique<Vulkan_Command_Pool>(),std::make_unique<Vulkan_Command_Pool>(),std::make_unique<Vulkan_Command_Pool>() };//TODO : Erase Repeat Code
 		array<VkCommandPool, s_Frames_In_Flight> m_VK_Command_Pools{ nullptr,nullptr,nullptr };
 
+		uint32_t m_Current_Frame_Index{ 0 };
+
 		array<unique_ptr<RHI_Command_Buffer>, s_Frames_In_Flight> m_RHI_Command_Buffers{ std::make_unique<Vulkan_Command_Buffer>(),std::make_unique<Vulkan_Command_Buffer>() ,std::make_unique<Vulkan_Command_Buffer>() };
 		array<VkCommandBuffer, s_Frames_In_Flight> m_VK_Command_Buffers{ nullptr,nullptr,nullptr };
-		VkCommandBuffer m_Current_VK_Command_Buffer{ nullptr };
-		uint32_t m_Current_Frame_Index{ 0 };
 
 		unique_ptr<RHI_Descriptor_Pool> m_Default_RHI_Descriptor_Pool{ std::make_unique<Vulkan_Descriptor_Pool>() };
 		VkDescriptorPool m_Default_VK_Descriptor_Pool{ nullptr };
@@ -418,8 +423,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Finished_For_Present_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Semaphore>, s_Frames_In_Flight> m_Image_Available_For_TeCopy_RHI_Semaphores{ std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>(),std::make_unique<Vulkan_Semaphore>() };
 		array<unique_ptr<RHI_Fence>, s_Frames_In_Flight> m_InFlight_RHI_Fences{ std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>(),std::make_unique<Vulkan_Fence>() };
-		array<VkFence, s_Frames_In_Flight> m_InFlight_VK_Fences{ nullptr,nullptr,nullptr };
-		VkFence m_Current_VK_Fence{ nullptr };
+		array<VkFence, s_Frames_In_Flight> m_VK_Fences{ nullptr,nullptr,nullptr };
 
 		//TODO : Override Func
 	public:
@@ -460,6 +464,8 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			) override;
 
 		void Allocate_Default_Command_Buffers(void) override;
+
+		[[nodiscard]] RHI_Command_Buffer* Get_Current_Command_Buffer(void) override;
 
 		[[nodiscard]] unique_ptr<RHI_Command_Buffer> Begin_SingleTime_Command(void) override;
 
@@ -698,6 +704,121 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 
 		void Prepare_Context(void) override;
 
+		void
+			Cmd_Begin_Render_Pass_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const RHI_Render_Pass_Begin_Info* Render_Pass_Begin,
+				RHI_SUBPASS_CONTENTS  Contents
+			) override;
+
+		void
+			Cmd_End_Render_Pass_PFN(
+				RHI_Command_Buffer* Command_Buffer
+			) override;
+
+		void
+			Cmd_Next_Subpass_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_SUBPASS_CONTENTS contents
+			) override;
+
+
+		void
+			Cmd_Bind_Pipeline_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point,
+				RHI_Pipeline* Pipeline
+			) override;
+
+		void
+			Cmd_Bind_Descriptor_Set_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point,
+				RHI_Pipeline_Layout* Layout,
+				uint32_t First_Set_Index,
+				RHI_Descriptor_Set* Descriptor_Set,
+				const vector<uint32_t>* Dynamic_Offsets = nullptr
+			) override;
+
+		void
+			Cmd_Bind_Descriptor_Sets_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_PIPELINE_BIND_POINT Pipeline_Bind_Point,
+				RHI_Pipeline_Layout* Layout,
+				uint32_t First_Set_Index,
+				const vector<RHI_Descriptor_Set*>* Descriptor_Sets,
+				const vector<uint32_t>* Dynamic_Offsets = nullptr
+			) override;
+
+		void
+			Cmd_Bind_Vertex_Buffers_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				uint32_t First_Binding_Index,
+				const vector<RHI_Buffer*>* Buffers,
+				const vector<RHI_Device_Size>* Offsets
+			) override;
+
+		void
+			Cmd_Bind_Vertex_Buffer_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_Buffer* Buffer,
+				RHI_Device_Size Offset
+			) override;
+
+		void
+			Cmd_Bind_Index_Buffer_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				RHI_Buffer* Buffer,
+				RHI_Device_Size Offset,
+				RHI_INDEX_TYPE Index_Type
+			) override;
+
+		void
+			Cmd_Set_Viewports_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const vector<const RHI_Viewport*>* Viewports
+			) override;
+
+		void
+			Cmd_Set_Viewport_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const RHI_Viewport& Viewport
+			) override;
+
+		void
+			Cmd_Set_Scissors_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const vector<const RHI_Rect_2D*>* Scissors
+			) override;
+
+		void
+			Cmd_Set_Scissor_PFN(
+				RHI_Command_Buffer* Command_Buffer,
+				const RHI_Rect_2D& Scissor
+			) override;
+
+		void
+			Cmd_Draw(
+				RHI_Command_Buffer* Command_Buffer,
+				uint32_t Vertex_Count,
+				uint32_t Instance_Count,
+				uint32_t First_Vertex_Index,
+				uint32_t First_Instance_Index
+			) override;
+
+		void Cmd_Clear_Attachments_PFN(
+			RHI_Command_Buffer* Command_Buffer,
+			const vector<const RHI_Clear_Attachment*>* Attachments,
+			const vector<const RHI_Clear_Rect*>* Rects
+		)override;
+
+		void Cmd_Clear_Attachment_PFN(
+			RHI_Command_Buffer* Command_Buffer,
+			const RHI_Clear_Attachment* Attachment,
+			const RHI_Clear_Rect* Rect
+		) override;
+
+
 	private:
 
 
@@ -708,15 +829,9 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 		bool Wait_For_Fence(void);
 
 
+
+
 	private:
-
-
-		[[nodiscard]] static const optional<VkClearValue>
-			Parser_RHI_Clear_Value(
-				const RHI_Clear_Value* Clear_Value
-			);
-
-
 
 
 
@@ -755,98 +870,6 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			) override;
 
 		void
-			Cmd_Begin_Render_Pass_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				const RHI_Render_Pass_Begin_Info* Render_Pass_Begin,
-				RHI_SUBPASS_CONTENTS  Contents) override;
-
-		void
-			Cmd_Next_Subpass_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_SUBPASS_CONTENTS contents
-			) override;
-
-		void
-			Cmd_End_Render_Pass_PFN(
-				RHI_Command_Buffer* Command_Buffer
-			) override;
-
-		void
-			Cmd_Bind_Pipeline_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point,
-				RHI_Pipeline* Pipeline
-			) override;
-
-		void
-			Cmd_Set_Viewports_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t First_Viewport_Index,
-				const vector<const RHI_Viewport*>* Viewports
-			) override;
-
-		void
-			Cmd_Set_Viewport_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				const RHI_Viewport* Viewport
-			) override;
-
-		void
-			Cmd_Set_Scissors_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t First_Scissor_Index,
-				const vector<const RHI_Rect_2D*>* Scissors
-			) override;
-
-		void
-			Cmd_Set_Scissors_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				const RHI_Rect_2D* Scissors
-			) override;
-
-		void
-			Cmd_Bind_Vertex_Buffers_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t First_Binding_Index,
-				const vector<RHI_Buffer*>* Buffers,
-				const vector<RHI_Device_Size>* Offsets
-			) override;
-
-		void
-			Cmd_Bind_Vertex_Buffer_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_Buffer* Buffers,
-				RHI_Device_Size* Offsets
-			) override;
-
-		void
-			Cmd_Bind_Index_Buffer_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_Buffer* Buffer,
-				RHI_Device_Size Offset,
-				RHI_INDEX_TYPE Index_Type
-			) override;
-
-		void
-			Cmd_Bind_Descriptor_Sets_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point,
-				RHI_Pipeline_Layout* Layout,
-				uint32_t First_Set_Index,
-				const vector<RHI_Descriptor_Set*>* Descriptor_Sets,
-				const vector<uint32_t>* Dynamic_Offsets = nullptr
-			) override;
-
-		void
-			Cmd_Bind_Descriptor_Set_PFN(
-				RHI_Command_Buffer* Command_Buffer,
-				RHI_PEPELINE_BIND_POINT Pipeline_Bind_Point,
-				RHI_Pipeline_Layout* Layout,
-				RHI_Descriptor_Set* Descriptor_Sets,
-				const vector<uint32_t>* Dynamic_Offsets = nullptr
-			) override;
-
-		void
 			Cmd_Draw_Indexed_PFN(
 				RHI_Command_Buffer* Command_Buffer,
 				uint32_t Index_Count,
@@ -856,17 +879,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 				uint32_t First_Instance
 			) override;
 
-		void Cmd_Clear_Attachments_PFN(
-			RHI_Command_Buffer* Command_Buffer,
-			const vector<const RHI_Clear_Attachment*>* Attachments,
-			const vector<const RHI_Clear_Rect*>* Rects
-		)override;
-
-		void Cmd_Clear_Attachment_PFN(
-			RHI_Command_Buffer* Command_Buffer,
-			const RHI_Clear_Attachment* Attachment,
-			const RHI_Clear_Rect* Rect
-		) override;
+		
 
 		void
 			Cmd_Copy_Image_To_Buffer(
@@ -897,14 +910,7 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_RHI::NameSpace_Vulkan_
 			) override;
 
 
-		void
-			Cmd_Draw(
-				RHI_Command_Buffer* Command_Buffer,
-				uint32_t Vertex_Count,
-				uint32_t Instance_Count,
-				uint32_t First_Vertex_Index,
-				uint32_t First_Instance_Index
-			) override;
+		
 
 		void
 			Cmd_Dispatch(

@@ -185,6 +185,7 @@
     <ClInclude Include="include\meta\generated\reflection\Level_Resource.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Materia.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Mesh.Generated_Reflection.h" />
+    <ClInclude Include="include\meta\generated\reflection\Mesh_Component.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Mesh_Data.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Motor.Generated_Reflection.h" />
     <ClInclude Include="include\meta\generated\reflection\Object_Resource.Generated_Reflection.h" />
@@ -209,7 +210,8 @@
     <ClInclude Include="include\meta\generated\serializer\Global_Rendering.Generated_Serializer.h" />
     <ClInclude Include="include\meta\generated\serializer\Level_Resource.Generated_Serializer.h" />
     <ClInclude Include="include\meta\generated\serializer\Materia.Generated_Serializer.h" />
-    <ClInclude Include="include\meta\generated\serializer\mesh.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Mesh.Generated_Serializer.h" />
+    <ClInclude Include="include\meta\generated\serializer\Mesh_Component.Generated_Serializer.h" />
     <ClInclude Include="include\meta\generated\serializer\Mesh_Data.Generated_Serializer.h" />
     <ClInclude Include="include\meta\generated\serializer\Motor.Generated_Serializer.h" />
     <ClInclude Include="include\meta\generated\serializer\Object_Resource.Generated_Serializer.h" />

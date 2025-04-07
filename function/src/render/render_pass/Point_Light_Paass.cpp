@@ -3,6 +3,8 @@
 #include<tuple>
 #include<utility>
 
+#include "math/Matrix4x4.h"
+
 #include "render/rhi/empty_rhi/RHI_Class.h"
 #include "render/rhi/empty_rhi/RHI_Type.h"
 #include "render/rhi/empty_rhi/RHI_Struct.h"
@@ -13,6 +15,18 @@
 #include "mesh_point_light_shadow_vert.h"
 #include "mesh_point_light_shadow_frag.h"
 #include "mesh_point_light_shadow_geom.h"
+
+#include "math/Matrix4x4.h"
+
+#include "render/rhi/empty_rhi/RHI_Type.h"
+#include "render/rhi/empty_rhi/RHI_Struct.h"
+
+#include "render/render_system/Render_Mesh.h"
+
+#include "render/render_pass/Render_Pass_Utilities.h"
+
+#include "mesh_directional_light_shadow_frag.h"
+#include "mesh_directional_light_shadow_vert.h"
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
@@ -84,6 +98,12 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
 	using NameSpace_Render_System::Render_Resource;
 	using NameSpace_Render_System::Mesh_Vertex;
+
+
+
+	using namespace NameSpace_RHI;
+	using NameSpace_Core::NameSpace_Math::Matrix4x4;
+
 
 	Point_Light_Pass::Point_Light_Pass(const Render_Pass_Command_Info& Command_Info) :
 		Render_Pass{ Command_Info } {
@@ -596,7 +616,103 @@ namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 	}
 
 	void Point_Light_Pass::Draw(void) {
-		//TODO : Implement
+		struct Mesh_Node final {
+			const Matrix4x4* Model_Matrix{ nullptr };
+			const Matrix4x4* Joint_Matrices{ nullptr };
+			uint32_t Joint_Count{ 0 };
+		};
+
+		map<Vulkan_PBR_Material*, map<Vulkan_Mesh*, vector<Mesh_Node>>> Mesh_Draw_Call_Batch;
+
+		for (const auto& Node : *Render_Pass::s_Visable_Node.Directional_Light_Visiable_Mesh_Nodes) {
+			auto& Mesh_Instance{ Mesh_Draw_Call_Batch[Node.Ref_Material] };
+			auto& Ref_Mesh_Nodes{ Mesh_Instance[Node.Ref_Mesh] };
+
+			Mesh_Node Temp{};
+			{
+				Temp.Model_Matrix = Node.Model_Matrix;
+				if (Node.Enable_Vertex_Blending) {
+					Temp.Joint_Matrices = Node.Joint_Matrices;
+					Temp.Joint_Count = Node.Joint_Count;
+				}
+			}
+			Ref_Mesh_Nodes.emplace_back(Temp);
+		}
+
+		{
+			auto Color_Clear_Value{ RHI_Clear_Value_Builder()
+			.Set_Color_Float({1.f,1.f,1.f,1.f})
+			.Build()
+			};
+
+			auto Depth_Stencil_Clear_Value{ RHI_Clear_Value_Builder()
+			.Set_Depth_Stencil(1.f,0)
+			.Build()
+			};
+
+			const vector<const RHI_Clear_Value*> Clear_Values{
+				&Color_Clear_Value,
+				&Depth_Stencil_Clear_Value
+			};
+
+			RHI_Render_Pass_Begin_Info Render_Pass_Begin_Info{};
+			{
+				Render_Pass_Begin_Info.sType = RHI_STRUCT_TYPE::RHI_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+				Render_Pass_Begin_Info.Render_Pass = this->m_Frame_Buffer.Render_Pass.get();
+				Render_Pass_Begin_Info.Frame_Buffer = this->m_Frame_Buffer.Frame_Buffer.get();
+				Render_Pass_Begin_Info.Render_Area.Offset = { 0,0 };
+				Render_Pass_Begin_Info.Render_Area.Extent = { this->m_Frame_Buffer.Width,this->m_Frame_Buffer.Height };
+				Render_Pass_Begin_Info.Clear_Values = &Clear_Values;
+			}
+
+			this->m_RHI->Cmd_Begin_Render_Pass_PFN(
+				this->m_RHI->Get_Current_Command_Buffer(),
+				&Render_Pass_Begin_Info,
+				RHI_SUBPASS_CONTENTS::RHI_SUBPASS_CONTENTS_INLINE
+			);
+		}
+
+		//NOTE :Mesh
+		{
+			this->m_RHI->Cmd_Bind_Pipeline_PFN(
+				this->m_RHI->Get_Current_Command_Buffer(),
+				RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+				this->m_Render_Pipelines[0].Pipeline.get()
+			);
+
+			auto& Ref_Global_Storage_Buffer{ this->m_Global_Render_Resource->Storage_Buffer };
+
+			uint32_t Per_Frame_Dynamic_Offset{ Round_Up(Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffers_End[this->m_RHI->Get_Current_Frame_Index()],Ref_Global_Storage_Buffer.Min_Storage_Buffer_Offset_Alignment) };
+
+			Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffers_End[this->m_RHI->Get_Current_Frame_Index()] = Per_Frame_Dynamic_Offset + sizeof(Mesh_Per_Frame_Storage_Buffer_Object);
+
+			*reinterpret_cast<Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object*>(reinterpret_cast<uintptr_t>(Ref_Global_Storage_Buffer.Global_Upload_Ring_Buffer_Mapped_Mamary) + Per_Frame_Dynamic_Offset) = this->m_Mesh_Point_Light_Shadow_Per_Frame_Storage_Buffer_Object;
+
+			for (const auto& [Temp_Material, Temp_Mesh_Instanced] : Mesh_Draw_Call_Batch) {
+				for (const auto& [Temp_Mesh, Temp_Mesh_Nodes] : Temp_Mesh_Instanced) {
+					uint32_t Total_Instance_Count{ static_cast<uint32_t>(Temp_Mesh_Nodes.size()) };
+
+					if (0 < Total_Instance_Count) {
+						this->m_RHI->Cmd_Bind_Descriptor_Set_PFN(
+							this->m_RHI->Get_Current_Command_Buffer(),
+							RHI_PIPELINE_BIND_POINT::RHI_PIPELINE_BIND_POINT_GRAPHICS,
+							this->m_Render_Pipelines[0].Pipeline_Layout.get(),
+							1,
+							this->m_Descriptors[0].Descriptor_Set.get(),
+							nullptr
+						);
+
+						this->m_RHI->Cmd_Bind_Vertex_Buffer_PFN(this->m_RHI->Get_Current_Command_Buffer(), Temp_Mesh->Mesh_Vertex_Position_Buffer.get(), 0);
+						this->m_RHI->Cmd_Bind_Index_Buffer_PFN(this->m_RHI->Get_Current_Command_Buffer(), Temp_Mesh->Mesh_Index_Buffer.get(), 0, RHI_INDEX_TYPE::RHI_INDEX_TYPE_UINT16);
+					}
+				}
+
+
+				//TODD
+			}
+
+			this->m_RHI->Cmd_End_Render_Pass_PFN(this->m_RHI->Get_Current_Command_Buffer());
+		}
 	}
 
 }// namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass

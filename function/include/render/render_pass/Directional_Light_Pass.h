@@ -1,5 +1,8 @@
 #pragma once
 
+#include<cstdint>
+#include<optional>
+#include<array>
 #include<vector>
 
 #include "render/rhi/empty_rhi/RHI_Type.h"
@@ -11,9 +14,29 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	///TTOD: Move
+	using NameSpace_RHI::RHI_Clear_Color_Value;
+	using NameSpace_RHI::RHI_Clear_Depth_Stencil_Value;
+	using NameSpace_RHI::RHI_Clear_Value_Builder;
+	using NameSpace_RHI::RHI_Clear_Value;
+	using NameSpace_RHI::RHI_Render_Pass_Begin_Info;
+	using NameSpace_RHI::RHI_PIPELINE_BIND_POINT;
+
+	using NameSpace_RHI::RHI_SUBPASS_CONTENTS;
+
+	using NameSpace_Render_System::Vulkan_PBR_Material;
+	using NameSpace_Render_System::Vulkan_Mesh;
+
+
+	using std::optional;
 	using std::vector;
+	using std::array;
 
 	using  NameSpace_Render_System::Mesh_Directional_Light_Shadow_Per_Frame_Storage_Buffer_Object;
+	using  NameSpace_Render_System::Mesh_Per_Frame_Storage_Buffer_Object;
+
+
+
 
 	struct Directioal_Light_Render_Pass_Pre_Initialize_Info final :public Render_Pass_Pre_Initialize_Info {
 		//NOTE : Empty

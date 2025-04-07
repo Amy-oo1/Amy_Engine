@@ -94,6 +94,6 @@ namespace NameSpace_Resource::NameSpace_Components {
 
 }// namespace NameSpace_Resource::NameSpace_Components
 
-CONVERT_UP(NameSpace_Resource::NameSpace_Components, Camera_Base, Camera_First_Persion);
-CONVERT_UP(NameSpace_Resource::NameSpace_Components, Camera_Base, Camera_Third_Persion);
-CONVERT_UP(NameSpace_Resource::NameSpace_Components, Camera_Base, Camera_Free);
+//CONVERT_UP(NameSpace_Resource::NameSpace_Components, Camera_Base, Camera_First_Persion);
+//CONVERT_UP(NameSpace_Resource::NameSpace_Components, Camera_Base, Camera_Third_Persion);
+//CONVERT_UP(NameSpace_Resource::NameSpace_Components, Camera_Base, Camera_Free);

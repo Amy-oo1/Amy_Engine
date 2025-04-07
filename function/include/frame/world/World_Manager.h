@@ -5,6 +5,8 @@
 
 #include "file/File_System.h"
 
+#include "config/Resource_Configer.h"
+
 #include "common/World_Resource.h"
 
 #include "physics/Physics_Scene.h"
@@ -17,6 +19,8 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_World {
 	using std::weak_ptr;
 
 	using NameSpace_Platform::NameSpace_File::path;
+
+	using NameSpace_Resource::NameSpace_Config::Resource_Configer;
 
 	using NameSpace_Resource::NameSpace_Common::World_Resource;
 
@@ -50,7 +54,7 @@ namespace NameSpace_Function::NameSpace_Frame::NameSpace_World {
 
 
 	private:
-		path m_Current_World_URL{};
+		path m_Current_World_URL{ Resource_Configer::Get_Instance().Get_Default_World_Resource_URL() };
 
 		shared_ptr<World_Resource> m_Current_World_Resource{ nullptr };
 		unordered_map<path, shared_ptr<Level>> m_Levels{};

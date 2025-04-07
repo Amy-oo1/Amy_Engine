@@ -4,6 +4,8 @@
 
 namespace NameSpace_Function::NameSpace_Render::NameSpace_Pass {
 
+	Visiable_Node Render_Pass::s_Visable_Node{};
+
 	using std::static_pointer_cast;
 
 	using NameSpace_Render_System::Render_Resource;
